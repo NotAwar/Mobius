@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-REPO_OWNER="mobiusmdm"
+REPO_OWNER="notawar"
 REPO_NAME="mobius"
 FILE_PATH="it-and-security/lib/macos/policies/latest-macos.yml"
 BRANCH="main"

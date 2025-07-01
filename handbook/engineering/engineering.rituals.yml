@@ -1,0 +1,96 @@
+- task: "Rotate the TUF root keys"
+  startedOn: "2024-09-01"
+  frequency: "Annually"
+  description: https://mobiusmdm.com/handbook/engineering/tuf#rotate-the-root-keys
+  moreInfoUrl: https://mobiusmdm.com/handbook/engineering/tuf#rotate-the-root-keys
+  dri: "lukeheath"
+  autoIssue:
+    labels: [ "~engineering-initiated", "P2" ]
+    repo: "mobius"
+
+- task: "Renew Apple certificate signing request (CSR)"
+  startedOn: "2024-09-01"
+  frequency: "Annually"
+  description: https://mobiusmdm.com/handbook/engineering#renew-mdm-certificate-signing-request-csr
+  moreInfoUrl: https://mobiusmdm.com/handbook/engineering#renew-mdm-certificate-signing-request-csr
+  dri: "lukeheath"
+  autoIssue:
+    labels: [ "~engineering-initiated" ]
+    repo: "mobius"
+
+- task: "Oncall handoff"
+  startedOn: "2023-08-09"
+  frequency: "Weekly"
+  description: "Hand off the oncall engineering responsibilities to the next oncall engineer."
+  moreInfoUrl:
+  dri: "lukeheath"
+
+- task: "Vulnerability alerts (mobiusmdm.com)"
+  startedOn: "2023-08-09"
+  frequency: "Weekly"
+  description: "Review and remediate or dismiss vulnerability alerts for the mobiusmdm.com codebase on GitHub."
+  moreInfoUrl: "https://github.com/notawar/mobius/security"
+  dri: "eashaw"
+
+- task: "Vulnerability alerts (frontend)"
+  startedOn: "2023-08-09"
+  frequency: "Weekly"
+  description: "Review and remediate or dismiss vulnerability alerts for the Mobius frontend codebase (and related JS) on GitHub."
+  moreInfoUrl: "https://github.com/notawar/mobius/security"
+  dri: "lukeheath"
+
+- task: "Vulnerability alerts (backend)"
+  startedOn: "2023-08-09"
+  frequency: "Weekly"
+  description: "Review and remediate or dismiss vulnerability alerts for the Mobius backend codebase (and all Go code) on GitHub."
+  moreInfoUrl: "https://github.com/notawar/mobius/security"
+  dri: "lukeheath"
+
+- task: "Release candidate ritual"
+  startedOn: "2023-08-09"
+  frequency: "Triweekly"
+  description: "Go through the process of creating a release candidate."
+  moreInfoUrl: "https://github.com/notawar/mobius/blob/main/tools/release/README.md#minor-release-typically-end-of-sprint"
+  dri: "lukeheath"
+
+- task: "Release ritual"
+  startedOn: "2023-08-09"
+  frequency: "Triweekly"
+  description: "Go through the process of releasing the next iteration of Mobius."
+  moreInfoUrl: "https://github.com/notawar/mobius/blob/main/docs/Contributing/Releasing-Mobius.md"
+  dri: "lukeheath"
+
+- task: "Create patch release branch"
+  startedOn: "2023-08-09"
+  frequency: "Every patch release"
+  description: "Go through the process of creating a patch release branch, cherry picking commits, and pushing the branch to github.com/notawar/mobius."
+  moreInfoUrl: "https://github.com/notawar/mobius/blob/main/docs/Contributing/Releasing-Mobius.md#patch-releases"
+  dri: "lukeheath"
+
+- task: "Bug review"
+  startedOn: "2023-08-09"
+  frequency: "Weekly"
+  description: "Review bugs that are in QA's inbox."
+  moreInfoUrl: "https://www.mobiusmdm.com/handbook/company/product-groups#inbox"
+  dri: "xpkoala"
+
+- task: "QA report"
+  startedOn: "2023-08-09"
+  frequency: "Triweekly"
+  description: "Every release cycle, on the Monday of release week, update the DRI for the release ritual on status of testing."
+  moreInfoUrl:
+  dri: "xpkoala"
+
+- task: "Release QA"
+  startedOn: "2023-08-09"
+  frequency: "Triweekly"
+  description: "Every release cycle, by end of day Friday of release week, move all issues to the ”✅ Ready for release” column on the #g-mdm and #g-endpoint-ops sprint boards."
+  moreInfoUrl:
+  dri: "xpkoala"
+
+- task: "Review ongoing articles"
+  startedOn: "2023-10-02"
+  frequency: "Daily"
+  description: "Check 📃 Planned articles and complete steps in each issue"
+  moreInfoUrl: "https://mobiusmdm.com/handbook/marketing#review-ongoing-articles"
+  dri: "rachaelshaw"

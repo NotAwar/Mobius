@@ -1,0 +1,72 @@
+services:
+- name: mobius
+  plan: standard
+  type: web
+  runtime: image
+  image:
+    url: 'mobiusmdm/mobius:latest'
+  preDeployCommand: "mobius prepare --no-prompt=true db"
+  healthCheckPath: /healthz
+  disk:
+    name: installers
+    mountPath: /opt/mobius/installers
+    sizeGB: 10
+  envVars:
+  - key: MOBIUS_SOFTWARE_INSTALLER_STORE_DIR
+    value: '/opt/mobius/installers'
+  - key: MOBIUS_SERVER_PRIVATE_KEY
+    generateValue: true
+  - key: MOBIUS_MYSQL_ADDRESS
+    fromService:
+      name: mobius-mysql
+      type: pserv
+      property: hostport
+  - key: MOBIUS_MYSQL_DATABASE
+    fromService:
+      name: mobius-mysql
+      type: pserv
+      envVarKey: MYSQL_DATABASE
+  - key: MOBIUS_MYSQL_PASSWORD
+    fromService:
+      name: mobius-mysql
+      type: pserv
+      envVarKey: MYSQL_PASSWORD
+  - key: MOBIUS_MYSQL_USERNAME
+    fromService:
+      name: mobius-mysql
+      type: pserv
+      envVarKey: MYSQL_USER
+  - key: MOBIUS_REDIS_ADDRESS
+    fromService:
+      name: mobius-redis
+      type: redis
+      property: connectionString
+  - key: MOBIUS_SERVER_TLS
+    value: 'false'
+  - key: PORT
+    value: 8080
+
+- name: mobius-mysql
+  plan: standard
+  type: pserv
+  runtime: docker
+  repo: https://github.com/render-examples/mysql
+  disk:
+    name: mysql
+    mountPath: /var/lib/mysql
+    sizeGB: 10
+  envVars:
+  - key: MYSQL_DATABASE
+    value: mobius
+  - key: MYSQL_PASSWORD
+    generateValue: true
+  - key: MYSQL_ROOT_PASSWORD
+    generateValue: true
+  - key: MYSQL_USER
+    value: mobius
+
+- name: mobius-redis
+  plan: starter # May use free plan for testing or short-lived deployments
+  type: redis
+  maxmemoryPolicy: allkeys-lru
+  ipAllowList: []

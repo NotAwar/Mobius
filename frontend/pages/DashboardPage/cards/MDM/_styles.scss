@@ -1,0 +1,21 @@
+.home-mdm {
+  margin-top: $pad-large;
+  position: relative;
+  height: 100%; // centers loading spinner
+
+  .tab-nav .table-container__header {
+    display: none;
+  }
+
+  &__mdm-status-table {
+    .data-table-block {
+      .data-table__table {
+        thead {
+          .status__header {
+            width: 30%;
+          }
+        }
+      }
+    }
+  }
+}

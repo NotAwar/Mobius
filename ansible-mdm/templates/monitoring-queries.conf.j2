@@ -1,0 +1,34 @@
+{
+  "queries": {
+    "disk_usage": {
+      "query": "SELECT device, path, size, used, available FROM mounts WHERE path='/' OR path LIKE 'C:%';",
+      "interval": 600,
+      "description": "Monitor disk usage"
+    },
+    "memory_usage": {
+      "query": "SELECT memory_total, memory_free, buffers, cached FROM memory_info;",
+      "interval": 300,
+      "description": "Monitor memory usage"
+    },
+    "cpu_load": {
+      "query": "SELECT cpu, user, nice, system, idle FROM cpu_time;",
+      "interval": 60,
+      "description": "Monitor CPU usage"
+    },
+    "network_traffic": {
+      "query": "SELECT interface, bytes_sent, bytes_received FROM interface_details;",
+      "interval": 300,
+      "description": "Monitor network traffic"
+    },
+    "failed_logins": {
+      "query": "SELECT username, time, host FROM last WHERE type=6;",
+      "interval": 300,
+      "description": "Monitor failed login attempts"
+    },
+    "file_integrity": {
+      "query": "SELECT target_path, category, time, action FROM file_events WHERE category='created' OR category='modified';",
+      "interval": 600,
+      "description": "Monitor file system changes"
+    }
+  }
+}

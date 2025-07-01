@@ -1,0 +1,36 @@
+---
+# macOS (Darwin) specific tasks
+- name: Install Homebrew (macOS)
+  shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: /opt/homebrew/bin/brew
+  when: ansible_machine == "arm64"
+
+- name: Install Homebrew (macOS Intel)
+  shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: /usr/local/bin/brew
+  when: ansible_machine == "x86_64"
+
+- name: Install osquery via Homebrew
+  homebrew:
+    name: osquery
+    state: present
+
+- name: Create osquery configuration directory
+  file:
+    path: /var/osquery
+    state: directory
+    mode: '0755'
+
+- name: Configure launchd for osquery
+  template:
+    src: com.facebook.osqueryd.plist.j2
+    dest: /Library/LaunchDaemons/com.facebook.osqueryd.plist
+    mode: '0644'
+  notify: restart osquery
+
+- name: Enable and start osquery service
+  command: launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist
+  args:
+    creates: /var/run/osqueryd.pid

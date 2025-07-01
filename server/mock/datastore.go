@@ -1,0 +1,39 @@
+package mock
+
+import (
+	"context"
+
+	"github.com/notawar/mobius/v4/server/mobius"
+)
+
+//go:generate go run ./mockimpl/impl.go -o datastore_mock.go "s *DataStore" "mobius.Datastore"
+//go:generate go run ./mockimpl/impl.go -o datastore_installers.go "s *InstallerStore" "mobius.InstallerStore"
+//go:generate go run ./mockimpl/impl.go -o nanodep/storage.go "s *Storage" "github.com/notawar/mobius set/v4/server/mdm/nanodep/storage.AllDEPStorage"
+//go:generate go run ./mockimpl/impl.go -o mdm/datastore_mdm_mock.go "fs *MDMAppleStore" "mobius.MDMAppleStore"
+//go:generate go run ./mockimpl/impl.go -o scep/depot.go "d *Depot" "depot.Depot"
+//go:generate go run ./mockimpl/impl.go -o scep/config.go "s *SCEPConfigService" "mobius.SCEPConfigService"
+//go:generate go run ./mockimpl/impl.go -o digicert/digicert.go "s *Service" "mobius.DigiCertService"
+//go:generate go run ./mockimpl/impl.go -o mdm/bootstrap_package_store.go "s *MDMBootstrapPackageStore" "mobius.MDMBootstrapPackageStore"
+//go:generate go run ./mockimpl/impl.go -o software/software_installer_store.go "s *SoftwareInstallerStore" "mobius.SoftwareInstallerStore"
+
+var _ mobius.Datastore = (*Store)(nil)
+
+type Store struct {
+	DataStore
+}
+
+func (m *Store) EnrollOrbit(ctx context.Context, isMDMEnabled bool, orbitHostInfo mobius.OrbitHostInfo, orbitNodeKey string, teamID *uint) (*mobius.Host, error) {
+	return nil, nil
+}
+
+func (m *Store) LoadHostByOrbitNodeKey(ctx context.Context, orbitNodeKey string) (*mobius.Host, error) {
+	return nil, nil
+}
+
+func (m *Store) Drop() error                             { return nil }
+func (m *Store) MigrateTables(ctx context.Context) error { return nil }
+func (m *Store) MigrateData(ctx context.Context) error   { return nil }
+func (m *Store) MigrationStatus(ctx context.Context) (*mobius.MigrationStatus, error) {
+	return &mobius.MigrationStatus{}, nil
+}
+func (m *Store) Name() string { return "mock" }

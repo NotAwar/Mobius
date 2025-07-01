@@ -1,0 +1,181 @@
+.ace_editor.ace-mobius {
+  font-family: "SourceCodePro", monospace;
+  font-size: 14px;
+  background-color: #fafafa;
+  color: #66696f;
+  border-radius: 4px;
+  border: solid 1px #dbe3e5;
+  line-height: 24px;
+}
+
+.ace_editor.ace-mobius.ace_focus {
+  box-shadow: inset 0 0 6px 0 rgba(0, 0, 0, 0.16);
+  background: transparent;
+}
+
+.ace_editor.ace-mobius.ace_focus .ace_gutter {
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.16);
+}
+.ace_editor.ace-mobius.ace_focus .ace_scroller {
+  border-bottom: solid 1px #c38dec;
+}
+
+.ace-mobius.ace_autocomplete .ace_content {
+  padding-left: 0px;
+}
+
+.ace_editor.ace-mobius.ace_autocomplete {
+  width: 350px;
+}
+
+.ace-mobius .ace_content {
+  height: 100%;
+}
+
+.ace-mobius .ace_gutter {
+  background: #fff;
+  color: #c38dec;
+  z-index: 1;
+  border-right: solid 1px #e3e3e3;
+}
+
+.ace-mobius .ace_gutter-active-line {
+  background-color: rgba(174, 109, 223, 0.15);
+  border-radius: 2px;
+}
+
+.ace-mobius .ace_print-margin {
+  width: 1px;
+  background: #f6f6f6;
+}
+
+.ace-mobius .ace_scrollbar {
+  z-index: 1;
+}
+
+.ace-mobius .ace_cursor {
+  color: #aeafad;
+}
+
+/* Hide cursor in read-only mode */
+.ace-mobius .ace_hidden-cursors {
+  opacity: 0;
+}
+
+.ace-mobius .ace_marker-layer .ace_selection {
+  background: rgba(74, 144, 226, 0.13);
+}
+
+.ace-mobius.ace_multiselect .ace_selection.ace_start {
+  box-shadow: 0 0 3px 0px #ffffff;
+}
+
+.ace-mobius .ace_marker-layer .ace_step {
+  background: rgb(255, 255, 0);
+}
+
+.ace-mobius .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid #d1d1d1;
+}
+
+.ace-mobius .ace_marker-layer .ace_selected-word {
+  border: 1px solid #d6d6d6;
+}
+
+.ace-mobius .ace_invisible {
+  color: #d1d1d1;
+}
+
+.ace-mobius .ace_keyword {
+  color: #ae6ddf;
+  font-weight: $bold;
+}
+
+.ace-mobius .ace_osquery-token {
+  border-radius: 3px;
+  background-color: #ae6ddf;
+  color: #ffffff;
+}
+
+.ace-mobius .ace_identifier {
+  color: #ff5850;
+}
+
+.ace-mobius .ace_string,
+.ace-mobius .ace_osquery-column {
+  color: #4fd061;
+}
+
+.ace-mobius .ace_meta,
+.ace-mobius .ace_storage,
+.ace-mobius .ace_storage.ace_type,
+.ace-mobius .ace_support.ace_type {
+  color: #8959a8;
+}
+
+.ace-mobius .ace_keyword.ace_operator {
+  color: #3e999f;
+}
+
+.ace-mobius .ace_constant.ace_character,
+.ace-mobius .ace_constant.ace_language,
+.ace-mobius .ace_constant.ace_numeric,
+.ace-mobius .ace_keyword.ace_other.ace_unit,
+.ace-mobius .ace_support.ace_constant,
+.ace-mobius .ace_variable.ace_parameter {
+  color: #f5871f;
+}
+
+.ace-mobius .ace_constant.ace_other {
+  color: #666969;
+}
+
+.ace-mobius .ace_invalid {
+  color: #ffffff;
+  background-color: #c82829;
+}
+
+.ace-mobius .ace_invalid.ace_deprecated {
+  color: #ffffff;
+  background-color: #ae6ddf;
+}
+
+.ace-mobius .ace_fold {
+  background-color: #4271ae;
+  border-color: #4d4d4c;
+}
+
+.ace-mobius .ace_entity.ace_name.ace_function,
+.ace-mobius .ace_support.ace_function,
+.ace-mobius .ace_variable {
+  color: #4271ae;
+}
+
+.ace-mobius .ace_support.ace_class,
+.ace-mobius .ace_support.ace_type {
+  color: #c99e00;
+}
+
+.ace-mobius .ace_heading,
+.ace-mobius .ace_markup.ace_heading,
+.ace-mobius .ace_string {
+  color: #4fd061;
+}
+
+.ace-mobius .ace_entity.ace_name.ace_tag,
+.ace-mobius .ace_entity.ace_other.ace_attribute-name,
+.ace-mobius .ace_meta.ace_tag,
+.ace-mobius .ace_string.ace_regexp,
+.ace-mobius .ace_variable {
+  color: #c82829;
+}
+
+.ace-mobius .ace_comment {
+  color: #8e908c;
+}
+
+.ace-mobius .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bdu3f/BwAlfgctduB85QAAAABJRU5ErkJggg==)
+    right repeat-y;
+}

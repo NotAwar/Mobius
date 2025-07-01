@@ -1,0 +1,44 @@
+---
+# osquery configuration tasks
+- name: Generate osquery configuration
+  template:
+    src: osquery.conf.j2
+    dest: "{{ osquery_config_path }}"
+    mode: '0644'
+  vars:
+    osquery_config_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\osquery.conf
+      {%- else -%}
+      /etc/osquery/osquery.conf
+      {%- endif -%}
+  notify: restart osquery
+
+- name: Generate osquery flags file
+  template:
+    src: osquery.flags.j2
+    dest: "{{ osquery_flags_path }}"
+    mode: '0644'
+  vars:
+    osquery_flags_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\osquery.flags
+      {%- else -%}
+      /etc/osquery/osquery.flags
+      {%- endif -%}
+  notify: restart osquery
+
+- name: Generate Mobius enrollment certificate
+  copy:
+    content: "{{ mobius_server_cert | default('') }}"
+    dest: "{{ mobius_cert_path }}"
+    mode: '0644'
+  vars:
+    mobius_cert_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\mobius.crt
+      {%- else -%}
+      /etc/osquery/mobius.crt
+      {%- endif -%}
+  when: mobius_server_cert is defined
+  notify: restart osquery

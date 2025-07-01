@@ -1,0 +1,11 @@
+.evented-table-tag {
+  display: inline-flex;
+  align-items: center;
+  color: $core-mobius-black;
+  background-color: $ui-mobius-black-10;
+  padding: $pad-xsmall $pad-small;
+  border-radius: 6px;
+  font-size: $xxx-small;
+  font-weight: $bold;
+  gap: $pad-small
+}

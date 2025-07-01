@@ -1,0 +1,70 @@
+.software-card {
+  .table-container {
+    .stackable-header {
+      min-width: initial; // Fix card overflow on low widths
+    }
+  }
+
+  .table-container__search-input {
+    width: 100%;
+  }
+
+  @media (min-width: ($break-md)) {
+    min-width: 305px; // Custom to fit placeholder text
+  }
+
+  .table-container__search {
+    width: 100%;
+  }
+
+  .table-container__data-table-block {
+    .data-table-block {
+      .data-table {
+        &__wrapper {
+          overflow-x: auto;
+        }
+      }
+    }
+  }
+
+  .host-software-table {
+    &__software-filter {
+      min-width: 240px;
+      width: 240px; // Override .form-field 100%
+    }
+
+    &__filters {
+      display: flex;
+      align-items: center;
+
+      .children-wrapper {
+        gap: $pad-small;
+      }
+    }
+
+    .table-container__search-input .input-with-icon {
+      min-width: 305px; // Fit placeholder text
+    }
+
+    .data-table-block {
+      .data-table__table {
+        thead {
+          .Vulnerabilities__header {
+            display: table-cell;
+            max-width: px-to-rem(140);
+          }
+        }
+      }
+
+      @media (max-width: ($break-sm - 1)) {
+        .data-table__table {
+          th,
+          td {
+            padding-left: $pad-medium;
+            padding-right: $pad-medium;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+// Core - Mobius Color Scheme
+$core-mobius-black: #000000;
+$core-mobius-white: #ffffff;
+$core-mobius-gray: #333333;
+$core-vibrant-blue: #6a67fe;
+$core-vibrant-red: #ff5c83;
+$core-mobius-accent: #ae6ddf;
+$core-white: #ffffff;
+$core-dark-blue-grey: #506e92;
+$site-nav-on-hover: #333333;
+
+// UI - Mobius UI Colors
+$ui-mobius-black-75: #404040;
+$ui-mobius-black-50: #808080;
+$ui-mobius-black-33: #aaaaaa;
+$ui-mobius-black-25: #bfbfbf;
+$ui-mobius-black-10: #e5e5e5;
+$ui-mobius-gray-10: #f9f9f9;
+$ui-dark-blue-gray: #afbec1;
+$ui-blue-gray: #dbe3e5;
+$ui-gray: #e3e3e3;
+$ui-light-grey: #fafafa;
+$ui-off-white: #f9f9f9;
+$ui-shadow: #e9e9e9;
+$ui-vibrant-blue-50: rgba(106, 103, 254, 0.5);
+$ui-vibrant-blue-25: #d9d9fe;
+$ui-vibrant-blue-10: #f1f0ff;
+$tooltip-bg: #333333;
+
+// Notifications & status & specific messages
+$ui-offline: #8b8fa2;
+$ui-success: #3db67b;
+$ui-warning: #ebbc43;
+$ui-error: #d66c7b;
+$ui-info: #6a67fe;
+$ui-yellow-banner: #fef7e0;
+$ui-yellow-banner-outline: #ece0bb;
+
+// Rainbow
+$rainbow-orange: #faa669;
+$rainbow-green: #63c740;
+$rainbow-blue: #5cabdf;
+
+// Gradients - Mobius Gradients
+$gradients-dark-gradient: linear-gradient(270deg, #000000 0%, #333333 100%);
+$gradients-dark-gradient-vertical: linear-gradient(
+  360deg,
+  #000000 0%,
+  #333333 100%
+);
+$gradients-bright-gradient: linear-gradient(180deg, #ae6ddf 0%, #6a67fe 100%);
+
+// Colors for over (hover) and down (active) buttons styles
+$core-vibrant-red-over: #e93661;
+$core-vibrant-red-down: #cb3559;
+$core-vibrant-blue-over: #5d5ae7;
+$core-vibrant-blue-down: #4b4ab4;
+$ui-success-over: #36a26d;
+$ui-success-down: #2b7f56;
+$core-focused-outline: #d9d9fe;
+$core-mobius-gray-over: #1a1a1a;
+$core-mobius-gray-down: $core-mobius-black;
+
+$transparent: rgba(255, 255, 255, 0);
+
+// Opaque colors for table shadows
+// l = lowest color  a = (255-l)/255
+$ui-vibrant-blue-10-alpha: (255-240)/255; // rgba(241, 240, 255)
+$ui-vibrant-blue-10-opaque: rgba(
+  (241-240) / $ui-vibrant-blue-10-alpha,
+  (240-240) / $ui-vibrant-blue-10-alpha,
+  (255-240) / $ui-vibrant-blue-10-alpha,
+  $ui-vibrant-blue-10-alpha
+);
+$ui-off-white-alpha: (255-249)/255; // rgba(249, 250, 252)
+$ui-off-white-opaque: rgba(
+  (249-249) / $ui-off-white-alpha,
+  (250-249) / $ui-off-white-alpha,
+  (252-249) / $ui-off-white-alpha,
+  $ui-off-white-alpha
+);

@@ -1,0 +1,202 @@
+{{- if .Values.mobius.autoApplySQLMigrations }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: mobius
+    chart: mobius
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: mobius-migration
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if not .Values.mysql.enabled }}
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+    {{- end }}
+    {{- with .Values.mobius.migrationJobAnnotations }}
+    {{- toYaml . | trim | nindent 4 }}
+    {{- end }}
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata:
+{{- with .Values.podAnnotations }}
+      annotations:
+{{- toYaml . | trim | nindent 8 }}
+{{- end }}
+      labels:
+        app: mobius
+        chart: mobius
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      shareProcessNamespace: true
+      containers:
+      - name: mobius-migration
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            /usr/bin/mobius prepare db --no-prompt;
+            {{- if .Values.gke.cloudSQL.enableProxy }}
+            sql_proxy_pid=$(pgrep cloud_sql_proxy) && kill -INT $sql_proxy_pid;
+            {{- end }}
+        image: "{{ .Values.imageRepository }}:{{ .Values.imageTag }}"
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+        env:
+          - name: MOBIUS_SERVER_ADDRESS
+            value: "0.0.0.0:{{ .Values.mobius.listenPort }}"
+          - name: MOBIUS_AUTH_BCRYPT_COST
+            value: "{{ .Values.mobius.auth.bcryptCost }}"
+          - name: MOBIUS_AUTH_SALT_KEY_SIZE
+            value: "{{ .Values.mobius.auth.saltKeySize }}"
+          - name: MOBIUS_APP_TOKEN_KEY_SIZE
+            value: "{{ .Values.mobius.app.tokenKeySize }}"
+          - name: MOBIUS_APP_TOKEN_VALIDITY_PERIOD
+            value: "{{ .Values.mobius.app.inviteTokenValidityPeriod }}"
+          - name: MOBIUS_SESSION_KEY_SIZE
+            value: "{{ .Values.mobius.session.keySize }}"
+          - name: MOBIUS_SESSION_DURATION
+            value: "{{ .Values.mobius.session.duration }}"
+          - name: MOBIUS_LOGGING_DEBUG
+            value: "{{ .Values.mobius.logging.debug }}"
+          - name: MOBIUS_LOGGING_JSON
+            value: "{{ .Values.mobius.logging.json }}"
+          - name: MOBIUS_LOGGING_DISABLE_BANNER
+            value: "{{ .Values.mobius.logging.disableBanner }}"
+          - name: MOBIUS_SERVER_TLS
+            value: "{{ .Values.mobius.tls.enabled }}"
+          {{- if .Values.mobius.tls.enabled }}
+          - name: MOBIUS_SERVER_TLS_COMPATIBILITY
+            value: "{{ .Values.mobius.tls.compatibility }}"
+          - name: MOBIUS_SERVER_CERT
+            value: "/secrets/tls/{{ .Values.mobius.tls.certSecretKey }}"
+          - name: MOBIUS_SERVER_KEY
+            value: "/secrets/tls/{{ .Values.mobius.tls.keySecretKey }}"
+          {{- end }}
+          ## END MOBIUS SECTION
+          ## BEGIN MYSQL SECTION
+          - name: MOBIUS_MYSQL_ADDRESS
+            value: "{{ .Values.database.address }}"
+          - name: MOBIUS_MYSQL_DATABASE
+            value: "{{ .Values.database.database }}"
+          - name: MOBIUS_MYSQL_USERNAME
+            value: "{{ .Values.database.username }}"
+          - name: MOBIUS_MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.secretName }}
+                key: {{ .Values.database.passwordKey }}
+          - name: MOBIUS_MYSQL_MAX_OPEN_CONNS
+            value: "{{ .Values.database.maxOpenConns }}"
+          - name: MOBIUS_MYSQL_MAX_IDLE_CONNS
+            value: "{{ .Values.database.maxIdleConns }}"
+          - name: MOBIUS_MYSQL_CONN_MAX_LIFETIME
+            value: "{{ .Values.database.connMaxLifetime }}"
+          {{- if .Values.database.tls.enabled }}
+          {{- if .Values.database.tls.caCertKey }}
+          - name: MOBIUS_MYSQL_TLS_CA
+            value: "/secrets/mysql/{{ .Values.database.tls.caCertKey }}"
+          {{- end }}
+          {{- if .Values.database.tls.certKey }}
+          - name: MOBIUS_MYSQL_TLS_CERT
+            value: "/secrets/mysql/{{ .Values.database.tls.certKey }}"
+          {{- end }}
+          {{- if .Values.database.tls.keyKey }}
+          - name: MOBIUS_MYSQL_TLS_KEY
+            value: "/secrets/mysql/{{ .Values.database.tls.keyKey }}"
+          {{- end }}
+          - name: MOBIUS_MYSQL_TLS_CONFIG
+            value: "{{ .Values.database.tls.config }}"
+          - name: MOBIUS_MYSQL_TLS_SERVER_NAME
+            value: "{{ .Values.database.tls.serverName }}"
+          {{- end }}
+          ## END MYSQL SECTION
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            {{- if .Values.gke.cloudSQL.enableProxy }}
+            add:
+              - SYS_PTRACE
+            {{- else }}
+            drop: [ALL]
+            {{- end }}
+          privileged: false
+          readOnlyRootFilesystem: true
+          {{- if .Values.mobius.securityContext.runAsGroup }}
+          runAsGroup: {{ int64 .Values.mobius.securityContext.runAsGroup }}
+          {{- end }}
+          {{- if .Values.mobius.securityContext.runAsUser }}
+          runAsUser: {{ int64 .Values.mobius.securityContext.runAsUser }}
+          {{- end }}
+          {{- if .Values.mobius.securityContext.runAsNonRoot }}
+          runAsNonRoot: {{ .Values.mobius.securityContext.runAsNonRoot }}
+          {{- end }}
+        volumeMounts:
+          {{- if .Values.database.tls.enabled }}
+          - name: mysql-tls
+            readOnly: true
+            mountPath: /secrets/mysql
+          {{- end }}
+      {{- if .Values.gke.cloudSQL.enableProxy }}
+      - name: cloudsql-proxy
+        image: "{{ .Values.gke.cloudSQL.imageRepository }}:{{ .Values.gke.cloudSQL.imageTag }}"
+        command:
+        - "/cloud_sql_proxy"
+        - "-verbose={{ .Values.gke.cloudSQL.verbose}}"
+        - "-instances={{ .Values.gke.cloudSQL.instanceName }}=tcp:3306"
+        resources:
+          limits:
+            cpu: 0.5 # 500Mhz
+            memory: 150Mi
+          requests:
+            cpu: 0.1 # 100Mhz
+            memory: 50Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+          privileged: false
+          readOnlyRootFilesystem: true
+          {{- if .Values.mobius.securityContext.runAsGroup }}
+          runAsGroup: {{ int64 .Values.mobius.securityContext.runAsGroup }}
+          {{- end }}
+          {{- if .Values.mobius.securityContext.runAsUser }}
+          runAsUser: {{ int64 .Values.mobius.securityContext.runAsUser }}
+          {{- end }}
+          {{- if .Values.mobius.securityContext.runAsNonRoot }}
+          runAsNonRoot: {{ .Values.mobius.securityContext.runAsNonRoot }}
+          {{- end }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8}}
+      {{- end }}
+      serviceAccountName: mobius
+      volumes:
+        {{- if .Values.database.tls.enabled }}
+        - name: mysql-tls
+          secret:
+            secretName: "{{ .Values.database.secretName }}"
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

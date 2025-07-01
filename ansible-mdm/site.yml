@@ -1,0 +1,41 @@
+---
+# Mobius MDM + Ansible Integration
+# This playbook provides device management capabilities using Ansible
+
+- name: Mobius MDM Device Management
+  hosts: all
+  gather_facts: true
+  vars:
+    mobius_server_url: "{{ mobius_server_url | default('https://mobius.example.com') }}"
+    mobius_enroll_secret: "{{ mobius_enroll_secret }}"
+    osquery_version: "{{ osquery_version | default('5.12.1') }}"
+    
+  tasks:
+    - name: Detect operating system
+      set_fact:
+        os_family: "{{ ansible_os_family | lower }}"
+        os_distribution: "{{ ansible_distribution | lower }}"
+        
+    - name: Include OS-specific tasks
+      include_tasks: "tasks/{{ os_family }}.yml"
+      when: os_family in ['debian', 'redhat', 'darwin', 'windows']
+      
+    - name: Include Ubuntu-specific tasks
+      include_tasks: tasks/ubuntu.yml
+      when: ansible_distribution == "Ubuntu"
+      
+    - name: Include Pop!_OS-specific tasks
+      include_tasks: tasks/popos.yml
+      when: ansible_distribution == "Pop!_OS"
+      
+    - name: Install and configure osquery
+      include_tasks: tasks/osquery.yml
+      
+    - name: Configure Mobius enrollment
+      include_tasks: tasks/mobius-enrollment.yml
+      
+    - name: Apply security policies
+      include_tasks: tasks/security-policies.yml
+      
+    - name: Configure monitoring
+      include_tasks: tasks/monitoring.yml

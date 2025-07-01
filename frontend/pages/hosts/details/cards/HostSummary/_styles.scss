@@ -1,0 +1,20 @@
+.host-summary-card {
+  display: flex;
+  gap: $pad-medium $pad-xxlarge;
+  padding: $pad-xxlarge;
+  flex-wrap: wrap;
+
+  // Properly vertically aligns host issue icon
+  .host-issue {
+    display: flex;
+    gap: $pad-xsmall;
+  }
+
+  .no-team {
+    color: $ui-mobius-black-50;
+  }
+
+  .data-set dd {
+    overflow: initial;
+  }
+}

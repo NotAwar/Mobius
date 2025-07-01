@@ -1,0 +1,40 @@
+{
+  "options": {
+    "config_plugin": "tls",
+    "logger_plugin": "tls",
+    "logger_tls_endpoint": "{{ mobius_server_url }}/api/v1/osquery/log",
+    "logger_tls_period": 300,
+    "distributed_plugin": "tls",
+    "distributed_interval": 60,
+    "distributed_tls_max_attempts": 3
+  },
+  "schedule": {
+    "system_info": {
+      "query": "SELECT hostname, cpu_brand, physical_memory FROM system_info;",
+      "interval": 3600
+    },
+    "network_interfaces": {
+      "query": "SELECT interface, address, mask FROM interface_addresses;",
+      "interval": 1800
+    },
+    "processes": {
+      "query": "SELECT name, path, pid, parent, cmdline FROM processes;",
+      "interval": 300
+    },
+    "listening_ports": {
+      "query": "SELECT pid, port, protocol, family, address FROM listening_ports;",
+      "interval": 600
+    },
+    "users": {
+      "query": "SELECT username, description, directory, shell FROM users;",
+      "interval": 3600
+    },
+    "installed_applications": {
+      "query": "SELECT name, version, bundle_identifier FROM apps;",
+      "interval": 3600
+    }
+  },
+  "packs": {
+    "monitoring": "/etc/osquery/packs/monitoring.conf"
+  }
+}

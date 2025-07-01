@@ -1,0 +1,53 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "-1"
+  labels:
+    app: mobius
+    chart: mobius
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: mobius
+  namespace: {{ .Release.Namespace }}
+rules:
+- apiGroups:
+  - core
+  resources:
+  - secrets
+  resourceNames:
+  - {{ .Values.database.secretName }}
+  - {{ .Values.cache.secretName }}
+  - {{ .Values.mobius.secretName }}
+  - {{ .Values.osquery.secretName }}
+  {{- range .Values.imagePullSecrets }}
+  - {{ .name }}
+  {{- end }}
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "-1"
+  labels:
+    app: mobius
+    chart: mobius
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: mobius
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: mobius
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: mobius
+  namespace: {{ .Release.Namespace }}

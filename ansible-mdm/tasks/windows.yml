@@ -1,0 +1,27 @@
+---
+# Windows specific tasks
+- name: Download osquery MSI
+  win_get_url:
+    url: "https://pkg.osquery.io/windows/osquery-{{ osquery_version }}.msi"
+    dest: "C:\\Windows\\Temp\\osquery-{{ osquery_version }}.msi"
+
+- name: Install osquery
+  win_package:
+    path: "C:\\Windows\\Temp\\osquery-{{ osquery_version }}.msi"
+    state: present
+
+- name: Create osquery configuration directory
+  win_file:
+    path: "C:\\ProgramData\\osquery"
+    state: directory
+
+- name: Create osquery log directory
+  win_file:
+    path: "C:\\ProgramData\\osquery\\log"
+    state: directory
+
+- name: Configure osquery service
+  win_service:
+    name: osqueryd
+    start_mode: auto
+    state: started

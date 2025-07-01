@@ -1,0 +1,39 @@
+.upcoming-activity-feed {
+  margin-top: $pad-large;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &__load-activities-button {
+    color: $core-vibrant-blue;
+    vertical-align: bottom;
+    padding: 6px;
+
+    .mobiusicon-chevronleft,
+    .mobiusicon-chevronright {
+      &:before {
+        font-size: 0.5rem;
+        font-weight: $bold;
+        position: relative;
+        top: -2px;
+      }
+    }
+
+    .mobiusicon-chevronleft {
+      margin-right: $pad-small;
+    }
+
+    .mobiusicon-chevronright {
+      margin-left: $pad-small;
+    }
+
+    &:first-of-type {
+      margin-right: $pad-large;
+    }
+
+    &:hover:not(.button--disabled),
+    &:focus {
+      background-color: $ui-vibrant-blue-10;
+    }
+  }
+}

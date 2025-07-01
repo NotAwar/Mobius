@@ -1,0 +1,1 @@
+These scripts are for backing up and restore the Docker development MySQL database, as described in the [testing and local developemt documentation](../../docs/Contributing/getting-started/testing-and-local-development.md#development-database-management).

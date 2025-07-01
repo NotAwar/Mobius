@@ -1,0 +1,26 @@
+.custom-link {
+  // Changing display will break multiline links
+  &:not(.custom-link--multiline) {
+    display: inline-flex;
+    align-items: center;
+    gap: $pad-xsmall;
+  }
+
+  &__no-wrap {
+    white-space: nowrap;
+    .icon {
+      padding-left: 6px;
+    }
+  }
+
+  // Variants
+  &--tooltip-link,
+  &--banner-link,
+  &--flash-messsage-link {
+    color: inherit; // Overrides mobius blue link color with parent color
+  }
+
+  &--tooltip-link {
+    font-size: inherit; // Overrides link default font size with parent tooltip font size
+  }
+}

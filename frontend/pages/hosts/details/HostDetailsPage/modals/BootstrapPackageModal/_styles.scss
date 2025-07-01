@@ -1,0 +1,16 @@
+.bootstrap-package-modal {
+
+  &__package-name {
+    margin: 0 0 $pad-xsmall;
+  }
+
+  &__details {
+    background-color: $ui-mobius-gray-10;
+    font-family: "SourceCodePro", $monospace;
+    color: $core-mobius-gray;
+    padding: 10px;
+    border: 1px solid $ui-mobius-black-10;
+    margin: 0;
+    border-radius: $border-radius;
+  }
+}

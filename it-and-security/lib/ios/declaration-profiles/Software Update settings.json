@@ -1,0 +1,15 @@
+{
+    "Type": "com.apple.configuration.softwareupdate.settings",
+    "Identifier": "com.mobiusmdm.config.softwareupdate.settings",
+    "Payload": {
+        "AutomaticActions": {
+            "Download": "AlwaysOn",
+            "InstallOSUpdates": "Allowed",
+            "InstallSecurityUpdate": "AlwaysOn"
+        },
+        "Notifications": true,
+        "RapidSecurityResponse": {
+            "Enabled": true
+        }
+    }
+}

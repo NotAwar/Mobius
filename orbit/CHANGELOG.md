@@ -1,0 +1,570 @@
+## Orbit 1.44.0 (Jun 26, 2025)
+
+* Added `app_sso_platform` table to get Platform SSO extensions state information.
+
+* Updated go to 1.24.4
+
+## Orbit 1.43.0 (Jun 10, 2025)
+
+* Fixed an issue where the setup experience window would never finish and close if a software installer was deleted while it was running.
+
+* Add `containerd_containers` table on Linux.
+
+* Revised "Migrate to Mobius" link anchor text.
+
+* Added two new Linux tables:
+  * `lsblk`: populated from the output of running `lsblk -n -O`.
+  * `cryptsetup_luks_salt`: given a device path it returns all the key_slots and salts of said device.
+
+* Added new column `cdhash_sha256` to `codesign` table.
+
+## Orbit 1.42.0 (May 15, 2025)
+
+* Made the macOS Setup Experience dialog more reliable by preventing system sleep while it is shown, changing the key combo to cmd+shift+x to exit, keeping it on top of all other windows and making sure it closes once it completes.
+
+* Fixed "concurrent map writes" crashes in orbit when both `EscrowBuddy` and `swiftDialog` components are updated/fetched.
+
+* Removed popup loading indicator for LUKS key escrow.
+
+* Fixed an issue causing Nudge launch failures.
+
+* Improved support for wide aspect ratio icons in the MDM setup experience and migration dialogs for
+  Apple devices.
+
+* When mobiusdaemon on a Windows host installs an update it detects from TUF, also update the corresponding `DisplayVersion` in the Registry.
+
+* Added automatic extraction of .tar.gz/.tgz archives prior to running the associated install script.
+
+* Updated Mobius Desktop's "My device" menu item to route to the policies tab on the "My device" web page.
+
+* Updated go to 1.24.2.
+
+* Updated the `windows_updates` Orbit table so that results are only returned iff there are non-installed windows updates.
+
+* Updated orbit linux CI builders to build (musl) static executable. (The main reason for this move was the deprecation of Ubuntu 20.04 runners by Github.)
+
+## Orbit 1.41.0 (Apr 14, 2025)
+
+* Fixed osquery flag parsing when the argument contained `=`.
+
+* Added `dconf_read` table to get configuration information from GNOME.
+
+* Added more logging to installation of software packages.
+
+* Updated mobiusdaemon to report software installer download errors back to Mobius.
+
+* Changed the way macos opens the mobius desktop app to better ensure successful launch.
+
+* Added support for Windows ARM64 platform in mobiusdaemon (`mobiuscli package --arch=arm64 --type=msi`).
+
+* Updated Go to v1.24.1.
+
+* Added a timeout so the desktop app retries if not displayed after 1 minute.
+
+## Orbit 1.40.1 (Mar 14, 2025)
+
+* Fixed LUKS key escrow in non-English system locales.
+
+* Added logic to ensure only one instance of Mobius Desktop is running at a time.
+
+* Fixed an issue where restarting the desktop manager on Ubuntu would cause the Mobius Desktop tray icon to disappear and not return.
+
+## Orbit 1.39.1 (Feb 12, 2025)
+
+* Fixed a bug where mobiusdaemon could not install software from an old mobius server.
+
+## Orbit 1.39.0 (Feb 07, 2025)
+
+* Fixed a bug where the `SystemDrive` environment variable was not being passed to osqueryd.
+
+* Removed rollback to connect to Mobius's old TUF server (added in case 1.38.0 had an emergency bug).
+
+* Added bash interpreter support for script execution.
+
+* Fixed a bug where mobiusdaemon was not properly cleaning up temporary directories during software installation.
+
+* Added support to download software installers from signed CDN URLs.
+
+* Added retry logic to orbit's call to `POST /orbit/software_install/result` to account for momentary network failures causing an install to appear failed (e.g. when installing network extensions as part of an EDR).
+
+* Added support for Wayland display sessions. Thanks @pboushy for [this](https://github.com/notawar/mobius/issues/19043#issuecomment-2625719309) contribution to fixing this issue.
+
+* Added more client-side logging for software installs, scripts, and MDM setup experience.
+
+## Orbit 1.38.0 (Jan 24, 2025), 1.38.1 (Jan 27, 2025)
+
+* Added changes to migrate to new TUF repository from <https://tuf.mobiusclii.com> to <https://updates.mobiusmdm.com>.
+
+## Orbit 1.37.0 (Dec 13, 2024)
+
+* Added support for key escrow on Ubuntu 20.04.
+
+* Added support for kdialog Linux key escrow prompts for compatibility with Kubuntu systems. Currently supported browser on Kubuntu for Mobius desktop is Chrome.
+
+* Fixed issue where the Linux encryption progress window in zenity was not displaying properly.
+
+* Added support to migrate the MDM provider of Windows devices to Mobius.
+
+* Added `nftables` table to show configuration for Linux `nftables` network filters.
+
+* Updated Go version to 1.23.4.
+
+## Orbit 1.36.0 (Nov 25, 2024)
+
+* Upgraded macadmins osquery-extension to v1.2.3.
+
+* Added `computer_name` and `hardware_model` for mobiusdaemon enrollment.
+
+* Added serial number for mobiusdaemon enrollment for Windows hosts (already present for macOS and Linux).
+
+* Added `codesign` table to provide the "Team identifier" of macOS applications.
+
+* Fixed stale Mobius Desktop token UUID after a macOS host completes Migration Assistant.
+
+* Added functionality to support linux disk encryption key escrow including end user prompts and LUKS key management
+
+* Fixed issue with mobiusdaemon not able to connect to Mobius server after Mobius MDM profiles have been removed.
+
+* Fixed cases where self-service menu item temporarily disappeared from Mobius Desktop menu when it should have stayed visible.
+
+## Orbit 1.35.0 (Nov 01, 2024)
+
+* Fixed orbit startup to not exit when "root.json", "snapshot.json", or "targets.json" TUF signatures have expired.
+
+* Added a UI for the Mobius setup experience to show users the status of software installs and script executions during macOS Setup Assistant.
+
+* Fixed Mobius Desktop to gracefully shutdown when receiving interrupt and terminate signals.
+
+* Added capability for mobiusdaemon to report vital errors to Mobius server, such as when Mobius Desktop is unable to start.
+
+## Orbit 1.34.0 (Oct 02, 2024)
+
+* Added a timeout to all script executions during software installs to prevent having install requests stuck in pending state forever.
+
+## Orbit 1.33.0 (Sep 20, 2024)
+
+* Added support to run the configured uninstall script when installer's post-install script fails.
+
+* Updated Go to go1.23.1
+
+## Orbit 1.32.0 (Aug 29, 2024)
+
+* Bumped macadmins extension to use SOFA feed sofafeed.macadmins.io
+
+* Fixed Mobius Desktop to refresh host status when the user clicks on "My Device" or "Self-service" dropdown option.
+
+* Updated go to go1.22.6
+
+* Added ability for MDM migrations if the host is manually enrolled to a 3rd party MDM.
+
+* Fixed a formatting error when an unrecognized error happens during BitLocker encryption.
+
+## Orbit 1.31.0 (Aug 19, 2024)
+
+* Fixed an issue that would display a disk encryption modal with MDM configured and FileVault enabled if the user hadn't escrowed the key in the past.
+
+## Orbit 1.30.0 (Aug 05, 2024)
+
+* Use Escrow Buddy to rotate FileVault keys on macOS
+
+## Orbit 1.29.0 (Jul 24, 2024)
+
+* Fixed a startup bug by performing an early restart of orbit if an agent options setting has changed.
+* Implemented a small refactor of orbit subsystems.
+
+## Orbit 1.28.0 (Jul 18, 2024)
+
+* Hid "Self-service" in Mobius Desktop and My device page if there is no self-service software available.
+
+* Fixed a bug that caused log Orbit's osquery table log output to be inconsistent.
+
+* Added support for new agent option `script_execution_timeout` to configure seconds until a script is killed due to timeout.
+
+* Updated Go version to go1.22.4.
+
+* Fixed boot loop caused by Linux hosts with no hardware UUID.
+
+* Added support for Linux ARM64.
+
+* Fixed bug where UTC timezone could cause error in `mobiusdaemon_logs` table time parsing.
+
+## Orbit 1.27.0 (Jun 21, 2024)
+
+* Disabled `mdm_bridge` table on Windows Server.
+
+* Fixes an issue related to hardware UUIDs being cached in osquery's database. When an orbit install
+  is transferred from one machine to another (e.g. via MacOS Migration Assistant), the new machine
+  now shows up in Mobius as a separate host from the old one.
+
+* Added support for `--end-user-email` option when building mobiusdaemon Linux packages.
+
+* Fixed bug where MDM migration fails when attempting to renew enrollment profiles on macOS Sonoma devices.
+
+## Orbit 1.26.0 (Jun 11, 2024)
+
+* Added `tcc_access` table to `mobiusdaemon` for macOS.
+
+* Fixed mobiusdaemon agent to identify HTTP calls from the SOFA macOS tables.
+
+* Fixed Orbit to ignore-and-log osquery errors when it gets valid host info from osquery at startup.
+
+* Added `mobiusdaemon_logs` table
+
+* Fixed scripts that were blocking execution of other scripts after timing out on Windows.
+
+* Added the `Self-service` menu item to Mobius Desktop.
+
+* Updated Go version to go1.22.3
+
+## Orbit 1.25.0 (May 22, 2024)
+
+* Added code to detect value of `DISPLAY` variable of user instead of defaulting to `:0` (to support Ubuntu 24.04 with Xorg).
+
+* Close idle connections every 55 minutes to prevent load balancers (like AWS ELB) from forcefully terminating long lived connections.
+
+* Add support for executing zsh scripts on macOS and Linux hosts
+
+* Windows orbit.exe and mobius-desktop.exe are now signed.
+
+* Added ability to install software when requested by the Mobius server. Note that this is disabled unless the package was built with the `--enable-scripts` flag.
+
+## Orbit 1.24.0 (Apr 17, 2024)
+
+* Fixed script execution exit codes on windows by casting to signed integers to match windows interpreter.
+
+* In `orbit_info` table, added `desktop_version` and `scripts_enabled` fields.
+
+## Orbit 1.23.0 (Apr 08, 2024)
+
+* Add `parse_json`, `parse_jsonl`, `parse_xml`, and `parse_ini` tables.
+
+* Add exponential backoff to orbit enroll retries.
+
+## Orbit 1.22.0 (Feb 26, 2024)
+
+* Reduce error logs when orbit cannot connect to Mobius.
+
+* Allow configuring a custom osquery database directory (`ORBIT_OSQUERY_DB` environment variable or `--osquery-db` flag).
+
+* Upgrade go version to 1.21.7.
+
+## Orbit 1.21.0 (Jan 30, 2024)
+
+* For macOS hosts, mobiusdaemon now stores and retrieves enroll secret from macOS keychain. This feature is enabled for non-MDM flow. The MDM profile flow will be supported in a future release.
+
+* For Windows hosts, mobiusdaemon now stores and retrieves enroll secret from Windows Credential Manager.
+
+* Orbit will now kill pre-existing osqueryd processes during startup.
+
+* Updated Windows Powershell evocation to run scripts in MTA mode to provide access to MDM configuration.
+
+* Updated Go to 1.21.6
+
+* Fixed bug on Windows where Mobius Desktop tray icon was not showing in the task bar.
+
+* Fixed bug on Windows where Orbit was not bringing the Mobius Desktop process up (when it was detected as not running).
+
+* Updated script running logic to stop running scripts if the script content can't be fetched from
+Mobius, which will preserve the order in which the scripts are queued.
+
+## Orbit 1.20.1 (Jan 23, 2024)
+
+* Attempt to automatically decrypt the disk before performing a BitLocker encryption if it was previously encrypted and Mobius doesn't have the key.
+
+* Fixed an issue that would cause `mobiusdaemon` to report the wrong error if BitLocker encryption fails.
+
+* Fixed the maximum age of a pending script when notifying mobiusdaemon of a script to run so that it matches the duration used elsewhere in Mobius.
+
+* Fixed issue on MacOS with starting Mobius Desktop for the first time. MacOS would return an error
+  if a user is not logged in via the GUI.
+
+* Improved the HTTP client used by `mobiusclii` and `mobiusdaemon` to prevent errors for 204 responses.
+
+* Fixed a log timestamp to print the right duration value when a mobius update has exceeded the maximum number of retries.
+
+## Orbit 1.20.0 (Jan 10, 2024)
+
+* Allow configuring TUF channels of `orbit`, `osqueryd` and `desktop` from Mobius agent settings.
+
+* Extended the script execution timeout to 5 minutes
+
+* Add `uptime` column to `orbit_info` table.
+
+* Added functionality to mobiusdaemon for macOS hosts to check for custom end user email field in Mobius MDM enrollment profile.
+
+## Orbit 1.19.0 (Dec 22, 2023)
+
+* Add `--host-identifier` option to mobiusdaemon to allow enrolling with a random identifier instead of the default behavior that uses the hardware UUID. This allows supporting running mobiusdaemon on VMs that have the same UUID and/or serial number.
+
+* At mobiusdaemon startup/upgrade, reduced the number of API calls to the server.
+  * Removed call to mobius/orbit/device_token unless token needs to be updated.
+  * Changed call to mobius/device/{token}/desktop with a less resource intensive call to mobius/device/{token}/ping
+  * Removed call to mobius/orbit/ping
+
+* Reducing the number of mobiusdaemon calls to mobius/orbit/config endpoint by caching the config for 3 seconds.
+
+* When mobius desktop is disabled, do not do API calls to desktop endpoints.
+
+* Fixing mobiusdaemon to NOT make unnecessary duplicate call to orbit/device_token endpoint.
+
+* Added initial randomization to update checker to prevent all agents updating at once.
+
+* Add backoff functionality to download `mobiusdaemon` updates. With this update, `mobiusdaemon` is going to retry 3 times and then wait 24 hours to try again.
+
+* Updated Go to v1.21.5
+
+## Orbit 1.18.3 (Nov 16, 2023)
+
+* Removed glibc dependencies for Mobius Desktop on linux
+
+* Adding support to manage Bitlocker operations through Orbit notifications
+
+* Orbit is now properly reporting Bitlocker encryption errors to Mobius server
+
+* Add a conditional check in the %postun script to prevent file deletion during RPM upgrade. The check ensures that files and directories are only removed during a full uninstall ( equals 0), safeguarding necessary files from unintended deletion during an upgrade.
+
+* Allow to configure the orbit `--log-file` flag via an environment variable `ORBIT_LOG_FILE`.
+
+* Updated Go version to 1.21.3
+
+## Orbit 1.17.0 (Sep 28, 2023)
+
+* Updated the image and the overall layout of the migration dialog
+
+* Added a mechanism to retry a Mobius Desktop token when the Mobius server response indicates it has expired or is invalid.
+
+* Upgraded Go version to 1.21.1
+
+## Orbit 1.16.0 (Sep 6, 2023)
+
+* Updated the default TUF update roots with the newest metadata in the server. (#13381)
+
+* Updated bundled-in CA certificates. (#13446)
+
+* Removed a listener for the OS. Kill signal since golang can't capture it. (#12861)
+
+* Allow clients to report errors back to the server during the MDM migration flow. (#13189)
+
+* Use OrbitNodeKey for windows mdm enrollment authentication instead of HostUUID (#12847)
+
+* Implemented script execution on the mobiusdaemon agent (disabled by default). (#9583)
+
+* Improved the MDM migration dialogs:
+  * Adjusted the copy and images. (#13158)
+  * Made sure that all dialogs take over the screen. (#13512)
+  * Ensure migration dialog doesn't open automatically if it was opened manually. (#13505)
+
+* Fixed theme detection and icon coloring issues for Mobius Desktop on Windows. (#13457)
+
+## Orbit 1.2.0 - Orbit 1.15.0 (Oct 4, 2022 - Aug 17, 2023)
+
+* Fixed an issue preventing Nudge from reading the configuration file delivered by Mobius on some installations. This only affects you if Nudge was enabled and configured on a host using Orbit v1.8.0.
+
+* Added `pmset` table extension to Mobius for CIS check 2.9.1.
+
+* Fixed a bug in Mobius Desktop causing it to spam servers without licenses for policies.
+
+* Added support to enhance the DEP migration flow in macOS for MDM.
+
+* Added `firmware_eficheck_integrity_check` table for macOS CIS 5.9.
+
+* Fixed an issue where Orbit service on Windows was not creating the `secret-orbit-node-key.txt` with a restricted ACL.
+
+* Added periodical restart of the `softwareupdated` service to work around a macOS bug.
+
+* Set `--database_path` in the shell `osqueryd` invocation to retrieve UUID and other fields.
+
+* Updated MDM migration flow to include checking the output of `profiles show -type enrollment`.
+
+* Ensured MDM migration modal is not shown if the host is already enrolled into Mobius.
+
+* Embedded Augeas lenses into Orbit on Unix platforms.
+
+* Added a new table to support the CIS audit process.
+
+* Added `sudo_info` table to Orbit for CIS checks 5.4 and 5.5 on macOS.
+
+* Fixed an issue affecting macOS devices with MDM enabled that prevented Orbit from restarting if Nudge was still open.
+
+* Added support to query Windows MDM enrollment status and enforce MDM commands through the `mdm_bridge` virtual table.
+
+* Dumped pprof data into a `profiles` directory in the Orbit root directory on Unix systems when receiving a SIGUSR1.
+
+* Added `launchctl bootstrap` retries in Orbit `pkg` installer to fix MDM deployments.
+
+* Allowed `mobiusdaemon` to get an enroll secret and Mobius URL configuration from a macOS configuration profile.
+
+* Added version information and icons to Orbit and Mobius Desktop binaries.
+
+* Implemented a table to hold `user_login_settings` options extension via Orbit.
+
+* Removed automatic functionality to call `launchctl kickstart -k softwareupdated`.
+
+* Fixed a panic in `mobiusdaemon` that might occur when concurrent requests are made to the server.
+
+* Fixed an issue where Orbit lost communication with Mobius server when the certificate used for insecure mode was deleted.
+
+* Added `dscl` table to Orbit for CIS check 5.6 on macOS.
+
+* Fixed an issue that prevented Orbit shell from running when the `osqueryd` instance attempted to register the same named pipe name.
+
+* Ensured Orbit now installs properly on Windows Server 2012 and 2016 with legacy Orbit or Osquery previously installed.
+
+* Fixed an Orbit bug causing repeated restarts when Mobius agent options were configured with `command_line_flags: {}`.
+
+* Fixed an update bug where the Orbit symlink was not present.
+
+* Adjusted the dialog shown during MDM migration to close when the "contact IT" button is pressed.
+
+* Added support for mTLS to `mobiusdaemon`.
+
+* Added `authdb` table for macOS CIS check 5.7.
+
+* Fixed a crash that occurred when updates were disabled under certain conditions.
+
+* Implemented a table to hold `csrutil_info` extension via Orbit.
+
+* Fixed a bug that set a wrong Mobius URL in Windows installers.
+
+* Added `sntp_request` table implementation to query NTP servers.
+
+* Stopped rendering errors as tooltips in Mobius Desktop. Errors are now found in the logs.
+
+* Retrieved UUID by reading the SMBIOS interface when WMI call fails on Windows.
+
+* Implemented autoupdate and deploy extensions via Orbit.
+
+* Implemented a table to hold `nvram_info` and `pwd_policy` options extension via Orbit.
+
+* Improved the logic to read enroll secrets from macOS configuration profiles.
+
+* Implemented `icloud_private_relay` table to get iCloud Private Relay status.
+
+* Ensured Orbit kills any pre-existing Mobius Desktop processes at startup.
+
+* Added support for `mobiusdaemon` to renew the MDM enrollment profile on pending devices.
+
+* Fixed an issue in Windows where the Mobius service was getting killed if the start took longer than 30 seconds.
+
+* Updated `mobiusclii` to generate installer flags that are compatible with MySQL 8 & S3.
+
+* Ensured Mobius Desktop app on Windows removes the tray icon when it exits.
+
+* Added functionality to rotate device tokens every one hour.
+
+* Waited until the device is fully unenrolled from the previous MDM to close the migration dialog.
+
+* Ensured Orbit restarts and switches channels when needed, even if the new channel is already installed.
+
+* Added a new flag, `--use-system-configuration`, for Orbit to read configuration values from the system.
+
+* Added `software_update` table implementation to check whether Apple software needs updating.
+
+* Updated Windows MSI installer to use custom actions to remove Orbit files.
+
+* Allowed configuring osquery startup flags from Mobius, with important notes for existing deployments:
+
+This feature requires Orbit to communicate with Mobius. Orbit uses osquery's enroll secret to authenticate and enroll to Mobius.
+
+On environments where an enroll secret has been revoked, Orbit hosts that were deployed with such secret will fail to enroll to Mobius.
+
+This is not a regression, all existing features should work as expected, but we recommend to fix this issue given that we will be adding more features to Orbit that will use the new communication channel.
+
+1. To determine which hosts need to be fixed, run the following query: `SELECT * FROM orbit_info WHERE enrolled = false`.
+Hosts not running Orbit will fail to execute such query because the table doesn't exist, those can be ignored.
+2. Generate Orbit packages with the new enroll secret.
+3. Deploy Orbit packages to the hosts returned in (1).
+
+* Ensured Orbit re-enrolls when encountering a 401/unauthenticated error when communicating with Mobius server endpoints.
+
+## Orbit 1.1.0 (Aug 19, 2022)
+
+* Rename `unified_log` table to `macadmins_unified_log` to avoid collision with osquery core. This allows Orbit to support osquery 5.5.0.
+
+## Orbit 1.0.0 (July 14, 2022)
+
+* Update the dropdown in Mobius Desktop to show the number of failing policies along with the status.
+
+* Disable the 'Transparency' menu item in Mobius Desktop until the device is successfully connected to the Mobius server.
+
+* Corrected the macOS logging path for Mobius Desktop to `~/Library/Logs`.
+
+* Added cleanup of osquery extension socket to Orbit at startup.
+
+## Orbit 0.0.13 (Jun 16, 2022)
+
+* Orbit is now a Universal Binary supporting Intel and M1 on macOS machines without Rosetta.
+
+* Updated the Mobius Desktop "Transparency" menu item to use a custom URL if specified (Premium only).
+
+* Added an early check for updates to Orbit (before sub-systems are started) to improve chances of being able to recover from crashes via updates.
+
+* Added log files for Mobius Desktop logs, located at:
+  * macOS: `~/Library/Log`
+  * Linux: `$XDG_STATE_HOME`, fallback to `$HOME/.local/state`
+  * Windows: `%LocalAppData%`
+
+## Orbit 0.0.12 (May 26, 2022)
+
+### This is a security release
+
+* **Security**: Update go-tuf library to fix [CVE-2022-29173](https://github.com/theupdateframework/go-tuf/security/advisories/GHSA-66x3-6cw3-v5gj). This vulnerability could allow an attacker with network access to perform a rollback attack, forcing Orbit to downgrade to an earlier version. Orbit installations with autoupdate turned on will automatically update, after which the client will no longer be vulnerable.
+
+* Mobius desktop will now notify Premium tier users if policies are failing/passing.
+
+## Orbit 0.0.11 (May 10, 2022)
+
+* Change install path to /opt/orbit. Fixes a permissions issue on platforms with SELinux enabled.
+  See [mobiusmdm/mobius#4176](https://github.com/notawar/mobius/issues/4176) for more details.
+
+* Remove support for Orbit to use the legacy osqueryd target on macOS. This has been deprecated since introduction of the app bundle support in Orbit 0.0.8.
+
+## Orbit 0.0.10 (Apr 26, 2022)
+
+* Revert Orbit osquery remote paths to use `v1`.
+
+## Orbit 0.0.9 (Apr 20, 2022)
+
+* Add Mobius Desktop Beta support for Windows.
+
+* Make update interval configurable and increase default from 10s to 15m.
+
+## Orbit 0.0.8 (Mar 25, 2022)
+
+* Fix `orbit shell` command to successfully run when Orbit is already running as daemon.
+
+* Add Mobius Desktop Beta support for macOS.
+
+* Support running osquery as an app bundle on macOS.
+
+* Upgrade [osquery-go](https://github.com/osquery/osquery-go) and [osquery-extension](https://github.com/macadmins/osquery-extension) dependencies.
+
+## Orbit 0.0.7 (Mar 8, 2022)
+
+* Improve reliability of osquery extension connection at startup.
+
+* Fix orbit not detecting updates at startup when they are published while orbit was not running.
+
+* Create and set log paths for "result" and "status" logs when launching osquery.
+
+## Orbit 0.0.6 (Jan 13, 2022)
+
+* Add logging when running as a Windows Service (because Windows discards stdout/stderr).
+
+* Improve flaky startups by adding wait for osquery extension socket.
+
+## Orbit 0.0.5 (Dec 22, 2021)
+
+* Fix handling of enroll secrets to address 0.0.4 enrollment issue.
+
+## Orbit 0.0.4 (Dec 19, 2021)
+
+* Use `certs.pem` if available in root directory to improve TLS compatibility.
+
+* Use UUID as the default host identifier for osquery.
+
+* Add github.com/macadmins/osquery-extension tables.
+
+* Add support for osquery flagfile (loaded automatically if it exists in the Orbit root).
+
+* Fix permissions for building MSI when packaging as root user. Fixes mobiusmdm/mobius#1424.

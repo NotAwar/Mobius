@@ -1,0 +1,16 @@
+.software-uninstall-details-modal {
+  &__modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  &__status-message {
+    display: flex;
+    align-items: center;
+    gap: $pad-small;
+    margin: 0;
+    .icon {
+      align-self: flex-start;
+    }
+  }
+}

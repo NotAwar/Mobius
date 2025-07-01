@@ -1,0 +1,5 @@
+github.com/notawar/mobius/v4/server/mobius/MDMProfileSpec	Path	string
+github.com/notawar/mobius/v4/server/mobius/MDMProfileSpec	Labels	[]string
+github.com/notawar/mobius/v4/server/mobius/MDMProfileSpec	LabelsIncludeAll	[]string
+github.com/notawar/mobius/v4/server/mobius/MDMProfileSpec	LabelsIncludeAny	[]string
+github.com/notawar/mobius/v4/server/mobius/MDMProfileSpec	LabelsExcludeAny	[]string

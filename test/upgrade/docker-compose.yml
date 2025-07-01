@@ -1,0 +1,49 @@
+services:
+  mysql:
+    platform: ${MOBIUS_MYSQL_PLATFORM:-linux/x86_64}
+    image: mysql:8.0.36
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: mobius
+      MYSQL_USER: mobius
+      MYSQL_PASSWORD: mobius
+    ports:
+      - "3306"
+
+  redis:
+    image: redis:6
+
+  mobius:
+    image: mobiusmdm/mobius:${MOBIUS_VERSION:-latest}
+    environment:
+      MOBIUS_MYSQL_ADDRESS: mysql:3306
+      MOBIUS_MYSQL_DATABASE: mobius
+      MOBIUS_MYSQL_USERNAME: mobius
+      MOBIUS_MYSQL_PASSWORD: mobius
+      MOBIUS_REDIS_ADDRESS: redis:6379
+      MOBIUS_SERVER_ADDRESS: 0.0.0.0:8080
+      MOBIUS_SERVER_CERT: /mobius.crt
+      MOBIUS_SERVER_KEY: /mobius.key
+      MOBIUS_LOGGING_JSON: "true"
+      MOBIUS_OSQUERY_LABEL_UPDATE_INTERVAL: 1m
+      MOBIUS_VULNERABILITIES_CURRENT_INSTANCE_CHECKS: "yes"
+      MOBIUS_VULNERABILITIES_DATABASES_PATH: /mobius/vulndb
+      MOBIUS_VULNERABILITIES_PERIODICITY: 5m
+      MOBIUS_LOGGING_DEBUG: "true"
+    volumes:
+      - ./mobius.crt:/mobius.crt
+      - ./mobius.key:/mobius.key
+    ports:
+      - "8080"
+    depends_on:
+      - mysql
+      - redis
+
+  osquery:
+    image: "osquery/osquery:4.7.0-ubuntu20.04"
+    volumes:
+      - ./mobius.crt:/etc/osquery/mobius.crt
+      - ./osquery.flags:/etc/osquery/osquery.flags
+    environment:
+      ENROLL_SECRET: "${ENROLL_SECRET:-foobar}"
+    command: osqueryd --flagfile=/etc/osquery/osquery.flags

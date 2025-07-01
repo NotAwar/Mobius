@@ -1,0 +1,124 @@
+.mobius-checkbox {
+  @include clearfix;
+  position: relative;
+  // inline-flex would prevents clickable white space right of the checkbox,
+  // but we need that clickable in some "rows" using checkbox
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    // Using selectors to avoid pointer cursor on  clickable white space right of checkbox
+    .mobius-checkbox__label,
+    .mobius-checkbox__icon,
+    .mobius-checkbox__label-tooltip {
+      cursor: pointer;
+    }
+  }
+
+  &:hover:not(.mobius-checkbox__label--disabled) {
+    svg {
+      .checkbox-state {
+        stroke: $core-vibrant-blue-over;
+        fill: $core-vibrant-blue-over;
+      }
+      .checkbox-unchecked-state {
+        stroke: $core-vibrant-blue-over;
+      }
+    }
+  }
+
+  // During click only
+  &:active:not(.mobius-checkbox__label--disabled) {
+    svg {
+      .checkbox-state {
+        stroke: $core-vibrant-blue-down;
+        fill: $core-vibrant-blue-down;
+      }
+      .checkbox-unchecked-state {
+        stroke: $core-vibrant-blue-down;
+      }
+    }
+  }
+
+  // When tabbing
+  &:focus-visible:not(.mobius-checkbox__label--disabled) {
+    outline: none;
+
+    svg {
+      outline: 2px solid $ui-vibrant-blue-25;
+      outline-offset: 1px;
+      border-radius: $border-radius;
+    }
+  }
+
+  &--disabled {
+    svg {
+      .checkbox-state {
+        stroke: $ui-mobius-black-25;
+        fill: $ui-mobius-black-25;
+      }
+      .checkbox-unchecked-state {
+        stroke: $ui-mobius-black-25;
+      }
+    }
+  }
+
+  &__label {
+    font-size: $x-small;
+    padding-left: $pad-small;
+    display: inline-block;
+    vertical-align: top;
+
+    &--disabled {
+      color: $ui-mobius-black-50;
+
+      svg {
+        .checkbox-state {
+          stroke: $ui-mobius-black-25;
+          fill: $ui-mobius-black-25;
+        }
+        .checkbox-unchecked-state {
+          stroke: $ui-mobius-black-25;
+          fill: $ui-mobius-black-25;
+        }
+      }
+
+      &:hover {
+        // Using selectors to avoid not allowed cursor on  clickable white space right of checkbox
+        .mobius-checkbox__label,
+        .mobius-checkbox__icon,
+        .mobius-checkbox__label-tooltip {
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  &__label-tooltip {
+    font-size: $x-small;
+    padding-left: $pad-small;
+    display: inherit;
+    vertical-align: top;
+  }
+
+  &__help-text {
+    @include help-text;
+  }
+}
+
+.inverse {
+  flex-direction: row-reverse; // Switches the text to the left side of checkbox as all checkboxes are now display flex
+
+  .mobius-checkbox {
+    &__icon {
+      padding-left: $pad-small;
+    }
+
+    &__label {
+      float: left;
+      padding-left: 0;
+      font-weight: $bold;
+      font-size: $x-small;
+    }
+  }
+}

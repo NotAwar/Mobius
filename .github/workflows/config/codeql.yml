@@ -1,0 +1,4 @@
+name: Mobius CodeQL
+
+paths-ignore:
+  - website/assets/dependencies/

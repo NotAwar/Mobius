@@ -1,0 +1,14 @@
+--tls_hostname={{ mobius_server_url | regex_replace('https?://') }}
+--tls_server_certs=/etc/osquery/mobius.crt
+--enroll_tls_endpoint={{ mobius_server_url }}/api/v1/osquery/enroll
+--config_tls_endpoint={{ mobius_server_url }}/api/v1/osquery/config
+--logger_tls_endpoint={{ mobius_server_url }}/api/v1/osquery/log
+--distributed_tls_read_endpoint={{ mobius_server_url }}/api/v1/osquery/distributed/read
+--distributed_tls_write_endpoint={{ mobius_server_url }}/api/v1/osquery/distributed/write
+--enroll_secret_path=/etc/osquery/enroll_secret
+--host_identifier=hostname
+--verbose=false
+--logger_min_status=1
+--logger_min_stderr=1
+--disable_events=false
+--disable_audit=false

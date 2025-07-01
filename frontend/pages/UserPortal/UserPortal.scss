@@ -1,0 +1,329 @@
+/* User Portal Styles */
+.user-portal {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+
+  &__header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 32px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    text-align: center;
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__user-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+    
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  &__profile-link {
+    color: white !important;
+    text-decoration: underline;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  &__my-devices {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  &__device-card {
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    h3 {
+      color: #2c3e50;
+      font-size: 1.2rem;
+      margin: 0;
+    }
+  }
+
+  &__device-details {
+    p {
+      margin: 8px 0;
+      font-size: 0.9rem;
+      color: #495057;
+      
+      strong {
+        color: #2c3e50;
+      }
+    }
+  }
+
+  &__status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    
+    &--online {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    &--offline {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    &--pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    &--enrolled {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    
+    &--failed {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  }
+
+  &__no-devices {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+    
+    p {
+      margin: 8px 0;
+      font-size: 1.1rem;
+    }
+  }
+
+  &__enrollment {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__enrollment-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &__enrollment-content {
+    padding: 24px;
+    
+    h3 {
+      color: #2c3e50;
+      margin-bottom: 12px;
+    }
+    
+    p {
+      color: #6c757d;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__enrollment-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  &__step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  &__step-number {
+    background: #007bff;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &__step-content {
+    flex: 1;
+    
+    h4 {
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #6c757d;
+      margin-bottom: 12px;
+    }
+  }
+
+  &__download-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__download-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  &__enrollment-code {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    
+    code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e83e8c;
+      background: transparent;
+    }
+  }
+
+  &__copy-button {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+  }
+
+  &__enrollment-actions {
+    text-align: center;
+  }
+
+  &__enroll-button {
+    padding: 12px 32px;
+    font-size: 1.1rem;
+  }
+
+  &__support {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__support-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &__support-content {
+    padding: 24px;
+    
+    h3 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__support-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  &__support-option {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    
+    h4 {
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #6c757d;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+  }
+
+  &__support-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}

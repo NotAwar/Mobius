@@ -1,0 +1,39 @@
+applications:
+- name: mobiusmdm
+  memory: 512m
+  disk_quota: 2g
+  instances: 1
+  timeout: 120
+  health-check-type: process
+  command: |
+    export MOBIUS_MYSQL_USERNAME=$( echo $VCAP_SERVICES | jq -r '.["aws-rds"][].credentials.username')  && \
+    export MOBIUS_MYSQL_ADDRESS=$( echo $VCAP_SERVICES | jq -r '.["aws-rds"][].credentials.host') && \
+    export MOBIUS_MYSQL_DATABASE=$( echo $VCAP_SERVICES | jq -r '.["aws-rds"][].credentials.db_name') && \
+    export MOBIUS_MYSQL_PASSWORD=$( echo $VCAP_SERVICES | jq -r '.["aws-rds"][].credentials.password') && \
+    export MOBIUS_REDIS_ADDRESS=$( echo $VCAP_SERVICES | jq -r '.["aws-elasticache-redis"][].credentials.host + ":" + .["aws-elasticache-redis"][].credentials.port') && \
+    export MOBIUS_REDIS_PASSWORD$( echo $VCAP_SERVICES | jq -r '.["aws-elasticache-redis"][].credentials.password') && \
+    mobius prepare --no-prompt=true db && \
+    mobius serve
+  docker:
+    image: mobiusmdm/mobius:latest
+  services:
+    - mobiusmdm-mysql
+    - mobiusmdm-redis
+  env:
+    MOBIUS_LOGGING_JSON: true
+    MOBIUS_LOGGING_DEBUG: true
+    MOBIUS_REDIS_USE_TLS: true
+    MOBIUS_SERVER_TLS: false
+    MOBIUS_REDIS_CONNECT_RETRY_ATTEMPTS: 3
+    # MOBIUS_FIREHOSE_STATUS_STREAM: FALSE
+    # MOBIUS_FIREHOSE_RESULT_STREAM: 
+    # MOBIUS_FIREHOSE_REGION:
+    # MOBIUS_OSQUERY_STATUS_LOG_PLUGIN"
+    # MOBIUS_OSQUERY_RESULT_LOG_PLUGIN"
+    # MOBIUS_VULNERABILITIES_DATABASES_PATH: 
+    # MOBIUS_OSQUERY_ENABLE_ASYNC_HOST_PROCESSING: 
+    # MOBIUS_S3_BUCKET: 
+    # MOBIUS_S3_PREFIX:
+    # MOBIUS_LICENSE_KEY:
+
+# Add the following to the command if needed     # printenv && \ 

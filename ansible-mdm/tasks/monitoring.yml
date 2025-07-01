@@ -1,0 +1,52 @@
+---
+# Monitoring configuration tasks
+- name: Install monitoring agents
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - htop
+    - iotop
+    - nethogs
+  when: ansible_os_family in ["Debian", "RedHat"]
+
+- name: Configure log rotation for osquery
+  template:
+    src: osquery-logrotate.j2
+    dest: /etc/logrotate.d/osquery
+    mode: '0644'
+  when: ansible_os_family in ["Debian", "RedHat"]
+
+- name: Create custom osquery packs directory
+  file:
+    path: "{{ osquery_packs_path }}"
+    state: directory
+    mode: '0755'
+  vars:
+    osquery_packs_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\packs
+      {%- else -%}
+      /etc/osquery/packs
+      {%- endif -%}
+
+- name: Deploy monitoring queries pack
+  template:
+    src: monitoring-queries.conf.j2
+    dest: "{{ osquery_packs_path }}/monitoring.conf"
+    mode: '0644'
+  vars:
+    osquery_packs_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\packs
+      {%- else -%}
+      /etc/osquery/packs
+      {%- endif -%}
+  notify: restart osquery
+
+- name: Configure system metrics collection
+  cron:
+    name: "System metrics collection"
+    minute: "*/5"
+    job: "osqueryi 'SELECT * FROM system_info;' > /var/log/osquery/system_metrics.log"
+  when: ansible_os_family in ["Debian", "RedHat", "Darwin"]

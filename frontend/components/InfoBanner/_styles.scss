@@ -1,0 +1,39 @@
+.info-banner {
+  display: flex;
+  justify-content: space-between;
+  padding: $pad-medium;
+  gap: $pad-large; // Between text and CTA
+  font-size: $x-small;
+  font-weight: $regular;
+  color: $core-mobius-black;
+
+  &__page-banner {
+    padding: $pad-large $pad-xlarge;
+    margin-bottom: $pad-large;
+    width: auto;
+  }
+
+  &__info {
+    p {
+      margin: $pad-small 0 0 0; // TOFIX: this causes weird top margin noticed in #28110
+    }
+  }
+
+  &__cta {
+    display: flex;
+    align-items: center;
+    color: $core-mobius-black;
+    text-align: right;
+    gap: $pad-small;
+    min-width: max-content;
+    margin-left: $pad-small;
+
+    button {
+      margin-left: $pad-small;
+    }
+  }
+
+  &__close {
+    margin: -$pad-small; // Offset clickable padding from making banner taller
+  }
+}

@@ -1,0 +1,45 @@
+# Ansible Inventory for Mobius MDM
+# Replace with your actual device information
+
+[mobius_servers]
+mobius-server ansible_host=192.168.1.100 ansible_user=admin
+
+[workstations]
+workstation-01 ansible_host=192.168.1.101 ansible_user=admin
+workstation-02 ansible_host=192.168.1.102 ansible_user=admin
+workstation-03 ansible_host=192.168.1.103 ansible_user=admin
+
+[servers]
+server-01 ansible_host=192.168.1.201 ansible_user=admin
+server-02 ansible_host=192.168.1.202 ansible_user=admin
+
+[ubuntu_workstations]
+ubuntu-ws-01 ansible_host=192.168.1.111 ansible_user=admin ansible_distribution=Ubuntu
+ubuntu-ws-02 ansible_host=192.168.1.112 ansible_user=admin ansible_distribution=Ubuntu
+
+[popos_workstations]
+popos-ws-01 ansible_host=192.168.1.121 ansible_user=admin ansible_distribution=Pop!_OS
+popos-ws-02 ansible_host=192.168.1.122 ansible_user=admin ansible_distribution=Pop!_OS
+
+[macos:children]
+workstations
+
+[ubuntu:children]
+ubuntu_workstations
+
+[popos:children]
+popos_workstations
+
+[debian:children]
+ubuntu
+popos
+
+[linux:children]
+servers
+mobius_servers
+debian
+
+[all:vars]
+mobius_server_url=https://mobius.example.com
+mobius_enroll_secret=your_enrollment_secret_here
+osquery_version=5.12.1

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+	<title>Mobius osquery</title>
+	<choices-outline>
+	    <line choice="choiceBase"/>
+    </choices-outline>
+    <choice id="choiceBase" title="Mobius osquery" enabled="false" selected="true" description="Standard installation for Mobius osquery.">
+        <pkg-ref id="com.mobiusmdm.orbit.base.pkg"/>
+    </choice>
+    
+    <pkg-ref id="com.mobiusmdm.orbit.base.pkg" version="42.0.0" auth="root">#base.pkg</pkg-ref>
+    
+    <pkg-ref id="com.mobiusmdm.orbit.base.pkg">
+      <bundle-version>
+        <bundle id="com.mobiusmdm.orbit" path="" />
+      </bundle-version>
+    </pkg-ref>
+	<options customize="never" hostArchitectures="arm64,x86_64" require-scripts="false" allow-external-scripts="false" />
+</installer-gui-script>

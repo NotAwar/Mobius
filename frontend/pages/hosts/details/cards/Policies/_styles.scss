@@ -1,0 +1,23 @@
+.policies-card {
+  .info-banner {
+    margin-bottom: 1rem;
+  }
+  .table-container__header {
+    display: none;
+  }
+  .data-table-block {
+    .data-table__table {
+      thead {
+        .name__header {
+          min-width: $col-md;
+        }
+        .response__header {
+          width: 0;
+        }
+        .linkToFilteredHosts__header {
+          width: 140px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+---
+# Debian/Ubuntu specific tasks
+- name: Add osquery repository key
+  apt_key:
+    url: https://pkg.osquery.io/GPG
+    state: present
+
+- name: Add osquery repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://pkg.osquery.io/deb deb main"
+    state: present
+
+- name: Install osquery
+  apt:
+    name: osquery
+    state: present
+    update_cache: true
+
+- name: Create osquery configuration directory
+  file:
+    path: /etc/osquery
+    state: directory
+    mode: '0755'
+
+- name: Create osquery log directory
+  file:
+    path: /var/log/osquery
+    state: directory
+    owner: osquery
+    group: osquery
+    mode: '0755'
+
+- name: Enable and start osquery service
+  systemd:
+    name: osqueryd
+    enabled: true
+    state: started

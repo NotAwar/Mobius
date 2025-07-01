@@ -1,0 +1,43 @@
+---
+# Mobius enrollment configuration
+- name: Configure Mobius enrollment
+  template:
+    src: mobius-enrollment.conf.j2
+    dest: "{{ mobius_enrollment_path }}"
+    mode: '0644'
+  vars:
+    mobius_enrollment_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\mobius-enrollment.conf
+      {%- else -%}
+      /etc/osquery/mobius-enrollment.conf
+      {%- endif -%}
+
+- name: Enroll host with Mobius
+  uri:
+    url: "{{ mobius_server_url }}/api/v1/osquery/enroll"
+    method: POST
+    body_format: json
+    body:
+      enroll_secret: "{{ mobius_enroll_secret }}"
+      host_identifier: "{{ ansible_hostname }}"
+      platform_type: "{{ ansible_os_family | lower }}"
+    headers:
+      Content-Type: "application/json"
+    status_code: 200
+  register: enrollment_result
+  when: mobius_enroll_secret is defined
+
+- name: Save enrollment node key
+  copy:
+    content: "{{ enrollment_result.json.node_key }}"
+    dest: "{{ node_key_path }}"
+    mode: '0600'
+  vars:
+    node_key_path: >-
+      {%- if ansible_os_family == "Windows" -%}
+      C:\ProgramData\osquery\node.key
+      {%- else -%}
+      /etc/osquery/node.key
+      {%- endif -%}
+  when: enrollment_result is defined and enrollment_result.json.node_key is defined

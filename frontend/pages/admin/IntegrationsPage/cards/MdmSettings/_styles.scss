@@ -1,0 +1,8 @@
+.mdm-settings {
+  display: flex;
+  flex-direction: column;
+  gap: $pad-xxxlarge;
+  .disabled-by-gitops-mode {
+    @include disabled;
+  }
+}

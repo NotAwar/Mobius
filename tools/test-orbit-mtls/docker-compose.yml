@@ -1,0 +1,14 @@
+---
+version: "2"
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - ../osquery/mobius.crt:/etc/nginx/certificates/mobius.crt
+      - ../osquery/mobius.key:/etc/nginx/certificates/mobius.key
+      - ./client-ca.crt:/etc/nginx/certificates/client-ca.crt
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8888:8888"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

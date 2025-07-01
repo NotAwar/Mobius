@@ -1,0 +1,36 @@
+{{- $serviceName := include "mobius.servicename" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mobius
+    chart: mobius
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+{{- if .Values.serviceAnnotations }}
+  annotations:
+  {{- with .Values.serviceAnnotations}}
+  {{- toYaml . | trim | nindent 4}}
+  {{- end }}
+{{- end }}
+  name: {{ $serviceName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- if .Values.gke.ingress.useGKEIngress }}
+  type: NodePort
+  {{- end }}
+  selector:
+    app: mobius
+    chart: mobius
+    component: mobius-server
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  ports:
+  - name: mobius
+    port: {{ ternary .Values.mobius.listenPort .Values.mobius.servicePort (eq .Values.mobius.servicePort nil) }}
+    targetPort: {{ .Values.mobius.listenPort }}
+    {{- if .Values.gke.ingress.useGKEIngress }}
+    {{- if .Values.gke.ingress.nodePort }}
+    nodePort: {{ .Values.gke.ingress.nodePort }}
+    {{- end }}
+    {{- end }}

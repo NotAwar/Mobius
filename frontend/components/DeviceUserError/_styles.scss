@@ -1,0 +1,42 @@
+.device-user-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__inner {
+    display: flex;
+    flex-direction: row;
+    margin: $pad-xxxlarge 0;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: $pad-large;
+    max-width: 333px;
+
+    &__header {
+      display: block;
+      gap: $pad-large;
+      color: $core-mobius-black;
+      font-weight: $bold;
+      font-size: $x-small;
+      text-align: center;
+
+      .icon {
+        vertical-align: sub;
+        margin-right: $pad-small;
+        position: relative;
+        bottom: 1px;
+      }
+    }
+    &__data {
+      display: block;
+      color: $core-mobius-black;
+      font-weight: normal;
+      font-size: $x-small;
+      text-align: center;
+      line-height: 21px; // Matches design
+    }
+  }
+}

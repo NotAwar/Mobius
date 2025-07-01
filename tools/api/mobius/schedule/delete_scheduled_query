@@ -1,0 +1,4 @@
+#!/bin/bash
+source $MOBIUS_ENV_PATH
+endpoint="api/latest/mobius/schedule/$1"
+curl $CURL_FLAGS -X DELETE -H "Authorization: Bearer $TOKEN" "$SERVER_URL/$endpoint"

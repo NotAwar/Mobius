@@ -1,0 +1,34 @@
+---
+# RHEL/CentOS/Fedora specific tasks
+- name: Add osquery repository
+  yum_repository:
+    name: osquery
+    description: osquery repository
+    baseurl: https://pkg.osquery.io/rpm/GPG
+    gpgkey: https://pkg.osquery.io/GPG
+    gpgcheck: true
+
+- name: Install osquery
+  package:
+    name: osquery
+    state: present
+
+- name: Create osquery configuration directory
+  file:
+    path: /etc/osquery
+    state: directory
+    mode: '0755'
+
+- name: Create osquery log directory
+  file:
+    path: /var/log/osquery
+    state: directory
+    owner: osquery
+    group: osquery
+    mode: '0755'
+
+- name: Enable and start osquery service
+  systemd:
+    name: osqueryd
+    enabled: true
+    state: started

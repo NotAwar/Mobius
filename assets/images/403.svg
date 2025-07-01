@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="100%" height="100%" fill="#1c2f38"/>
+  <!-- Stylized moth side-profile path -->
+  <path d="M400,540 C460,460 560,460 620,540 C560,620 460,620 400,540 Z
+           M410,530 Q470,480 530,530 Q470,580 410,530 Z" 
+        fill="none" stroke="#d4af37" stroke-width="4" />
+  <text x="60%" y="50%" fill="#fdf6e3" font-size="100" font-family="sans-serif" dominant-baseline="middle" text-anchor="middle">403</text>
+  <text x="60%" y="60%" fill="#fdf6e3" font-size="40" font-family="sans-serif" dominant-baseline="middle" text-anchor="middle">Access Forbidden</text>
+</svg>

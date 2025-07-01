@@ -1,0 +1,58 @@
+---
+# Security policies configuration
+- name: Configure firewall rules (Linux)
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+  - "22" # SSH
+  - "443" # HTTPS to Mobius
+  when: ansible_os_family == "Debian"
+
+- name: Configure firewall rules (RHEL/CentOS)
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    state: enabled
+  loop:
+  - "22" # SSH
+  - "443" # HTTPS to Mobius
+  when: ansible_os_family == "RedHat"
+
+- name: Configure automatic updates (Debian/Ubuntu)
+  apt:
+    name: unattended-upgrades
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Configure automatic updates (RHEL/CentOS)
+  package:
+    name: yum-cron
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Disable unnecessary services
+  systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  loop:
+  - telnet
+  - rsh
+  - rlogin
+  ignore_errors: true
+  when: ansible_os_family in ["Debian", "RedHat"]
+
+- name: Set secure SSH configuration
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backup: true
+  loop:
+  - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
+  - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+  - { regexp: '^#?Protocol', line: 'Protocol 2' }
+  when: ansible_os_family in ["Debian", "RedHat", "Darwin"]
+  notify: restart sshd

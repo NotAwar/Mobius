@@ -1,0 +1,382 @@
+%mobiusicon {
+  display: inline-block;
+  font: normal normal normal 14px/1 "mobiusicons";
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="mobiusicon-"],
+[class*=" mobiusicon-"],
+.mobiusicon {
+  @extend %mobiusicon;
+}
+
+.mobiusicon-lg {
+  font-size: 1.33333333em;
+  line-height: 0.75em;
+  vertical-align: -15%;
+}
+
+.mobiusicon-2x {
+  font-size: 2em;
+}
+
+.mobiusicon-3x {
+  font-size: 3em;
+}
+
+.mobiusicon-4x {
+  font-size: 4em;
+}
+
+.mobiusicon-5x {
+  font-size: 5em;
+}
+
+.mobiusicon-fw {
+  width: 1.28571429em;
+  text-align: center;
+}
+
+.mobiusicon-chevrondown:before {
+  content: "\f004";
+}
+
+.mobiusicon-chevronleft:before {
+  content: "\f006";
+}
+
+.mobiusicon-chevronright:before {
+  content: "\f008";
+}
+
+.mobiusicon-chevronup:before {
+  content: "\f00a";
+}
+
+.mobiusicon-cpu:before {
+  content: "\f00c";
+}
+
+.mobiusicon-downcaret:before {
+  content: "\f00d";
+}
+
+.mobiusicon-filter:before {
+  content: "\f00f";
+}
+
+.mobiusicon-mac:before {
+  content: "\f012";
+}
+
+.mobiusicon-memory:before {
+  content: "\f013";
+}
+
+.mobiusicon-storage:before {
+  content: "\f019";
+}
+
+.mobiusicon-upcaret:before {
+  content: "\f01b";
+}
+
+.mobiusicon-uptime:before {
+  content: "\f01c";
+}
+
+.mobiusicon-world:before {
+  content: "\f01d";
+}
+
+.mobiusicon-osquery:before {
+  content: "\f021";
+}
+
+.mobiusicon-join:before {
+  content: "\f022";
+}
+
+.mobiusicon-add-button:before {
+  content: "\f029";
+}
+
+.mobiusicon-packs:before {
+  content: "\f02f";
+}
+
+.mobiusicon-help:before {
+  content: "\f030";
+}
+
+.mobiusicon-admin:before {
+  content: "\f031";
+}
+
+.mobiusicon-config:before {
+  content: "\f032";
+}
+
+.mobiusicon-success-check:before {
+  content: "\f035";
+}
+
+.mobiusicon-offline:before {
+  content: "\f036";
+}
+
+.mobiusicon-windows-original:before {
+  content: "\f037";
+}
+
+.mobiusicon-centos-original:before {
+  content: "\f038";
+}
+
+.mobiusicon-ubuntu-original:before {
+  content: "\f039";
+}
+
+.mobiusicon-apple-original:before {
+  content: "\f03a";
+}
+
+.mobiusicon-search:before {
+  content: "\f03b";
+}
+
+.mobiusicon-all-hosts:before {
+  content: "\f03c";
+}
+
+.mobiusicon-alerts:before {
+  content: "\f03e";
+}
+
+.mobiusicon-logout:before {
+  content: "\f03f";
+}
+
+.mobiusicon-account:before {
+  content: "\f040";
+}
+
+.mobiusicon-clipboard:before {
+  content: "\f043";
+}
+
+.mobiusicon-list-select:before {
+  content: "\f044";
+}
+
+.mobiusicon-grid-select:before {
+  content: "\f045";
+}
+
+.mobiusicon-label:before {
+  content: "\f033";
+}
+
+.mobiusicon-docker:before {
+  content: "\f046";
+}
+
+.mobiusicon-cloud:before {
+  content: "\f047";
+}
+
+.mobiusicon-self-hosted:before {
+  content: "\f048";
+}
+
+.mobiusicon-help-solid:before {
+  content: "\f049";
+}
+
+.mobiusicon-help-stroke:before {
+  content: "\f04a";
+}
+
+.mobiusicon-warning-filled:before {
+  content: "\f04b";
+}
+
+.mobiusicon-delete-cloud:before {
+  content: "\f04c";
+}
+
+.mobiusicon-pdf:before {
+  content: "\f04d";
+}
+
+.mobiusicon-credit-card-small:before {
+  content: "\f04e";
+}
+
+.mobiusicon-billing-card:before {
+  content: "\f04f";
+}
+
+.mobiusicon-lock-big:before {
+  content: "\f050";
+}
+
+.mobiusicon-link-big:before {
+  content: "\f051";
+}
+
+.mobiusicon-briefcase:before {
+  content: "\f052";
+}
+
+.mobiusicon-name-card:before {
+  content: "\f053";
+}
+
+.mobiusicon-business:before {
+  content: "\f055";
+}
+
+.mobiusicon-clock:before {
+  content: "\f056";
+}
+
+.mobiusicon-host-large:before {
+  content: "\f057";
+}
+
+.mobiusicon-single-host:before {
+  content: "\f03d";
+}
+
+.mobiusicon-username:before {
+  content: "\f02a";
+}
+
+.mobiusicon-password:before {
+  content: "\f02b";
+}
+
+.mobiusicon-email:before {
+  content: "\f02c";
+}
+
+.mobiusicon-hosts:before {
+  content: "\f02e";
+}
+
+.mobiusicon-query:before {
+  content: "\f02d";
+}
+
+.mobiusicon-import:before {
+  content: "\f058";
+}
+
+.mobiusicon-pencil:before {
+  content: "\f059";
+}
+
+.mobiusicon-add-plus:before {
+  content: "\f05a";
+}
+
+.mobiusicon-x:before {
+  content: "\f05b";
+}
+
+.mobiusicon-right-arrow:before {
+  content: "\f05d";
+}
+
+.mobiusicon-camera:before {
+  content: "\f05e";
+}
+
+.mobiusicon-plus-minus:before {
+  content: "\f05f";
+}
+
+.mobiusicon-bold-plus:before {
+  content: "\f060";
+}
+
+.mobiusicon-linux-original:before {
+  content: "\f061";
+}
+
+.mobiusicon-clock2:before {
+  content: "\f063";
+}
+
+.mobiusicon-trash:before {
+  content: "\f064";
+}
+
+.mobiusicon-laptop-plus:before {
+  content: "\f066";
+}
+
+.mobiusicon-wrench-hand:before {
+  content: "\f067";
+}
+
+.mobiusicon-external-link:before {
+  content: "\f068";
+}
+
+.mobiusicon-fullscreen:before {
+  content: "\f069";
+}
+
+.mobiusicon-windowed:before {
+  content: "\f06a";
+}
+
+.mobiusicon-heroku:before {
+  content: "\f06b";
+}
+
+.mobiusicon-ubuntu:before {
+  content: "\f06c";
+}
+
+.mobiusicon-windows:before {
+  content: "\f06d";
+}
+
+.mobiusicon-centos:before {
+  content: "\f06e";
+}
+
+.mobiusicon-apple:before {
+  content: "\f06f";
+}
+
+.mobiusicon-linux:before {
+  content: "\f070";
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+}

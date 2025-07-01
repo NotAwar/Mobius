@@ -1,0 +1,123 @@
+.input-field {
+  line-height: 1.5;
+  background-color: $ui-light-grey;
+  border: solid 1px $ui-mobius-black-10;
+  border-radius: $border-radius;
+  font-size: $x-small;
+  padding: $pad-small $pad-medium;
+  color: $core-mobius-gray;
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+  height: 40px;
+  transition: border-color 100ms;
+  width: 100%;
+
+  &::placeholder {
+    color: $ui-mobius-black-50;
+  }
+
+  &:hover:not(.input-field--read-only) {
+    box-shadow: none;
+    border: 1px solid $core-vibrant-blue-over;
+  }
+
+  &:active:not(.input-field--read-only),
+  &:focus:not(.input-field--read-only),
+  &:focus-visible:not(.input-field--read-only) {
+    box-shadow: none;
+    outline: 0;
+    border: 1px solid $core-vibrant-blue-down;
+  }
+
+  &--disabled {
+    color: $ui-mobius-black-50;
+
+    .form-field__label,
+    .form-field__help-text {
+      color: $ui-mobius-black-50;
+    }
+  }
+
+  &--error {
+    color: $core-vibrant-red;
+    border: 1px solid $core-vibrant-red;
+    box-sizing: border-box;
+    border-radius: $border-radius;
+
+    &:focus {
+      border-color: $ui-error;
+      background-color: $core-white;
+      color: $core-mobius-black;
+    }
+  }
+
+  &__textarea {
+    min-height: 100px;
+    max-width: 100%;
+    display: block;
+  }
+
+  &__label {
+    display: block;
+    font-size: $medium;
+    font-weight: $regular;
+    color: $core-mobius-black;
+    margin-bottom: $pad-xsmall;
+
+    &--error {
+      font-weight: $bold;
+      color: $ui-error;
+    }
+  }
+
+  &__wrapper {
+    margin-bottom: $pad-medium;
+  }
+
+  &__help-text {
+    font-size: $x-small;
+    font-weight: $regular;
+    line-height: 1.57;
+    letter-spacing: 1px;
+    color: $core-mobius-gray;
+
+    code {
+      color: $core-vibrant-blue;
+      background-color: $ui-gray;
+      padding: $pad-xxsmall;
+      font-family: "SourceCodePro", $monospace;
+    }
+  }
+
+  &__copy-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: $pad-xsmall;
+    background-color: $ui-light-grey;
+  }
+
+  &__input-container.copy-enabled {
+    position: relative;
+
+    .input-field {
+      padding-right: 35px; // horizontal scroll of long inputs will not be hidden by copy button
+    }
+  }
+
+  &__copied-confirmation {
+    @include copy-message;
+  }
+
+  &__copied-confirmation-outside {
+    margin-left: -81px;
+  }
+}
+
+// Removes arrows on Firefox number fields
+input[type="number"] {
+  -moz-appearance: textfield;
+}

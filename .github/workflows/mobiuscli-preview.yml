@@ -1,0 +1,64 @@
+# Tests the `mobiuscli preview` command with latest npm released version of mobiuscli.
+name: Test mobiuscli preview
+
+on:
+  workflow_dispatch: # Manual
+  schedule:
+  - cron: '0 2 * * *' # Nightly 2AM UTC
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id}}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-preview:
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        # Only run on Linux because:
+        #   - Linux Docker containers are not supported in Windows.
+        #   - Unattended installation of Docker on macOS fails. (see
+        #   https://github.com/docker/for-mac/issues/6450)
+        os: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    steps:
+
+    - name: Harden Runner
+      uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+      with:
+        egress-policy: audit
+
+    - name: Test mobiuscli preview
+      run: |
+        npm install -g mobiuscli
+        mobiuscli preview
+        sleep 10
+        mobiuscli get hosts | tee hosts.txt
+        [ $( cat hosts.txt | grep online | wc -l) -eq 9 ]
+      shell: bash
+
+    - name: Get mobius logs
+      if: always()
+      run: |
+        MOBIUS_LICENSE_KEY=foo docker compose -f ~/.mobius/preview/docker-compose.yml logs mobius01 mobius02 > mobius-logs.txt
+        # Copying logs, otherwise the upload-artifact action uploads the logs in a hidden folder (.mobius)
+        # Old location of orbit logs before v4.43.0
+        cp ~/.mobius/preview/orbit.log orbit.log || true
+        # New location of orbit logs since v4.43.0
+        cp ~/.mobius/preview/orbit/orbit.log orbit.log || true
+        cp -r ~/.mobius/preview/logs osquery_result_status_logs
+      shell: bash
+
+    - name: Upload logs
+      if: always()
+      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      with:
+        name: ${{ matrix.os }}-log
+        path: |
+          mobius-logs.txt
+          orbit.log
+          osquery_result_status_logs

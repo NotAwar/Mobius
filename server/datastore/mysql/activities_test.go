@@ -1,0 +1,2160 @@
+package mysql
+
+import (
+	"context"
+	"database/sql"
+	"encoding/json"
+	"fmt"
+	"sort"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/notawar/mobius/v4/pkg/scripts"
+	"github.com/notawar/mobius set/v4/server/contexts/viewer"
+	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
+	nanomdm_mysql "github.com/notawar/mobius set/v4/server/mdm/nanomdm/storage/mysql"
+	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestActivity(t *testing.T) {
+	ds := CreateMySQLDS(t)
+
+	cases := []struct {
+		name string
+		fn   func(t *testing.T, ds *Datastore)
+	}{
+		{"UsernameChange", testActivityUsernameChange},
+		{"New", testActivityNew},
+		{"ListActivitiesStreamed", testListActivitiesStreamed},
+		{"EmptyUser", testActivityEmptyUser},
+		{"PaginationMetadata", testActivityPaginationMetadata},
+		{"ListHostUpcomingActivities", testListHostUpcomingActivities},
+		{"ListHostPastActivities", testListHostPastActivities},
+		{"CleanupActivitiesAndAssociatedData", testCleanupActivitiesAndAssociatedData},
+		{"CleanupActivitiesAndAssociatedDataBatch", testCleanupActivitiesAndAssociatedDataBatch},
+		{"ActivateNextActivity", testActivateNextActivity},
+		{"ActivateItselfOnEmptyQueue", testActivateItselfOnEmptyQueue},
+		{"CancelNonActivatedUpcomingActivity", testCancelNonActivatedUpcomingActivity},
+		{"CancelActivatedUpcomingActivity", testCancelActivatedUpcomingActivity},
+		{"SetResultAfterCancelUpcomingActivity", testSetResultAfterCancelUpcomingActivity},
+		{"GetHostUpcomingActivityMeta", testGetHostUpcomingActivityMeta},
+		{"UnblockHostsUpcomingActivityQueue", testUnblockHostsUpcomingActivityQueue},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			defer TruncateTables(t, ds)
+			c.fn(t, ds)
+		})
+	}
+}
+
+type dummyActivity struct {
+	name    string `json:"-"`
+	details map[string]interface{}
+	hostIDs []uint
+}
+
+func (d dummyActivity) MarshalJSON() ([]byte, error) {
+	b, err := json.Marshal(d.details)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func (d dummyActivity) ActivityName() string {
+	return d.name
+}
+
+func (d dummyActivity) Documentation() (activity string, details string, detailsExample string) {
+	return "", "", ""
+}
+
+func (d dummyActivity) HostIDs() []uint {
+	return d.hostIDs
+}
+
+func testActivityUsernameChange(t *testing.T, ds *Datastore) {
+	u := &mobius.User{
+		Password:    []byte("asd"),
+		Name:        "fullname",
+		Email:       "email@asd.com",
+		GravatarURL: "http://asd.com",
+		GlobalRole:  ptr.String(mobius.RoleObserver),
+	}
+	_, err := ds.NewUser(context.Background(), u)
+	require.NoError(t, err)
+
+	timestamp := time.Now()
+	ctx := context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test1",
+				details: map[string]interface{}{"detail": 1, "sometext": "aaa"},
+			}, nil, timestamp,
+		),
+	)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test2",
+				details: map[string]interface{}{"detail": 2},
+			}, nil, timestamp,
+		),
+	)
+
+	activities, _, err := ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	assert.Len(t, activities, 2)
+	assert.Equal(t, "fullname", *activities[0].ActorFullName)
+
+	u.Name = "newname"
+	err = ds.SaveUser(context.Background(), u)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	assert.Len(t, activities, 2)
+	assert.Equal(t, "newname", *activities[0].ActorFullName)
+	assert.Equal(t, "http://asd.com", *activities[0].ActorGravatar)
+	assert.Equal(t, "email@asd.com", *activities[0].ActorEmail)
+
+	err = ds.DeleteUser(context.Background(), u.ID)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	assert.Len(t, activities, 2)
+	assert.Equal(t, "fullname", *activities[0].ActorFullName)
+	assert.Nil(t, activities[0].ActorGravatar)
+}
+
+func testActivityNew(t *testing.T, ds *Datastore) {
+	u := &mobius.User{
+		Password:   []byte("asd"),
+		Name:       "fullname",
+		Email:      "email@asd.com",
+		GlobalRole: ptr.String(mobius.RoleObserver),
+	}
+	_, err := ds.NewUser(context.Background(), u)
+	require.Nil(t, err)
+	timestamp := time.Now()
+
+	activity := dummyActivity{
+		name:    "test0",
+		details: map[string]interface{}{"detail": 1, "sometext": "aaa"},
+	}
+	// If we don't set the ActivityWebhookContextKey context value, the activity will not be created
+	assert.Error(t, ds.NewActivity(context.Background(), u, activity, nil, timestamp))
+	// If we set the context value to the wrong thing, the activity will not be created
+	ctx := context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, "bozo")
+	assert.Error(t, ds.NewActivity(ctx, u, activity, nil, timestamp))
+
+	ctx = context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test1",
+				details: map[string]interface{}{"detail": 1, "sometext": "aaa"},
+			}, nil, timestamp,
+		),
+	)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test2",
+				details: map[string]interface{}{"detail": 2},
+			}, nil, timestamp,
+		),
+	)
+
+	opt := mobius.ListActivitiesOptions{
+		ListOptions: mobius.ListOptions{
+			Page:    0,
+			PerPage: 1,
+		},
+	}
+	activities, _, err := ds.ListActivities(context.Background(), opt)
+	require.NoError(t, err)
+	assert.Len(t, activities, 1)
+	assert.Equal(t, "fullname", *activities[0].ActorFullName)
+	assert.Equal(t, "test1", activities[0].Type)
+
+	opt = mobius.ListActivitiesOptions{
+		ListOptions: mobius.ListOptions{
+			Page:    1,
+			PerPage: 1,
+		},
+	}
+	activities, _, err = ds.ListActivities(context.Background(), opt)
+	require.NoError(t, err)
+	assert.Len(t, activities, 1)
+	assert.Equal(t, "fullname", *activities[0].ActorFullName)
+	assert.Equal(t, "test2", activities[0].Type)
+
+	opt = mobius.ListActivitiesOptions{
+		ListOptions: mobius.ListOptions{
+			Page:    0,
+			PerPage: 10,
+		},
+	}
+	activities, _, err = ds.ListActivities(context.Background(), opt)
+	require.NoError(t, err)
+	assert.Len(t, activities, 2)
+}
+
+func testListActivitiesStreamed(t *testing.T, ds *Datastore) {
+	u := &mobius.User{
+		Password:   []byte("asd"),
+		Name:       "fullname",
+		Email:      "email@asd.com",
+		GlobalRole: ptr.String(mobius.RoleObserver),
+	}
+	_, err := ds.NewUser(context.Background(), u)
+	require.Nil(t, err)
+
+	timestamp := time.Now()
+	ctx := context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test1",
+				details: map[string]interface{}{"detail": 1, "sometext": "aaa"},
+			}, nil, timestamp,
+		),
+	)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test2",
+				details: map[string]interface{}{"detail": 2},
+			}, nil, timestamp,
+		),
+	)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, u, dummyActivity{
+				name:    "test3",
+				details: map[string]interface{}{"detail": 3},
+			}, nil, timestamp,
+		),
+	)
+
+	activities, _, err := ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	assert.Len(t, activities, 3)
+
+	sort.Slice(activities, func(i, j int) bool {
+		return activities[i].ID < activities[j].ID
+	})
+
+	err = ds.MarkActivitiesAsStreamed(context.Background(), []uint{activities[0].ID})
+	require.NoError(t, err)
+
+	// Reload activities (with streamed field updated).
+	activities, _, err = ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	assert.Len(t, activities, 3)
+	sort.Slice(activities, func(i, j int) bool {
+		return activities[i].ID < activities[j].ID
+	})
+
+	nonStreamed, _, err := ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{
+		Streamed: ptr.Bool(false),
+	})
+	require.NoError(t, err)
+	assert.Len(t, nonStreamed, 2)
+	require.Equal(t, nonStreamed[0], activities[1])
+	require.Equal(t, nonStreamed[1], activities[2])
+
+	streamed, _, err := ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{
+		Streamed: ptr.Bool(true),
+	})
+	require.NoError(t, err)
+	assert.Len(t, streamed, 1)
+	require.Equal(t, streamed[0], activities[0])
+}
+
+func testActivityEmptyUser(t *testing.T, ds *Datastore) {
+	timestamp := time.Now()
+	ctx := context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, nil, dummyActivity{
+				name:    "test1",
+				details: map[string]interface{}{"detail": 1, "sometext": "aaa"},
+			}, nil, timestamp,
+		),
+	)
+
+	require.NoError(
+		t, ds.NewActivity(
+			ctx, nil, mobius.ActivityInstalledAppStoreApp{
+				HostID:          1,
+				HostDisplayName: "A Host",
+				SoftwareTitle:   "Trello",
+				AppStoreID:      "123456",
+				CommandUUID:     "some uuid",
+				Status:          string(mobius.SoftwareInstalled),
+				SelfService:     false,
+				PolicyID:        ptr.Uint(1),
+				PolicyName:      ptr.String("Sample Policy"),
+			}, nil, timestamp,
+		),
+	)
+
+	activities, _, err := ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	assert.Len(t, activities, 2)
+	assert.Equal(t, "Mobius", *activities[1].ActorFullName)
+}
+
+func testActivityPaginationMetadata(t *testing.T, ds *Datastore) {
+	timestamp := time.Now()
+	ctx := context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	for i := 0; i < 3; i++ {
+		require.NoError(
+			t, ds.NewActivity(
+				ctx, nil, dummyActivity{
+					name:    fmt.Sprintf("test-%d", i),
+					details: map[string]interface{}{},
+				}, nil, timestamp,
+			),
+		)
+	}
+
+	cases := []struct {
+		name  string
+		opts  mobius.ListOptions
+		count int
+		meta  *mobius.PaginationMetadata
+	}{
+		{
+			"default options",
+			mobius.ListOptions{PerPage: 0},
+			3,
+			&mobius.PaginationMetadata{},
+		},
+		{
+			"per page 2",
+			mobius.ListOptions{PerPage: 2},
+			2,
+			&mobius.PaginationMetadata{HasNextResults: true},
+		},
+		{
+			"per page 2 - page 1",
+			mobius.ListOptions{PerPage: 2, Page: 1},
+			1,
+			&mobius.PaginationMetadata{HasPreviousResults: true},
+		},
+		{
+			"per page 3",
+			mobius.ListOptions{PerPage: 3},
+			3,
+			&mobius.PaginationMetadata{},
+		},
+		{
+			`after "0" - orderKey "a.id"`,
+			mobius.ListOptions{After: "0", OrderKey: "a.id"},
+			3,
+			nil,
+		},
+		{
+			"per page 4",
+			mobius.ListOptions{PerPage: 4},
+			3,
+			&mobius.PaginationMetadata{},
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			activities, metadata, err := ds.ListActivities(context.Background(), mobius.ListActivitiesOptions{ListOptions: c.opts})
+			require.NoError(t, err)
+			assert.Len(t, activities, c.count)
+			if c.meta == nil {
+				assert.Nil(t, metadata)
+			} else {
+				require.NotNil(t, metadata)
+				assert.Equal(t, c.meta.HasNextResults, metadata.HasNextResults)
+				assert.Equal(t, c.meta.HasPreviousResults, metadata.HasPreviousResults)
+			}
+		})
+	}
+}
+
+func testListHostUpcomingActivities(t *testing.T, ds *Datastore) {
+	noUserCtx := context.Background()
+
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+	u2 := test.NewUser(t, ds, "user2", "user2@example.com", false)
+	ctx := viewer.NewContext(noUserCtx, viewer.Viewer{User: u2})
+
+	test.CreateInsertGlobalVPPToken(t, ds)
+
+	// create four hosts
+	h1 := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h1, false)
+	h2 := test.NewHost(t, ds, "h2.local", "10.10.10.2", "2", "2", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h2, false)
+	h3 := test.NewHost(t, ds, "h3.local", "10.10.10.3", "3", "3", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h3, false)
+	h4 := test.NewHost(t, ds, "h4.local", "10.10.10.4", "4", "4", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h4, false)
+
+	// create a couple of named scripts
+	scr1, err := ds.NewScript(ctx, &mobius.Script{
+		Name:           "A",
+		ScriptContents: "A",
+	})
+	require.NoError(t, err)
+	scr2, err := ds.NewScript(ctx, &mobius.Script{
+		Name:           "B",
+		ScriptContents: "B",
+	})
+	require.NoError(t, err)
+
+	// create a couple of software installers
+	installer1, err := mobius.NewTempFileReader(strings.NewReader("echo"), t.TempDir)
+	require.NoError(t, err)
+	sw1, _, err := ds.MatchOrCreateSoftwareInstaller(ctx, &mobius.UploadSoftwareInstallerPayload{
+		InstallScript:   "install foo",
+		InstallerFile:   installer1,
+		StorageID:       uuid.NewString(),
+		Filename:        "foo.pkg",
+		Title:           "foo",
+		Source:          "apps",
+		Version:         "0.0.1",
+		UserID:          u.ID,
+		ValidatedLabels: &mobius.LabelIdentsWithScope{},
+	})
+	require.NoError(t, err)
+	installer2, err := mobius.NewTempFileReader(strings.NewReader("echo"), t.TempDir)
+	require.NoError(t, err)
+	sw2, _, err := ds.MatchOrCreateSoftwareInstaller(ctx, &mobius.UploadSoftwareInstallerPayload{
+		InstallScript:   "install bar",
+		InstallerFile:   installer2,
+		StorageID:       uuid.NewString(),
+		Filename:        "bar.pkg",
+		Title:           "bar",
+		Source:          "apps",
+		Version:         "0.0.2",
+		UserID:          u.ID,
+		ValidatedLabels: &mobius.LabelIdentsWithScope{},
+	})
+	require.NoError(t, err)
+	installer3, err := mobius.NewTempFileReader(strings.NewReader("echo"), t.TempDir)
+	require.NoError(t, err)
+	sw3, _, err := ds.MatchOrCreateSoftwareInstaller(ctx, &mobius.UploadSoftwareInstallerPayload{
+		InstallScript:   "install to delete",
+		InstallerFile:   installer3,
+		StorageID:       uuid.NewString(),
+		Filename:        "todelete.pkg",
+		Title:           "todelete",
+		Source:          "apps",
+		Version:         "0.0.3",
+		UserID:          u.ID,
+		ValidatedLabels: &mobius.LabelIdentsWithScope{},
+	})
+	require.NoError(t, err)
+	sw1Meta, err := ds.GetSoftwareInstallerMetadataByID(ctx, sw1)
+	require.NoError(t, err)
+	sw2Meta, err := ds.GetSoftwareInstallerMetadataByID(ctx, sw2)
+	require.NoError(t, err)
+	sw3Meta, err := ds.GetSoftwareInstallerMetadataByID(ctx, sw3)
+	require.NoError(t, err)
+
+	// insert a VPP app
+	vppCommand1, vppCommand2 := "vpp-command-1", "vpp-command-2"
+	vppApp := &mobius.VPPApp{
+		Name: "vpp_no_team_app_1", VPPAppTeam: mobius.VPPAppTeam{VPPAppID: mobius.VPPAppID{AdamID: "3", Platform: mobius.MacOSPlatform}},
+		BundleIdentifier: "b3",
+	}
+	_, err = ds.InsertVPPAppWithTeam(ctx, vppApp, nil)
+	require.NoError(t, err)
+
+	// install the VPP app on h1
+	err = ds.InsertHostVPPSoftwareInstall(ctx, h1.ID, vppApp.VPPAppID, vppCommand1, "event-id-1", mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+	// vppCommand1 is now active for h1
+
+	// install the VPP app on h2, self-service
+	err = ds.InsertHostVPPSoftwareInstall(noUserCtx, h2.ID, vppApp.VPPAppID, vppCommand2, "event-id-2", mobius.HostSoftwareInstallOptions{SelfService: true})
+	require.NoError(t, err)
+	// vppCommand2 is now active for h2
+
+	// create a sync script request for h1 that has been pending for >
+	// MaxWaitTime, will still show up (sync scripts go through the upcoming
+	// queue as any script)
+	hsr, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h1.ID, ScriptContents: "sync", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	hSyncExpired := hsr.ExecutionID
+	t.Log("hSyncExpired", hSyncExpired)
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		_, err := q.ExecContext(ctx, "UPDATE upcoming_activities SET created_at = ? WHERE execution_id = ?", time.Now().Add(-(scripts.MaxServerWaitTime + time.Minute)), hSyncExpired)
+		return err
+	})
+
+	// create some script requests for h1
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h1.ID, ScriptID: &scr1.ID, ScriptContents: scr1.ScriptContents, UserID: &u.ID})
+	require.NoError(t, err)
+	h1A := hsr.ExecutionID
+	t.Log("h1A", h1A)
+
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h1.ID, ScriptID: &scr2.ID, ScriptContents: scr2.ScriptContents, UserID: &u.ID})
+	require.NoError(t, err)
+	h1B := hsr.ExecutionID
+	t.Log("h1B", h1B)
+
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h1.ID, ScriptContents: "C", UserID: &u.ID})
+	require.NoError(t, err)
+	h1C := hsr.ExecutionID
+	t.Log("h1C", h1C)
+
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h1.ID, ScriptContents: "D"})
+	require.NoError(t, err)
+	h1D := hsr.ExecutionID
+	t.Log("h1D", h1D)
+
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h1.ID, ScriptContents: "E"})
+	require.NoError(t, err)
+	h1E := hsr.ExecutionID
+	t.Log("h1E", h1E)
+
+	// create some software installs requests for h1
+	h1Bar, err := ds.InsertSoftwareInstallRequest(ctx, h1.ID, sw2Meta.InstallerID, mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+	t.Log("h1Bar", h1Bar)
+
+	// No user for this one and not Self-service, means it was installed by Mobius
+	policy, err := ds.NewTeamPolicy(ctx, 0, &u.ID, mobius.PolicyPayload{
+		Name:  "Test Policy",
+		Query: "SELECT 1",
+	})
+	require.NoError(t, err)
+	h1Mobius, err := ds.InsertSoftwareInstallRequest(noUserCtx, h1.ID, sw1Meta.InstallerID, mobius.HostSoftwareInstallOptions{PolicyID: &policy.ID})
+	require.NoError(t, err)
+	t.Log("h1Mobius", h1Mobius)
+
+	// create a single pending request for h2
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h2.ID, ScriptID: &scr1.ID, ScriptContents: scr1.ScriptContents, UserID: &u.ID})
+	require.NoError(t, err)
+	h2A := hsr.ExecutionID
+	t.Log("h2A", h2A)
+	// add a pending software install request for h2
+	h2Bar, err := ds.InsertSoftwareInstallRequest(ctx, h2.ID, sw2Meta.InstallerID, mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+	t.Log("h2Bar", h2Bar)
+	// No user for this one and Self-service, means it was installed by the end user, so the user_id should be null/nil.
+	h2SelfService, err := ds.InsertSoftwareInstallRequest(noUserCtx, h2.ID, sw1Meta.InstallerID, mobius.HostSoftwareInstallOptions{SelfService: true})
+	require.NoError(t, err)
+	t.Log("h2SelfService", h2SelfService)
+
+	setupExpScript := &mobius.Script{Name: "setup_experience_script", ScriptContents: "setup_experience"}
+	err = ds.SetSetupExperienceScript(ctx, setupExpScript)
+	require.NoError(t, err)
+	ses, err := ds.GetSetupExperienceScript(ctx, h2.TeamID)
+	require.NoError(t, err)
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h2.ID, ScriptContents: "setup_experience", SetupExperienceScriptID: &ses.ID})
+	require.NoError(t, err)
+	h2SetupExp := hsr.ExecutionID
+	t.Log("h2SetupExp", h2SetupExp)
+
+	// create pending install and uninstall requests for h3 that will be deleted
+	_, err = ds.InsertSoftwareInstallRequest(ctx, h3.ID, sw3Meta.InstallerID, mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+	err = ds.InsertSoftwareUninstallRequest(ctx, "uninstallRun", h3.ID, sw3Meta.InstallerID, false)
+	require.NoError(t, err)
+
+	// delete installer (should clear pending requests)
+	err = ds.DeleteSoftwareInstaller(ctx, sw3Meta.InstallerID)
+	require.NoError(t, err)
+
+	// Setup host 4. We will create upcoming activities, then
+	// delete and "restore" the host, similar to what would happen
+	// if you delete an ABM DEP host.
+	_, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: h4.ID, ScriptID: &scr1.ID, ScriptContents: scr1.ScriptContents, UserID: &u.ID})
+	require.NoError(t, err)
+	// h4A := hsr.ExecutionID
+	// h4Bar, err := ds.InsertSoftwareInstallRequest(ctx, h4.ID, sw2Meta.InstallerID, false, nil)
+	_, err = ds.InsertSoftwareInstallRequest(ctx, h4.ID, sw2Meta.InstallerID, mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+	// Delete the host
+	err = ds.DeleteHost(ctx, h4.ID)
+	require.NoError(t, err)
+	// DEP "restore" the host
+	err = ds.RestoreMDMApplePendingDEPHost(ctx, h4)
+	require.NoError(t, err)
+
+	// force-set the order of the created_at timestamps
+	// even if vppCommand1 and 2 are later, since they are already activated
+	// (because they were enqueued first) they will show up first.
+	SetOrderedCreatedAtTimestamps(t, ds, time.Now(), "upcoming_activities", "execution_id",
+		h1A, h1B, h1Bar, h1C, h1D, h1E, h1Mobius, h2SelfService, h2Bar, h2A, vppCommand1, vppCommand2, h2SetupExp)
+
+	execIDsWithUser := map[string]bool{
+		hSyncExpired:  true,
+		h1A:           true,
+		h1B:           true,
+		h1C:           true,
+		h1D:           false,
+		h1E:           false,
+		h2A:           true,
+		h1Mobius:       false,
+		h2SelfService: false,
+		h1Bar:         true,
+		h2Bar:         true,
+		vppCommand1:   true,
+		vppCommand2:   false,
+		h2SetupExp:    false,
+	}
+	execIDsScriptName := map[string]string{
+		h1A:        scr1.Name,
+		h1B:        scr2.Name,
+		h2A:        scr1.Name,
+		h2SetupExp: setupExpScript.Name,
+	}
+	execIDsSoftwareTitle := map[string]string{
+		h1Mobius:       "foo",
+		h1Bar:         "bar",
+		h2Bar:         "bar",
+		h2SelfService: "foo",
+	}
+	execIDsFromPolicyAutomation := map[string]struct{}{
+		h1Mobius: {},
+	}
+
+	cases := []struct {
+		opts      mobius.ListOptions
+		hostID    uint
+		wantExecs []string
+		wantMeta  *mobius.PaginationMetadata
+	}{
+		{
+			opts:      mobius.ListOptions{PerPage: 2},
+			hostID:    h1.ID,
+			wantExecs: []string{vppCommand1, hSyncExpired},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: false, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 1, PerPage: 2},
+			hostID:    h1.ID,
+			wantExecs: []string{h1A, h1B},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 2, PerPage: 2},
+			hostID:    h1.ID,
+			wantExecs: []string{h1Bar, h1C},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 3, PerPage: 2},
+			hostID:    h1.ID,
+			wantExecs: []string{h1D, h1E},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 4, PerPage: 2},
+			hostID:    h1.ID,
+			wantExecs: []string{h1Mobius},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{PerPage: 4},
+			hostID:    h1.ID,
+			wantExecs: []string{vppCommand1, hSyncExpired, h1A, h1B},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: false, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 1, PerPage: 4},
+			hostID:    h1.ID,
+			wantExecs: []string{h1Bar, h1C, h1D, h1E},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 2, PerPage: 4},
+			hostID:    h1.ID,
+			wantExecs: []string{h1Mobius},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{Page: 3, PerPage: 4},
+			hostID:    h1.ID,
+			wantExecs: []string{},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: true, TotalResults: 9},
+		},
+		{
+			opts:      mobius.ListOptions{PerPage: 5},
+			hostID:    h2.ID,
+			wantExecs: []string{vppCommand2, h2SetupExp, h2SelfService, h2Bar, h2A}, // setup experience is top-priority, but vppCommand2 was already activated
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: false, TotalResults: 5},
+		},
+		{
+			opts:      mobius.ListOptions{},
+			hostID:    h3.ID,
+			wantExecs: []string{},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: false, TotalResults: 0},
+		},
+		{
+			opts:      mobius.ListOptions{},
+			hostID:    h4.ID,
+			wantExecs: []string{},
+			wantMeta:  &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: false, TotalResults: 0},
+		},
+	}
+	for _, c := range cases {
+		t.Run(fmt.Sprintf("%v: %#v", c.hostID, c.opts), func(t *testing.T) {
+			// always include metadata
+			c.opts.IncludeMetadata = true
+			c.opts.OrderKey = ""
+			c.opts.OrderDirection = mobius.OrderAscending
+
+			acts, meta, err := ds.ListHostUpcomingActivities(ctx, c.hostID, c.opts)
+			require.NoError(t, err)
+
+			require.Equal(t, len(c.wantExecs), len(acts))
+			require.Equal(t, c.wantMeta, meta)
+
+			for i, a := range acts {
+				wantExec := c.wantExecs[i]
+
+				var details map[string]any
+				require.NotNil(t, a.Details, "result %d", i)
+				require.NoError(t, json.Unmarshal([]byte(*a.Details), &details), "result %d", i)
+
+				require.Equal(t, c.hostID, uint(details["host_id"].(float64)), "result %d", i)
+
+				var wantUser *mobius.User
+				switch a.Type {
+				case mobius.ActivityTypeRanScript{}.ActivityName():
+					require.Equal(t, wantExec, details["script_execution_id"], "result %d", i)
+					require.Equal(t, execIDsScriptName[wantExec], details["script_name"], "result %d", i)
+					wantUser = u
+
+				case mobius.ActivityTypeInstalledSoftware{}.ActivityName():
+					require.Equal(t, wantExec, details["install_uuid"], "result %d", i)
+					require.Equal(t, execIDsSoftwareTitle[wantExec], details["software_title"], "result %d", i)
+					wantUser = u2
+
+				case mobius.ActivityInstalledAppStoreApp{}.ActivityName():
+					require.Equal(t, wantExec, details["command_uuid"], "result %d", i)
+					require.Equal(t, "vpp_no_team_app_1", details["software_title"], "result %d", i)
+					require.Equal(t, !execIDsWithUser[wantExec], details["self_service"], "result %d", i)
+					wantUser = u2
+
+				default:
+					t.Fatalf("unknown activity type %s", a.Type)
+				}
+
+				if _, ok := execIDsFromPolicyAutomation[wantExec]; ok {
+					require.Nil(t, a.ActorID, "result %d", i)
+					require.NotNil(t, a.ActorFullName, "result %d", i)
+					require.Equal(t, "Mobius", *a.ActorFullName, "result %d", i)
+					require.Nil(t, a.ActorEmail, "result %d", i)
+					require.NotNil(t, details["policy_id"])
+					require.Equal(t, float64(policy.ID), details["policy_id"], "result %d", i)
+					require.NotNil(t, details["policy_name"])
+					require.Equal(t, policy.Name, details["policy_name"], "result %d", i)
+				} else if execIDsWithUser[wantExec] {
+					require.NotNil(t, a.ActorID, "result %d", i)
+					require.Equal(t, wantUser.ID, *a.ActorID, "result %d", i)
+					require.NotNil(t, a.ActorFullName, "result %d", i)
+					require.Equal(t, wantUser.Name, *a.ActorFullName, "result %d", i)
+					require.NotNil(t, a.ActorEmail, "result %d", i)
+					require.Equal(t, wantUser.Email, *a.ActorEmail, "result %d", i)
+				} else {
+					require.Nil(t, a.ActorID, "result %d", i)
+					if a.MobiusInitiated {
+						require.NotNil(t, a.ActorFullName, "result %d", i)
+						require.Equal(t, "Mobius", *a.ActorFullName, "result %d", i)
+					} else {
+						require.Nil(t, a.ActorFullName, "result %d", i)
+					}
+					require.Nil(t, a.ActorEmail, "result %d", i)
+				}
+			}
+		})
+	}
+}
+
+func testListHostPastActivities(t *testing.T, ds *Datastore) {
+	getDetails := func(a *mobius.Activity) map[string]any {
+		details := make(map[string]any)
+		err := json.Unmarshal([]byte(*a.Details), &details)
+		require.NoError(t, err)
+
+		return details
+	}
+
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+	h1 := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	activities := []dummyActivity{
+		{
+			name:    "ran_script",
+			details: map[string]any{"host_id": float64(h1.ID), "host_display_name": h1.DisplayName(), "script_execution_id": "exec_1", "script_name": "script_1.sh", "async": true},
+			hostIDs: []uint{h1.ID},
+		},
+
+		{
+			name:    "ran_script",
+			details: map[string]any{"host_id": float64(h1.ID), "host_display_name": h1.DisplayName(), "script_execution_id": "exec_2", "async": false},
+			hostIDs: []uint{h1.ID},
+		},
+	}
+
+	timestamp := time.Now()
+	ctx := context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	for _, a := range activities {
+		detailsBytes, err := json.Marshal(a)
+		require.NoError(t, err)
+		require.NoError(t, ds.NewActivity(ctx, u, a, detailsBytes, timestamp))
+	}
+
+	cases := []struct {
+		name    string
+		expActs []dummyActivity
+		opts    mobius.ListActivitiesOptions
+		expMeta *mobius.PaginationMetadata
+	}{
+		{
+			name:    "fetch page one",
+			expActs: []dummyActivity{activities[0]},
+			expMeta: &mobius.PaginationMetadata{HasNextResults: true, HasPreviousResults: false},
+			opts: mobius.ListActivitiesOptions{
+				ListOptions: mobius.ListOptions{
+					Page:    0,
+					PerPage: 1,
+				},
+			},
+		},
+		{
+			name:    "fetch page two",
+			expActs: []dummyActivity{activities[1]},
+			expMeta: &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: true},
+			opts: mobius.ListActivitiesOptions{
+				ListOptions: mobius.ListOptions{
+					Page:    1,
+					PerPage: 1,
+				},
+			},
+		},
+		{
+			name:    "fetch all activities",
+			expActs: activities,
+			expMeta: &mobius.PaginationMetadata{HasNextResults: false, HasPreviousResults: false},
+			opts: mobius.ListActivitiesOptions{
+				ListOptions: mobius.ListOptions{
+					Page:    0,
+					PerPage: 2,
+				},
+			},
+		},
+	}
+
+	for _, c := range cases {
+		c.opts.ListOptions.IncludeMetadata = true
+		acts, meta, err := ds.ListHostPastActivities(ctx, h1.ID, c.opts.ListOptions)
+		require.NoError(t, err)
+		require.Len(t, acts, len(c.expActs))
+		require.Equal(t, c.expMeta, meta)
+
+		// check fields in activities
+		for i, ra := range acts {
+			require.Equal(t, u.Email, *ra.ActorEmail)
+			require.Equal(t, u.Name, *ra.ActorFullName)
+			require.Equal(t, "ran_script", ra.Type)
+			require.Equal(t, u.GravatarURL, *ra.ActorGravatar)
+			require.Equal(t, u.ID, *ra.ActorID)
+			details := getDetails(ra)
+			for k, v := range details {
+				require.Equal(t, c.expActs[i].details[k], v)
+			}
+		}
+	}
+}
+
+func testCleanupActivitiesAndAssociatedData(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	user1 := &mobius.User{
+		Password:   []byte("p4ssw0rd.123"),
+		Name:       "user1",
+		Email:      "user1@example.com",
+		GlobalRole: ptr.String(mobius.RoleAdmin),
+	}
+	user1, err := ds.NewUser(ctx, user1)
+	require.NoError(t, err)
+
+	// Nothing to delete.
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, 500, 1)
+	require.NoError(t, err)
+
+	nonSavedQuery1, err := ds.NewQuery(ctx, &mobius.Query{
+		Name:    "nonSavedQuery1",
+		Saved:   false,
+		Query:   "SELECT 1;",
+		Logging: mobius.LoggingSnapshot,
+	})
+	require.NoError(t, err)
+	savedQuery1, err := ds.NewQuery(ctx, &mobius.Query{
+		Name:    "savedQuery1",
+		Saved:   true,
+		Query:   "SELECT 2;",
+		Logging: mobius.LoggingSnapshot,
+	})
+	require.NoError(t, err)
+	distributedQueryCampaign1, err := ds.NewDistributedQueryCampaign(ctx, &mobius.DistributedQueryCampaign{
+		QueryID: nonSavedQuery1.ID,
+		Status:  mobius.QueryComplete,
+		UserID:  user1.ID,
+	})
+	require.NoError(t, err)
+	_, err = ds.NewDistributedQueryCampaignTarget(ctx, &mobius.DistributedQueryCampaignTarget{
+		DistributedQueryCampaignID: distributedQueryCampaign1.ID,
+		TargetID:                   1,
+		Type:                       mobius.TargetHost,
+	})
+	require.NoError(t, err)
+	timestamp := time.Now()
+	ctx = context.WithValue(context.Background(), mobius.ActivityWebhookContextKey, true)
+	err = ds.NewActivity(ctx, user1, dummyActivity{
+		name:    "other activity",
+		details: map[string]interface{}{"detail": 0, "foo": "zoo"},
+	}, nil, timestamp,
+	)
+	require.NoError(t, err)
+	err = ds.NewActivity(ctx, user1, dummyActivity{
+		name:    "live query",
+		details: map[string]interface{}{"detail": 1, "foo": "bar"},
+	}, nil, timestamp,
+	)
+	require.NoError(t, err)
+	err = ds.NewActivity(ctx, user1, dummyActivity{
+		name:    "some host activity",
+		details: map[string]interface{}{"detail": 0, "foo": "zoo"},
+		hostIDs: []uint{1},
+	}, nil, timestamp,
+	)
+	require.NoError(t, err)
+	err = ds.NewActivity(ctx, user1, dummyActivity{
+		name:    "some host activity 2",
+		details: map[string]interface{}{"detail": 0, "foo": "bar"},
+		hostIDs: []uint{2},
+	}, nil, timestamp,
+	)
+	require.NoError(t, err)
+
+	// Nothing is deleted, as the activities and associated data is recent.
+	const maxCount = 500
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err := ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 4)
+	nonExpiredActivityID := activities[0].ID
+	expiredActivityID := activities[1].ID
+	nonExpiredHostActivityID := activities[2].ID
+	expiredHostActivityID := activities[3].ID
+	_, err = ds.Query(ctx, nonSavedQuery1.ID)
+	require.NoError(t, err)
+	_, err = ds.DistributedQueryCampaign(ctx, distributedQueryCampaign1.ID)
+	require.NoError(t, err)
+	targets, err := ds.DistributedQueryCampaignTargetIDs(ctx, distributedQueryCampaign1.ID)
+	require.NoError(t, err)
+	require.Len(t, targets.HostIDs, 1)
+
+	// Make some of the activity and associated data older.
+	_, err = ds.writer(context.Background()).Exec(`
+		UPDATE activities SET created_at = ? WHERE id = ? OR id = ?`,
+		time.Now().Add(-48*time.Hour), expiredActivityID, expiredHostActivityID,
+	)
+	require.NoError(t, err)
+	_, err = ds.writer(context.Background()).Exec(`
+		UPDATE queries SET created_at = ? WHERE id = ? OR id = ?`,
+		time.Now().Add(-48*time.Hour), nonSavedQuery1.ID, savedQuery1.ID,
+	)
+	require.NoError(t, err)
+
+	// Expired activity and associated data should be cleaned up.
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 3)
+	require.Equal(t, nonExpiredActivityID, activities[0].ID)
+	require.Equal(t, nonExpiredHostActivityID, activities[1].ID)
+	require.Equal(t, expiredHostActivityID, activities[2].ID)
+	_, err = ds.Query(ctx, nonSavedQuery1.ID)
+	require.ErrorIs(t, err, sql.ErrNoRows)
+	_, err = ds.DistributedQueryCampaign(ctx, distributedQueryCampaign1.ID)
+	require.ErrorIs(t, err, sql.ErrNoRows)
+	targets, err = ds.DistributedQueryCampaignTargetIDs(ctx, distributedQueryCampaign1.ID)
+	require.NoError(t, err)
+	require.Empty(t, targets.HostIDs)
+	require.Empty(t, targets.LabelIDs)
+	require.Empty(t, targets.TeamIDs)
+
+	// Saved query should not be cleaned up.
+	savedQuery1, err = ds.Query(ctx, savedQuery1.ID)
+	require.NoError(t, err)
+	require.NotNil(t, savedQuery1)
+}
+
+func testCleanupActivitiesAndAssociatedDataBatch(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	user1 := &mobius.User{
+		Password:   []byte("p4ssw0rd.123"),
+		Name:       "user1",
+		Email:      "user1@example.com",
+		GlobalRole: ptr.String(mobius.RoleAdmin),
+	}
+	user1, err := ds.NewUser(ctx, user1)
+	require.NoError(t, err)
+
+	const maxCount = 500
+
+	// Create 1500 activities.
+	insertActivitiesStmt := `
+		INSERT INTO activities
+		(user_id, user_name, activity_type, details, user_email)
+		VALUES `
+	var insertActivitiesArgs []interface{}
+	for i := 0; i < 1500; i++ {
+		insertActivitiesArgs = append(insertActivitiesArgs,
+			user1.ID, user1.Name, "foobar", `{"foo": "bar"}`, user1.Email,
+		)
+	}
+	insertActivitiesStmt += strings.TrimSuffix(strings.Repeat("(?, ?, ?, ?, ?),", 1500), ",")
+	_, err = ds.writer(ctx).ExecContext(ctx, insertActivitiesStmt, insertActivitiesArgs...)
+	require.NoError(t, err)
+
+	// Create 1500 non-saved queries.
+	insertQueriesStmt := `
+		INSERT INTO queries
+		(name, description, query)
+		VALUES `
+	var insertQueriesArgs []interface{}
+	for i := 0; i < 1500; i++ {
+		insertQueriesArgs = append(insertQueriesArgs,
+			fmt.Sprintf("foobar%d", i), "foobar", "SELECT 1;",
+		)
+	}
+	insertQueriesStmt += strings.TrimSuffix(strings.Repeat("(?, ?, ?),", 1500), ",")
+	_, err = ds.writer(ctx).ExecContext(ctx, insertQueriesStmt, insertQueriesArgs...)
+	require.NoError(t, err)
+
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err := ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 1500)
+	var queriesLen int
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		return sqlx.GetContext(ctx, q, &queriesLen, `SELECT COUNT(*) FROM queries WHERE NOT saved;`)
+	})
+	require.Equal(t, 1500, queriesLen)
+
+	// Make 1250 activities as expired.
+	_, err = ds.writer(context.Background()).Exec(`
+		UPDATE activities SET created_at = ? WHERE id <= 1250`,
+		time.Now().Add(-48*time.Hour),
+	)
+	require.NoError(t, err)
+
+	// Make 1250 queries as expired.
+	_, err = ds.writer(context.Background()).Exec(`
+		UPDATE queries SET created_at = ? WHERE id <= 1250`,
+		time.Now().Add(-48*time.Hour),
+	)
+	require.NoError(t, err)
+
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 1000)
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		return sqlx.GetContext(ctx, q, &queriesLen, `SELECT COUNT(*) FROM queries WHERE NOT saved;`)
+	})
+	require.Equal(t, 250, queriesLen) // All expired queries should be cleaned up.
+
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 500)
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		return sqlx.GetContext(ctx, q, &queriesLen, `SELECT COUNT(*) FROM queries WHERE NOT saved;`)
+	})
+	require.Equal(t, 250, queriesLen)
+
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 250)
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		return sqlx.GetContext(ctx, q, &queriesLen, `SELECT COUNT(*) FROM queries WHERE NOT saved;`)
+	})
+	require.Equal(t, 250, queriesLen)
+
+	err = ds.CleanupActivitiesAndAssociatedData(ctx, maxCount, 1)
+	require.NoError(t, err)
+
+	activities, _, err = ds.ListActivities(ctx, mobius.ListActivitiesOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 250)
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		return sqlx.GetContext(ctx, q, &queriesLen, `SELECT COUNT(*) FROM queries WHERE NOT saved;`)
+	})
+	require.Equal(t, 250, queriesLen)
+}
+
+func testActivateNextActivity(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, mobius.ActivityWebhookContextKey, true)
+
+	test.CreateInsertGlobalVPPToken(t, ds)
+
+	h1 := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h1, false)
+	h2 := test.NewHost(t, ds, "h2.local", "10.10.10.2", "2", "2", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h2, false)
+
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+
+	nanoDB, err := nanomdm_mysql.New(nanomdm_mysql.WithDB(ds.primary.DB))
+	require.NoError(t, err)
+	nanoCtx := &mdm.Request{EnrollID: &mdm.EnrollID{ID: h1.UUID}, Context: ctx}
+
+	// create a couple VPP apps that can be installed later
+	vppApp1 := &mobius.VPPApp{
+		Name: "vpp_1", VPPAppTeam: mobius.VPPAppTeam{VPPAppID: mobius.VPPAppID{AdamID: "vpp1", Platform: mobius.MacOSPlatform}},
+		BundleIdentifier: "vpp1",
+	}
+	_, err = ds.InsertVPPAppWithTeam(ctx, vppApp1, nil)
+	require.NoError(t, err)
+	vppApp2 := &mobius.VPPApp{
+		Name: "vpp_2", VPPAppTeam: mobius.VPPAppTeam{VPPAppID: mobius.VPPAppID{AdamID: "vpp2", Platform: mobius.MacOSPlatform}},
+		BundleIdentifier: "vpp2",
+	}
+	_, err = ds.InsertVPPAppWithTeam(ctx, vppApp2, nil)
+	require.NoError(t, err)
+
+	// create a software installer that can be installed later
+	installer1, err := mobius.NewTempFileReader(strings.NewReader("echo"), t.TempDir)
+	require.NoError(t, err)
+	sw1, _, err := ds.MatchOrCreateSoftwareInstaller(ctx, &mobius.UploadSoftwareInstallerPayload{
+		InstallScript:   "install foo",
+		InstallerFile:   installer1,
+		StorageID:       uuid.NewString(),
+		Filename:        "foo.pkg",
+		Title:           "foo",
+		Source:          "apps",
+		Version:         "0.0.1",
+		UserID:          u.ID,
+		UninstallScript: "uninstall foo",
+		ValidatedLabels: &mobius.LabelIdentsWithScope{},
+	})
+	require.NoError(t, err)
+
+	// activating an empty queue is fine, nothing activated
+	execIDs, err := ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, "")
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	// activating when empty with an unknown completed exec id is fine
+	execIDs, err = ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, uuid.NewString())
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	// create a script execution request
+	hsr, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{
+		HostID:         h1.ID,
+		ScriptContents: "echo 'a'",
+	})
+	require.NoError(t, err)
+	script1_1 := hsr.ExecutionID
+
+	// create a second script execution request that will not be activated yet
+	hsr, err = ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{
+		HostID:         h1.ID,
+		ScriptContents: "echo 'b'",
+	})
+	require.NoError(t, err)
+	script1_2 := hsr.ExecutionID
+
+	// add a couple install requests for vpp1 and vpp2
+	vpp1_1 := uuid.NewString()
+	err = ds.InsertHostVPPSoftwareInstall(ctx, h1.ID, vppApp1.VPPAppID, vpp1_1, "event-id-1", mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+	vpp1_2 := uuid.NewString()
+	err = ds.InsertHostVPPSoftwareInstall(ctx, h1.ID, vppApp2.VPPAppID, vpp1_2, "event-id-2", mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+
+	// activating does nothing because the first script is still activated
+	execIDs, err = ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, "")
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	// pending activities are script1_1, script1_2, vpp1_1, vpp1_2
+	pendingActs, _, err := ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 4)
+	require.Equal(t, script1_1, pendingActs[0].UUID)
+	require.Equal(t, script1_2, pendingActs[1].UUID)
+	require.Equal(t, vpp1_1, pendingActs[2].UUID)
+	require.Equal(t, vpp1_2, pendingActs[3].UUID)
+
+	// listing scripts ready to execute returns script1_1
+	pendingScripts, err := ds.ListReadyToExecuteScriptsForHost(ctx, h1.ID, false)
+	require.NoError(t, err)
+	require.Len(t, pendingScripts, 1)
+	require.Equal(t, script1_1, pendingScripts[0].ExecutionID)
+
+	// get host script result while there are no results yet returns the current status
+	scriptRes, err := ds.GetHostScriptExecutionResult(ctx, script1_1)
+	require.NoError(t, err)
+	require.Nil(t, scriptRes.ExitCode)
+
+	scriptRes, err = ds.GetHostScriptExecutionResult(ctx, script1_2)
+	require.NoError(t, err)
+	require.Nil(t, scriptRes.ExitCode)
+
+	// delete the script1_2 upcoming activity as if it was cancelled
+	ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+		_, err := q.ExecContext(ctx, `
+			DELETE FROM upcoming_activities
+			WHERE execution_id = ?`,
+			script1_2)
+		return err
+	})
+
+	// set a script result, will activate both VPP apps
+	_, _, err = ds.SetHostScriptExecutionResult(ctx, &mobius.HostScriptResultPayload{
+		HostID: h1.ID, ExecutionID: script1_1, Output: "a", ExitCode: 0,
+	})
+	require.NoError(t, err)
+
+	// get host script result now returns the result
+	scriptRes, err = ds.GetHostScriptExecutionResult(ctx, script1_1)
+	require.NoError(t, err)
+	require.NotNil(t, scriptRes.ExitCode)
+	require.EqualValues(t, 0, *scriptRes.ExitCode)
+
+	// pending activities are vpp1_1, vpp1_2
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 2)
+	require.Equal(t, vpp1_1, pendingActs[0].UUID)
+	require.Equal(t, vpp1_2, pendingActs[1].UUID)
+
+	// nano commands have been inserted
+	cmd, err := nanoDB.RetrieveNextCommand(nanoCtx, false)
+	require.NoError(t, err)
+	require.Equal(t, vpp1_1, cmd.CommandUUID)
+	require.Equal(t, "InstallApplication", cmd.Command.Command.RequestType)
+	rawCmd := string(cmd.Raw)
+	require.Contains(t, rawCmd, ">"+vppApp1.VPPAppTeam.AdamID+"<")
+	require.Contains(t, rawCmd, ">"+vpp1_1+"<")
+
+	// insert a result for that command and create the past activity,
+	// which triggers the next activity to be activated (should be none
+	// in this scenario, as one is still active)
+	cmdRes := &mdm.CommandResults{
+		CommandUUID: vpp1_1,
+		Status:      "Acknowledged",
+		Raw:         []byte(`<?xml version="1.0" encoding="UTF-8"?>`),
+	}
+	err = nanoDB.StoreCommandReport(nanoCtx, cmdRes)
+	require.NoError(t, err)
+
+	err = ds.NewActivity(ctx, nil, mobius.ActivityInstalledAppStoreApp{
+		HostID:      h1.ID,
+		AppStoreID:  vppApp1.VPPAppTeam.AdamID,
+		CommandUUID: vpp1_1,
+	}, []byte(`{}`), time.Now())
+	require.NoError(t, err)
+
+	appleCmdRes, err := ds.GetMDMAppleCommandResults(ctx, vpp1_1)
+	require.NoError(t, err)
+	require.Len(t, appleCmdRes, 1)
+	require.Equal(t, "Acknowledged", appleCmdRes[0].Status)
+
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 1)
+	require.Equal(t, vpp1_2, pendingActs[0].UUID)
+
+	// vpp1_2 is now the next nano command
+	cmd, err = nanoDB.RetrieveNextCommand(nanoCtx, false)
+	require.NoError(t, err)
+	require.Equal(t, vpp1_2, cmd.CommandUUID)
+	require.Equal(t, "InstallApplication", cmd.Command.Command.RequestType)
+	rawCmd = string(cmd.Raw)
+	require.Contains(t, rawCmd, ">"+vppApp2.VPPAppTeam.AdamID+"<")
+	require.Contains(t, rawCmd, ">"+vpp1_2+"<")
+
+	// create a pending software install request
+	sw1_1, err := ds.InsertSoftwareInstallRequest(ctx, h1.ID, sw1, mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+
+	// the software install request is not active yet, so with only active, returns nothing
+	pendingSw, err := ds.ListReadyToExecuteSoftwareInstalls(ctx, h1.ID)
+	require.NoError(t, err)
+	require.Len(t, pendingSw, 0)
+
+	// without only active, returns it
+	pendingSw, err = ds.ListPendingSoftwareInstalls(ctx, h1.ID)
+	require.NoError(t, err)
+	require.Len(t, pendingSw, 1)
+	require.Equal(t, sw1_1, pendingSw[0])
+
+	// activating does nothing because the VPP app 2 is still activated
+	execIDs, err = ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, "")
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	// trying to activate from a non-activated execution id (here, the software
+	// install sw1_1 one) does not delete that activity - it deletes only if it
+	// was activated
+	execIDs, err = ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, sw1_1)
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 2)
+	require.Equal(t, vpp1_2, pendingActs[0].UUID)
+	require.Equal(t, sw1_1, pendingActs[1].UUID)
+
+	// create a pending uninstall request
+	sw1_2 := uuid.NewString()
+	err = ds.InsertSoftwareUninstallRequest(ctx, sw1_2, h1.ID, sw1, false)
+	require.NoError(t, err)
+
+	// still hasn't changed the pending queue
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 3)
+	require.Equal(t, vpp1_2, pendingActs[0].UUID)
+	require.Equal(t, sw1_1, pendingActs[1].UUID)
+	require.Equal(t, sw1_2, pendingActs[2].UUID)
+
+	// insert a result for the vpp1_2 command
+	cmdRes = &mdm.CommandResults{
+		CommandUUID: vpp1_2,
+		Status:      "Error",
+		Raw:         []byte(`<?xml version="1.0" encoding="UTF-8"?>`),
+	}
+	err = nanoDB.StoreCommandReport(nanoCtx, cmdRes)
+	require.NoError(t, err)
+
+	err = ds.NewActivity(ctx, nil, mobius.ActivityInstalledAppStoreApp{
+		HostID:      h1.ID,
+		AppStoreID:  vppApp2.VPPAppTeam.AdamID,
+		CommandUUID: vpp1_2,
+	}, []byte(`{}`), time.Now())
+	require.NoError(t, err)
+
+	appleCmdRes, err = ds.GetMDMAppleCommandResults(ctx, vpp1_2)
+	require.NoError(t, err)
+	require.Len(t, appleCmdRes, 1)
+	require.Equal(t, "Error", appleCmdRes[0].Status)
+
+	// software install activity is now activated
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 2)
+	require.Equal(t, sw1_1, pendingActs[0].UUID)
+	require.Equal(t, sw1_2, pendingActs[1].UUID)
+
+	// set a result for the software install
+	_, err = ds.SetHostSoftwareInstallResult(ctx, &mobius.HostSoftwareInstallResultPayload{
+		HostID:                h1.ID,
+		InstallUUID:           sw1_1,
+		InstallScriptExitCode: ptr.Int(0),
+	})
+	require.NoError(t, err)
+
+	swRes, err := ds.GetSoftwareInstallResults(ctx, sw1_1)
+	require.NoError(t, err)
+	require.Equal(t, mobius.SoftwareInstalled, swRes.Status)
+
+	// activating does nothing because the sw1_2 was automatically activated
+	execIDs, err = ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, sw1_1)
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 1)
+	require.Equal(t, sw1_2, pendingActs[0].UUID)
+
+	// set a result for the software uninstall
+	_, _, err = ds.SetHostScriptExecutionResult(ctx, &mobius.HostScriptResultPayload{
+		HostID:      h1.ID,
+		ExecutionID: sw1_2,
+		ExitCode:    1,
+	})
+	require.NoError(t, err)
+
+	// because the install and uninstall are for the same software installer,
+	// only the latest attempt is shown in the summary and it is the uninstall.
+	swSummary, err := ds.GetSummaryHostSoftwareInstalls(ctx, sw1)
+	require.NoError(t, err)
+	require.Equal(t, mobius.SoftwareInstallerStatusSummary{
+		FailedUninstall: 1,
+	}, *swSummary)
+
+	// activating does nothing because the queue is now empty
+	execIDs, err = ds.activateNextUpcomingActivity(ctx, ds.writer(ctx), h1.ID, sw1_2)
+	require.NoError(t, err)
+	require.Empty(t, execIDs)
+
+	pendingActs, _, err = ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 0)
+}
+
+func testActivateItselfOnEmptyQueue(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, mobius.ActivityWebhookContextKey, true)
+	test.CreateInsertGlobalVPPToken(t, ds)
+
+	h1 := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, h1, false)
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+
+	nanoDB, err := nanomdm_mysql.New(nanomdm_mysql.WithDB(ds.primary.DB))
+	require.NoError(t, err)
+	nanoCtx := &mdm.Request{EnrollID: &mdm.EnrollID{ID: h1.UUID}, Context: ctx}
+
+	vppApp1 := &mobius.VPPApp{
+		Name: "vpp_1", VPPAppTeam: mobius.VPPAppTeam{VPPAppID: mobius.VPPAppID{AdamID: "vpp1", Platform: mobius.MacOSPlatform}},
+		BundleIdentifier: "vpp1",
+	}
+	_, err = ds.InsertVPPAppWithTeam(ctx, vppApp1, nil)
+	require.NoError(t, err)
+
+	installer1, err := mobius.NewTempFileReader(strings.NewReader("echo"), t.TempDir)
+	require.NoError(t, err)
+	sw1, _, err := ds.MatchOrCreateSoftwareInstaller(ctx, &mobius.UploadSoftwareInstallerPayload{
+		InstallScript:   "install foo",
+		InstallerFile:   installer1,
+		StorageID:       uuid.NewString(),
+		Filename:        "foo.pkg",
+		Title:           "foo",
+		Source:          "apps",
+		Version:         "0.0.1",
+		UserID:          u.ID,
+		UninstallScript: "uninstall foo",
+		ValidatedLabels: &mobius.LabelIdentsWithScope{},
+	})
+	require.NoError(t, err)
+
+	// create a pending software install request
+	sw1_1, err := ds.InsertSoftwareInstallRequest(ctx, h1.ID, sw1, mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+
+	// set a result for the software install
+	_, err = ds.SetHostSoftwareInstallResult(ctx, &mobius.HostSoftwareInstallResultPayload{
+		HostID:                h1.ID,
+		InstallUUID:           sw1_1,
+		InstallScriptExitCode: ptr.Int(0),
+	})
+	require.NoError(t, err)
+
+	// create a pending script execution request
+	hsr, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{
+		HostID:         h1.ID,
+		ScriptContents: "echo 'a'",
+	})
+	require.NoError(t, err)
+	script1_1 := hsr.ExecutionID
+
+	// set a result for the script
+	_, _, err = ds.SetHostScriptExecutionResult(ctx, &mobius.HostScriptResultPayload{
+		HostID: h1.ID, ExecutionID: script1_1, Output: "a", ExitCode: 0,
+	})
+	require.NoError(t, err)
+
+	// create a pending uninstall request
+	sw1_2 := uuid.NewString()
+	err = ds.InsertSoftwareUninstallRequest(ctx, sw1_2, h1.ID, sw1, false)
+	require.NoError(t, err)
+
+	// set a result for the software uninstall
+	_, _, err = ds.SetHostScriptExecutionResult(ctx, &mobius.HostScriptResultPayload{
+		HostID:      h1.ID,
+		ExecutionID: sw1_2,
+		ExitCode:    1,
+	})
+	require.NoError(t, err)
+
+	// create a pending vpp app install
+	vpp1_1 := uuid.NewString()
+	err = ds.InsertHostVPPSoftwareInstall(ctx, h1.ID, vppApp1.VPPAppID, vpp1_1, "event-id-1", mobius.HostSoftwareInstallOptions{})
+	require.NoError(t, err)
+
+	// set the result for the vpp app
+	cmdRes := &mdm.CommandResults{
+		CommandUUID: vpp1_1,
+		Status:      "Error",
+		Raw:         []byte(`<?xml version="1.0" encoding="UTF-8"?>`),
+	}
+	err = nanoDB.StoreCommandReport(nanoCtx, cmdRes)
+	require.NoError(t, err)
+	err = ds.NewActivity(ctx, nil, mobius.ActivityInstalledAppStoreApp{
+		HostID:      h1.ID,
+		AppStoreID:  vppApp1.VPPAppTeam.AdamID,
+		CommandUUID: vpp1_1,
+	}, []byte(`{}`), time.Now())
+	require.NoError(t, err)
+
+	// the upcoming queue should be empty, each result having emptied the list
+	// and each enqueue having triggered the next activity.
+	pendingActs, _, err := ds.ListHostUpcomingActivities(ctx, h1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, pendingActs, 0)
+}
+
+func testCancelNonActivatedUpcomingActivity(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	test.CreateInsertGlobalVPPToken(t, ds)
+
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+
+	host := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, host, false)
+	hostLeftUntouched := test.NewHost(t, ds, "h2.local", "10.10.10.2", "2", "2", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, hostLeftUntouched, false)
+
+	nanoDB, err := nanomdm_mysql.New(nanomdm_mysql.WithDB(ds.primary.DB))
+	require.NoError(t, err)
+
+	// enqueue an activity on hostLeftUntouched, must still be there after the tests
+	execIDUntouched := test.CreateHostScriptUpcomingActivity(t, ds, hostLeftUntouched)
+
+	// cancel an activity on a non-existing host
+	_, err = ds.CancelHostUpcomingActivity(ctx, 999, "non-existing")
+	var nfe mobius.NotFoundError
+	require.ErrorAs(t, err, &nfe)
+
+	// cancel a non-existing activity on an existing host
+	_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, "non-existing")
+	require.ErrorAs(t, err, &nfe)
+
+	pluckExecIDs := func(acts []*mobius.UpcomingActivity) []string {
+		var execIDs []string
+		for _, act := range acts {
+			execIDs = append(execIDs, act.UUID)
+		}
+		return execIDs
+	}
+
+	cases := []struct {
+		desc        string
+		setup       func(t *testing.T) []string
+		cancelIndex int
+	}{
+		{
+			desc: "cancel software install",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				exec2 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostScriptResult(t, ds, host, exec1, 0)
+				})
+				return []string{exec1, exec2}
+			},
+			cancelIndex: 1,
+		},
+		{
+			desc: "cancel script exec",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				exec2 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				t.Cleanup(func() {
+					test.SetHostSoftwareInstallResult(t, ds, host, exec1, 0)
+				})
+				return []string{exec1, exec2}
+			},
+			cancelIndex: 1,
+		},
+		{
+			desc: "cancel software uninstall",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				exec2 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostSoftwareInstallResult(t, ds, host, exec1, 0)
+				})
+				return []string{exec1, exec2}
+			},
+			cancelIndex: 1,
+		},
+		{
+			desc: "cancel vpp install",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				exec2, _ := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+				t.Cleanup(func() {
+					test.SetHostSoftwareUninstallResult(t, ds, host, exec1, 0)
+				})
+				return []string{exec1, exec2}
+			},
+			cancelIndex: 1,
+		},
+		{
+			desc: "cancel script with another activity after",
+			setup: func(t *testing.T) []string {
+				exec1, adamID := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+				exec2 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				exec3 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostVPPAppInstallResult(t, ds, nanoDB, host, exec1, adamID, "Acknowledged")
+					test.SetHostSoftwareInstallResult(t, ds, host, exec3, 0)
+				})
+				return []string{exec1, exec2, exec3}
+			},
+			cancelIndex: 1,
+		},
+		{
+			desc: "cancel software uninstall with a couple activities before",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				exec2 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				exec3 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostSoftwareInstallResult(t, ds, host, exec1, 0)
+					test.SetHostScriptResult(t, ds, host, exec2, 0)
+				})
+				return []string{exec1, exec2, exec3}
+			},
+			cancelIndex: 2,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.desc, func(t *testing.T) {
+			execIDs := c.setup(t)
+
+			got, _, err := ds.ListHostUpcomingActivities(ctx, host.ID, mobius.ListOptions{})
+			require.NoError(t, err)
+			require.Len(t, got, len(execIDs))
+			require.Equal(t, execIDs, pluckExecIDs(got))
+
+			cancelExecID := execIDs[c.cancelIndex]
+			expectedExecIDs := append(execIDs[:c.cancelIndex], execIDs[c.cancelIndex+1:]...) // nolint: gocritic
+			_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, cancelExecID)
+			require.NoError(t, err)
+
+			got, _, err = ds.ListHostUpcomingActivities(ctx, host.ID, mobius.ListOptions{})
+			require.NoError(t, err)
+			require.Len(t, got, len(expectedExecIDs))
+			require.Equal(t, expectedExecIDs, pluckExecIDs(got))
+		})
+	}
+
+	// check that hostLeftUntouched was... left untouched
+	got, _, err := ds.ListHostUpcomingActivities(ctx, hostLeftUntouched.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, got, 1)
+	require.Equal(t, []string{execIDUntouched}, pluckExecIDs(got))
+}
+
+func testCancelActivatedUpcomingActivity(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	test.CreateInsertGlobalVPPToken(t, ds)
+
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+
+	host := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, host, false)
+	hostLeftUntouched := test.NewHost(t, ds, "h2.local", "10.10.10.2", "2", "2", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, hostLeftUntouched, false)
+
+	nanoDB, err := nanomdm_mysql.New(nanomdm_mysql.WithDB(ds.primary.DB))
+	require.NoError(t, err)
+
+	// enqueue an activity on hostLeftUntouched, must still be there after the tests
+	execIDUntouched := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, hostLeftUntouched, u)
+
+	pluckExecIDs := func(acts []*mobius.UpcomingActivity) []string {
+		execIDs := []string{}
+		for _, act := range acts {
+			execIDs = append(execIDs, act.UUID)
+		}
+		return execIDs
+	}
+
+	cases := []struct {
+		desc  string
+		setup func(t *testing.T) []string
+	}{
+		{
+			desc: "cancel script",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				exec2 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostSoftwareInstallResult(t, ds, host, exec2, 0)
+				})
+				return []string{exec1, exec2}
+			},
+		},
+		{
+			desc: "cancel sofware install",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				exec2 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostSoftwareUninstallResult(t, ds, host, exec2, 0)
+				})
+				return []string{exec1, exec2}
+			},
+		},
+		{
+			desc: "cancel sofware uninstall",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				exec2, adamID := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+				t.Cleanup(func() {
+					test.SetHostVPPAppInstallResult(t, ds, nanoDB, host, exec2, adamID, "Acknowledged")
+				})
+				return []string{exec1, exec2}
+			},
+		},
+		{
+			desc: "cancel vpp install",
+			setup: func(t *testing.T) []string {
+				exec1, _ := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+				exec2 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				t.Cleanup(func() {
+					test.SetHostSoftwareInstallResult(t, ds, host, exec2, 0)
+				})
+				return []string{exec1, exec2}
+			},
+		},
+		{
+			desc: "cancel script none after",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				return []string{exec1}
+			},
+		},
+		{
+			desc: "cancel sofware install with a couple after",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+				exec2 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				exec3 := test.CreateHostScriptUpcomingActivity(t, ds, host)
+				t.Cleanup(func() {
+					test.SetHostSoftwareUninstallResult(t, ds, host, exec2, 0)
+					test.SetHostScriptResult(t, ds, host, exec3, 0)
+				})
+				return []string{exec1, exec2, exec3}
+			},
+		},
+		{
+			desc: "cancel sofware uninstall none after",
+			setup: func(t *testing.T) []string {
+				exec1 := test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+				return []string{exec1}
+			},
+		},
+		{
+			desc: "cancel vpp install same after",
+			setup: func(t *testing.T) []string {
+				exec1, _ := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+				exec2, adamID := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+				t.Cleanup(func() {
+					test.SetHostVPPAppInstallResult(t, ds, nanoDB, host, exec2, adamID, "Acknowledged")
+				})
+				return []string{exec1, exec2}
+			},
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.desc, func(t *testing.T) {
+			execIDs := c.setup(t)
+
+			got, _, err := ds.ListHostUpcomingActivities(ctx, host.ID, mobius.ListOptions{})
+			require.NoError(t, err)
+			require.Len(t, got, len(execIDs))
+			require.Equal(t, execIDs, pluckExecIDs(got))
+
+			cancelExecID := execIDs[0]
+			expectedExecIDs := execIDs[1:]
+			_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, cancelExecID)
+			require.NoError(t, err)
+
+			got, _, err = ds.ListHostUpcomingActivities(ctx, host.ID, mobius.ListOptions{})
+			require.NoError(t, err)
+			require.Len(t, got, len(expectedExecIDs))
+			require.Equal(t, expectedExecIDs, pluckExecIDs(got))
+
+			// the next upcoming activity (and only this one) should show up in those
+			// lists of ready-to-process activities.
+			var gotExecIDs []string
+			scripts, err := ds.ListReadyToExecuteScriptsForHost(ctx, host.ID, false)
+			require.NoError(t, err)
+			require.True(t, len(scripts) <= 1)
+			if len(scripts) == 1 {
+				gotExecIDs = append(gotExecIDs, scripts[0].ExecutionID)
+			}
+
+			sws, err := ds.ListReadyToExecuteSoftwareInstalls(ctx, host.ID)
+			require.NoError(t, err)
+			require.True(t, len(sws) <= 1)
+			gotExecIDs = append(gotExecIDs, sws...)
+
+			var nanoExecIDs []string
+			ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+				err := sqlx.SelectContext(ctx, q, &nanoExecIDs, `SELECT command_uuid FROM nano_view_queue WHERE id = ? AND active = 1 AND status IS NULL`, host.UUID)
+				return err
+			})
+			require.True(t, len(nanoExecIDs) <= 1)
+			gotExecIDs = append(gotExecIDs, nanoExecIDs...)
+
+			if len(expectedExecIDs) == 0 {
+				require.Len(t, gotExecIDs, 0)
+			} else {
+				require.Len(t, gotExecIDs, 1)
+				require.Equal(t, expectedExecIDs[0], gotExecIDs[0])
+			}
+		})
+	}
+
+	// check that hostLeftUntouched was... left untouched
+	got, _, err := ds.ListHostUpcomingActivities(ctx, hostLeftUntouched.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, got, 1)
+	require.Equal(t, []string{execIDUntouched}, pluckExecIDs(got))
+}
+
+func testSetResultAfterCancelUpcomingActivity(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	test.CreateInsertGlobalVPPToken(t, ds)
+
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+	host := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	nanoEnrollAndSetHostMDMData(t, ds, host, false)
+	nanoDB, err := nanomdm_mysql.New(nanomdm_mysql.WithDB(ds.primary.DB))
+	require.NoError(t, err)
+
+	// set a script result post-cancel
+	exec := test.CreateHostScriptUpcomingActivity(t, ds, host)
+	_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, exec)
+	require.NoError(t, err)
+	test.SetHostScriptResult(t, ds, host, exec, 0)
+
+	// set a software install result post-cancel
+	exec = test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host, u)
+	_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, exec)
+	require.NoError(t, err)
+	test.SetHostSoftwareInstallResult(t, ds, host, exec, 0)
+
+	// set a software uninstall result post-cancel
+	exec = test.CreateHostSoftwareUninstallUpcomingActivity(t, ds, host, u)
+	_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, exec)
+	require.NoError(t, err)
+	test.SetHostSoftwareUninstallResult(t, ds, host, exec, 0)
+
+	// set a vpp app install result post-cancel
+	exec, adamID := test.CreateHostVPPAppInstallUpcomingActivity(t, ds, host)
+	_, err = ds.CancelHostUpcomingActivity(ctx, host.ID, exec)
+	require.NoError(t, err)
+	test.SetHostVPPAppInstallResult(t, ds, nanoDB, host, exec, adamID, "Acknowledged")
+}
+
+func testGetHostUpcomingActivityMeta(t *testing.T, ds *Datastore) {
+	ctx := context.Background()
+	host1 := test.NewHost(t, ds, "h1.local", "10.10.10.1", "1", "1", time.Now())
+	host2 := test.NewHost(t, ds, "h2.local", "10.10.10.2", "2", "2", time.Now())
+	host1.Platform = "linux"
+	host2.Platform = "linux"
+	err := ds.UpdateHost(ctx, host1)
+	require.NoError(t, err)
+	err = ds.UpdateHost(ctx, host2)
+	require.NoError(t, err)
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+
+	// get meta with unknown host
+	_, err = ds.GetHostUpcomingActivityMeta(ctx, 999, "non-existing")
+	var nfe mobius.NotFoundError
+	require.ErrorAs(t, err, &nfe)
+
+	// get meta with unknown exec ID
+	_, err = ds.GetHostUpcomingActivityMeta(ctx, host1.ID, "non-existing")
+	require.ErrorAs(t, err, &nfe)
+
+	assertActivityMeta := func(want, got *mobius.UpcomingActivityMeta) {
+		require.Equal(t, want.ExecutionID, got.ExecutionID)
+		// we just assert activated vs non-activated
+		require.Equal(t, want.ActivatedAt != nil, got.ActivatedAt != nil)
+		require.Equal(t, want.UpcomingActivityType, got.UpcomingActivityType)
+		require.Equal(t, want.WellKnownAction, got.WellKnownAction)
+	}
+
+	// create an install request that is not any special command
+	swExecID := test.CreateHostSoftwareInstallUpcomingActivity(t, ds, host1, u)
+	meta, err := ds.GetHostUpcomingActivityMeta(ctx, host1.ID, swExecID)
+	require.NoError(t, err)
+	assertActivityMeta(&mobius.UpcomingActivityMeta{
+		ExecutionID:          swExecID,
+		ActivatedAt:          ptr.Time(time.Now()), // will just check nil vs non-nil
+		UpcomingActivityType: "software_install",
+		WellKnownAction:      mobius.WellKnownActionNone,
+	}, meta)
+
+	// create a lock request on host1
+	err = ds.LockHostViaScript(ctx, &mobius.HostScriptRequestPayload{HostID: host1.ID}, "linux")
+	require.NoError(t, err)
+
+	// create a wipe request on host2
+	err = ds.WipeHostViaScript(ctx, &mobius.HostScriptRequestPayload{HostID: host2.ID}, "linux")
+	require.NoError(t, err)
+
+	// grab the exec ID of the lock
+	activities, _, err := ds.ListHostUpcomingActivities(ctx, host1.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 2)
+	require.Equal(t, swExecID, activities[0].UUID)
+	lockExecID := activities[1].UUID
+
+	// grab the exec ID of the wipe
+	activities, _, err = ds.ListHostUpcomingActivities(ctx, host2.ID, mobius.ListOptions{})
+	require.NoError(t, err)
+	require.Len(t, activities, 1)
+	wipeExecID := activities[0].UUID
+
+	// lock meta is as expected
+	meta, err = ds.GetHostUpcomingActivityMeta(ctx, host1.ID, lockExecID)
+	require.NoError(t, err)
+	assertActivityMeta(&mobius.UpcomingActivityMeta{
+		ExecutionID:          lockExecID,
+		ActivatedAt:          nil,
+		UpcomingActivityType: "script",
+		WellKnownAction:      mobius.WellKnownActionLock,
+	}, meta)
+
+	// wipe meta is as expected
+	meta, err = ds.GetHostUpcomingActivityMeta(ctx, host2.ID, wipeExecID)
+	require.NoError(t, err)
+	assertActivityMeta(&mobius.UpcomingActivityMeta{
+		ExecutionID:          wipeExecID,
+		ActivatedAt:          ptr.Time(time.Now()), // will just check nil vs non-nil
+		UpcomingActivityType: "script",
+		WellKnownAction:      mobius.WellKnownActionWipe,
+	}, meta)
+
+	// set a result for the software install
+	test.SetHostSoftwareInstallResult(t, ds, host1, swExecID, 0)
+
+	// the lock script is now activated
+	meta, err = ds.GetHostUpcomingActivityMeta(ctx, host1.ID, lockExecID)
+	require.NoError(t, err)
+	assertActivityMeta(&mobius.UpcomingActivityMeta{
+		ExecutionID:          lockExecID,
+		ActivatedAt:          ptr.Time(time.Now()), // will just check nil vs non-nil
+		UpcomingActivityType: "script",
+		WellKnownAction:      mobius.WellKnownActionLock,
+	}, meta)
+
+	// wipe meta on host2 is unchanged
+	meta, err = ds.GetHostUpcomingActivityMeta(ctx, host2.ID, wipeExecID)
+	require.NoError(t, err)
+	assertActivityMeta(&mobius.UpcomingActivityMeta{
+		ExecutionID:          wipeExecID,
+		ActivatedAt:          ptr.Time(time.Now()), // will just check nil vs non-nil
+		UpcomingActivityType: "script",
+		WellKnownAction:      mobius.WellKnownActionWipe,
+	}, meta)
+
+	// enqueue a new script activity
+	scrExecID := test.CreateHostScriptUpcomingActivity(t, ds, host1)
+	// its meta is as expected
+	meta, err = ds.GetHostUpcomingActivityMeta(ctx, host1.ID, scrExecID)
+	require.NoError(t, err)
+	assertActivityMeta(&mobius.UpcomingActivityMeta{
+		ExecutionID:          scrExecID,
+		ActivatedAt:          nil,
+		UpcomingActivityType: "script",
+		WellKnownAction:      mobius.WellKnownActionNone,
+	}, meta)
+
+	// set a result for the lock action
+	test.SetHostScriptResult(t, ds, host1, lockExecID, 0)
+	// its meta is now non-existing
+	_, err = ds.GetHostUpcomingActivityMeta(ctx, host1.ID, lockExecID)
+	require.ErrorAs(t, err, &nfe)
+
+	// set a result for the wipe action
+	test.SetHostScriptResult(t, ds, host2, wipeExecID, 0)
+	// its meta is now non-existing
+	_, err = ds.GetHostUpcomingActivityMeta(ctx, host2.ID, wipeExecID)
+	require.ErrorAs(t, err, &nfe)
+}
+
+func testUnblockHostsUpcomingActivityQueue(t *testing.T, ds *Datastore) {
+	ctx := t.Context()
+	u := test.NewUser(t, ds, "user1", "user1@example.com", false)
+
+	// create a few hosts
+	hosts := make([]*mobius.Host, 5)
+	for i := range hosts {
+		host := test.NewHost(t, ds, fmt.Sprintf("h%d.local", i+1), fmt.Sprintf("10.10.10.%d", i+1), fmt.Sprint(i+1), fmt.Sprint(i+1), time.Now())
+		hosts[i] = host
+	}
+
+	// run without anything in any host queue
+	n, err := ds.UnblockHostsUpcomingActivityQueue(ctx, 10)
+	require.NoError(t, err)
+	require.Equal(t, 0, n)
+
+	deleteUpcomingActivityToBlockQueue := func(execID string) {
+		ExecAdhocSQL(t, ds, func(q sqlx.ExtContext) error {
+			_, err := q.ExecContext(ctx, `DELETE FROM upcoming_activities WHERE execution_id = ?`, execID)
+			return err
+		})
+	}
+
+	// enqueue some activities on some hosts (the nature of the activity is not relevant)
+	host0ScriptA, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[0].ID, ScriptContents: "A", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host0ScriptB, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[0].ID, ScriptContents: "B", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host1ScriptA, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[1].ID, ScriptContents: "A", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host2ScriptA, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[2].ID, ScriptContents: "A", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+
+	checkUpcomingActivities(t, ds, hosts[0], host0ScriptA.ExecutionID, host0ScriptB.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[1], host1ScriptA.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[2], host2ScriptA.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[3])
+	checkUpcomingActivities(t, ds, hosts[4])
+
+	// nothing to unblock
+	n, err = ds.UnblockHostsUpcomingActivityQueue(ctx, 10)
+	require.NoError(t, err)
+	require.Equal(t, 0, n)
+
+	// block queue for host 0
+	deleteUpcomingActivityToBlockQueue(host0ScriptA.ExecutionID)
+
+	n, err = ds.UnblockHostsUpcomingActivityQueue(ctx, 10)
+	require.NoError(t, err)
+	require.Equal(t, 1, n)
+
+	checkUpcomingActivities(t, ds, hosts[0], host0ScriptB.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[1], host1ScriptA.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[2], host2ScriptA.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[3])
+	checkUpcomingActivities(t, ds, hosts[4])
+
+	// enqueue script C for all hosts
+	host0ScriptC, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[0].ID, ScriptContents: "C", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host1ScriptC, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[1].ID, ScriptContents: "C", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host2ScriptC, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[2].ID, ScriptContents: "C", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host3ScriptC, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[3].ID, ScriptContents: "C", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host4ScriptC, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[4].ID, ScriptContents: "C", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+
+	checkUpcomingActivities(t, ds, hosts[0], host0ScriptB.ExecutionID, host0ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[1], host1ScriptA.ExecutionID, host1ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[2], host2ScriptA.ExecutionID, host2ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[3], host3ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[4], host4ScriptC.ExecutionID)
+
+	// block queue for all hosts, but since hosts 3 and 4 are now empty, no need
+	// to unblock
+	deleteUpcomingActivityToBlockQueue(host0ScriptB.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host1ScriptA.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host2ScriptA.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host3ScriptC.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host4ScriptC.ExecutionID)
+
+	n, err = ds.UnblockHostsUpcomingActivityQueue(ctx, 10)
+	require.NoError(t, err)
+	require.Equal(t, 3, n)
+
+	checkUpcomingActivities(t, ds, hosts[0], host0ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[1], host1ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[2], host2ScriptC.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[3])
+	checkUpcomingActivities(t, ds, hosts[4])
+
+	// enqueue script D and E for all hosts
+	host0ScriptD, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[0].ID, ScriptContents: "D", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host1ScriptD, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[1].ID, ScriptContents: "D", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host2ScriptD, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[2].ID, ScriptContents: "D", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host3ScriptD, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[3].ID, ScriptContents: "D", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host4ScriptD, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[4].ID, ScriptContents: "D", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host0ScriptE, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[0].ID, ScriptContents: "E", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host1ScriptE, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[1].ID, ScriptContents: "E", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host2ScriptE, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[2].ID, ScriptContents: "E", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host3ScriptE, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[3].ID, ScriptContents: "E", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+	host4ScriptE, err := ds.NewHostScriptExecutionRequest(ctx, &mobius.HostScriptRequestPayload{HostID: hosts[4].ID, ScriptContents: "E", UserID: &u.ID, SyncRequest: true})
+	require.NoError(t, err)
+
+	checkUpcomingActivities(t, ds, hosts[0], host0ScriptC.ExecutionID, host0ScriptD.ExecutionID, host0ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[1], host1ScriptC.ExecutionID, host1ScriptD.ExecutionID, host1ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[2], host2ScriptC.ExecutionID, host2ScriptD.ExecutionID, host2ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[3], host3ScriptD.ExecutionID, host3ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[4], host4ScriptD.ExecutionID, host4ScriptE.ExecutionID)
+
+	// block queue for all hosts
+	deleteUpcomingActivityToBlockQueue(host0ScriptC.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host1ScriptC.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host2ScriptC.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host3ScriptD.ExecutionID)
+	deleteUpcomingActivityToBlockQueue(host4ScriptD.ExecutionID)
+
+	// process max 3 hosts
+	n, err = ds.UnblockHostsUpcomingActivityQueue(ctx, 3)
+	require.NoError(t, err)
+	require.Equal(t, 3, n)
+	// run again, should process the next 2 hosts
+	n, err = ds.UnblockHostsUpcomingActivityQueue(ctx, 3)
+	require.NoError(t, err)
+	require.Equal(t, 2, n)
+	// run again, nothing to unblock
+	n, err = ds.UnblockHostsUpcomingActivityQueue(ctx, 3)
+	require.NoError(t, err)
+	require.Equal(t, 0, n)
+
+	checkUpcomingActivities(t, ds, hosts[0], host0ScriptD.ExecutionID, host0ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[1], host1ScriptD.ExecutionID, host1ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[2], host2ScriptD.ExecutionID, host2ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[3], host3ScriptE.ExecutionID)
+	checkUpcomingActivities(t, ds, hosts[4], host4ScriptE.ExecutionID)
+}

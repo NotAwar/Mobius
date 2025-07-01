@@ -1,0 +1,75 @@
+.host-details {
+  // grid layout styles for the host details page
+  &__details-panel {
+    display: grid;
+    gap: $pad-medium;
+  }
+
+  &__header-summary {
+    display: flex;
+    flex-direction: column;
+    gap: $pad-medium;
+  }
+
+  @media screen and (min-width: $break-md) {
+    &__details-panel.react-tabs__tab-panel--selected {
+      // Must be selected to show grid
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    // these are used for positiong the cards in the grid. place these classes
+    // on the cards depending on the layout needed.
+    &__card {
+      grid-column: span 1; // card will be 1 column x 1 row
+
+      &--full-width {
+        grid-column: span 2; // card will fill the whole row
+      }
+
+      &--double-height {
+        grid-row: span 2; // card will be 1 column x 2 rows
+      }
+    }
+  }
+
+  .about-card,
+  .agent-options-card {
+    .info {
+      &__item {
+        &--about {
+          margin-right: 92px;
+          flex-direction: row;
+        }
+      }
+      &__data {
+        margin-bottom: $pad-medium;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .munki-issues-card {
+    margin-top: $pad-medium;
+  }
+
+  .button img {
+    transform: scale(0.5);
+  }
+
+  &__button-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin: $pad-xxlarge 0 0;
+  }
+
+  .tooltip__tooltip-icon {
+    img {
+      vertical-align: middle;
+      height: 16px;
+      width: auto;
+    }
+  }
+}

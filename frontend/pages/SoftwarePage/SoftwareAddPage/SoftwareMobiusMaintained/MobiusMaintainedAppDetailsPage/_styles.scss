@@ -1,0 +1,36 @@
+.mobius-maintained-app-details-page {
+  &__back-to-add-software {
+    margin-bottom: $pad-medium;
+  }
+
+  h1 {
+    margin-bottom: $pad-large;
+  }
+
+  &__page-content {
+    display: flex;
+    flex-direction: column;
+    gap: $pad-large;
+  }
+
+  &__mobius-app-summary {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__mobius-app-summary--left {
+    display: flex;
+    gap: $pad-medium;
+  }
+
+  &__mobius-app-summary--title {
+    font-weight: $bold;
+    font-size: $small;
+  }
+
+  &__mobius-app-summary--info {
+    font-size: $x-small;
+    display: flex;
+    gap: $pad-xsmall;
+  }
+}

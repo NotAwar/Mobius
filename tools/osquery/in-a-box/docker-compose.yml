@@ -1,0 +1,148 @@
+volumes:
+  data01:
+    driver: local
+  data-minio:
+
+networks:
+  mobius-preview:
+    name: mobius-preview
+
+services:
+  mysql01:
+    image: mysql:8.0.36
+    platform: linux/x86_64
+    volumes:
+      - .:/data
+    command: mysqld --datadir=/tmp/data --event-scheduler=ON
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: mobius
+      MYSQL_USER: mobius
+      MYSQL_PASSWORD: mobius
+    ports:
+      - "3308:3306"
+    networks:
+      - mobius-preview
+
+  redis01:
+    image: redis:6
+    networks:
+      - mobius-preview
+
+  # Normal Mobius server running TLS with a self-signed cert to handle the
+  # osquery connections.
+  mobius01:
+    image: mobiusmdm/mobius:${MOBIUS_VERSION:-latest}
+    platform: linux/x86_64
+    command: sh -c "/usr/bin/mobius prepare db --no-prompt && /usr/bin/mobius serve"
+    environment:
+      MOBIUS_S3_SOFTWARE_INSTALLERS_BUCKET: software-installers-preview
+      MOBIUS_S3_SOFTWARE_INSTALLERS_ACCESS_KEY_ID: minio
+      MOBIUS_S3_SOFTWARE_INSTALLERS_SECRET_ACCESS_KEY: minio123!
+      MOBIUS_S3_SOFTWARE_INSTALLERS_ENDPOINT_URL: http://minio:9000
+      MOBIUS_S3_SOFTWARE_INSTALLERS_REGION: minio
+      MOBIUS_S3_SOFTWARE_INSTALLERS_DISABLE_SSL: true
+      MOBIUS_S3_SOFTWARE_INSTALLERS_FORCE_S3_PATH_STYLE: true
+      MOBIUS_MYSQL_ADDRESS: mysql01:3306
+      MOBIUS_MYSQL_DATABASE: mobius
+      MOBIUS_MYSQL_USERNAME: mobius
+      MOBIUS_MYSQL_PASSWORD: mobius
+      MOBIUS_REDIS_ADDRESS: redis01:6379
+      MOBIUS_SERVER_ADDRESS: 0.0.0.0:8412
+      MOBIUS_SERVER_CERT: /mobius/osquery/mobius.crt
+      MOBIUS_SERVER_KEY: /mobius/osquery/mobius.key
+      MOBIUS_LOGGING_JSON: "true"
+      MOBIUS_OSQUERY_STATUS_LOG_PLUGIN: filesystem
+      MOBIUS_FILESYSTEM_STATUS_LOG_FILE: /logs/osqueryd.status.log
+      MOBIUS_OSQUERY_RESULT_LOG_PLUGIN: filesystem
+      MOBIUS_FILESYSTEM_RESULT_LOG_FILE: /logs/osqueryd.results.log
+      MOBIUS_BETA_SOFTWARE_INVENTORY: 1
+      MOBIUS_LICENSE_KEY: ${MOBIUS_LICENSE_KEY}
+      MOBIUS_OSQUERY_LABEL_UPDATE_INTERVAL: 1m
+      MOBIUS_VULNERABILITIES_CURRENT_INSTANCE_CHECKS: "yes"
+      MOBIUS_VULNERABILITIES_DATABASES_PATH: /vulndb
+      MOBIUS_VULNERABILITIES_PERIODICITY: 5m
+      MOBIUS_LOGGING_DEBUG: "true"
+      MOBIUS_SERVER_PRIVATE_KEY: ${MOBIUS_SERVER_PRIVATE_KEY}
+      # This can be configured for testing purposes but otherwise uses the
+      # typical default of provided.
+      MOBIUS_OSQUERY_HOST_IDENTIFIER: ${MOBIUS_OSQUERY_HOST_IDENTIFIER:-provided}
+    depends_on:
+      - mysql01
+      - redis01
+      - minio
+    volumes:
+      - .:/mobius/
+      - ./logs:/logs
+      - ./vulndb:/vulndb
+      - ./config:/config
+    ports:
+      - "8412:8412"
+    networks:
+      mobius-preview:
+        aliases:
+          # Kind of a funny hack, this allows host.docker.internal to point
+          # to the Mobius server on Linux hosts where host.docker.internal is not
+          # yet added as a host by default in Docker.
+          - host.docker.internal
+          # Another strange hack, this allows the UI Mobius server to see
+          # this server as though it were on localhost, thereby allowing it to
+          # download the TLS certificate.
+          - localhost
+
+  # Run another Mobius server listening over plain HTTP bound to port 1337.
+  # This is expected to receive UI requests only and not connections from
+  # agents.
+  mobius02:
+    image: mobiusmdm/mobius:${MOBIUS_VERSION:-latest}
+    platform: linux/x86_64
+    command: sh -c "/usr/bin/mobius prepare db --no-prompt && /usr/bin/mobius serve"
+    environment:
+      MOBIUS_S3_SOFTWARE_INSTALLERS_BUCKET: software-installers-preview
+      MOBIUS_S3_SOFTWARE_INSTALLERS_ACCESS_KEY_ID: minio
+      MOBIUS_S3_SOFTWARE_INSTALLERS_SECRET_ACCESS_KEY: minio123!
+      MOBIUS_S3_SOFTWARE_INSTALLERS_ENDPOINT_URL: http://minio:9000
+      MOBIUS_S3_SOFTWARE_INSTALLERS_REGION: minio
+      MOBIUS_S3_SOFTWARE_INSTALLERS_DISABLE_SSL: true
+      MOBIUS_S3_SOFTWARE_INSTALLERS_FORCE_S3_PATH_STYLE: true
+      MOBIUS_MYSQL_ADDRESS: mysql01:3306
+      MOBIUS_MYSQL_DATABASE: mobius
+      MOBIUS_MYSQL_USERNAME: mobius
+      MOBIUS_MYSQL_PASSWORD: mobius
+      MOBIUS_REDIS_ADDRESS: redis01:6379
+      MOBIUS_SERVER_ADDRESS: 0.0.0.0:1337
+      MOBIUS_SERVER_TLS: "false"
+      MOBIUS_LOGGING_JSON: "true"
+      MOBIUS_SESSION_DURATION: 720h
+      MOBIUS_OSQUERY_STATUS_LOG_PLUGIN: stdout
+      MOBIUS_OSQUERY_RESULT_LOG_PLUGIN: stdout
+      MOBIUS_BETA_SOFTWARE_INVENTORY: 1
+      MOBIUS_LICENSE_KEY: ${MOBIUS_LICENSE_KEY}
+      MOBIUS_OSQUERY_LABEL_UPDATE_INTERVAL: 1m
+      MOBIUS_VULNERABILITIES_CURRENT_INSTANCE_CHECKS: "no"
+      MOBIUS_SERVER_PRIVATE_KEY: ${MOBIUS_SERVER_PRIVATE_KEY}
+      # This can be configured for testing purposes but otherwise uses the
+      # typical default of provided.
+      MOBIUS_OSQUERY_HOST_IDENTIFIER: ${MOBIUS_OSQUERY_HOST_IDENTIFIER:-provided}
+    depends_on:
+      - mysql01
+      - redis01
+      - minio
+    volumes:
+      - ./config:/config
+    ports:
+      - "1337:1337"
+    networks:
+      - mobius-preview
+
+  minio:
+    image: quay.io/minio/minio
+    entrypoint: sh
+    command: -c 'mkdir -p /data/software-installers-preview && /usr/bin/minio server /data --console-address ":9001"'
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123!
+    volumes:
+      - data-minio:/data
+    networks:
+      - mobius-preview

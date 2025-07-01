@@ -1,0 +1,74 @@
+.app-wrap {
+  .site-nav {
+    height: 50px;
+  }
+}
+
+// styles specific to DeviceUserPage
+// for styles that should apply to both DeviceUserPage and HostDetailsPage (most of them),
+// update frontend/pages/hosts/details/_styles.scss/ `.host-details, .device-user {...}`
+.device-user {
+  justify-content: flex-start;
+  padding-bottom: 50px;
+  min-width: 0;
+
+  .info-banner {
+    &__cta {
+      white-space: nowrap;
+    }
+  }
+  a img.external-link-icon {
+    width: 12px;
+    height: 12px;
+    margin-left: 0.25rem;
+  }
+
+  .button img {
+    transform: scale(0.5);
+  }
+
+  &__details-panel {
+    display: grid;
+    gap: $pad-medium;
+  }
+
+  @media screen and (min-width: $break-md) {
+    &__details-panel {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    // these are used for positiong the cards in the grid. place these classes
+    // on the cards depending on the layout needed.
+    &__card {
+      grid-column: span 1; // card will be 1 column x 1 row
+
+      &--full-width {
+        grid-column: span 2; // card will fill the whole row
+      }
+    }
+  }
+
+  &__wrapper {
+    border: solid 1px $ui-mobius-black-10;
+    border-radius: 6px;
+    margin-top: $pad-small;
+    overflow: scroll;
+    box-shadow: inset -8px 0 17px -10px #e8edf4;
+  }
+
+  .tooltip__tooltip-icon {
+    img {
+      vertical-align: middle;
+      height: 16px;
+      width: auto;
+    }
+  }
+
+  .policies-card .data-table-block .data-table__table thead .response__header {
+    width: $col-md;
+  }
+}
+
+.dup-org-logo {
+  cursor: default;
+}

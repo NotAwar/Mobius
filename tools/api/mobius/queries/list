@@ -1,0 +1,4 @@
+#!/bin/bash
+source $MOBIUS_ENV_PATH
+endpoint="api/latest/mobius/queries"
+curl $CURL_FLAGS -H "Authorization: Bearer $TOKEN" "$SERVER_URL/$endpoint" 

@@ -1,0 +1,26 @@
+---
+- name: restart osquery
+  systemd:
+    name: osqueryd
+    state: restarted
+  when: ansible_os_family in ["Debian", "RedHat"]
+
+- name: restart osquery
+  command: launchctl unload /Library/LaunchDaemons/com.facebook.osqueryd.plist && launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist
+  when: ansible_os_family == "Darwin"
+
+- name: restart osquery
+  win_service:
+    name: osqueryd
+    state: restarted
+  when: ansible_os_family == "Windows"
+
+- name: restart sshd
+  systemd:
+    name: sshd
+    state: restarted
+  when: ansible_os_family in ["Debian", "RedHat"]
+
+- name: restart sshd
+  command: launchctl unload /System/Library/LaunchDaemons/ssh.plist && launchctl load /System/Library/LaunchDaemons/ssh.plist
+  when: ansible_os_family == "Darwin"

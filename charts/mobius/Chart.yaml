@@ -1,0 +1,20 @@
+apiVersion: v2
+description: A Helm chart for Mobius
+name: mobius
+keywords:
+- mobius
+- osquery
+version: v6.6.7
+home: https://github.com/notawar/mobius
+sources:
+- https://github.com/notawar/mobius.git
+appVersion: v4.69.0
+dependencies:
+- name: mysql
+  condition: mysql.enabled
+  version: 9.12.5
+  repository: https://charts.bitnami.com/bitnami
+- name: redis
+  condition: redis.enabled
+  version: 18.1.6
+  repository: https://charts.bitnami.com/bitnami

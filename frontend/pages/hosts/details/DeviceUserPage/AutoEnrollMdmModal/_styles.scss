@@ -1,0 +1,13 @@
+.auto-enroll-mdm-modal {
+  @include enroll-mdm-modal;
+
+  &__profiles-renew {
+    margin: 0 0 0 $pad-medium;
+
+    &--instructions {
+      color: $ui-mobius-black-75;
+      margin-top: $pad-small;
+      margin-bottom: $pad-small;
+    }
+  }
+}

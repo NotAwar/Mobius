@@ -1,0 +1,37 @@
+mysql:
+  address: 127.0.0.1:3306
+  database: mobius
+  username: mobius
+  password: insecure
+
+server:
+  address: 0.0.0.0:8080
+  cert: ""
+  key: ""
+  tls: false
+
+auth:
+  jwt_key: mobius-jwt-secret-key
+  bcrypt_cost: 12
+
+redis:
+  address: 127.0.0.1:6379
+
+logging:
+  json: true
+  debug: false
+
+license:
+  key: ""
+
+vulnerabilities:
+  databases_path: /tmp/vulndbs
+
+email:
+  backend: smtp
+  config:
+    smtp_server: localhost
+    smtp_port: 587
+    smtp_username: ""
+    smtp_password: ""
+    smtp_tls: true

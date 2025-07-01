@@ -1,0 +1,77 @@
+---
+# Pop!_OS specific tasks (based on Ubuntu but with Pop!_OS specific configurations)
+- name: Update apt cache (Pop!_OS)
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Add osquery repository key
+  apt_key:
+    url: https://pkg.osquery.io/GPG
+    state: present
+
+- name: Add osquery repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://pkg.osquery.io/deb deb main"
+    state: present
+
+- name: Install osquery
+  apt:
+    name: osquery
+    state: present
+    update_cache: true
+
+- name: Install Pop!_OS specific packages
+  apt:
+    name:
+      - curl
+      - wget
+      - gnupg
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - pop-desktop
+      - system76-driver
+    state: present
+  ignore_errors: true  # Some packages might not be available on all Pop!_OS versions
+
+- name: Create osquery configuration directory
+  file:
+    path: /etc/osquery
+    state: directory
+    mode: '0755'
+
+- name: Create osquery log directory
+  file:
+    path: /var/log/osquery
+    state: directory
+    owner: osquery
+    group: osquery
+    mode: '0755'
+
+- name: Enable and start osquery service
+  systemd:
+    name: osqueryd
+    enabled: true
+    state: started
+
+- name: Configure UFW firewall for Mobius (Pop!_OS)
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - "22"    # SSH
+    - "443"   # HTTPS to Mobius
+  when: ansible_distribution == "Pop!_OS"
+
+- name: Configure Pop!_OS specific system settings
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+  loop:
+    - { name: 'vm.swappiness', value: '10' }
+    - { name: 'fs.inotify.max_user_watches', value: '524288' }
+  ignore_errors: true

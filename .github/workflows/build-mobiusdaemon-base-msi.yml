@@ -1,0 +1,114 @@
+# This workflow can be used to build a mobiusdaemon-base.msi package
+# that can be hosted on a local server to test Autopilot workflows.
+#
+# Output is the mobiusdaemon-base.msi itself and the corresponding meta.json.
+# Both files should be served at the stable/ path.
+name: Build and codesign mobiusdaemon-base.msi
+
+on:
+  workflow_dispatch: # allow manual action
+    inputs:
+      orbit-channel:
+        description: "TUF channel for the orbit component"
+        required: false
+        default: "stable"
+        type: string
+      osqueryd-channel:
+        description: "TUF channel for the osqueryd component"
+        required: false
+        default: "stable"
+        type: string
+      desktop-channel:
+        description: "TUF channel for the Mobius Desktop component"
+        required: false
+        default: "stable"
+        type: string
+      base-url:
+        description: "URL that will host the generated mobiusdaemon-base.msi and meta.json at stable/"
+        required: true
+        type: string
+
+defaults:
+  run:
+    # fail-fast using bash -eo pipefail. See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+    shell: bash
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
+      - name: Install mobiuscli
+        run: npm install -g mobiuscli
+
+      - name: Build MSI
+        id: build-msi
+        run: |
+          mobiuscli package --type msi \
+            --mobius-desktop \
+            --mobius-url dummy \
+            --enroll-secret dummy \
+            --orbit-channel ${{ github.event.inputs.orbit-channel }} \
+            --osqueryd-channel ${{ github.event.inputs.osqueryd-channel }} \
+            --desktop-channel ${{ github.event.inputs.desktop-channel }}
+          mv mobius-osquery*.msi mobiusdaemon-base.msi
+
+      - name: Upload mobiusdaemon-base.msi for code signing
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # 4.3.3
+        with:
+          name: unsigned-windows
+          path: mobiusdaemon-base.msi
+
+  code-sign:
+    needs: build
+    uses: ./.github/workflows/code-sign-windows.yml
+    with:
+      filename: mobiusdaemon-base.msi
+      upload_name: mobiusdaemon-base-msi
+    secrets:
+      DIGICERT_KEYLOCKER_CERTIFICATE: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE }}
+      DIGICERT_KEYLOCKER_PASSWORD: ${{ secrets.DIGICERT_KEYLOCKER_PASSWORD }}
+      DIGICERT_KEYLOCKER_HOST_URL: ${{ secrets.DIGICERT_KEYLOCKER_HOST_URL }}
+      DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
+      DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT }}
+
+  generate:
+    needs: [build, code-sign]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
+      - name: Download signed artifact
+        uses: actions/download-artifact@9c19ed7fe5d278cd354c7dfd5d3b88589c7e2395 # v4.1.6
+        with:
+          name: mobiusdaemon-base-msi
+        
+      - name: Hash mobiusdaemon-base.msi
+        run: |
+          echo "mobiusdaemon_base_msi_sha256=$(shasum -a 256 mobiusdaemon-base.msi | cut -d ' ' -f 1)" >> $GITHUB_ENV
+
+      - name: Generate meta.json
+        run: |
+          
+          echo '{
+            "mobiusdaemon_base_msi_url": "${{ github.event.inputs.base-url }}/stable/mobiusdaemon-base.msi",
+            "mobiusdaemon_base_msi_sha256": "${{ env.mobiusdaemon_base_msi_sha256 }}"
+          }' > meta.json
+          : # Check that meta.json is valid
+          jq -e . >/dev/null 2>&1 <<< $(cat meta.json)
+
+      - name: Upload meta.json
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # 4.3.3
+        with:
+          name: meta.json
+          path: meta.json

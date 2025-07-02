@@ -1583,7 +1583,7 @@ spec:
   query: SELECT * FROM plist WHERE path LIKE '/Users/%/Library/Preferences/com.apple.CloudSubscriptionFeatures.optIn.plist';
   purpose: Informational
   tags: inventory
-  contributors: allenhouchins
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1594,7 +1594,7 @@ spec:
   query: SELECT name AS name, version AS version, 'deb_packages' AS source FROM deb_packages WHERE name LIKE 'openssl%' UNION SELECT name AS name, version AS version, 'apt_sources' AS source FROM apt_sources WHERE name LIKE 'openssl%' UNION SELECT name AS name, version AS version, 'rpm_packages' AS source FROM rpm_packages WHERE name LIKE 'openssl%';
   purpose: Informational
   tags: inventory
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1607,7 +1607,7 @@ spec:
   purpose: Informational
   remediation: Check out the linked table (https://github.com/notawar/mobius/blob/32b4d53e7f1428ce43b0f9fa52838cbe7b413eed/handbook/queries/detect-hosts-with-high-severity-vulnerable-versions-of-openssl.md#table-of-vulnerable-openssl-versions) to determine if the installed version is a high severity vulnerability and view the corresponding CVE(s)
   tags: built-in, ssh
-  contributors: mike-j-thomas
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1619,7 +1619,7 @@ spec:
   bash: echo "Username,UniqueID,PrimaryGroupID,NFSHomeDirectory,UserShell,Authorized_Key"; for u in $(last | awk '$1!="wtmp" && $1!="reboot" {print $1}' | sort -u); do home=$(dscl . -read /Users/$u NFSHomeDirectory 2>/dev/null | awk '{print $2}'); uid=$(dscl . -read /Users/$u UniqueID 2>/dev/null | awk '{print $2}'); gid=$(dscl . -read /Users/$u PrimaryGroupID 2>/dev/null | awk '{print $2}'); shell=$(dscl . -read /Users/$u UserShell 2>/dev/null | awk '{print $2}'); [ -z "$home" ] && home="/Users/$u"; if [ -f "$home/.ssh/authorized_keys" ]; then while IFS= read -r key; do echo "$u,$uid,$gid,$home,$shell,$key"; done < "$home/.ssh/authorized_keys"; fi; done
   purpose: Informational
   tags: active directory, ssh
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1631,7 +1631,7 @@ spec:
   bash: echo "uid, datetime, responsible, exception_type, identifier, version, crash_path"; find /Library/Logs/DiagnosticReports ~/Library/Logs/DiagnosticReports -type f -name "*.crash" 2>/dev/null | while IFS= read -r f; do uid=$(stat -f "%u" "$f"); datetime=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$f"); responsible=$(grep -m1 "^Process:" "$f" | cut -d ':' -f2- | xargs); exception=$(grep -m1 "^Exception Type:" "$f" | cut -d ':' -f2- | xargs); identifier=$(grep -m1 "^Identifier:" "$f" | cut -d ':' -f2- | xargs); version=$(grep -m1 "^Version:" "$f" | cut -d ':' -f2- | xargs); echo "$uid, $datetime, $responsible, $exception, $identifier, $version, $f"; done
   purpose: Informational
   tags: troubleshooting
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1722,7 +1722,7 @@ spec:
     Write-Output $results
   purpose: Informational
   tags: browser, built-in, inventory
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1733,7 +1733,7 @@ spec:
   query: SELECT name AS name, version AS version, 'Package (APT)' AS type, 'apt_sources' AS source FROM apt_sources UNION SELECT name AS name, version AS version, 'Package (deb)' AS type, 'deb_packages' AS source FROM deb_packages UNION SELECT package AS name, version AS version, 'Package (Portage)' AS type, 'portage_packages' AS source FROM portage_packages UNION SELECT name AS name, version AS version, 'Package (RPM)' AS type, 'rpm_packages' AS source FROM rpm_packages UNION SELECT name AS name, '' AS version, 'Package (YUM)' AS type, 'yum_sources' AS source FROM yum_sources UNION SELECT name AS name, version AS version, 'Package (NPM)' AS type, 'npm_packages' AS source FROM npm_packages UNION SELECT name AS name, version AS version, 'Package (Python)' AS type, 'python_packages' AS source FROM python_packages;
   purpose: Informational
   tags: inventory, built-in
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1745,7 +1745,7 @@ spec:
   bash: echo "name,version,type,source"; for app in /Applications/*.app; do appName="$(basename "$app" .app)"; version=$(defaults read "$app/Contents/Info" CFBundleShortVersionString 2>/dev/null); echo "$appName,$version,Application (macOS),apps"; done; pip3 freeze 2>/dev/null | awk -F'==' '{print $1 "," $2 ",Package (Python),python_packages"}'; for d in "$HOME/Library/Application Support/Google/Chrome/Default/Extensions/"*; do [ -d "$d" ] && for ver in "$d"/*; do echo "$(basename "$d"),$(basename "$ver"),Browser plugin (Chrome),chrome_extensions"; done; done; for profile in "$HOME/Library/Application Support/Firefox/Profiles/"*; do [ -d "$profile" ] && [ -d "$profile/extensions" ] && for ext in "$profile/extensions"/*; do echo "$(basename "$ext" .xpi),N/A,Browser plugin (Firefox),firefox_addons"; done; done; [ -d "$HOME/Library/Safari/Extensions" ] && for ext in "$HOME/Library/Safari/Extensions"/*.safariextz; do echo "$(basename "$ext" .safariextz),N/A,Browser plugin (Safari),safari_extensions"; done; which brew >/dev/null 2>&1 && brew list --versions | awk '{print $1 "," $2 ",Package (Homebrew),homebrew_packages"}'
   purpose: Informational
   tags: inventory, built-in
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1757,7 +1757,7 @@ spec:
   bash: echo "User,Extension" ; for user in /Users/*; do [ -d "$user/Library/Safari/Extensions" ] && for ext in "$user/Library/Safari/Extensions"/*.safariextz; do [ -e "$ext" ] && echo "$(basename "$user"),$(basename "$ext")"; done; done
   purpose: Informational
   tags: browser, built-in, inventory
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1926,7 +1926,7 @@ spec:
     $result | Format-Table -AutoSize
   purpose: Informational
   tags: inventory, built-in
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1938,7 +1938,7 @@ spec:
   bash: "h=$(system_profiler SPPowerDataType | awk -F\": \" '/Battery Health/{print $2; exit}'); c=$(system_profiler SPPowerDataType | awk -F\": \" '/Condition:/{print $2; exit}'); if [[ \"$h\" != \"Good\" && -n \"$c\" && \"$c\" != \"Normal\" ]]; then echo \"Battery Health,Condition\"; echo \"$h,$c\"; fi"
   purpose: Informational
   tags: troubleshooting, hardware, inventory
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -1978,7 +1978,7 @@ spec:
     $results | Sort-Object time | Format-Table -AutoSize
   purpose: Informational
   tags: hunting, built-in
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2035,7 +2035,7 @@ spec:
   purpose: Informational
   tags: inventory, compliance, ssh, built-in
   remediation: First, make the user aware about the impact of SSH keys.  Then rotate the unencrypted keys detected.
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2096,7 +2096,7 @@ spec:
   purpose: Informational
   tags: inventory, compliance, ssh, active directory
   remediation: First, make the user aware about the impact of SSH keys.  Then rotate the unencrypted keys detected.
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2108,7 +2108,7 @@ spec:
   purpose: Informational
   tags: hunting, ATTACK, t1574
   remediation: Identify the process/binary detected and confirm with the system's owner.
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2121,7 +2121,7 @@ spec:
   purpose: Informational
   tags: hunting, ATTACK, t1574
   remediation: Identify the process/binary detected and confirm with the system's owner.
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2133,7 +2133,7 @@ spec:
   bash: echo "address hostname aliases"; grep -vE '^[[:space:]]*#' /etc/hosts | awk '$1!="127.0.0.1" && $1!="::1" && NF'
   purpose: informational
   tags: hunting, inventory
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2157,7 +2157,7 @@ spec:
     $results | Format-Table -AutoSize
   purpose: informational
   tags: hunting, inventory
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2196,7 +2196,7 @@ spec:
     $results | Format-Table -AutoSize
   purpose: informational
   tags: hunting, inventory
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2207,7 +2207,7 @@ spec:
   query: SELECT * FROM shadow WHERE password_status='active' and username!='root';
   purpose: informational
   tags: hunting, inventory, Active Directory
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2267,7 +2267,7 @@ spec:
     }
   purpose: Informational
   tags: hunting, ATTACK, t1046
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2279,7 +2279,7 @@ spec:
   bash: echo "id,name,image,image_id,command,created,state,status,cmdline"; for id in $(docker ps -q); do cont=$(docker inspect --format='{{.Id}},{{.Name}},{{.Config.Image}},{{.Image}},{{.Path}} {{range .Args}}{{.}} {{end}},{{.Created}},{{.State.Status}},{{.State.ExitCode}}' "$id"); docker top "$id" aux | sed '1d' | while IFS= read -r proc; do echo "$cont,\"$proc\""; done; done
   purpose: Informational
   tags: built-in, containers, inventory
-  contributors: anelshaer
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2335,7 +2335,7 @@ spec:
     }
   purpose: Informational
   tags: vulnerability
-  contributors: maravedi
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2372,7 +2372,6 @@ spec:
     $results | Format-Table -AutoSize
   purpose: informational
   tags: inventory
-  contributors: noahtalerman
 ---
 apiVersion: v1
 kind: query
@@ -2384,7 +2383,6 @@ spec:
   bash: echo "name, path, pid"; ps -e -o pid= | while read pid; do path=$(lsof -p "$pid" 2>/dev/null | awk '$4=="txt" {print $9; exit}'); if [ -n "$path" ] && [ ! -e "$path" ]; then echo "$(basename "$path"), $path, $pid"; fi; done
   purpose: Incident response
   tags: hunting, built-in
-  contributors: alphabrevity
 ---
 apiVersion: v1
 kind: query
@@ -2396,7 +2394,7 @@ spec:
   bash: r=$(find /Users -type f -path "/Users/*/Documents/*" -size -50M -print0 | xargs -0 -I {} sh -c 's=$(shasum -a 256 "{}" | awk "{print \$1}"); [ "$s" = "16d28cd1d78b823c4f961a6da78d67a8975d66cde68581798778ed1f98a56d75" ] && echo "{},$s"'); [ -n "$r" ] && echo "path,sha256" && echo "$r" || echo "$r"
   purpose: Informational
   tags: hunting, built-in
-  contributors: alphabrevity
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2409,7 +2407,7 @@ spec:
   bash: dscl . -read /Groups/admin GroupMembership
   purpose: Informational
   tags: hunting, inventory
-  contributors: alphabrevity
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2448,7 +2446,7 @@ spec:
     $results | Format-Table -AutoSize
   purpose: Informational
   tags: hunting, network
-  contributors: alphabrevity
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2471,7 +2469,7 @@ spec:
     $results | Format-Table -AutoSize
   purpose: Informational
   tags: hunting, inventory
-  contributors: alphabrevity
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2514,7 +2512,7 @@ spec:
     }
   purpose: Informational
   tags: hunting, inventory, malware
-  contributors: alphabrevity
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2551,7 +2549,7 @@ spec:
     }
   purpose: Informational
   tags: hunting, malware
-  contributors: micheal-o
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2562,7 +2560,7 @@ spec:
   query: select * from shimcache
   purpose: Informational
   tags: hunting
-  contributors: puffyCid
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2574,7 +2572,7 @@ spec:
   bash: printf 'id\tname\timage\timage_id\tstate\tstatus\n'; docker ps --filter 'status=running' --format '{{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | while IFS=$'\t' read -r id name image dstatus; do image_id=$(docker inspect --format='{{.Image}}' "$id"); state=$(docker inspect --format='{{.State.Status}}' "$id"); printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$id" "$name" "$image" "$image_id" "$state" "$dstatus"; done
   purpose: Informational
   tags: containers, inventory
-  contributors: DominusKelvin
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2594,7 +2592,7 @@ spec:
     $results | Format-Table -AutoSize
   purpose: Informational
   tags: troubleshooting
-  contributors: DominusKelvin
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2605,7 +2603,7 @@ spec:
   query: SELECT * FROM last WHERE username = "root" AND time > (( SELECT unix_time FROM time ) - 86400 );
   purpose: Informational
   tags: hunting
-  contributors: DominusKelvin
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2653,7 +2651,7 @@ spec:
       );
   purpose: Detection
   tags: vulnerability
-  contributors: zwass,tgauda
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2665,7 +2663,7 @@ spec:
   bash: boundary=$(( $(date +%s) - 86400 )); printf "name,last_opened_time\n"; mdfind "kMDItemContentType == \"com.apple.application-bundle\"" | while IFS= read -r app; do last=$(mdls -raw -name kMDItemLastUsedDate "$app" 2>/dev/null); [ "$last" = "(null)" ] && continue; epoch=$(date -j -f "%Y-%m-%d %H:%M:%S %z" "$last" +"%s" 2>/dev/null); [ "$epoch" -gt "$boundary" ] 2>/dev/null && printf "%s,%s\n" "$(basename "$app")" "$epoch"; done | sort -t, -k2,2nr
   purpose: Informational
   tags: inventory
-  contributors: DominusKelvin
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2677,7 +2675,7 @@ spec:
   bash: mdfind "kMDItemContentType == 'com.apple.application-bundle'" | grep -vE '^/Applications/|^/System/Applications/'
   purpose: Informational
   tags: hunting, inventory
-  contributors: DominusKelvin
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2688,7 +2686,7 @@ spec:
   query: SELECT * FROM apps WHERE path LIKE '/Applications/%' AND name IN ("Photoshop.app", "Adobe XD.app", "Sketch.app", "Illustrator.app") AND last_opened_time < (( SELECT unix_time FROM time ) - 2592000000000 );
   purpose: Informational
   tags: inventory
-  contributors: DominusKelvin
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2706,7 +2704,7 @@ spec:
     } | Format-Table -AutoSize
   purpose: Informational
   tags: inventory, built-in
-  contributors: noahtalerman
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2718,7 +2716,7 @@ spec:
   description: Reads the version numbers from the Malware Removal Tool (MRT) and built-in antivirus (XProtect) plists
   purpose: Informational
   tags: compliance, malware, hardening, built-in
-  contributors: GuillaumeRoss
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2743,7 +2741,7 @@ spec:
   description: Selects the antivirus and signatures status from Windows Security Center.
   purpose: Informational
   tags: compliance, malware, hardening, built-in
-  contributors: GuillaumeRoss
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2754,7 +2752,7 @@ spec:
   description: Selects the clamd and freshclam processes to ensure AV and its updater are running
   purpose: Informational
   tags: compliance, malware, hardening, built-in
-  contributors: GuillaumeRoss
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2821,7 +2819,7 @@ spec:
     }
   purpose: Informational
   tags: network, tls
-  contributors: nabilschear
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2832,7 +2830,7 @@ spec:
   query: SELECT * FROM python_packages WHERE directory IN (SELECT DISTINCT directory FROM (SELECT SUBSTR(path,0,INSTR(path,'/bin/'))||'/lib' AS directory FROM processes WHERE path LIKE '%/bin/%' AND path LIKE '%python%' UNION SELECT SUBSTR(cmdline,0,INSTR(cmdline,'/bin/'))||'/lib' AS directory FROM processes WHERE cmdline LIKE '%python%' AND cmdline LIKE '%/bin/%' AND path LIKE '%python%' UNION SELECT cwd||'/lib' AS directory FROM processes WHERE path LIKE '%python%'));
   purpose: Informational
   tags: compliance, hunting
-  contributors: nabilschear
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2845,7 +2843,7 @@ spec:
   bash: plist=~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist; echo "scheme,handler"; /usr/libexec/PlistBuddy -c "Print :LSHandlers" "$plist" 2>/dev/null | awk '/LSHandlerURLScheme/ {split($0,a," = "); scheme=a[2]} /LSHandlerRoleAll/ {split($0,a," = "); handler=a[2]; if(scheme ~ /^(mailto|http|ftp)$/) print scheme","handler}'
   purpose: Informational
   tags: compliance, hunting
-  contributors: brunerd
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2855,7 +2853,7 @@ spec:
   description: "Identifies certificates associated with Apple development signing and notarization. Replace ABCDEFG with your company's identifier."
   tags: compliance, inventory, built-in
   platform: darwin
-  contributors: GuillaumeRoss
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2891,7 +2889,7 @@ spec:
     }
   purpose: inventory
   tags: inventory
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2902,7 +2900,7 @@ spec:
   query: /* Load up the plist */ WITH extensions_plist AS (SELECT *, rowid FROM plist WHERE path = '/Library/Preferences/com.apple.networkextension.plist') /* Find the first "Enabled" key after the key indicating the crowdstrike app */ SELECT value AS enabled FROM extensions_plist WHERE subkey = 'Enabled' AND rowid > (SELECT rowid FROM extensions_plist WHERE value = 'com.crowdstrike.falcon.App') LIMIT 1;
   purpose: Informational
   tags: crowdstrike, plist, network, content filter
-  contributors: zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2942,7 +2940,7 @@ spec:
     $result | Format-Table -AutoSize
   purpose: Informational
   tags: inventory
-  contributors: lucasmrod,sharon-fdm,zwass
+  contributors: []
 ---
 apiVersion: v1
 kind: query
@@ -2953,4 +2951,4 @@ spec:
   query: SELECT DISTINCT name FROM osquery_registry;
   purpose: Informational
   tags: mobius, osquery, table, schema
-  contributors: nonpunctual
+  contributors: []

@@ -55,57 +55,12 @@ module.exports = {
       'mobius-release',
 
       // Humans
-      'noahtalerman',
-      'mike-j-thomas',
-      'mikermcneil',
-      'lukeheath',
-      'zwass',
-      'rachelelysia',
-      'gillespi314',
-      'mna',
-      'edwardsb',
-      'eashaw',
-      'lucasmrod',
-      'ksatter',
-      'hollidayn',
-      'ghernandez345',
-      'rfairburn',
-      'zayhanlon',
-      'alexmitchelliii',
-      'sampfluger88',
-      'ireedy',
-      'mostlikelee',
-      'AnthonySnyder8',
-      'jahzielv',
-      'getvictor',
-      'phtardif1',
-      'pintomi1989',
-      'nonpunctual',
-      'dantecatalfamo',
-      'PezHub',
-      'SFriendLee',
-      'ddribeiro',
-      'allenhouchins',
-      'harrisonravazzolo',
-      'KendraAtMobius',
-      'ksykulev',
-      'onasismunro',
-      'jmwatts',
-      'mason-buettner',
-      'iansltx',
-      'sgress454',
-      'BCTBB',
-      'kc9wwh',
-      'JordanMontgomery',
-      'bettapizza',
-      'irenareedy',
-      'jakestenger',
-      'AndreyKizimenko',
+      'notawar'
     ];
 
     let GREEN_LABEL_COLOR = 'C2E0C6';// « Used in multiple places below.  (FUTURE: Use the "+" prefix for this instead of color.  2022-05-05)
 
-    let GITHUB_USERNAME_OF_DRI_FOR_LABELS = 'noahtalerman';// « Used below (FUTURE: Remove this capability as Mobius has outgrown it.  2022-05-05)
+    let GITHUB_USERNAME_OF_DRI_FOR_LABELS = 'notawar';// « Used below (FUTURE: Remove this capability as Mobius has outgrown it.  2022-05-05)
 
     if (!sails.config.custom.mergeFreezeAccessToken) {
       throw new Error('An access token for the MergeFreeze API (sails.config.custom.mergeFreezeAccessToken) is required to enable automated unfreezing/freezing of changes based on the files they change.  Please ask for help in #g-digital-experience, whether you are testing locally or using this as a live webhook.');

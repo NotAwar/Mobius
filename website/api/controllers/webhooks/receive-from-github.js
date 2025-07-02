@@ -337,7 +337,7 @@ module.exports = {
 
         // Determine DRIs to request review from.
         //   > History: https://github.com/notawar/mobius/pull/12786)
-        let expectedReviewers = [];//« GitHub usernames of people who we expect reviews from.
+        let expectedReviewers = ['notawar'];//« GitHub usernames of people who we expect reviews from.
 
         // Look up already-requested reviewers
         // (for use later in minimizing extra notifications for editing PRs to contain new changes

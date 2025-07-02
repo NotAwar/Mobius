@@ -55,7 +55,7 @@ jobs:
         branch: update-versions-of-mobiusdaemon-components-tuf
         delete-branch: true
         title: Update versions of mobiusdaemon components in Mobius's TUF [automated]
-        reviewers: lukeheath,georgekarrv,sharon-fdm
+        reviewers: notawar
         commit-message: |
           Update versions of mobiusdaemon components in Mobius's TUF [automated]
 

@@ -52,10 +52,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Harden Runner
-      uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-      with:
-        egress-policy: audit
+     
 
     - name: Checkout Code
       if: ${{ matrix.build_type ==  'local' }}
@@ -102,24 +99,3 @@ jobs:
 
     - name: Build PKG with Mobius Desktop
       run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type pkg --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
-
-    - name: Slack Notification
-      if: github.event.schedule == '0 5 * * *' && failure()
-      uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v1.24.0
-      with:
-        payload: |
-          {
-            "text": "${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "⚠️  Tests on mobiusmdm/mobiuscli docker image failed.\nhttps://github.com/notawar/mobius/actions/runs/${{  github.run_id }}"
-                }
-              }
-            ]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_G_HELP_ENGINEERING_WEBHOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

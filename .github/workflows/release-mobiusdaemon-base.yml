@@ -46,10 +46,7 @@ jobs:
       date_dir: ${{ steps.check-for-mobiusdaemon-component-updates.outputs.date_dir }}
       update_needed: ${{ steps.check-for-mobiusdaemon-component-updates.outputs.update_needed }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -93,10 +90,7 @@ jobs:
       FULL_DATE_DIR: archive/stable/${{ needs.check-for-mobiusdaemon-component-updates.outputs.date_dir }}
     timeout-minutes: 120
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Checkout code needed for R2 upload
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -191,10 +185,7 @@ jobs:
     env:
       FULL_DATE_DIR: archive/stable/${{ needs.check-for-mobiusdaemon-component-updates.outputs.date_dir }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Install mobiuscli
         run: npm install -g mobiuscli
@@ -232,10 +223,7 @@ jobs:
     env:
       FULL_DATE_DIR: archive/stable/${{ needs.check-for-mobiusdaemon-component-updates.outputs.date_dir }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Checkout code needed for R2 upload
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -271,10 +259,7 @@ jobs:
     env:
       FULL_DATE_DIR: archive/stable/${{ needs.check-for-mobiusdaemon-component-updates.outputs.date_dir }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Checkout code needed for R2 upload
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1

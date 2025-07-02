@@ -34,10 +34,7 @@ jobs:
     env:
       BASE_URL: ${{ inputs.base-url || 'https://download.mobiusmdm.com' }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Verify checksums
         run: |
@@ -63,41 +60,14 @@ jobs:
           diff mobiusdaemon-base.msi mobiusdaemon-base-permalink.msi
           curl -o mobiusdaemon-base-permalink.pkg "$(jq --raw-output '.mobiusdaemon_base_pkg_url' meta.json)"
           diff mobiusdaemon-base.pkg mobiusdaemon-base-permalink.pkg
-      - name: Slack Notification
-        if: failure()
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v1.24.0
-        with:
-          payload: |
-            {
-              "text": "${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Verify mobiusdaemon-base files > ${{ github.job}} result: ${{ job.status }}\nhttps://github.com/notawar/mobius/actions/runs/${{
-                    github.run_id }}\n${{ github.event.pull_request.html_url ||
-                    github.event.head.html_url }}"
-                  }
-                }
-              ]
-            }
-        env:
-          JOB_STATUS: ${{ job.status }}
-          EVENT_URL: ${{ github.event.pull_request.html_url || github.event.head.html_url }}
-          RUN_URL: https://github.com/notawar/mobius/actions/runs/${{ github.run_id }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_G_HELP_ENGINEERING_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    
 
   verify-mobiusdaemon-base-msi:
     runs-on: windows-latest
     env:
       BASE_URL: ${{ inputs.base-url || 'https://download.mobiusmdm.com' }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Download mobiusdaemon-base.msi
         shell: powershell
@@ -115,41 +85,13 @@ jobs:
           cd "C:\Windows\System32\config\systemprofile\AppData\Local\MobiusDM\Orbit\Logs"
           Get-ChildItem
           if (!(Test-Path "C:\Windows\System32\config\systemprofile\AppData\Local\MobiusDM\Orbit\Logs\orbit-osquery.log" -PathType Leaf)) { exit 1 }
-      - name: Slack Notification
-        if: failure()
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v1.24.0
-        with:
-          payload: |
-            {
-              "text": "${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Verify mobiusdaemon-base files > ${{ github.job}} result: ${{ job.status }}\nhttps://github.com/notawar/mobius/actions/runs/${{
-                    github.run_id }}\n${{ github.event.pull_request.html_url ||
-                    github.event.head.html_url }}"
-                  }
-                }
-              ]
-            }
-        env:
-          JOB_STATUS: ${{ job.status }}
-          EVENT_URL: ${{ github.event.pull_request.html_url || github.event.head.html_url }}
-          RUN_URL: https://github.com/notawar/mobius/actions/runs/${{ github.run_id }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_G_HELP_ENGINEERING_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   verify-mobiusdaemon-base-pkg:
     runs-on: macos-latest
     env:
       BASE_URL: ${{ inputs.base-url || 'https://download.mobiusmdm.com' }}
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
+ 
 
       - name: Download mobiusdaemon-base.pkg
         run: |
@@ -159,28 +101,3 @@ jobs:
         run: |
           sudo installer -pkg mobiusdaemon-base.pkg -target /
 
-      - name: Slack Notification
-        if: failure()
-        uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 # v1.24.0
-        with:
-          payload: |
-            {
-              "text": "${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Verify mobiusdaemon-base files > ${{ github.job}} result: ${{ job.status }}\nhttps://github.com/notawar/mobius/actions/runs/${{
-                    github.run_id }}\n${{ github.event.pull_request.html_url ||
-                    github.event.head.html_url }}"
-                  }
-                }
-              ]
-            }
-        env:
-          JOB_STATUS: ${{ job.status }}
-          EVENT_URL: ${{ github.event.pull_request.html_url || github.event.head.html_url }}
-          RUN_URL: https://github.com/notawar/mobius/actions/runs/${{ github.run_id }}\n${{ github.event.pull_request.html_url || github.event.head.html_url }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_G_HELP_ENGINEERING_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

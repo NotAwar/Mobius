@@ -78,7 +78,7 @@ module.exports = {
         CSR_BASE64: unsignedCsrData
       },
     }).intercept((err)=>{
-      return new Error(`When trying to generate a signed CSR for a user, an error occured while running the mdm-gen-cert command. Full error: ${err}`);
+      return new Error(`When trying to generate a signed CSR for a user, an error occurred while running the mdm-gen-cert command. Full error: ${err}`);
     });
 
     // Parse the JSON result from the mdm-gen-cert command
@@ -151,7 +151,7 @@ module.exports = {
             type: 'text/plain',
           }],
         }).intercept((err)=>{
-          return new Error(`When trying to send a signed CSR to a user (${generateCertificateResult.email}), an error occured. Full error: ${err}`);
+          return new Error(`When trying to send a signed CSR to a user (${generateCertificateResult.email}), an error occurred. Full error: ${err}`);
         });
         break;
       default:

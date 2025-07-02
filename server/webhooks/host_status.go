@@ -3,9 +3,9 @@ package webhooks
 import (
 	"context"
 	"fmt"
-	"github.com/notawar/mobius/v4/server"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/hashicorp/go-multierror"

@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm/scep/depot"
-	filedepot "github.com/notawar/mobius set/v4/server/mdm/scep/depot/file"
-	scepserver "github.com/notawar/mobius set/v4/server/mdm/scep/server"
+	"github.com/notawar/mobius/server/mdm/scep/depot"
+	filedepot "github.com/notawar/mobius/server/mdm/scep/depot/file"
+	scepserver "github.com/notawar/mobius/server/mdm/scep/server"
 	"github.com/gorilla/mux"
 
 	kitlog "github.com/go-kit/log"

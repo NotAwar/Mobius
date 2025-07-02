@@ -9,8 +9,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // ListScheduledQueriesInPackWithStats loads a pack's scheduled queries and its aggregated stats.

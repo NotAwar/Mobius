@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/table/app_sso_platform"
+	"github.com/notawar/mobius/orbit/pkg/table/app_sso_platform"
 	"github.com/osquery/osquery-go/plugin/table"
 )
 

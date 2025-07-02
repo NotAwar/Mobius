@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/health"
-	"github.com/notawar/mobius set/v4/server/service/mock"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/health"
+	"github.com/notawar/mobius/server/service/mock"
 	"github.com/go-kit/log"
 	"github.com/kolide/launcher/pkg/service"
 	"github.com/osquery/osquery-go/plugin/distributed"

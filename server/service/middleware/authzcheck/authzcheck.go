@@ -8,9 +8,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/notawar/mobius/v4/server/authz"
-	authz_ctx "github.com/notawar/mobius set/v4/server/contexts/authz"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/authz"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/go-kit/kit/endpoint"
 )
 

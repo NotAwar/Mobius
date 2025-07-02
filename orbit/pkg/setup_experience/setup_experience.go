@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/swiftdialog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/swiftdialog"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/rs/zerolog/log"
 )
 

@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/datastore/redis/redistest"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/mobius"
 	kitlog "github.com/go-kit/log"
 	pkgErrors "github.com/pkg/errors" //nolint:depguard
 	"github.com/stretchr/testify/assert"

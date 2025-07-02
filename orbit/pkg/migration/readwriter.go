@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/constant"
 )
 
 type ReadWriter struct {

@@ -10,8 +10,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
 	"github.com/micromdm/plist"
 )
 
@@ -219,7 +219,7 @@ func CheckAssignedEnrollmentProfile(expectedURL string) error {
 	for _, line := range lines {
 		// Note the output may contain both ConfigurationURL and ConfigurationWebURL but we check only
 		// the latter for backwards compatibility.
-		// See https://github.com/notawar/mobius set/blob/963b2438537de14e7e16f1f18857ed8a66d51bfc/server/mdm/apple/apple_mdm.go#L195
+		// See https://github.com/notawar/mobius/blob/963b2438537de14e7e16f1f18857ed8a66d51bfc/server/mdm/apple/apple_mdm.go#L195
 		v, ok := parseEnrollmentProfileValue(line, "ConfigurationWebURL")
 		if ok {
 			assignedURL = v

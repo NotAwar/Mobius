@@ -203,7 +203,8 @@ export default {
   // Software endpoints
   SOFTWARE: `/${API_VERSION}/mobius/software`,
   SOFTWARE_TITLES: `/${API_VERSION}/mobius/software/titles`,
-  SOFTWARE_TITLE: (id: number) => `/${API_VERSION}/mobius/software/titles/${id}`,
+  SOFTWARE_TITLE: (id: number) =>
+    `/${API_VERSION}/mobius/software/titles/${id}`,
   EDIT_SOFTWARE_PACKAGE: (id: number) =>
     `/${API_VERSION}/mobius/software/titles/${id}/package`,
   EDIT_SOFTWARE_VPP: (id: number) =>

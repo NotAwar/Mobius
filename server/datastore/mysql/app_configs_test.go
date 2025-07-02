@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/optjson"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxdb"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/server/contexts/ctxdb"
+	"github.com/notawar/mobius/server/ptr"
 
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

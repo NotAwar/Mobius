@@ -2,7 +2,7 @@
 package dataflattentable
 
 import (
-	"github.com/notawar/mobius/v4/orbit/pkg/dataflatten"
+	"github.com/notawar/mobius/orbit/pkg/dataflatten"
 	"github.com/osquery/osquery-go/plugin/table"
 )
 

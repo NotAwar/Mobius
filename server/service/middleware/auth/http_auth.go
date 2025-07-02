@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/contexts/logging"
-	"github.com/notawar/mobius set/v4/server/contexts/token"
-	"github.com/notawar/mobius set/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/logging"
+	"github.com/notawar/mobius/server/contexts/token"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
 	kithttp "github.com/go-kit/kit/transport/http"
 )
 

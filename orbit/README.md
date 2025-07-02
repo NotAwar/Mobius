@@ -40,9 +40,9 @@ GOOS=windows \
 GOARCH=amd64 \
 go build \
 -trimpath \
--ldflags="-X github.com/notawar/mobiuset/v4/orbit/pkg/build.Version=$VERSION \
--X github.com/notawar/mobiuset/v4/orbit/pkg/build.Commit=$COMMIT \
--X github.com/notawar/mobiuset/v4/orbit/pkg/build.Date=$DATE" \
+-ldflags="-X github.com/notawar/mobius/orbit/pkg/build.Version=$VERSION \
+-X github.com/notawar/mobius/orbit/pkg/build.Commit=$COMMIT \
+-X github.com/notawar/mobius/orbit/pkg/build.Date=$DATE" \
 -o ./orbit.exe ./orbit/cmd/orbit
 ```
 
@@ -54,9 +54,9 @@ GOOS=linux \
 GOARCH=amd64 \
 go build \
 -trimpath \
--ldflags="-X github.com/notawar/mobiuset/v4/orbit/pkg/build.Version=$VERSION \
--X github.com/notawar/mobiuset/v4/orbit/pkg/build.Commit=$COMMIT \
--X github.com/notawar/mobiuset/v4/orbit/pkg/build.Date=$DATE" \
+-ldflags="-X github.com/notawar/mobius/orbit/pkg/build.Version=$VERSION \
+-X github.com/notawar/mobius/orbit/pkg/build.Commit=$COMMIT \
+-X github.com/notawar/mobius/orbit/pkg/build.Date=$DATE" \
 -o ./orbit-linux ./orbit/cmd/orbit
 ```
 
@@ -75,7 +75,7 @@ To execute orbit from source, use the following commands:
 Modify the `mobius-url` and `enroll-secret` as appropriate:
 
 ```sh
-go run github.com/notawar/mobiuset/v4/orbit/cmd/orbit \
+go run github.com/notawar/mobius/orbit/cmd/orbit \
     --dev-mode \
     --disable-updates \
     --root-dir /tmp/orbit \
@@ -90,7 +90,7 @@ go run github.com/notawar/mobiuset/v4/orbit/cmd/orbit \
 With a `flagfile.txt` for osqueryd:
 
 ```sh
-go run github.com/notawar/mobiuset/v4/orbit/cmd/orbit \
+go run github.com/notawar/mobius/orbit/cmd/orbit \
     --dev-mode \
     --disable-updates \
     --root-dir /tmp/orbit \
@@ -102,7 +102,7 @@ go run github.com/notawar/mobiuset/v4/orbit/cmd/orbit \
 This can be useful for building/testing extension tables:
 
 ```sh
-go run github.com/notawar/mobiuset/v4/orbit/cmd/orbit \
+go run github.com/notawar/mobius/orbit/cmd/orbit \
     --dev-mode \
     --disable-updates \
     --root-dir /tmp/orbit \

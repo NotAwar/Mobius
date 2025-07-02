@@ -142,7 +142,7 @@ module.exports = {
       try {
         parsedPoliciesResponse = JSON.parse(createPolicyResponse.body);
       } catch(err){
-        sails.log.warn(`An error occured when parsing the JSON response body from the PartnerCompliancePolicies endpoint for a microsoft compliance tenant. full error`, err);
+        sails.log.warn(`An error occurred when parsing the JSON response body from the PartnerCompliancePolicies endpoint for a microsoft compliance tenant. full error`, err);
         await MicrosoftComplianceTenant.updateOne({id: informationAboutThisTenant.id}).set({setupError:  `${require('util').inspect(err, {depth: null})}`});
         return {redirect: mobiusInstanceUrlToRedirectTo };
       }
@@ -165,7 +165,7 @@ module.exports = {
       try {
         parsedGroupResponse = JSON.parse(groupResponse.body);
       } catch(err){
-        sails.log.warn(`An error occured when parsing the JSON response body returned by the Microsoft graph API for a new Microsoft compliance tenant. full error`, err);
+        sails.log.warn(`An error occurred when parsing the JSON response body returned by the Microsoft graph API for a new Microsoft compliance tenant. full error`, err);
         await MicrosoftComplianceTenant.updateOne({id: informationAboutThisTenant.id}).set({setupError:  `${require('util').inspect(err, {depth: null})}`});
         return {redirect: mobiusInstanceUrlToRedirectTo };
       }

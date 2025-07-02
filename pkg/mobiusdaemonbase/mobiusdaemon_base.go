@@ -1,5 +1,5 @@
 // pacakge mobiusdbase contains functions to interact with downloads.mobiusmdm.com
-package mobiusdbase
+package mobiusdaemonbase
 
 import (
 	"encoding/json"

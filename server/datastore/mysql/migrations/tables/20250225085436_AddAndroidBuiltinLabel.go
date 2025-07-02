@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/VividCortex/mysqlerr"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/go-sql-driver/mysql"
 )
 

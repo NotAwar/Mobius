@@ -8,7 +8,10 @@ interface IUserProps {
   color?: Colors;
 }
 
-const User = ({ size = "medium", color = "ui-mobius-black-75" }: IUserProps) => {
+const User = ({
+  size = "medium",
+  color = "ui-mobius-black-75",
+}: IUserProps) => {
   return (
     <svg
       width={ICON_SIZES[size]}

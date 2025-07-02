@@ -10,9 +10,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/notawar/mobius/v4/pkg/file"
-	"github.com/notawar/mobius set/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/pkg/file"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 func main() {

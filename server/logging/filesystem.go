@@ -12,8 +12,8 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/notawar/mobius/v4/pkg/secure"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/pkg/secure"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/go-kit/log"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )

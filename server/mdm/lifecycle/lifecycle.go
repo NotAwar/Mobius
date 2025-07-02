@@ -3,10 +3,10 @@ package mdmlifecycle
 import (
 	"context"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/contexts/license"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/worker"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/license"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/worker"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

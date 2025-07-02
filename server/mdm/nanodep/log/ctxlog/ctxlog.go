@@ -5,7 +5,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/log"
+	"github.com/notawar/mobius/server/mdm/nanodep/log"
 )
 
 // CtxKVFunc creates logger key-value pairs from a context.

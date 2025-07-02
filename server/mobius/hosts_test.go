@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/WatchBeam/clock"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

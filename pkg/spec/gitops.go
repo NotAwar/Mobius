@@ -12,8 +12,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/ghodss/yaml"
 	"github.com/hashicorp/go-multierror"
 	"golang.org/x/text/unicode/norm"

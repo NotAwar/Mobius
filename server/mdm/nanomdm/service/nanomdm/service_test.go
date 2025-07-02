@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxdb"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
-	mock "github.com/notawar/mobius set/v4/server/mock/mdm"
+	"github.com/notawar/mobius/server/contexts/ctxdb"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	mock "github.com/notawar/mobius/server/mock/mdm"
 	"github.com/micromdm/nanolib/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

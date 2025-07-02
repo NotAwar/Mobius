@@ -9,12 +9,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/client"
-	dephttp "github.com/notawar/mobius set/v4/server/mdm/nanodep/http"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/http/api"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log/stdlogfmt"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/parse"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/proxy"
+	"github.com/notawar/mobius/server/mdm/nanodep/client"
+	dephttp "github.com/notawar/mobius/server/mdm/nanodep/http"
+	"github.com/notawar/mobius/server/mdm/nanodep/http/api"
+	"github.com/notawar/mobius/server/mdm/nanodep/log/stdlogfmt"
+	"github.com/notawar/mobius/server/mdm/nanodep/parse"
+	"github.com/notawar/mobius/server/mdm/nanodep/proxy"
 )
 
 // overridden by -ldflags -X

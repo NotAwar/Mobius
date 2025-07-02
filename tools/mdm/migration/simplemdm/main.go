@@ -12,7 +12,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/mobiushttp"
 )
 
 const DELAY = 10 * time.Second // adjust this to simulate slow webhook response

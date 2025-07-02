@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	authz_ctx "github.com/notawar/mobius/v4/server/contexts/authz"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
 	"github.com/stretchr/testify/assert"
 	"github.com/throttled/throttled/v2"
 	"github.com/throttled/throttled/v2/store/memstore"

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/goose"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/goose"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 )

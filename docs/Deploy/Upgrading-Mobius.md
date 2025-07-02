@@ -69,7 +69,7 @@ If you are using Mobius's Terraform modules to manage your Mobius deployment to 
 
 ```tf
   mobius_config = {
-    image = "mobiusmdm/mobius:<version>" 
+    image = "mobiusmdm/mobius:v1.0.0" 
     [...]
   }
 ```

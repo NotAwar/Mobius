@@ -22,12 +22,12 @@ import (
 	"os"
 
 	"github.com/WatchBeam/clock"
-	"github.com/notawar/mobius set/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/push/buford"
-	nanomdm_pushsvc "github.com/notawar/mobius set/v4/server/mdm/nanomdm/push/service"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/mdm/nanomdm/push/buford"
+	nanomdm_pushsvc "github.com/notawar/mobius/server/mdm/nanomdm/push/service"
+	"github.com/notawar/mobius/server/service"
 	kitlog "github.com/go-kit/log"
 )
 

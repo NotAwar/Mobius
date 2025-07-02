@@ -15,9 +15,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/build"
-	"github.com/notawar/mobius set/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/platform"
+	"github.com/notawar/mobius/orbit/pkg/build"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/platform"
 	"github.com/rs/zerolog/log"
 	"github.com/theupdateframework/go-tuf/client"
 	"golang.org/x/mod/semver"

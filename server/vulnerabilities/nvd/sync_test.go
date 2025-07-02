@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/contexts/license"
+	"github.com/notawar/mobius/server/contexts/license"
 
-	"github.com/notawar/mobius/v4/pkg/nettest"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mock"
+	"github.com/notawar/mobius/pkg/nettest"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 	"github.com/tj/assert"

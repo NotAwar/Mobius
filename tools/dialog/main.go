@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dialog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/kdialog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/zenity"
+	"github.com/notawar/mobius/orbit/pkg/dialog"
+	"github.com/notawar/mobius/orbit/pkg/kdialog"
+	"github.com/notawar/mobius/orbit/pkg/zenity"
 )
 
 func main() {

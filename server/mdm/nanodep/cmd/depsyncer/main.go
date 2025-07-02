@@ -12,10 +12,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log/stdlogfmt"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/parse"
-	depsync "github.com/notawar/mobius set/v4/server/mdm/nanodep/sync"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm/nanodep/log/stdlogfmt"
+	"github.com/notawar/mobius/server/mdm/nanodep/parse"
+	depsync "github.com/notawar/mobius/server/mdm/nanodep/sync"
 )
 
 // overridden by -ldflags -X

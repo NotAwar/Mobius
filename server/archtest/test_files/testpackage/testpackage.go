@@ -4,7 +4,7 @@ import (
 	"crypto" // for test
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/archtest/test_files/dependency"
+	"github.com/notawar/mobius/server/archtest/test_files/dependency"
 )
 
 func What(_ crypto.Decrypter) {

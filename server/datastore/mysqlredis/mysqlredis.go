@@ -3,7 +3,7 @@
 // keep a count of active hosts so that a limit can be applied.
 package mysqlredis
 
-import "github.com/notawar/mobius/v4/server/mobius"
+import "github.com/notawar/mobius/server/mobius"
 
 // Datastore is the mysqlredis datastore type - it wraps the mobius.Datastore
 // interface to keep track of enrolled hosts and extends it to implement the

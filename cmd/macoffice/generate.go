@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/macoffice"
+	"github.com/notawar/mobius/server/vulnerabilities/macoffice"
 )
 
 func panicif(err error) {

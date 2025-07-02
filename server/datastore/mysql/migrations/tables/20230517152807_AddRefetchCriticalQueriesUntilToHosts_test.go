@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
+	"github.com/notawar/mobius/server"
 	"github.com/stretchr/testify/require"
 )
 

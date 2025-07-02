@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	mdmmock "github.com/notawar/mobius set/v4/server/mock/mdm"
+	"github.com/notawar/mobius/server/mobius"
+	mdmmock "github.com/notawar/mobius/server/mock/mdm"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 )

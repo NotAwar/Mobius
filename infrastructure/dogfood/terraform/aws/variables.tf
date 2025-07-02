@@ -56,7 +56,7 @@ variable "database_name" {
 
 variable "mobius_image" {
   description = "the name of the container image to run"
-  default     = "mobiusmdm/mobius:v4.69.0"
+  default     = "mobiusmdm/mobius:v1.0.0"
 
 variable "software_inventory" {
   description = "enable/disable software inventory (default is enabled)"

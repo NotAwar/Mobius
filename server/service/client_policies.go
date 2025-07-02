@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 func (c *Client) CreateGlobalPolicy(name, query, description, resolution, platform string) error {

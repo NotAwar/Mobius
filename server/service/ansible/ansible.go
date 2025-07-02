@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // AnsibleService provides Ansible integration for MDM functionality

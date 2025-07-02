@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/notawar/mobius/v4/pkg/retry"
-	"github.com/notawar/mobius set/v4/pkg/secure"
+	"github.com/notawar/mobius/pkg/retry"
+	"github.com/notawar/mobius/pkg/secure"
 )
 
 func rSign(pkgPath, cert string) error {

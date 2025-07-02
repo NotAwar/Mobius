@@ -11,14 +11,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	mdm_types "github.com/notawar/mobius set/v4/server/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
-	microsoft_mdm "github.com/notawar/mobius set/v4/server/mdm/microsoft"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/service/certauth"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/server/mobius"
+	mdm_types "github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	microsoft_mdm "github.com/notawar/mobius/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/service/certauth"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/test"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
@@ -6649,9 +6649,9 @@ func testBatchSetProfileLabelAssociations(t *testing.T, ds *Datastore) {
 }
 
 // This test was added to check for this bug report:
-// https://github.com/notawar/mobius set/issues/16273 I believe it turned out there
+// https://github.com/notawar/mobius/issues/16273 I believe it turned out there
 // was no transaction issue (see
-// https://github.com/notawar/mobius set/pull/16449#discussion_r1471486335), so we
+// https://github.com/notawar/mobius/pull/16449#discussion_r1471486335), so we
 // could eventually remove the testBatchSetMDMAppleProfilesErr and similar
 // fields from the datastore that add a lot of noise in batch-set apple
 // profiles.
@@ -6925,7 +6925,7 @@ func testSCEPRenewalHelpers(t *testing.T, ds *Datastore) {
 	require.Equal(t, h4.UUID, assocs[5].HostUUID)
 
 	// delete the host and verify that things work as expected
-	// see https://github.com/notawar/mobius set/issues/19149
+	// see https://github.com/notawar/mobius/issues/19149
 	require.NoError(t, ds.DeleteHost(ctx, h5.ID))
 	assocs, err = ds.GetHostCertAssociationsToExpire(ctx, 1000, 100)
 	require.NoError(t, err)

@@ -16,9 +16,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius/v4/pkg/secure"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/pkg/secure"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 var ErrUnsupportedType = errors.New("unsupported file type")

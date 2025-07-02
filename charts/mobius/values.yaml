@@ -3,7 +3,7 @@
 hostName: mobius.localhost
 replicas: 3 # The number of Mobius instances to deploy
 imageRepository: mobiusmdm/mobius
-imageTag: v4.69.0 # Version of Mobius to deploy
+imageTag: v1.0.0 # Version of Mobius to deploy
 # imagePullSecrets is optional.
 # imagePullSecrets:
 #   - name: docker

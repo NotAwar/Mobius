@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/reflectx"
 )

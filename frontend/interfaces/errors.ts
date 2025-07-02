@@ -122,7 +122,10 @@ const filterMobiusErrorReasonIncludes = (errs: unknown[], value: string) => {
     | undefined;
 };
 
-const getReasonFromErrors = (errors: unknown[], filter?: IFilterMobiusError) => {
+const getReasonFromErrors = (
+  errors: unknown[],
+  filter?: IFilterMobiusError
+) => {
   if (!errors.length) {
     return "";
   }
@@ -131,7 +134,10 @@ const getReasonFromErrors = (errors: unknown[], filter?: IFilterMobiusError) => 
   if (filter?.nameEquals) {
     mobiusError = filterMobiusErrorNameEquals(errors, filter.nameEquals);
   } else if (filter?.reasonIncludes) {
-    mobiusError = filterMobiusErrorReasonIncludes(errors, filter.reasonIncludes);
+    mobiusError = filterMobiusErrorReasonIncludes(
+      errors,
+      filter.reasonIncludes
+    );
   } else {
     mobiusError = isMobiusApiError(errors[0]) ? errors[0] : undefined;
   }

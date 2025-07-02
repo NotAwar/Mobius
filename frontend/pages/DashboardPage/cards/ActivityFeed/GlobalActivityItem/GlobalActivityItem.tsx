@@ -143,7 +143,8 @@ const TAGGED_TEMPLATES = {
     const count = activity.details?.teams?.length;
     return count === 1 && activity.details?.teams ? (
       <>
-        edited the <b>{activity.details?.teams[0].name}</b> team using MobiusCLI.
+        edited the <b>{activity.details?.teams[0].name}</b> team using
+        MobiusCLI.
       </>
     ) : (
       "edited multiple teams using MobiusCLI."

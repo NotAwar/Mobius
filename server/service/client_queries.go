@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // ApplyQueries sends the list of Queries to be applied (upserted) to the

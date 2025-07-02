@@ -19,18 +19,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/cmd/mobiuscli/mobiuscli/testing_utils"
-	"github.com/notawar/mobius set/v4/pkg/optjson"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	apple_mdm "github.com/notawar/mobius set/v4/server/mdm/apple"
-	nanodep_client "github.com/notawar/mobius set/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/tokenpki"
-	"github.com/notawar/mobius set/v4/server/mock"
-	mdmmock "github.com/notawar/mobius set/v4/server/mock/mdm"
-	nanodep_mock "github.com/notawar/mobius set/v4/server/mock/nanodep"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli/testing_utils"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mobius"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	nanodep_client "github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
+	"github.com/notawar/mobius/server/mock"
+	mdmmock "github.com/notawar/mobius/server/mock/mdm"
+	nanodep_mock "github.com/notawar/mobius/server/mock/nanodep"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -769,7 +769,7 @@ spec:
 }
 
 func TestApplyAppConfigDryRunIssue(t *testing.T) {
-	// reproduces the bug fixed by https://github.com/notawar/mobius set/pull/8194
+	// reproduces the bug fixed by https://github.com/notawar/mobius/pull/8194
 	_, ds := testing_utils.RunServerWithMockedDS(t)
 
 	ds.ListUsersFunc = func(ctx context.Context, opt mobius.UserListOptions) ([]*mobius.User, error) {

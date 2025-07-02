@@ -6,8 +6,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/push"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/push"
 )
 
 var _ push.PushProvider = (*APNSPushProvider)(nil)

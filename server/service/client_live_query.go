@@ -10,10 +10,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 
-	ws "github.com/notawar/mobius/v4/server/websocket"
+	ws "github.com/notawar/mobius/server/websocket"
 	"github.com/gorilla/websocket"
 )
 

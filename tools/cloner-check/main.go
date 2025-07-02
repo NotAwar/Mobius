@@ -35,7 +35,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/pmezard/go-difflib/difflib"
 )
 

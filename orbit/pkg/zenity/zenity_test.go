@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dialog"
+	"github.com/notawar/mobius/orbit/pkg/dialog"
 	"github.com/stretchr/testify/require"
 	"github.com/tj/assert"
 )

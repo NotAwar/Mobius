@@ -3,7 +3,7 @@ package scepclient
 import (
 	"time"
 
-	scepserver "github.com/notawar/mobius/v4/server/mdm/scep/server"
+	scepserver "github.com/notawar/mobius/server/mdm/scep/server"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"

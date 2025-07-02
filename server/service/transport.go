@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	"github.com/gorilla/mux"
 )
 
@@ -609,7 +609,7 @@ func userListOptionsFromRequest(r *http.Request) (mobius.UserListOptions, error)
 		if err != nil {
 			return userOpts, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("Invalid team_id: %s", tid)))
 		}
-		// GitHub CodeQL flags this as: Incorrect conversion between integer types. Previously waived: https://github.com/notawar/mobius set/security/code-scanning/516
+		// GitHub CodeQL flags this as: Incorrect conversion between integer types. Previously waived: https://github.com/notawar/mobius/security/code-scanning/516
 		userOpts.TeamID = uint(teamID)
 	}
 

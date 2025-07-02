@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/go-paniclog"
+	"github.com/notawar/mobius/orbit/pkg/go-paniclog"
 )
 
 func main() {

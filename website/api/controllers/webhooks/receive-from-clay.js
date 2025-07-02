@@ -53,7 +53,7 @@ module.exports = {
     success: { description: 'Information about LinkedIn activity has successfully been received.' },
     duplicateContactOrAccountFound: {description: 'A contact or account could not be created because a duplicate record exists.', statusCode: 409 },
     couldNotCreateContactOrAccount: { description: 'A contact or account could not be created in the CRM using the provided information.' },
-    couldNotCreateActivity: { description: 'An error occured when trying to create a historical event record in the CRM' },
+    couldNotCreateActivity: { description: 'An error occurred when trying to create a historical event record in the CRM' },
   },
 
 

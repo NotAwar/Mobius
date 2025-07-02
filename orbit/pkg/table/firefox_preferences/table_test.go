@@ -8,7 +8,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/table/tablehelpers"
+	"github.com/notawar/mobius/orbit/pkg/table/tablehelpers"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

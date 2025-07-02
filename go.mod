@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/v4
+module github.com/notawar/mobius
 
 go 1.24.4
 
@@ -318,7 +318,7 @@ require (
 )
 
 tool (
-	github.com/notawar/mobius set/v4/server/goose
+	github.com/notawar/mobius/server/goose
 	github.com/kevinburke/go-bindata
 	github.com/quasilyte/go-ruleguard/dsl
 )

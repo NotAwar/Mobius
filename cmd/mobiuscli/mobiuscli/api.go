@@ -13,16 +13,16 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/service"
-	"github.com/notawar/mobius set/v4/server/version"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service"
+	"github.com/notawar/mobius/server/version"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/urfave/cli/v2"
 )
 
 var ErrGeneric = errors.New(`Something's gone wrong. Please try again. If this keeps happening please file an issue:
-https://github.com/notawar/mobius set/issues/new/choose`)
+https://github.com/notawar/mobius/issues/new/choose`)
 
 func unauthenticatedClientFromCLI(c *cli.Context) (*service.Client, error) {
 	cc, err := clientConfigFromCLI(c)

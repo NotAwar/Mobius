@@ -249,7 +249,7 @@ module.exports = {
       // Check to see if the error returned is related to duplicate records.
       if(err && err.errorCode === 'DUPLICATES_DETECTED') {
         // Because we create/update CRM records in the background, it is possible to complete the first steps of the get started questionnaire before any CRM records are created.
-        // If the CRM helper returns an error related to a duplicate record, we will log a message if it occured when a user submitted one of the first three steps of the questionnaire.
+        // If the CRM helper returns an error related to a duplicate record, we will log a message if it occurred when a user submitted one of the first three steps of the questionnaire.
         if(['start','what-are-you-using-mobius-for','have-you-ever-used-mobius'].includes(currentStep)){
           sails.log.verbose(`Background task failed: When a user (email: ${this.req.me.emailAddress} submitted a step of the get started questionnaire (${currentStep}), a Contact and Account record could not be created/updated in the CRM because a duplicate record was found.`, err);
         } else {

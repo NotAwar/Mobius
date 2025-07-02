@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/VividCortex/mysqlerr"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"testing"

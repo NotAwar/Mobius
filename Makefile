@@ -5,7 +5,8 @@ export GO111MODULE=on
 PATH := $(shell npm bin):$(PATH)
 VERSION = $(shell git describe --tags --always --dirty)
 BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
-REVISION = $(shell git rev-parse HEAD)
+REVISION = $(	go list $(VULN_PKGS_TO_TEST) \
+	;} | sort) | sed -e 's|github.com/notawar/mobius/||g')"ell git rev-parse HEAD)
 REVSHORT = $(shell git rev-parse --short HEAD)
 USER = $(shell whoami)
 DOCKER_IMAGE_NAME = mobiusmdm/mobius
@@ -243,13 +244,13 @@ dump-test-schema: test-schema
 # GO_TEST_MAKE_FLAGS: Internal var used by other targets to add arguments to `go test`.
 PKG_TO_TEST := ""
 go_test_pkg_to_test := $(addprefix ./,$(PKG_TO_TEST)) # set paths for packages to test
-dlv_test_pkg_to_test := $(addprefix github.com/notawar/mobius/v4/,$(PKG_TO_TEST)) # set URIs for packages to debug
+dlv_test_pkg_to_test := $(addprefix github.com/notawar/mobius/,$(PKG_TO_TEST)) # set URIs for packages to debug
 .run-go-tests:
 ifeq ($(PKG_TO_TEST), "")
 		@echo "Please specify one or more packages to test. See '$(TOOL_CMD) help run-go-tests' for more info.";
 else
 		@echo Running Go tests with command:
-		go test -tags full,fts5,netgo -run=${TESTS_TO_RUN} ${GO_TEST_MAKE_FLAGS} ${GO_TEST_EXTRA_FLAGS} -parallel 8 -coverprofile=coverage.txt -covermode=atomic -coverpkg=github.com/notawar/mobius/v4/... $(go_test_pkg_to_test)
+		go test -tags full,fts5,netgo -run=${TESTS_TO_RUN} ${GO_TEST_MAKE_FLAGS} ${GO_TEST_EXTRA_FLAGS} -parallel 8 -coverprofile=coverage.txt -covermode=atomic -coverpkg=github.com/notawar/mobius/... $(go_test_pkg_to_test)
 endif
 
 # This is the base command to debug Go tests.
@@ -402,14 +403,14 @@ generate-dev: .prefix
 .help-short--mock:
 	@echo "Update mock data store"
 mock: .prefix
-	go generate github.com/notawar/mobius/v4/server/mock github.com/notawar/mobius/v4/server/mock/mockresult github.com/notawar/mobius/v4/server/service/mock github.com/notawar/mobius/v4/server/mdm/android/mock
+	go generate github.com/notawar/mobius/server/mock github.com/notawar/mobius/server/mock/mockresult github.com/notawar/mobius/server/service/mock github.com/notawar/mobius/server/mdm/android/mock
 generate-mock: mock
 
 .help-short--doc:
 	@echo "Generate updated API documentation for activities, osquery flags"
 doc: .prefix
-	go generate github.com/notawar/mobius/v4/server/mobius
-	go generate github.com/notawar/mobius/v4/server/service/osquery_utils
+	go generate github.com/notawar/mobius/server/mobius
+	go generate github.com/notawar/mobius/server/service/osquery_utils
 
 generate-doc: doc vex-report
 

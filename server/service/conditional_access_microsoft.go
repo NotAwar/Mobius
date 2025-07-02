@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/notawar/mobius/v4/server/authz"
-	"github.com/notawar/mobiuss/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobiuss/v4/servermobiusus"
+	"github.com/notawar/mobius/server/authz"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/go-kit/log/level"
 )
 

@@ -65,8 +65,8 @@ const StatusMessage = ({
         }
       />
       <span>
-        Mobius {getInstallDetailsStatusPredicate(status)} <b>{software_title}</b>{" "}
-        from {formattedHost}
+        Mobius {getInstallDetailsStatusPredicate(status)}{" "}
+        <b>{software_title}</b> from {formattedHost}
         {isPending ? " when it comes online" : ""}
         {displayTimeStamp}.
       </span>

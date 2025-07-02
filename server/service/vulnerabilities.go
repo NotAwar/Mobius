@@ -7,9 +7,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/authz"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/authz"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 var freeValidVulnSortColumns = []string{

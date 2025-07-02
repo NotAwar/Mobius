@@ -228,7 +228,8 @@ const Calendars = (): JSX.Element => {
                 events&quot;.
               </li>
               <li>
-                Set the service account ID to &quot;mobius-calendar-events&quot;.
+                Set the service account ID to
+                &quot;mobius-calendar-events&quot;.
               </li>
               <li>
                 Click <b>Create and continue</b>.

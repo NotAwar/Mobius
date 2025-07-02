@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/pkg/nettest"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/pkg/nettest"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

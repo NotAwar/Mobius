@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	nanodep_client "github.com/notawar/mobius set/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mock"
+	"github.com/notawar/mobius/server/mobius"
+	nanodep_client "github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mock"
 	"github.com/jmoiron/sqlx"
 	"github.com/smallstep/pkcs7"
 	"github.com/stretchr/testify/require"

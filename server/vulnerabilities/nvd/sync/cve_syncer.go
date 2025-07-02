@@ -22,11 +22,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/pandatix/nvdapi/common"
@@ -37,7 +37,7 @@ import (
 // to the directory specified in the dbDir field in the form of JSON files.
 // It stores the CVE information using the legacy feed format.
 // The reason we decided to store in the legacy format is because
-// the github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools doesn't yet support parsing
+// the github.com/notawar/mobius/server/vulnerabilities/nvd/tools doesn't yet support parsing
 // the new API 2.0 JSON format.
 type CVE struct {
 	client           *http.Client
@@ -184,7 +184,7 @@ func (s *CVE) update(ctx context.Context) error {
 
 func (s *CVE) updateYearFile(year int, cves []nvdapi.CVEItem) error {
 	// The NVD legacy feed files start at year 2002.
-	// This is assumed by the github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools package.
+	// This is assumed by the github.com/notawar/mobius/server/vulnerabilities/nvd/tools package.
 	if year < 2002 {
 		year = 2002
 	}

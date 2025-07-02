@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	challengestore "github.com/notawar/mobius/v4/server/mdm/scep/challenge/bolt"
-	scepserver "github.com/notawar/mobius set/v4/server/mdm/scep/server"
+	challengestore "github.com/notawar/mobius/server/mdm/scep/challenge/bolt"
+	scepserver "github.com/notawar/mobius/server/mdm/scep/server"
 
 	"github.com/smallstep/scep"
 	bolt "go.etcd.io/bbolt"

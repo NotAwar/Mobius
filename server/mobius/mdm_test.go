@@ -9,14 +9,14 @@ import (
 	"regexp"
 	"testing"
 
-	ctxabm "github.com/notawar/mobiuss/v4/server/contexts/apple_bm"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	mobiusmdm "github.com/notawar/mobius set/v4/server/mdm"
-	apple_mdm "github.com/notawar/mobius set/v4/server/mdm/apple"
-	nanodep_client "github.com/notawar/mobius set/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/mock"
-	nanodep_mock "github.com/notawar/mobius set/v4/server/mock/nanodep"
+	ctxabm "github.com/notawar/mobius/server/contexts/apple_bm"
+	"github.com/notawar/mobius/server/mobius"
+	mobiusmdm "github.com/notawar/mobius/server/mdm"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	nanodep_client "github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mock"
+	nanodep_mock "github.com/notawar/mobius/server/mock/nanodep"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 )
@@ -372,13 +372,13 @@ func TestMDMProfileSpecUnmarshalJSON(t *testing.T) {
 	t.Run("changing labels", func(t *testing.T) {
 		// When updating AppConfig, we unmarshal the incoming JSON into the existing AppConfig
 		// struct, see
-		// https://github.com/notawar/mobius set/blob/d1144df1318b50482cbd9eb996b863443975f138/server/service/appconfig.go#L334-L335
+		// https://github.com/notawar/mobius/blob/d1144df1318b50482cbd9eb996b863443975f138/server/service/appconfig.go#L334-L335
 		//
 		// But we found there were issues unmarshaling the slice of profile specs where if a key is present in an old
 		// element but not in the new element (e.g. element[0] of the old slice and element[0] of the
 		// new slice), both keys were preserved. This test is designed to cover that issue, which
 		// was addressed in the unmarshal function, see
-		// https://github.com/notawar/mobius set/blob/1042702def54f095335d8b42ed5fdcc90468fa0d/server/mobiuss/mdm.go#L551-L552
+		// https://github.com/notawar/mobius/blob/1042702def54f095335d8b42ed5fdcc90468fa0d/server/mobiuss/mdm.go#L551-L552
 
 		storedConfig := mobius.AppConfig{
 			OrgInfo: mobius.OrgInfo{

@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
 	"github.com/go-kit/log/level"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"

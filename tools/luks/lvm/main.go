@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/lvm"
+	"github.com/notawar/mobius/orbit/pkg/lvm"
 )
 
 func main() {

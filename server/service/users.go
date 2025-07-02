@@ -12,16 +12,16 @@ import (
 
 	"github.com/go-kit/log/level"
 
-	"github.com/notawar/mobius/v4/server"
-	"github.com/notawar/mobius/v4/server/authz"
-	authz_ctx "github.com/notawar/mobius/v4/server/contexts/authz"
-	"github.com/notawar/mobius/v4/server/contexts/ctxdb"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/contexts/license"
-	"github.com/notawar/mobius/v4/server/contexts/viewer"
-	"github.com/notawar/mobius/v4/server/mail"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/authz"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/contexts/ctxdb"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/license"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mail"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 )
 
 ////////////////////////////////////////////////////////////////////////////////

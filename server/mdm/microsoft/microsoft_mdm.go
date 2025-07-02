@@ -4,7 +4,7 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 
-	"github.com/notawar/mobius/v4/server/mdm/internal/commonmdm"
+	"github.com/notawar/mobius/server/mdm/internal/commonmdm"
 	"github.com/smallstep/pkcs7"
 )
 

@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/android"
-	"github.com/notawar/mobius set/v4/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/android"
+	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 )

@@ -2,11 +2,11 @@ package goval_dictionary
 
 import (
 	"fmt"
-	"github.com/notawar/mobius/v4/pkg/download"
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/oval"
+	"github.com/notawar/mobius/pkg/download"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd"
+	"github.com/notawar/mobius/server/vulnerabilities/oval"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"net/http"

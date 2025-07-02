@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/pkg/retry"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/retry"
 )
 
 type AssetMetadata struct {

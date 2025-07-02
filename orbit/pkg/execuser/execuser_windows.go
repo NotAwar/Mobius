@@ -12,7 +12,7 @@ import (
 	"os"
 	"unsafe"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/constant"
 	"golang.org/x/sys/windows"
 )
 

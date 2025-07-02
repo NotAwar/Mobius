@@ -3,8 +3,8 @@ package mobius
 import (
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm"
-	"github.com/notawar/mobius/v4/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
 	"github.com/stretchr/testify/require"
 )
 

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/vulnerabilities/io"
 	"github.com/stretchr/testify/require"
 )
 

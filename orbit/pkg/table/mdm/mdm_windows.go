@@ -16,7 +16,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/platform"
+	"github.com/notawar/mobius/orbit/pkg/platform"
 	"github.com/google/uuid"
 	"github.com/hillu/go-ntdll"
 	"github.com/osquery/osquery-go/plugin/table"

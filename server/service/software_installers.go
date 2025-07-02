@@ -14,13 +14,13 @@ import (
 	"strconv"
 
 	"github.com/docker/go-units"
-	authzctx "github.com/notawar/mobius/v4/server/contexts/authz"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	hostctx "github.com/notawar/mobius/v4/server/contexts/host"
-	"github.com/notawar/mobius/v4/server/contexts/logging"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/service/middleware/endpoint_utils"
+	authzctx "github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	hostctx "github.com/notawar/mobius/server/contexts/host"
+	"github.com/notawar/mobius/server/contexts/logging"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 )
 
 type uploadSoftwareInstallerRequest struct {

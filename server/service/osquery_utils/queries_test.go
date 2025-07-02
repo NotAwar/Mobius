@@ -17,17 +17,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
 
 	"github.com/WatchBeam/clock"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/contexts/publicip"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	apple_mdm "github.com/notawar/mobius set/v4/server/mdm/apple"
-	"github.com/notawar/mobius set/v4/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius set/v4/server/mock"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/service/async"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/contexts/publicip"
+	"github.com/notawar/mobius/server/mobius"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mock"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service/async"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -1918,7 +1918,7 @@ func TestIngestNetworkInterface(t *testing.T) {
 	t.Parallel()
 
 	// NOTE: It was decided that we should allow ingesting private IPs on the PublicIP field,
-	// see https://github.com/notawar/mobius set/issues/11102.
+	// see https://github.com/notawar/mobius/issues/11102.
 	for _, tc := range []struct {
 		name  string
 		ip    string

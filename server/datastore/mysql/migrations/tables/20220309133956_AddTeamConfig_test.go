@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/require"
 )
 

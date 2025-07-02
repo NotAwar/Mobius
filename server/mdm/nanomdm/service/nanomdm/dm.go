@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/service"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/service"
 )
 
 const enrollmentIDHeader = "X-Enrollment-ID"

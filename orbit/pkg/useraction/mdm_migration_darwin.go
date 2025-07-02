@@ -15,14 +15,14 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/migration"
-	"github.com/notawar/mobius set/v4/orbit/pkg/swiftdialog"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/migration"
+	"github.com/notawar/mobius/orbit/pkg/swiftdialog"
 
-	"github.com/notawar/mobius set/v4/orbit/pkg/profiles"
-	"github.com/notawar/mobius set/v4/pkg/file"
-	"github.com/notawar/mobius set/v4/pkg/retry"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/orbit/pkg/profiles"
+	"github.com/notawar/mobius/pkg/file"
+	"github.com/notawar/mobius/pkg/retry"
+	"github.com/notawar/mobius/server/service"
 	"github.com/rs/zerolog/log"
 )
 

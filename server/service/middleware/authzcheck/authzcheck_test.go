@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/contexts/authz"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/service/contract"
+	"github.com/notawar/mobius/server/service/contract"
 )
 
 // Login attempts to login to the current Mobius instance. If login is successful,

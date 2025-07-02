@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/config"
+	"github.com/notawar/mobius/server/config"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"

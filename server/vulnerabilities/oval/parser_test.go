@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	oval_input "github.com/notawar/mobius/v4/server/vulnerabilities/oval/input"
-	oval_parsed "github.com/notawar/mobius/v4/server/vulnerabilities/oval/parsed"
+	"github.com/notawar/mobius/server/mobius"
+	oval_input "github.com/notawar/mobius/server/vulnerabilities/oval/input"
+	oval_parsed "github.com/notawar/mobius/server/vulnerabilities/oval/parsed"
 	"github.com/stretchr/testify/require"
 )
 

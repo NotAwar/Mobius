@@ -3,12 +3,12 @@ package mock
 import (
 	"context"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 //go:generate go run ./mockimpl/impl.go -o datastore_mock.go "s *DataStore" "mobius.Datastore"
 //go:generate go run ./mockimpl/impl.go -o datastore_installers.go "s *InstallerStore" "mobius.InstallerStore"
-//go:generate go run ./mockimpl/impl.go -o nanodep/storage.go "s *Storage" "github.com/notawar/mobius set/v4/server/mdm/nanodep/storage.AllDEPStorage"
+//go:generate go run ./mockimpl/impl.go -o nanodep/storage.go "s *Storage" "github.com/notawar/mobius/server/mdm/nanodep/storage.AllDEPStorage"
 //go:generate go run ./mockimpl/impl.go -o mdm/datastore_mdm_mock.go "fs *MDMAppleStore" "mobius.MDMAppleStore"
 //go:generate go run ./mockimpl/impl.go -o scep/depot.go "d *Depot" "depot.Depot"
 //go:generate go run ./mockimpl/impl.go -o scep/config.go "s *SCEPConfigService" "mobius.SCEPConfigService"

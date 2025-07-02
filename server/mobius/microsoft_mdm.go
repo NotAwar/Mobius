@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

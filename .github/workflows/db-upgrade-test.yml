@@ -5,11 +5,11 @@ on:
   workflow_dispatch: # allow manual action
     inputs:
       from-version:
-        description: "Docker tag of Mobius starting version, e.g. 'v4.64.2'"
+        description: "Docker tag of Mobius starting version, e.g. 'v1.64.2'"
         required: true
         type: string
       to-version:
-        description: "Docker tag of Mobius version to upgrade to, e.g. 'rc-minor-mobius-v4.65.0'"
+        description: "Docker tag of Mobius version to upgrade to, e.g. 'rc-minor-mobius-v1.65.0'"
         required: true
         type: string
 

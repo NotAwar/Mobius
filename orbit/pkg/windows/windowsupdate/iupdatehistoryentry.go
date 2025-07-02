@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/windows/oleconv"
+	"github.com/notawar/mobius/orbit/pkg/windows/oleconv"
 	"github.com/go-ole/go-ole"
 	"github.com/go-ole/go-ole/oleutil"
 )

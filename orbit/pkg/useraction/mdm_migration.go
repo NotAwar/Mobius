@@ -3,7 +3,7 @@ package useraction
 import (
 	"context"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // MDMMigrator represents the minimum set of methods a migration must implement

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
 )
 
 // Event is a MicroMDM webhook-ish JSON structure.

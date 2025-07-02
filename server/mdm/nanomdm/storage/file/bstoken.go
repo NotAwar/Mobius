@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 func (s *FileStorage) StoreBootstrapToken(r *mdm.Request, msg *mdm.SetBootstrapToken) error {

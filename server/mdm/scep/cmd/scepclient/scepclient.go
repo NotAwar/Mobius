@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	scepclient "github.com/notawar/mobius/v4/server/mdm/scep/client"
+	scepclient "github.com/notawar/mobius/server/mdm/scep/client"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"

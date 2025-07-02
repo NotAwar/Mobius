@@ -1,4 +1,0 @@
-github.com/notawar/mobius/v4/server/mobius/Features	EnableHostUsers	bool
-github.com/notawar/mobius/v4/server/mobius/Features	EnableSoftwareInventory	bool
-github.com/notawar/mobius/v4/server/mobius/Features	AdditionalQueries	*json.RawMessage
-github.com/notawar/mobius/v4/server/mobius/Features	DetailQueryOverrides	map[string]*string

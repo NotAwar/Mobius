@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 func GenerateRandomCertificateSerialNumber() (*big.Int, error) {

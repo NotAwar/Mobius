@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/table/tablehelpers"
+	"github.com/notawar/mobius/orbit/pkg/table/tablehelpers"
 
 	"github.com/osquery/osquery-go/plugin/table"
 	"github.com/rs/zerolog"

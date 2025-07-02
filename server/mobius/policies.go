@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/optjson"
+	"github.com/notawar/mobius/pkg/optjson"
 )
 
 // PolicyPayload holds data for policy creation.

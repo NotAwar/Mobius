@@ -1,6 +1,6 @@
 package oval_parsed
 
-import "github.com/notawar/mobius/v4/server/mobius"
+import "github.com/notawar/mobius/server/mobius"
 
 type Result interface {
 	// Eval evaluates the current OVAL definition against an OS version and a list of installed software, returns all software

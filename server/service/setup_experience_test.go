@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/viewer"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mock"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/require"
 )
 

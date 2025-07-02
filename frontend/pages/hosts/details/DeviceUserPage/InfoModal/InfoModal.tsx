@@ -19,8 +19,8 @@ const InfoModal = ({ onCancel }: IInfoModalProps): JSX.Element => {
     >
       <div>
         <p>
-          Your organization uses Mobius to check if all devices meet its security
-          policies.
+          Your organization uses Mobius to check if all devices meet its
+          security policies.
         </p>
         <p>With Mobius, you and your team can secure your device, together.</p>
         <p>

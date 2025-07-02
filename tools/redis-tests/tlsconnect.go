@@ -18,7 +18,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis"
+	"github.com/notawar/mobius/server/datastore/redis"
 	redigo "github.com/gomodule/redigo/redis"
 )
 

@@ -35,7 +35,7 @@ module.exports = {
       template: 'email-mdm-video',
       templateData: {}
     }).intercept((err)=>{
-      return new Error(`When trying to send a MDM demo video email for a user with the email address ${emailAddress}, an error occured. full error: ${err.stack}`);
+      return new Error(`When trying to send a MDM demo video email for a user with the email address ${emailAddress}, an error occurred. full error: ${err.stack}`);
     });
 
     // All done.

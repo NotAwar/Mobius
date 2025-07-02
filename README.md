@@ -8,7 +8,7 @@
 
 - **🔍 Device Visibility**: Real-time insights into device status, configuration, and security posture using osquery
 - **⚙️ Configuration Management**: Automated device configuration and policy enforcement using Ansible
-- **📊 Centralized Dashboard**: Modern web interface for monitoring and managing your entire mobius
+- **📊 Centralized Dashboard**: Modern web interface for monitoring and managing your entire fleet
 - **🔒 Security Focus**: Built-in security policies and compliance monitoring
 - **🌐 Cross-Platform**: Support for Linux, macOS, Windows, and IoT devices
 - **📈 Scalable**: Designed to handle thousands of devices efficiently
@@ -17,7 +17,7 @@
 
 Organizations use Mobius MDM for:
 
-- **Device Inventory Management**: Complete visibility into hardware and software across your mobius
+- **Device Inventory Management**: Complete visibility into hardware and software across your fleet
 - **Security Monitoring**: Real-time security posture assessment and threat detection
 - **Configuration Management**: Automated deployment of settings, software, and security policies
 - **Compliance Reporting**: Automated compliance checks and detailed reporting

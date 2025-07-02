@@ -7,9 +7,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/msrc/parsed"
-	msrcxml "github.com/notawar/mobius/v4/server/vulnerabilities/msrc/xml"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/vulnerabilities/msrc/parsed"
+	msrcxml "github.com/notawar/mobius/server/vulnerabilities/msrc/xml"
 )
 
 func ParseFeed(fPath string) (map[string]*parsed.SecurityBulletin, error) {

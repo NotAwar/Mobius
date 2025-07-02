@@ -56,7 +56,7 @@ module.exports = {
     try {
       parsedComplianceUpdateResponse = JSON.parse(complianceStatusResultResponse.body);
     } catch(err){
-      throw new Error(`When parsing the JSON response body of a Microsoft compliance partner update status, an error occured. full error: ${require('util').inspect(err)}`);
+      throw new Error(`When parsing the JSON response body of a Microsoft compliance partner update status, an error occurred. full error: ${require('util').inspect(err)}`);
     }
     let result = {
       message_id: messageId,// eslint-disable-line camelcase

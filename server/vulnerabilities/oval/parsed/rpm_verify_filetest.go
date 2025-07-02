@@ -1,7 +1,7 @@
 package oval_parsed
 
 import (
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // <rpmverifyfile_test> can target any file installed via RPM - but in the case of OVAL

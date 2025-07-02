@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/io"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/msrc"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/msrc/parsed"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/vulnerabilities/msrc"
+	"github.com/notawar/mobius/server/vulnerabilities/msrc/parsed"
 	"github.com/google/go-github/v37/github"
 )
 

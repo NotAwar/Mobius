@@ -6,7 +6,7 @@ import (
 	"crypto/x509"
 	"errors"
 
-	scepserver "github.com/notawar/mobius/v4/server/mdm/scep/server"
+	scepserver "github.com/notawar/mobius/server/mdm/scep/server"
 
 	"github.com/smallstep/scep"
 )

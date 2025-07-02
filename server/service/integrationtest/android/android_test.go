@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql"
-	"github.com/notawar/mobius/v4/server/mdm/android"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/mdm/android"
 	"github.com/stretchr/testify/assert"
 )
 

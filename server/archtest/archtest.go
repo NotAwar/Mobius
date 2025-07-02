@@ -23,7 +23,7 @@ type PackageTest struct {
 }
 
 // PackageTest will ignore dependency on this package.
-const thisPackage = "github.com/notawar/mobius/v4/server/archtest"
+const thisPackage = "github.com/notawar/mobius/server/archtest"
 
 type TestingT interface {
 	Errorf(format string, args ...any)

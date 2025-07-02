@@ -6,15 +6,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/contexts/logging"
-	"github.com/notawar/mobius/v4/server/mobius"
-	middleware_log "github.com/notawar/mobius/v4/server/service/middleware/log"
+	"github.com/notawar/mobius/server/contexts/logging"
+	"github.com/notawar/mobius/server/mobius"
+	middleware_log "github.com/notawar/mobius/server/service/middleware/log"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 
-	authz_ctx "github.com/notawar/mobius/v4/server/contexts/authz"
-	hostctx "github.com/notawar/mobius/v4/server/contexts/host"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
+	hostctx "github.com/notawar/mobius/server/contexts/host"
 	"github.com/go-kit/kit/endpoint"
 )
 

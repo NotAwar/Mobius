@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/notawar/mobius/v4/pkg/optjson"
-	"github.com/notawar/mobius/v4/pkg/spec"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/pkg/spec"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

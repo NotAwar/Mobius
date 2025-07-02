@@ -3,10 +3,10 @@ package test
 import (
 	"context"
 
-	authz_ctx "github.com/notawar/mobius/v4/server/contexts/authz"
-	hostctx "github.com/notawar/mobius set/v4/server/contexts/host"
-	"github.com/notawar/mobius set/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
+	hostctx "github.com/notawar/mobius/server/contexts/host"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // UserContext returns a new context with the provided user as the viewer.

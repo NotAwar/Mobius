@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/sethvargo/go-password/password"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/ssh/terminal"

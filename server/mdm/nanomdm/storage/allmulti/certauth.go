@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/storage"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/storage"
 )
 
 func (ms *MultiAllStorage) HasCertHash(r *mdm.Request, hash string) (bool, error) {

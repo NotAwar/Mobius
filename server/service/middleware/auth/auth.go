@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/contexts/authz"
-	"github.com/notawar/mobius set/v4/server/contexts/token"
-	"github.com/notawar/mobius set/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/service/middleware/log"
+	"github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/contexts/token"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service/middleware/log"
 	"github.com/go-kit/kit/endpoint"
 )
 

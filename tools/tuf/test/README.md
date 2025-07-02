@@ -102,7 +102,7 @@ source ./tools/tuf/test/load_orbit_version_vars.sh
 GOOS=windows GOARCH=amd64 go build \
     -o orbit-windows.exe \
     -ldflags="-X github.com/notawar/mobius/v4/orbit/pkg/build.Version=$ORBIT_VERSION \
-    -X github.com/notawar/mobiuset/v4/orbit/pkg/build.Commit=$ORBIT_COMMIT" \
+    -X github.com/notawar/mobius/orbit/pkg/build.Commit=$ORBIT_COMMIT" \
     ./orbit/cmd/orbit
 
 # Push the compiled Orbit as a new version

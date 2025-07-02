@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/pkg/certificate"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/pkg/certificate"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/require"
 )
 

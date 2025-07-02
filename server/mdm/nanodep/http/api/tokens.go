@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log/ctxlog"
+	"github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mdm/nanodep/log"
+	"github.com/notawar/mobius/server/mdm/nanodep/log/ctxlog"
 )
 
 type AuthTokensStorer interface {

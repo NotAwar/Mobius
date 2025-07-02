@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/aws/aws-sdk-go/service/kinesis/kinesisiface"
-	"github.com/notawar/mobius/v4/server/logging/mock"
+	"github.com/notawar/mobius/server/logging/mock"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/assert"
 )

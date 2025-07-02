@@ -17,12 +17,12 @@ import (
 	"golang.org/x/text/unicode/norm"
 	"gopkg.in/yaml.v2"
 
-	"github.com/notawar/mobius/v4/pkg/optjson"
-	"github.com/notawar/mobius/v4/pkg/spec"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mdm"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/pkg/spec"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/ptr"
 	kithttp "github.com/go-kit/kit/transport/http"
 )
 

@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/bitlocker"
-	"github.com/notawar/mobius set/v4/orbit/pkg/scripts"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/orbit/pkg/bitlocker"
+	"github.com/notawar/mobius/orbit/pkg/scripts"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/require"
 )

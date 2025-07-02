@@ -1,8 +1,8 @@
 package oval_parsed
 
 import (
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/vulnerabilities/utils"
 )
 
 // DpkgInfoTest encapsulates a Dpkg info test.

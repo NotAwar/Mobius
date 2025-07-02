@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/macoffice"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/msrc/parsed"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/nvd"
+	"github.com/notawar/mobius/server/vulnerabilities/macoffice"
+	"github.com/notawar/mobius/server/vulnerabilities/msrc/parsed"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd"
 	"github.com/jmoiron/sqlx"
 )
 

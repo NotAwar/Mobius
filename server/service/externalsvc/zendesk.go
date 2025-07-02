@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/nukosuke/go-zendesk/zendesk"
 )
 

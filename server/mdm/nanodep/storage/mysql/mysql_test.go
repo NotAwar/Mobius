@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/storage"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/storage/storagetest"
+	"github.com/notawar/mobius/server/mdm/nanodep/storage"
+	"github.com/notawar/mobius/server/mdm/nanodep/storage/storagetest"
 	_ "github.com/go-sql-driver/mysql"
 )
 

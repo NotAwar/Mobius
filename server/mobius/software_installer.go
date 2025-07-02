@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/docker/go-units"
-	"github.com/notawar/mobiuss/v4/pkg/optjson"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/server/ptr"
 )
 
 // MaxSoftwareInstallerSize is the maximum size allowed for software

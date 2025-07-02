@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius/v4/pkg/spec"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/spec"
 	kitlog "github.com/go-kit/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -15,8 +15,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/packaging"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/packaging"
 	"github.com/josephspurrier/goversioninfo"
 	zlog "github.com/rs/zerolog/log"
 )
@@ -211,7 +211,7 @@ func buildTargetBinary(cmdDir string, version string, binaryPath string, arch st
 		linkFlags := fmt.Sprintf("-H=windowsgui -X=main.version=%s", version)
 		buildExec = exec.Command("go", "build", "-ldflags", linkFlags, "-o", outputBinary)
 	} else {
-		linkFlags := fmt.Sprintf("-X=github.com/notawar/mobius set/v4/orbit/pkg/build.Version=%s", version)
+		linkFlags := fmt.Sprintf("-X=github.com/notawar/mobius/orbit/pkg/build.Version=%s", version)
 		buildExec = exec.Command("go", "build", "-ldflags", linkFlags, "-o", outputBinary)
 	}
 	buildExec.Env = append(os.Environ(), "GOOS=windows", fmt.Sprintf("GOARCH=%s", arch))

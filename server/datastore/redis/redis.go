@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/gomodule/redigo/redis"
 	"github.com/mna/redisc"
 )

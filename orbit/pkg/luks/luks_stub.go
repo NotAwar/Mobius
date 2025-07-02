@@ -5,7 +5,7 @@ package luks
 
 import (
 	"context"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // Run is a placeholder method for non-Linux builds.

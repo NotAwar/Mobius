@@ -16,10 +16,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/packaging"
-	"github.com/notawar/mobius set/v4/pkg/certificate"
-	"github.com/notawar/mobius set/v4/pkg/secure"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/packaging"
+	"github.com/notawar/mobius/pkg/certificate"
+	"github.com/notawar/mobius/pkg/secure"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/urfave/cli/v2"
 )
 

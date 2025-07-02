@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/mobiushttp"
 )
 
 // Proxy holds functionality to send requests to Entra via Mobius's MS proxy.

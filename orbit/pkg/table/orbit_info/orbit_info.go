@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/build"
-	orbit_table "github.com/notawar/mobius set/v4/orbit/pkg/table"
-	"github.com/notawar/mobius set/v4/orbit/pkg/token"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/orbit/pkg/build"
+	orbit_table "github.com/notawar/mobius/orbit/pkg/table"
+	"github.com/notawar/mobius/orbit/pkg/token"
+	"github.com/notawar/mobius/server/service"
 	"github.com/osquery/osquery-go/plugin/table"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/vulnerabilities/utils"
 )
 
 type UnixUnameTest struct {

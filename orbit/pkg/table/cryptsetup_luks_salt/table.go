@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/notawar/mobius/v4/orbit/pkg/luks"
+	"github.com/notawar/mobius/orbit/pkg/luks"
 	"github.com/osquery/osquery-go/plugin/table"
 	"github.com/rs/zerolog/log"
 	"strings"

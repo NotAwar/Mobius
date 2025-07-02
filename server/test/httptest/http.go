@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	"github.com/stretchr/testify/require"
 )
 

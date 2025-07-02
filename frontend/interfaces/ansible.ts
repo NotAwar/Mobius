@@ -3,11 +3,18 @@ export interface IAnsibleHost {
   hostname: string;
   ip_address: string;
   operating_system: string;
-  status: 'online' | 'offline' | 'pending';
+  status: "online" | "offline" | "pending";
   last_seen: string;
   ansible_facts?: { [key: string]: any };
   osquery_enrolled: boolean;
-  distribution?: 'Ubuntu' | 'Pop!_OS' | 'Debian' | 'RHEL' | 'CentOS' | 'macOS' | 'Windows';
+  distribution?:
+    | "Ubuntu"
+    | "Pop!_OS"
+    | "Debian"
+    | "RHEL"
+    | "CentOS"
+    | "macOS"
+    | "Windows";
 }
 
 export interface IAnsiblePlaybook {
@@ -25,7 +32,7 @@ export interface IAnsibleJob {
   id: string;
   playbook_id: string;
   host_ids: string[];
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   started_at?: string;
   finished_at?: string;
   output?: string;

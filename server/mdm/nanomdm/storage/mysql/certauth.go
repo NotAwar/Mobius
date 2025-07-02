@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 // Executes SQL statements that return a single COUNT(*) of rows.

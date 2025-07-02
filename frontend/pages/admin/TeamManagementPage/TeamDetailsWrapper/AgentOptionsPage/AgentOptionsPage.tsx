@@ -148,9 +148,9 @@ const AgentOptionsPage = ({
   return (
     <div className={`${baseClass}`}>
       <p className={`${baseClass}__page-description`}>
-        Agent options configure Mobius&apos;s agent (mobiusdaemon). When you update
-        agent options, they will be applied the next time a host checks in to
-        Mobius.
+        Agent options configure Mobius&apos;s agent (mobiusdaemon). When you
+        update agent options, they will be applied the next time a host checks
+        in to Mobius.
         <br />
         <CustomLink
           url="https://mobius-mdm.org/learn-more-about/agent-options"

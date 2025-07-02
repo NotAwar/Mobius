@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 func NewService(config config.MobiusConfig) (mobius.MailService, error) {

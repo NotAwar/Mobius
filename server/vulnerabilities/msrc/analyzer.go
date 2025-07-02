@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/io"
-	msrc "github.com/notawar/mobius/v4/server/vulnerabilities/msrc/parsed"
-	utils "github.com/notawar/mobius/v4/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/vulnerabilities/io"
+	msrc "github.com/notawar/mobius/server/vulnerabilities/msrc/parsed"
+	utils "github.com/notawar/mobius/server/vulnerabilities/utils"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

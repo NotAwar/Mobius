@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/push"
+	"github.com/notawar/mobius/server/mdm/nanomdm/push"
 	"golang.org/x/net/http2"
 )
 

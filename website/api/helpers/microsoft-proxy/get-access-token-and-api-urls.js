@@ -63,7 +63,7 @@ module.exports = {
       graphAccessToken = JSON.parse(graphAccessTokenResponse.body).access_token;
       manageApiAccessToken = JSON.parse(manageAccessTokenResponse.body).access_token;
     } catch(err){
-      throw new Error(`When sending a request to get an access token for a Microsoft compliance tenant, an error occured. full error: ${require('util').inspect(err)}`);
+      throw new Error(`When sending a request to get an access token for a Microsoft compliance tenant, an error occurred. full error: ${require('util').inspect(err)}`);
     }
 
     // [?]: https://learn.microsoft.com/en-us/graph/api/resources/serviceprincipal

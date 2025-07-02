@@ -1,9 +1,9 @@
 {
   "name": "@mobiusmdm/mobius",
-  "version": "0.99.99",
+  "version": "1.0.0",
   "description": "The premier osquery mobius manager.",
   "engines": {
-    "node": "20.18.1",
+    "node": ">=20.18.1",
     "yarn": ">=1.22.21"
   },
   "private": true,

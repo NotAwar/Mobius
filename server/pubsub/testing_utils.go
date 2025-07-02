@@ -3,7 +3,7 @@ package pubsub
 import (
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
 	"github.com/go-kit/log"
 )
 

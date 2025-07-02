@@ -6,12 +6,12 @@ package windowsupdatetable
 
 import (
 	"context"
-	"github.com/notawar/mobius/v4/orbit/pkg/windows/windowsupdate"
+	"github.com/notawar/mobius/orbit/pkg/windows/windowsupdate"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/tablehelpers"
+	"github.com/notawar/mobius/orbit/pkg/table/tablehelpers"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 )

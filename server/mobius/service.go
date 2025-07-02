@@ -7,8 +7,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/notawar/mobiuss/v4/server/version"
-	"github.com/notawar/mobius set/v4/server/websocket"
+	"github.com/notawar/mobius/server/version"
+	"github.com/notawar/mobius/server/websocket"
 )
 
 // EnterpriseOverrides contains the methods that can be overriden by the

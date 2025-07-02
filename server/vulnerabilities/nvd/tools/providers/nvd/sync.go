@@ -26,7 +26,7 @@ type Syncer interface {
 	Sync(ctx context.Context, src SourceConfig, localdir string) error
 }
 
-// SyncError accumulates errors occured during Sync.Do() call.
+// SyncError accumulates errors occurred during Sync.Do() call.
 type SyncError []string
 
 // Error implements error interface.
@@ -50,7 +50,7 @@ type Sync struct {
 
 // Do executes the synchronization.
 func (s Sync) Do(ctx context.Context) error {
-	err := os.MkdirAll(s.LocalDir, 0755)
+	err := os.MkdirAll(s.LocalDir, 0o755)
 	if err != nil {
 		return err
 	}

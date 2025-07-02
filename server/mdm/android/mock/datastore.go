@@ -6,7 +6,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/notawar/mobius/v4/server/mdm/android"
+	"github.com/notawar/mobius/server/mdm/android"
 	"github.com/jmoiron/sqlx"
 )
 

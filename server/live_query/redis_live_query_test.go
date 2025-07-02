@@ -3,8 +3,8 @@ package live_query
 import (
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis/redistest"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/test"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/assert"
 )

@@ -54,7 +54,7 @@ module.exports = {
         sails.log.warn(`When the receive-from-zoom webhook recieved an event to validate the webhook URL, the provided payload did not contain a token. Full payload: ${require('util').inpsect(payload, {depth: null})}`);
         return this.res.badRequest();
       }
-      // [?]: https://nodejs.org/docs/latest-v20.x/api/crypto.html#class-hmac
+      // [?]: https://nodejs.org/docs/latest/api/crypto.html#class-hmac
       let hmac = require('crypto').createHmac('sha256', sails.config.custom.zoomWebhookToken);
       hmac.update(payload.plainToken);
       let encryptedTokenToReturnToZoom = hmac.digest('hex');
@@ -79,7 +79,7 @@ module.exports = {
           account_id: sails.config.custom.zoomAccountId// eslint-disable-line camelcase
         }
       }).intercept((err)=>{
-        return new Error(`When sending a request to get a Zoom access token, an error occured. Full error ${require('util').inspect(err, {depth: 3})}`);
+        return new Error(`When sending a request to get a Zoom access token, an error occurred. Full error ${require('util').inspect(err, {depth: 3})}`);
       });
       let token = oauthResponse.access_token;
 
@@ -94,7 +94,7 @@ module.exports = {
         sails.log.warn(`The receive-from-zoom webhook received an event (type: ${event}) about a Zoom call (id: ${idOfCallToGenerateTranscriptFor}), the Zoom API returned a 404 response when a request was sent to get information about the call. Full error: ${require('util').inspect(err, {depth: 3})}`);
         return 'callInfoNotFound';
       }).intercept((err)=>{
-        return new Error(`When sending a request to get information about a Zoom recording, an error occured. Full error ${require('util').inspect(err, {depth: 3})}`);
+        return new Error(`When sending a request to get information about a Zoom recording, an error occurred. Full error ${require('util').inspect(err, {depth: 3})}`);
       });
 
 
@@ -109,7 +109,7 @@ module.exports = {
         sails.log.warn(`The receive-from-zoom webhook received an event (type: ${event}) about a Zoom call (id: ${idOfCallToGenerateTranscriptFor}), the Zoom API returned a 404 response when a request was sent to get a transcript of the call. Full error: ${require('util').inspect(err, {depth: 3})}`);
         return 'callTranscriptNotFound';
       }).intercept((err)=>{
-        return new Error(`When sending a request to get a transcript of a Zoom recording, an error occured. Full error ${require('util').inspect(err, {depth: 3})}`);
+        return new Error(`When sending a request to get a transcript of a Zoom recording, an error occurred. Full error ${require('util').inspect(err, {depth: 3})}`);
       });
 
       let allSpeakersOnThisCall = [];
@@ -124,14 +124,14 @@ module.exports = {
               'Authorization': `Bearer ${token}`
             }
           }).intercept((err)=>{
-            return new Error(`When the receive-from-zoom webhook send a request to get a page of a call transcript (call id: ${idOfCallToGenerateTranscriptFor}) an error occured. Full error: ${require('util').inspect(err, {depth: null})}`);
+            return new Error(`When the receive-from-zoom webhook send a request to get a page of a call transcript (call id: ${idOfCallToGenerateTranscriptFor}) an error occurred. Full error: ${require('util').inspect(err, {depth: null})}`);
           });
           allSpeakersOnThisCall = allSpeakersOnThisCall.concat(thisPageOfCallInformation.participants);
           tokenForNextPageOfResults = thisPageOfCallInformation.next_page_token;
           // Stop the until() helper when the response body does not contain a token for the next page of results.
           return thisPageOfCallInformation.next_page_token === '';
         }).intercept((err)=>{
-          return new Error(`When the receive-from-zoom webhook attempted to process multiple pages of a call transcript (call ID: ${idOfCallToGenerateTranscriptFor}). An error occured. full error ${require('util').inspect(err, {depth: null})}`);
+          return new Error(`When the receive-from-zoom webhook attempted to process multiple pages of a call transcript (call ID: ${idOfCallToGenerateTranscriptFor}). An error occurred. full error ${require('util').inspect(err, {depth: null})}`);
         });
       }
 
@@ -178,7 +178,7 @@ module.exports = {
       .timeout(5000)
       .tolerate(['non200Response', 'requestFailed', {name: 'TimeoutError'}], (err)=>{
         // Note that Zapier responds with a 2xx status code even if something goes wrong, so just because this message is not logged doesn't mean everything is hunky dory.  More info: https://github.com/notawar/mobius/pull/6380#issuecomment-1204395762
-        sails.log.warn(`When trying to send a Zoom transcript to Zapier, an error occured. Raw error: ${require('util').inspect(err)}`);
+        sails.log.warn(`When trying to send a Zoom transcript to Zapier, an error occurred. Raw error: ${require('util').inspect(err)}`);
         return;
       });
     } else {

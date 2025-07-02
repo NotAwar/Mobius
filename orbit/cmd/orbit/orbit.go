@@ -27,33 +27,33 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/augeas"
-	"github.com/notawar/mobius set/v4/orbit/pkg/build"
-	"github.com/notawar/mobius set/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/execuser"
-	"github.com/notawar/mobius set/v4/orbit/pkg/insecure"
-	"github.com/notawar/mobius set/v4/orbit/pkg/installer"
-	"github.com/notawar/mobius set/v4/orbit/pkg/keystore"
-	"github.com/notawar/mobius set/v4/orbit/pkg/logging"
-	"github.com/notawar/mobius set/v4/orbit/pkg/luks"
-	"github.com/notawar/mobius set/v4/orbit/pkg/osquery"
-	"github.com/notawar/mobius set/v4/orbit/pkg/osservice"
-	"github.com/notawar/mobius set/v4/orbit/pkg/platform"
-	"github.com/notawar/mobius set/v4/orbit/pkg/profiles"
-	setupexperience "github.com/notawar/mobius set/v4/orbit/pkg/setup_experience"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/mobiusdaemon_logs"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/orbit_info"
-	"github.com/notawar/mobius set/v4/orbit/pkg/token"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update/filestore"
-	"github.com/notawar/mobius set/v4/orbit/pkg/user"
-	"github.com/notawar/mobius set/v4/pkg/certificate"
-	"github.com/notawar/mobius set/v4/pkg/file"
-	retrypkg "github.com/notawar/mobius set/v4/pkg/retry"
-	"github.com/notawar/mobius set/v4/pkg/secure"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/orbit/pkg/augeas"
+	"github.com/notawar/mobius/orbit/pkg/build"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/execuser"
+	"github.com/notawar/mobius/orbit/pkg/insecure"
+	"github.com/notawar/mobius/orbit/pkg/installer"
+	"github.com/notawar/mobius/orbit/pkg/keystore"
+	"github.com/notawar/mobius/orbit/pkg/logging"
+	"github.com/notawar/mobius/orbit/pkg/luks"
+	"github.com/notawar/mobius/orbit/pkg/osquery"
+	"github.com/notawar/mobius/orbit/pkg/osservice"
+	"github.com/notawar/mobius/orbit/pkg/platform"
+	"github.com/notawar/mobius/orbit/pkg/profiles"
+	setupexperience "github.com/notawar/mobius/orbit/pkg/setup_experience"
+	"github.com/notawar/mobius/orbit/pkg/table"
+	"github.com/notawar/mobius/orbit/pkg/table/mobiusdaemon_logs"
+	"github.com/notawar/mobius/orbit/pkg/table/orbit_info"
+	"github.com/notawar/mobius/orbit/pkg/token"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/orbit/pkg/update/filestore"
+	"github.com/notawar/mobius/orbit/pkg/user"
+	"github.com/notawar/mobius/pkg/certificate"
+	"github.com/notawar/mobius/pkg/file"
+	retrypkg "github.com/notawar/mobius/pkg/retry"
+	"github.com/notawar/mobius/pkg/secure"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service"
 	"github.com/google/uuid"
 	"github.com/oklog/run"
 	"github.com/rs/zerolog"
@@ -190,7 +190,7 @@ func main() {
 		// using it because softwareupdated was causing problems and I
 		// don't want to break their setups.
 		//
-		// For more context please check out: https://github.com/notawar/mobius set/issues/11777
+		// For more context please check out: https://github.com/notawar/mobius/issues/11777
 		&cli.BoolFlag{
 			Name:    "disable-kickstart-softwareupdated",
 			Usage:   "(Deprecated) Disable periodic execution of 'launchctl kickstart -k softwareupdated' on macOS",
@@ -466,7 +466,7 @@ func main() {
 					return err
 				}
 				// Since the normal enroll secret flow supports keychain, we can use it here as well.
-				// The story to remove the enroll secret from macOS MDM profile is: https://github.com/notawar/mobius set/issues/16118
+				// The story to remove the enroll secret from macOS MDM profile is: https://github.com/notawar/mobius/issues/16118
 				if err := tryReadEnrollSecretFromKeystore(); err != nil {
 					// Log the error but don't return it, as we want to keep trying to read the configuration
 					// from the system profile.
@@ -744,7 +744,7 @@ func main() {
 		if runtime.GOOS == "darwin" {
 			// Get the hardware UUID. We use a temporary osquery DB location in order to guarantee that
 			// we're getting true UUID, not a cached UUID. See
-			// https://github.com/notawar/mobius set/issues/17934 and
+			// https://github.com/notawar/mobius/issues/17934 and
 			// https://github.com/osquery/osquery/issues/7509 for more details.
 
 			tmpDBPath := filepath.Join(os.TempDir(), strings.Join([]string{uuid.NewString(), "tmp-db"}, "-"))
@@ -1633,7 +1633,7 @@ func (d *desktopRunner) Execute() error {
 		// First retry logic to start mobius-desktop.
 		if done := retry(30*time.Second, false, d.interruptCh, func() bool {
 			// On MacOS, if we attempt to run Mobius Desktop while the user is not logged in through
-			// the GUI, MacOS returns an error. See https://github.com/notawar/mobius set/issues/14698
+			// the GUI, MacOS returns an error. See https://github.com/notawar/mobius/issues/14698
 			// for more details.
 			loggedInUser, err := user.UserLoggedInViaGui()
 			if err != nil {
@@ -1727,7 +1727,7 @@ func (d *desktopRunner) processLog(log string) {
 	var msg string
 	switch {
 	case strings.Contains(log, string(logErrorLaunchServicesSubstr)):
-		// https://github.com/notawar/mobius set/issues/19172
+		// https://github.com/notawar/mobius/issues/19172
 		msg = string(logErrorLaunchServicesMsg)
 	case strings.Contains(log, string(logErrorMissingExecSubstr)):
 		// For manual testing.

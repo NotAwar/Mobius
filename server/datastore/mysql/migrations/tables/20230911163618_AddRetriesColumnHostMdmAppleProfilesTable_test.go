@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/require"
 )
 

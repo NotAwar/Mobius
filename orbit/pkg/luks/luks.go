@@ -4,7 +4,7 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dialog"
+	"github.com/notawar/mobius/orbit/pkg/dialog"
 )
 
 type LuksDump struct {

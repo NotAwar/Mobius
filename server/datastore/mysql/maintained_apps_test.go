@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	maintained_apps "github.com/notawar/mobius set/v4/server/mdm/maintainedapps"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/server/mobius"
+	maintained_apps "github.com/notawar/mobius/server/mdm/maintainedapps"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/test"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 )

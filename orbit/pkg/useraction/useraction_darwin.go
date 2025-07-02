@@ -11,7 +11,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/ptr"
 )
 
 const defaultDialogTimeout = 30 // in seconds

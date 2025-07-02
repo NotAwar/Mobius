@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/log"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log/ctxlog"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/sync"
+	"github.com/notawar/mobius/server/mdm/nanodep/log"
+	"github.com/notawar/mobius/server/mdm/nanodep/log/ctxlog"
+	"github.com/notawar/mobius/server/mdm/nanodep/sync"
 )
 
 // RetrieveAssignerProfileHandler returns the assigner profile UUID for the

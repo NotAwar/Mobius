@@ -11,13 +11,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/authz"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/contexts/license"
-	"github.com/notawar/mobius set/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/authz"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/license"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 )
 
 /////////////////////////////////////////////////////////////////////////////////

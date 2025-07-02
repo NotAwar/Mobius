@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/mobiushttp"
 )
 
 var (

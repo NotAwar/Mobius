@@ -7,9 +7,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dialog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/lvm"
-	"github.com/notawar/mobius set/v4/orbit/pkg/zenity"
+	"github.com/notawar/mobius/orbit/pkg/dialog"
+	"github.com/notawar/mobius/orbit/pkg/lvm"
+	"github.com/notawar/mobius/orbit/pkg/zenity"
 	"github.com/siderolabs/go-blockdevice/v2/encryption"
 	"github.com/siderolabs/go-blockdevice/v2/encryption/luks"
 )

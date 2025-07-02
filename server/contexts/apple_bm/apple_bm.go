@@ -3,7 +3,7 @@ package apple_bm
 import (
 	"context"
 
-	depclient "github.com/notawar/mobius/v4/server/mdm/nanodep/client"
+	depclient "github.com/notawar/mobius/server/mdm/nanodep/client"
 )
 
 type key int

@@ -1,8 +1,8 @@
 package goval_dictionary
 
 import (
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/oval"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/vulnerabilities/oval"
 	"github.com/stretchr/testify/require"
 	"testing"
 	"time"

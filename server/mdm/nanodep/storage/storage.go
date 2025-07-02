@@ -3,9 +3,9 @@ package storage
 import (
 	"errors"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/http/api"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/sync"
+	"github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mdm/nanodep/http/api"
+	"github.com/notawar/mobius/server/mdm/nanodep/sync"
 )
 
 // ErrNotFound is returned by AllStorage when a requested resource is not found.

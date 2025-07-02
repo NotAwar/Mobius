@@ -66,7 +66,9 @@ const MobiusAppSummary = ({
       <div className={`${baseClass}__mobius-app-summary--left`}>
         <SoftwareIcon name={name} size="medium" />
         <div className={`${baseClass}__mobius-app-summary--details`}>
-          <div className={`${baseClass}__mobius-app-summary--title`}>{name}</div>
+          <div className={`${baseClass}__mobius-app-summary--title`}>
+            {name}
+          </div>
           <div className={`${baseClass}__mobius-app-summary--info`}>
             <div
               className={`${baseClass}__mobius-app-summary--details--platform`}

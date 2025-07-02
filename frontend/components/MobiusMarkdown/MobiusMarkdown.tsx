@@ -19,7 +19,11 @@ const baseClass = "mobius-markdown";
 /** This will give us sensible defaults for how we render markdown across the mobius application.
  * NOTE: can be extended later to take custom components, but dont need that at the moment.
  */
-const MobiusMarkdown = ({ markdown, className, name }: IMobiusMarkdownProps) => {
+const MobiusMarkdown = ({
+  markdown,
+  className,
+  name,
+}: IMobiusMarkdownProps) => {
   const classNames = classnames(baseClass, className);
 
   return (

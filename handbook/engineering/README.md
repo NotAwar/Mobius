@@ -114,7 +114,7 @@ To provide full-time focus to the role, the on-call engineer is not expected to 
 
 ### Create a release candidate
 
-All minor releases go through the release candidate process before they are published. A release candidate for the next minor release is created on the last Friday of each sprint at 8:00 AM Pacific (see [Mobius's release calendar](https://calendar.google.com/calendar/u/0?cid=Y192Nzk0M2RlcW4xdW5zNDg4YTY1djJkOTRic0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)). A release candidate branch is created at `rc-minor-mobius-v4.x.x` and no additional feature work or released bug fixes are merged without EM and QA approval.
+All minor releases go through the release candidate process before they are published. A release candidate for the next minor release is created on the last Friday of each sprint at 8:00 AM Pacific (see [Mobius's release calendar](https://calendar.google.com/calendar/u/0?cid=Y192Nzk0M2RlcW4xdW5zNDg4YTY1djJkOTRic0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)). A release candidate branch is created at `rc-minor-mobius-v1.x.x` and no additional feature work or released bug fixes are merged without EM and QA approval.
 
 [Run the first step](https://github.com/notawar/mobius/tree/main/tools/release#minor-release-typically-end-of-sprint) of the minor release section of the Mobius releases script to create the release candidate branch, the release QA issue, and announce the release candidate in Slack.
 
@@ -208,8 +208,8 @@ After each Mobius release, the new release is deployed to Mobius's "dogfood" (in
 How to deploy a new release to dogfood:
 
 1. Head to the **Tags** page on the mobiusmdm/mobius Docker Hub: <https://hub.docker.com/r/mobiusmdm/mobius/tags>
-2. In the **Filter tags** search bar, type in the latest release (ex. v4.19.0).
-3. Locate the tag for the new release and copy the image name. An example image name is "mobiusmdm/mobius:v4.19.0".
+2. In the **Filter tags** search bar, type in the latest release (ex. v1.19.0).
+3. Locate the tag for the new release and copy the image name. An example image name is "mobiusmdm/mobius:v1.19.0".
 4. Head to the "Deploy Dogfood Environment" action on GitHub: <https://github.com/notawar/mobius/actions/workflows/dogfood-deploy.yml>
 5. Select **Run workflow** and paste the image name in the **The image tag wished to be deployed.** field.
 

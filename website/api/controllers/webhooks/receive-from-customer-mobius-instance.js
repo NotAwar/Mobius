@@ -85,7 +85,7 @@ module.exports = {
       },
     })
     .intercept((err)=>{
-      return new Error(`When sending a request to get a Workspace ONE authorization token for the recieve-from-customer-mobius-instance webhook, an error occured. Full error: ${err.stack}`);
+      return new Error(`When sending a request to get a Workspace ONE authorization token for the receive-from-customer-mobius-instance webhook, an error occurred. Full error: ${err.stack}`);
     });
 
     // The body in responses returned from the sendHttpRequest helper will always be a string, so we need to parse the raw JSON response body to get the access_token returned from the OAuth URL.
@@ -108,7 +108,7 @@ module.exports = {
       } else if(err.raw.statusCode === 400) {
         return { badRequest: `When sending a request to unenroll a host from a Workspace One instance (Host information: Serial number: ${host.hardware_serial}, id: ${host.id}, uuid: ${host.uuid}), the Workspace One instance could not unenroll the specified host. Full error: ${err.stack}` };
       } else {
-        return new Error(`When sending a request to unenroll a host from a Workspace One instance (Host information: Serial number: ${host.hardware_serial}, id: ${host.id}, uuid: ${host.uuid}), an error occured. Full error: ${err.stack}`);
+        return new Error(`When sending a request to unenroll a host from a Workspace One instance (Host information: Serial number: ${host.hardware_serial}, id: ${host.id}, uuid: ${host.uuid}), an error occurred. Full error: ${err.stack}`);
       }
     });
 

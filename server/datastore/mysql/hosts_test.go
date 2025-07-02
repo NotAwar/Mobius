@@ -19,16 +19,16 @@ import (
 	"time"
 
 	"github.com/WatchBeam/clock"
-	"github.com/notawar/mobius/v4/pkg/optjson"
-	"github.com/notawar/mobius set/v4/server"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/contexts/license"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/contexts/license"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/test"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
@@ -3953,7 +3953,7 @@ func getReads(t *testing.T, ds *Datastore) int {
 }
 
 func testHostsReadsLessRows(t *testing.T, ds *Datastore) {
-	t.Skip("flaky: https://github.com/notawar/mobius set/issues/4270")
+	t.Skip("flaky: https://github.com/notawar/mobius/issues/4270")
 
 	user1 := test.NewUser(t, ds, "alice", "alice-123@example.com", true)
 	var hosts []*mobius.Host

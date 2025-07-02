@@ -1,7 +1,7 @@
 package s3
 
 import (
-	"github.com/notawar/mobius/v4/server/config"
+	"github.com/notawar/mobius/server/config"
 )
 
 const softwareInstallersPrefix = "software-installers"

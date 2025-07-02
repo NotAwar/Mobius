@@ -5,9 +5,9 @@ package table
 import (
 	"fmt"
 
-	cisaudit "github.com/notawar/mobius/v4/orbit/pkg/table/cis_audit"
-	mdmbridge "github.com/notawar/mobius set/v4/orbit/pkg/table/mdm"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/windowsupdatetable"
+	cisaudit "github.com/notawar/mobius/orbit/pkg/table/cis_audit"
+	mdmbridge "github.com/notawar/mobius/orbit/pkg/table/mdm"
+	"github.com/notawar/mobius/orbit/pkg/table/windowsupdatetable"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/sys/windows/registry"
 

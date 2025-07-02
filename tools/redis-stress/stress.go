@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis"
+	"github.com/notawar/mobius/server/datastore/redis"
 )
 
 var (

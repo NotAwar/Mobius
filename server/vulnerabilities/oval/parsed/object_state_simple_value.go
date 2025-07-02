@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/vulnerabilities/utils"
 )
 
 type ObjectStateSimpleValue string

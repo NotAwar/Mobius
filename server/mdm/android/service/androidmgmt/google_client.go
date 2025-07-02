@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mdm/android"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mdm/android"
 	"github.com/go-json-experiment/json"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"

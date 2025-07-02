@@ -8,7 +8,7 @@ import (
 
 	"github.com/VividCortex/mysqlerr"
 	"github.com/cenkalti/backoff/v4"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/go-kit/log"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"

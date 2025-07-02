@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/archtest"
+	"github.com/notawar/mobius/server/archtest"
 )
 
 // TestAllAndroidPackageDependencies checks that android packages are not dependent on other Mobius packages
@@ -12,22 +12,22 @@ import (
 // If coupling is necessary, it should be done in the main server/mobius, server/service, or other package.
 func TestAllAndroidPackageDependencies(t *testing.T) {
 	t.Parallel()
-	archtest.NewPackageTest(t, "github.com/notawar/mobius set/v4/server/mdm/android...").
+	archtest.NewPackageTest(t, "github.com/notawar/mobius/server/mdm/android...").
 		OnlyInclude(regexp.MustCompile(`^github\.com/mobiusmdm/`)).
 		WithTests().
-		IgnoreXTests("github.com/notawar/mobius set/v4/server/mobius"). // ignore mobius_test package
+		IgnoreXTests("github.com/notawar/mobius/server/mobius"). // ignore mobius_test package
 		IgnorePackages(
-			"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql...",
-			"github.com/notawar/mobius set/v4/server/service/externalsvc", // dependency on Jira and Zendesk
-			"github.com/notawar/mobius set/v4/server/service/middleware/auth",
-			"github.com/notawar/mobius set/v4/server/service/middleware/authzcheck",
-			"github.com/notawar/mobius set/v4/server/service/middleware/endpoint_utils",
-			"github.com/notawar/mobius set/v4/server/service/middleware/log",
-			"github.com/notawar/mobius set/v4/server/service/middleware/ratelimit",
+			"github.com/notawar/mobius/server/datastore/mysql/common_mysql...",
+			"github.com/notawar/mobius/server/service/externalsvc", // dependency on Jira and Zendesk
+			"github.com/notawar/mobius/server/service/middleware/auth",
+			"github.com/notawar/mobius/server/service/middleware/authzcheck",
+			"github.com/notawar/mobius/server/service/middleware/endpoint_utils",
+			"github.com/notawar/mobius/server/service/middleware/log",
+			"github.com/notawar/mobius/server/service/middleware/ratelimit",
 		).
 		ShouldNotDependOn(
-			"github.com/notawar/mobius set/v4/server/service...",
-			"github.com/notawar/mobius set/v4/server/datastore...",
+			"github.com/notawar/mobius/server/service...",
+			"github.com/notawar/mobius/server/datastore...",
 		)
 }
 
@@ -36,7 +36,7 @@ func TestAllAndroidPackageDependencies(t *testing.T) {
 // If coupling is necessary, it should be done in the main server/mobius or another package.
 func TestAndroidPackageDependencies(t *testing.T) {
 	t.Parallel()
-	archtest.NewPackageTest(t, "github.com/notawar/mobius set/v4/server/mdm/android").
+	archtest.NewPackageTest(t, "github.com/notawar/mobius/server/mdm/android").
 		OnlyInclude(regexp.MustCompile(`^github\.com/mobiusmdm/`)).
-		ShouldNotDependOn("github.com/notawar/mobius set/v4/...")
+		ShouldNotDependOn("github.com/notawar/mobius/...")
 }

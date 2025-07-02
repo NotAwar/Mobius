@@ -10,10 +10,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mock"
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/test"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/test"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/guregu/null.v3"
 )

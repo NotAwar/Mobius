@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
+	"github.com/notawar/mobius/server"
 	"github.com/pkg/errors"
 )
 

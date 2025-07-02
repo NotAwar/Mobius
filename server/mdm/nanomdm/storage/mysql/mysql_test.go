@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/test/e2e"
+	"github.com/notawar/mobius/server/mdm/nanomdm/test/e2e"
 	_ "github.com/go-sql-driver/mysql"
 )
 

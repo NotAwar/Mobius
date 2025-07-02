@@ -17,16 +17,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	mobiusmdm "github.com/notawar/mobius set/v4/server/mdm"
-	apple_mdm "github.com/notawar/mobius set/v4/server/mdm/apple"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mobius"
+	mobiusmdm "github.com/notawar/mobius/server/mdm"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/google/go-cmp/cmp"
@@ -2644,7 +2644,7 @@ func (ds *Datastore) bulkSetPendingMDMAppleHostProfilesDB(
 	// behavior but I think it can be refactored. For now leaving it as-is.
 	//
 	// TODO part II(roberto): we found this call to be a major bottleneck during load testing
-	// https://github.com/notawar/mobius set/issues/21338
+	// https://github.com/notawar/mobius/issues/21338
 	if len(wantedProfiles) > 0 {
 		if err := ds.bulkDeleteMDMAppleHostsConfigProfilesDB(ctx, tx, wantedProfiles); err != nil {
 			return false, ctxerr.Wrap(ctx, err, "bulk delete all profiles")
@@ -4772,7 +4772,7 @@ func (ds *Datastore) MDMResetEnrollment(ctx context.Context, hostUUID string, sc
 		switch host.Platform {
 		case "ios", "ipados":
 			// Clear refetch commands for iOS and iPadOS hosts.
-			// FIXME: Do we care about wipe/lock commands? How can we consolidate this with host deletion? See https://github.com/notawar/mobius set/pull/29283/files#r2098735905
+			// FIXME: Do we care about wipe/lock commands? How can we consolidate this with host deletion? See https://github.com/notawar/mobius/pull/29283/files#r2098735905
 			_, err = tx.ExecContext(ctx, `
 					DELETE FROM host_mdm_commands
 					WHERE host_id = ? AND instr(command_type, ?)`, host.ID, mobius.RefetchBaseCommandUUIDPrefix)

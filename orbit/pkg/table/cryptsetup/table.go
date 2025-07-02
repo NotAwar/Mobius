@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dataflatten"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/dataflattentable"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/tablehelpers"
+	"github.com/notawar/mobius/orbit/pkg/dataflatten"
+	"github.com/notawar/mobius/orbit/pkg/table/dataflattentable"
+	"github.com/notawar/mobius/orbit/pkg/table/tablehelpers"
 	"github.com/osquery/osquery-go/plugin/table"
 	"github.com/rs/zerolog"
 )

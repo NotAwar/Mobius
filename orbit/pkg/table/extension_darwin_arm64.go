@@ -4,7 +4,7 @@ package table
 
 import (
 	// ARM64 Kolide tables
-	appicons "github.com/notawar/mobius/v4/orbit/pkg/table/app-icons"
+	appicons "github.com/notawar/mobius/orbit/pkg/table/app-icons"
 
 	"github.com/osquery/osquery-go"
 )

@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/notawar/mobiuss/v4/pkg/optjson"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/optjson"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/require"
 )
 

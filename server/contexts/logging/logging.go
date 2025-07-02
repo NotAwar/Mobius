@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
 	kithttp "github.com/go-kit/kit/transport/http"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"

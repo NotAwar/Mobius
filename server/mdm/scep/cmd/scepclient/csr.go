@@ -10,7 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/mdm/scep/x509util"
+	"github.com/notawar/mobius/server/mdm/scep/x509util"
 )
 
 const (

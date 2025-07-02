@@ -3,7 +3,7 @@ package dep
 import (
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/archtest/test_files/nesteddependency"
+	"github.com/notawar/mobius/server/archtest/test_files/nesteddependency"
 )
 
 func init() {

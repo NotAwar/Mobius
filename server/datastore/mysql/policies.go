@@ -12,10 +12,10 @@ import (
 
 	"golang.org/x/text/unicode/norm"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
@@ -534,7 +534,7 @@ func (ds *Datastore) RecordPolicyQueryExecutions(ctx context.Context, host *mobi
 	bindvars := []string{}
 	if len(results) > 0 {
 		// Sort the results to have generated SQL queries ordered to minimize
-		// deadlocks. See https://github.com/notawar/mobius set/issues/1146.
+		// deadlocks. See https://github.com/notawar/mobius/issues/1146.
 		orderedIDs := make([]uint, 0, len(results))
 		for policyID := range results {
 			orderedIDs = append(orderedIDs, policyID)
@@ -1854,7 +1854,7 @@ func amountPolicyViolationDaysDB(ctx context.Context, tx sqlx.QueryerContext) (i
 func (ds *Datastore) UpdateHostPolicyCounts(ctx context.Context) error {
 	// NOTE these queries are duplicated in the below migration.  Updates
 	// to these queries should be reflected there as well.
-	// https://github.com/notawar/mobius set/blob/main/server/datastore/mysql/migrations/tables/20231215122713_InsertPolicyStatsData.go#L12
+	// https://github.com/notawar/mobius/blob/main/server/datastore/mysql/migrations/tables/20231215122713_InsertPolicyStatsData.go#L12
 	// This implementation should be functionally equivalent to the migration.
 
 	// Update Counts for Inherited Global Policies for each Team
@@ -2143,7 +2143,7 @@ func (ds *Datastore) getPoliciesBySoftwareTitleIDs(
 		tmID = *teamID
 	}
 
-	batchSize := 32000 // see https://github.com/notawar/mobius set/issues/26753 on the math behind this number
+	batchSize := 32000 // see https://github.com/notawar/mobius/issues/26753 on the math behind this number
 	var policies []mobius.AutomaticInstallPolicy
 	err := common_mysql.BatchProcessSimple(softwareTitleIDs, batchSize, func(softwareTitleIDsToProcess []uint) error {
 		query, args, err := sqlx.In(baseQuery, softwareTitleIDsToProcess, softwareTitleIDsToProcess, tmID)

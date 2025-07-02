@@ -1,7 +1,7 @@
 package dependency
 
 import "fmt"
-import "github.com/notawar/mobius/v4/server/archtest/test_files/transative"
+import "github.com/notawar/mobius/server/archtest/test_files/transative"
 
 const Item = "depend on me"
 

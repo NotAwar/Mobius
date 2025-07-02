@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/constant"
 	gopsutil_process "github.com/shirou/gopsutil/v3/process"
 )
 

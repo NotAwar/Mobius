@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/pkg/mobiushttp"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/google/go-github/v37/github"
 	"github.com/urfave/cli/v2"
 )

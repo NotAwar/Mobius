@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	oval_parsed "github.com/notawar/mobius/v4/server/vulnerabilities/oval/parsed"
+	oval_parsed "github.com/notawar/mobius/server/vulnerabilities/oval/parsed"
 )
 
 type Platform string

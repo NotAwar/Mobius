@@ -1,0 +1,47 @@
+.learn-mobius {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: $pad-large;
+    height: 100%;
+  }
+
+  &__icon {
+    margin-bottom: $pad-medium;
+    color: $core-mobius-gold;
+  }
+
+  &__text {
+    margin-bottom: $pad-large;
+
+    h3 {
+      font-size: $x-small;
+      font-weight: $bold;
+      margin-bottom: $pad-small;
+      color: $core-mobius-dark-blue;
+    }
+
+    p {
+      font-size: $x-small;
+      line-height: 1.5;
+      color: $ui-mobius-black-75;
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    margin-top: auto;
+    
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: $pad-xsmall;
+    }
+  }
+}

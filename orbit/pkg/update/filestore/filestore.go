@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/pkg/secure"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/pkg/secure"
 	"github.com/theupdateframework/go-tuf/client"
 )
 

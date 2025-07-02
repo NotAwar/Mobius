@@ -17,7 +17,6 @@ flag_management:
     - cmd/
     - pkg/
     - server/
-    - ee/
     - orbit/
   - name: frontend
     paths:

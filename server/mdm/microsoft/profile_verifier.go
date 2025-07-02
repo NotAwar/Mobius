@@ -11,11 +11,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/microsoft/admx"
-	"github.com/notawar/mobius set/v4/server/mdm/microsoft/wlanxml"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/mdm/microsoft/admx"
+	"github.com/notawar/mobius/server/mdm/microsoft/wlanxml"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

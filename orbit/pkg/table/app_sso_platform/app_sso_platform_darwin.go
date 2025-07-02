@@ -14,7 +14,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/user"
+	"github.com/notawar/mobius/orbit/pkg/user"
 	"github.com/osquery/osquery-go/plugin/table"
 	"github.com/rs/zerolog/log"
 )

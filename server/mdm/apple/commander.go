@@ -8,13 +8,13 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/appmanifest"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
-	mdmcrypto "github.com/notawar/mobius set/v4/server/mdm/crypto"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
-	nanomdm_push "github.com/notawar/mobius set/v4/server/mdm/nanomdm/push"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/apple/appmanifest"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	mdmcrypto "github.com/notawar/mobius/server/mdm/crypto"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	nanomdm_push "github.com/notawar/mobius/server/mdm/nanomdm/push"
 	"github.com/micromdm/plist"
 )
 

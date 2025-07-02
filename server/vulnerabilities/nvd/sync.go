@@ -13,14 +13,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/license"
+	"github.com/notawar/mobius/server/contexts/license"
 
-	"github.com/notawar/mobius/v4/pkg/download"
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed"
-	feednvd "github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/notawar/mobius/pkg/download"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed"
+	feednvd "github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis"
-	"github.com/notawar/mobiuset/v4/server/mobius"
+	"github.com/notawar/mobius/server/datastore/redis"
+	"github.com/notawar/mobius/server/mobius"
 	redigo "github.com/gomodule/redigo/redis"
 )
 

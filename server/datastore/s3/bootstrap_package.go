@@ -1,6 +1,6 @@
 package s3
 
-import "github.com/notawar/mobius/v4/server/config"
+import "github.com/notawar/mobius/server/config"
 
 const bootstrapPackagePrefix = "bootstrap-packages"
 

@@ -4,8 +4,8 @@ import (
 	"encoding/xml"
 	"testing"
 
-	"github.com/notawar/mobiuss/v4/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/require"
 )
 

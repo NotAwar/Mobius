@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/goose"
+	"github.com/notawar/mobius/server/goose"
 	"github.com/stretchr/testify/require"
 )
 

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/ptr"
 )
 
 // Auth contains methods to fetch information from a valid SSO auth response

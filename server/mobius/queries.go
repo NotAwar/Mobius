@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/ghodss/yaml"
 )
 

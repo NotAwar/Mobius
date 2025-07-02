@@ -70,8 +70,8 @@ const StatusMessage = ({
     <div className={`${baseClass}__status-message`}>
       <Icon name={INSTALL_DETAILS_STATUS_ICONS[status] ?? "pending-outline"} />
       <span>
-        Mobius {getInstallDetailsStatusPredicate(status)} <b>{software_title}</b>{" "}
-        ({software_package}) on {formattedHost}
+        Mobius {getInstallDetailsStatusPredicate(status)}{" "}
+        <b>{software_title}</b> ({software_package}) on {formattedHost}
         {status === "pending_install" ? " when it comes online" : ""}
         {displayTimeStamp}.
       </span>

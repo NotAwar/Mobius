@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis/redistest"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mobius/policytest"
-	"github.com/notawar/mobius/v4/server/test"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mobius/policytest"
+	"github.com/notawar/mobius/server/test"
 )
 
 func TestRedisFailingPolicySet(t *testing.T) {

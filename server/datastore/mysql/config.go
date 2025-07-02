@@ -3,8 +3,8 @@ package mysql
 import (
 	"time"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
 	"github.com/go-kit/log"
 	"github.com/ngrok/sqlmw"
 )

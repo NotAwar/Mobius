@@ -20,9 +20,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/host"
-	"github.com/notawar/mobius set/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/host"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/getsentry/sentry-go"
 	"go.elastic.co/apm/v2"
 )

@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"net/http/pprof"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobiuss/v4/server/contexts/logging"
-	"github.com/notawar/mobiuss/v4/server/contexts/token"
-	"github.com/notawar/mobiuss/v4/server/errorstore"
-	"github.com/notawar/mobiuss/v4/servermobiusus"
-	"github.com/notawar/mobiuss/v4/server/service/middleware/auth"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/contexts/logging"
+	"github.com/notawar/mobius/server/contexts/token"
+	"github.com/notawar/mobius/server/errorstore"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service/middleware/auth"
 
 	kithttp "github.com/go-kit/kit/transport/http"
 	kitlog "github.com/go-kit/log"

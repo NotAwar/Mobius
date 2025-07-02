@@ -15,7 +15,7 @@ import Modal from "components/Modal";
 import Icon from "components/Icon";
 import { IPaginatedListHandle } from "components/PaginatedList";
 import CalendarEventPreviewModal from "../CalendarEventPreviewModal";
-import CalendarPreview from "../../../../../../assets/images/calendar-graphic.png";
+import CalendarPreview from "../../../../../../assets/images/mobius-logo.png";
 import PoliciesPaginatedList, {
   IFormPolicy,
 } from "../PoliciesPaginatedList/PoliciesPaginatedList";
@@ -162,7 +162,8 @@ const CalendarEventsModal = ({
         </a>
         <div>
           To create calendar events for end users if their hosts fail policies,
-          you must first connect Mobius to your Google Workspace service account.
+          you must first connect Mobius to your Google Workspace service
+          account.
         </div>
         <div>
           This can be configured in <b>Settings</b> &gt; <b>Integrations</b>{" "}

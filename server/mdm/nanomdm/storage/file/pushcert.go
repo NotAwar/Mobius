@@ -8,7 +8,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/cryptoutil"
+	"github.com/notawar/mobius/server/mdm/nanomdm/cryptoutil"
 )
 
 // RetrievePushCert is passed through to a new PushCertFileStorage

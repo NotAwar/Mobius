@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/contexts/logging"
+	"github.com/notawar/mobius/server/contexts/logging"
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/log"
 )

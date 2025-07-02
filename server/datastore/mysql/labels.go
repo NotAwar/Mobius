@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	microsoft_mdm "github.com/notawar/mobius set/v4/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	microsoft_mdm "github.com/notawar/mobius/server/mdm/microsoft"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -450,7 +450,7 @@ func (ds *Datastore) LabelQueriesForHost(ctx context.Context, host *mobius.Host)
 
 func (ds *Datastore) RecordLabelQueryExecutions(ctx context.Context, host *mobius.Host, results map[uint]*bool, updated time.Time, deferredSaveHost bool) error {
 	// Sort the results to have generated SQL queries ordered to minimize
-	// deadlocks. See https://github.com/notawar/mobius set/issues/1146.
+	// deadlocks. See https://github.com/notawar/mobius/issues/1146.
 	orderedIDs := make([]uint, 0, len(results))
 	for labelID := range results {
 		orderedIDs = append(orderedIDs, labelID)

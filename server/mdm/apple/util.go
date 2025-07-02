@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 // Note Apple rejects CSRs if the key size is not 2048.

@@ -12,22 +12,22 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	ctxabm "github.com/notawar/mobius set/v4/server/contexts/apple_bm"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/logging"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius set/v4/server/mdm/internal/commonmdm"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	ctxabm "github.com/notawar/mobius/server/contexts/apple_bm"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/logging"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mdm/internal/commonmdm"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-multierror"
 
-	depclient "github.com/notawar/mobius set/v4/server/mdm/nanodep/client"
-	nanodep_storage "github.com/notawar/mobius set/v4/server/mdm/nanodep/storage"
-	depsync "github.com/notawar/mobius set/v4/server/mdm/nanodep/sync"
+	depclient "github.com/notawar/mobius/server/mdm/nanodep/client"
+	nanodep_storage "github.com/notawar/mobius/server/mdm/nanodep/storage"
+	depsync "github.com/notawar/mobius/server/mdm/nanodep/sync"
 	kitlog "github.com/go-kit/log"
 )
 
@@ -676,7 +676,7 @@ func (d *DEPService) processDeviceResponse(
 	// `deleted_at ` col is NOT NULL. Down below we skip assigning the profile to devices that we
 	// think are still enrolled; doing this check here allows us to avoid skipping devices that
 	// _seem_ like they're still enrolled but were actually removed and should get the profile.
-	// See https://github.com/notawar/mobius set/issues/23200 for more context.
+	// See https://github.com/notawar/mobius/issues/23200 for more context.
 	existingDeletedSerials, err := d.ds.GetMatchingHostSerialsMarkedDeleted(ctx, addedSerials)
 	if err != nil {
 		return ctxerr.Wrap(ctx, err, "get matching deleted host serials")

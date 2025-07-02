@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -108,7 +108,7 @@ func getMySQLServer(t *testing.T, r mobius.DBReader) mysqlServer {
 }
 
 func testLocksDBLocks(t *testing.T, ds *Datastore) {
-	t.Skip("flaky: https://github.com/notawar/mobius set/issues/4270")
+	t.Skip("flaky: https://github.com/notawar/mobius/issues/4270")
 
 	if srv := getMySQLServer(t, ds.reader(context.Background())); srv == mysql8 {
 		t.Skip("#3626: DBLocks is not supported for mysql 8 yet.")

@@ -14,9 +14,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/nvd"
-	nvdsync "github.com/notawar/mobius set/v4/server/vulnerabilities/nvd/sync"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd"
+	nvdsync "github.com/notawar/mobius/server/vulnerabilities/nvd/sync"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

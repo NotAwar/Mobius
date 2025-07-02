@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/cryptoutil"
+	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/mdm/nanomdm/cryptoutil"
 	"github.com/stretchr/testify/require"
 )
 

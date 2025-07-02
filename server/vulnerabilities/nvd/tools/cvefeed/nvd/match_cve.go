@@ -17,8 +17,8 @@ package nvd
 import (
 	"regexp"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/wfn"
 )
 
 var cveRegex = regexp.MustCompile("CVE-[0-9]{4}-[0-9]{4,}")

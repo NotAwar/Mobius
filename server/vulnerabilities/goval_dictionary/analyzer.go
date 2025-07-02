@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/oval"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/vulnerabilities/oval"
+	"github.com/notawar/mobius/server/vulnerabilities/utils"
 	kitlog "github.com/go-kit/log"
 )
 

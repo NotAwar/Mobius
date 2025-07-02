@@ -10,7 +10,7 @@ import (
 	"math/big"
 	"sync"
 
-	"github.com/notawar/mobius/v4/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/mdm/scep/depot"
 
 	bolt "go.etcd.io/bbolt"
 )

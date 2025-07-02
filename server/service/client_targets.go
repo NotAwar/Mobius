@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // SearchTargets searches for the supplied targets in the Mobius instance.

@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/test"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
@@ -236,7 +236,7 @@ func testHostScriptResult(t *testing.T, ds *Datastore) {
 
 	// modify the upcoming script to be a sync script that has
 	// been pending for a long time doesn't change result
-	// https://github.com/notawar/mobius set/issues/22866#issuecomment-2575961141
+	// https://github.com/notawar/mobius/issues/22866#issuecomment-2575961141
 	ExecAdhocSQL(t, ds, func(tx sqlx.ExtContext) error {
 		_, err := tx.ExecContext(ctx, "UPDATE upcoming_activities SET created_at = ?, payload = JSON_SET(payload, '$.sync_request', ?) WHERE id = ?",
 			time.Now().Add(-24*time.Hour), true, createdScript3.ID)

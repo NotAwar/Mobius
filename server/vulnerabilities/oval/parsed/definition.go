@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // Criteria is used to express an arbitrary logic tree.

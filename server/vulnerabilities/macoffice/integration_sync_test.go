@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/nettest"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/io"
+	"github.com/notawar/mobius/pkg/nettest"
+	"github.com/notawar/mobius/server/vulnerabilities/io"
 	"github.com/stretchr/testify/require"
 )
 

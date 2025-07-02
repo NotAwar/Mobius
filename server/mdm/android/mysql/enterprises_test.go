@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql/common_mysql/testing_utils"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/android"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql/testing_utils"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/android"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

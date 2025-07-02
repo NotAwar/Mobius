@@ -8,15 +8,15 @@ import (
 	"strings"
 	"time"
 
-	abmctx "github.com/notawar/mobius/v4/server/contexts/apple_bm"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/assets"
-	nanodep_client "github.com/notawar/mobius set/v4/server/mdm/nanodep/client"
-	nanodep_mysql "github.com/notawar/mobius set/v4/server/mdm/nanodep/storage/mysql"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
-	nanomdm_mysql "github.com/notawar/mobius set/v4/server/mdm/nanomdm/storage/mysql"
+	abmctx "github.com/notawar/mobius/server/contexts/apple_bm"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/assets"
+	nanodep_client "github.com/notawar/mobius/server/mdm/nanodep/client"
+	nanodep_mysql "github.com/notawar/mobius/server/mdm/nanodep/storage/mysql"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	nanomdm_mysql "github.com/notawar/mobius/server/mdm/nanomdm/storage/mysql"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
@@ -234,7 +234,7 @@ type NanoDEPStorage struct {
 // RetrieveAuthTokens partially implements nanodep.AuthTokensRetriever. NOTE: this method will first
 // check the context for an ABM token; if it doesn't find one, it will fall back to checking the DB.
 // This is so we can use the existing DEP client machinery without major changes. See
-// https://github.com/notawar/mobius set/issues/21177 for more details.
+// https://github.com/notawar/mobius/issues/21177 for more details.
 func (s *NanoDEPStorage) RetrieveAuthTokens(ctx context.Context, name string) (*nanodep_client.OAuth1Tokens, error) {
 	if ctxTok, ok := abmctx.FromContext(ctx); ok {
 		return ctxTok, nil

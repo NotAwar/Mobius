@@ -39,8 +39,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/rootcert"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/apple/rootcert"
 	"github.com/micromdm/plist"
 	"github.com/smallstep/pkcs7"
 )

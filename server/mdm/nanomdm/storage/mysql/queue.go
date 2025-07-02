@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/micromdm/nanolib/log"

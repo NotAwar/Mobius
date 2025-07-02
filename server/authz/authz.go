@@ -14,9 +14,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	authz_ctx "github.com/notawar/mobius/v4/server/contexts/authz"
-	"github.com/notawar/mobius set/v4/server/contexts/viewer"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/open-policy-agent/opa/rego"
 )
 

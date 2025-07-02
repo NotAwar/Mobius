@@ -135,7 +135,7 @@ module.exports = {
         Website_visit_reason__c: websiteVisitReason// eslint-disable-line camelcase
       });
     }).intercept((err)=>{
-      return new Error(`An error occured when creating a new Historical event record in Salesforce. full error ${require('util').inpsect(err, {depth: null})}`);
+      return new Error(`An error occurred when creating a new Historical event record in Salesforce. full error ${require('util').inpsect(err, {depth: null})}`);
     });
 
 

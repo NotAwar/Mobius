@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm"
-	"github.com/notawar/mobius/v4/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
 )
 
 // MDMWindowsBitLockerSummary reports the number of Windows hosts being managed by Mobius with

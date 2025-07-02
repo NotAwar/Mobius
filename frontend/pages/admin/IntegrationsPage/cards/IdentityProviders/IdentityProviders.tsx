@@ -32,8 +32,8 @@ const AddEndUserInfoCard = () => {
       }
     >
       <p className={`${baseClass}__section-card-content`}>
-        To add end user information, connect Mobius to Okta, Entra ID, or another
-        identity provider (IdP).
+        To add end user information, connect Mobius to Okta, Entra ID, or
+        another identity provider (IdP).
       </p>
     </SectionCard>
   );

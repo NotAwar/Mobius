@@ -3,7 +3,7 @@ package nvd
 import (
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/wfn"
 )
 
 type CPEMatchingRules []CPEMatchingRule

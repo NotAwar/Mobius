@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/jmoiron/sqlx"
 )
 

@@ -4,12 +4,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	android_mock "github.com/notawar/mobius/v4/server/mdm/android/mock"
-	android_service "github.com/notawar/mobius/v4/server/mdm/android/service"
-	"github.com/notawar/mobius/v4/server/service"
-	"github.com/notawar/mobius/v4/server/service/integrationtest"
-	"github.com/notawar/mobius/v4/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/mobius"
+	android_mock "github.com/notawar/mobius/server/mdm/android/mock"
+	android_service "github.com/notawar/mobius/server/mdm/android/service"
+	"github.com/notawar/mobius/server/service"
+	"github.com/notawar/mobius/server/service/integrationtest"
+	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 )

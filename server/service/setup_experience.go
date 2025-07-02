@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/docker/go-units"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 )
 
 type putSetupExperienceSoftwareRequest struct {

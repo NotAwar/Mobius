@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 func (mw metricsMiddleware) NewAppConfig(ctx context.Context, p mobius.AppConfig) (*mobius.AppConfig, error) {

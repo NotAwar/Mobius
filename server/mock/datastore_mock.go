@@ -11,12 +11,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/android"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/android"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 	"github.com/jmoiron/sqlx"
 )
 

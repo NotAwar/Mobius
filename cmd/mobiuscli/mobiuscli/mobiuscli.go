@@ -4,8 +4,8 @@ import (
 	"errors"
 	"io"
 
-	eemobiuscli "github.com/notawar/mobius/v4/ee/mobiuscli"
-	"github.com/notawar/mobius set/v4/server/version"
+	eemobiuscli "github.com/notawar/mobius/ee/mobiuscli"
+	"github.com/notawar/mobius/server/version"
 	"github.com/urfave/cli/v2"
 )
 

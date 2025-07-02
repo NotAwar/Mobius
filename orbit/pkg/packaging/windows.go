@@ -16,12 +16,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/packaging/wix"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update"
-	"github.com/notawar/mobius set/v4/pkg/file"
-	"github.com/notawar/mobius set/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/pkg/secure"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/packaging/wix"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/pkg/file"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/secure"
 	"github.com/josephspurrier/goversioninfo"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/mod/semver"
@@ -100,7 +100,7 @@ func BuildMSI(opt Options) (string, error) {
 	if !strings.HasPrefix(orbitVersion, "v") {
 		orbitVersion = "v" + orbitVersion
 	}
-	// v1.28.0 introduced configurable END_USER_EMAIL property for MSI package: https://github.com/notawar/mobius set/issues/19219
+	// v1.28.0 introduced configurable END_USER_EMAIL property for MSI package: https://github.com/notawar/mobius/issues/19219
 	if semver.Compare(orbitVersion, "v1.28.0") >= 0 {
 		opt.EnableEndUserEmailProperty = true
 	}

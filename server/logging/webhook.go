@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
+	"github.com/notawar/mobius/server"
 	"github.com/go-kit/kit/log/level"
 	"github.com/go-kit/log"
 )

@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mock"
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/io"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/msrc/parsed"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/vulnerabilities/msrc/parsed"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 )

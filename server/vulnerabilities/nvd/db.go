@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cpedict"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cpedict"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/wfn"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )

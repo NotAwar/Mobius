@@ -3,8 +3,8 @@ package allmulti
 import (
 	"context"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/storage"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/storage"
 
 	"github.com/micromdm/nanolib/log"
 	"github.com/micromdm/nanolib/log/ctxlog"

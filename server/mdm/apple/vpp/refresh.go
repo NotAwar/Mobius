@@ -3,9 +3,9 @@ package vpp
 import (
 	"context"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/itunes"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/apple/itunes"
 )
 
 // RefreshVersions updatest the LatestVersion fields for the VPP apps stored in Mobius.

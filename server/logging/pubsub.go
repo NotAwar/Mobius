@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

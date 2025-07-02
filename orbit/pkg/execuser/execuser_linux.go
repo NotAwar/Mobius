@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	userpkg "github.com/notawar/mobius/v4/orbit/pkg/user"
+	userpkg "github.com/notawar/mobius/orbit/pkg/user"
 	"github.com/rs/zerolog/log"
 )
 

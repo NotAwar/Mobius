@@ -64,6 +64,9 @@ export const HumanTimeDiffWithMobiusLaunchCutoff = ({
   timeString,
 }: IHumanTimeDiffWithDateTip): JSX.Element => {
   return (
-    <HumanTimeDiffWithDateTip timeString={timeString} cutoffBeforeMobiusLaunch />
+    <HumanTimeDiffWithDateTip
+      timeString={timeString}
+      cutoffBeforeMobiusLaunch
+    />
   );
 };

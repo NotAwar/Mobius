@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/constant"
 )
 
 // DefaultOptions are the default options to use when creating an update

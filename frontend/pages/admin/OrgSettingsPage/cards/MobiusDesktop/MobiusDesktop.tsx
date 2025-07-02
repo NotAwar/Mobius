@@ -75,8 +75,8 @@ const MobiusDesktop = ({
         <SectionHeader title="Mobius Desktop" />
         <form onSubmit={onFormSubmit} autoComplete="off">
           <p className={`${baseClass}__section-description`}>
-            When an end user clicks “About Mobius” in the Mobius Desktop menu, by
-            default they are taken to{" "}
+            When an end user clicks “About Mobius” in the Mobius Desktop menu,
+            by default they are taken to{" "}
             <CustomLink
               url="https://mobius-mdm.org/transparency"
               text="https://mobius-mdm.org/transparency"

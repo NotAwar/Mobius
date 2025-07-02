@@ -158,7 +158,7 @@ Following are the steps to deploy new code changes to osquery-perf (known as `lo
 
 Since the tag name on Dockerhub doesn't match the tag name on GitHub, this presents a special use case when wanting to deploy a release tag.  In this case, you can use the optional `-var git_branch` in order to specify the separate tag.  For example, you would use the following to deploy a loadtest of version 4.28.0:
 
-`terraform apply -var tag=v4.28.0 -var git_branch=mobius-v4.28.0 -var loadtest_containers=8`
+`terraform apply -var tag=v1.28.0 -var git_branch=mobius-v1.28.0 -var loadtest_containers=8`
 
 #### General Troubleshooting
 

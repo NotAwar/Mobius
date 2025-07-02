@@ -10,8 +10,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/log"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log/ctxlog"
+	"github.com/notawar/mobius/server/mdm/nanodep/log"
+	"github.com/notawar/mobius/server/mdm/nanodep/log/ctxlog"
 )
 
 // ReadAllAndReplaceBody reads all of r.Body and replaces it with a new byte buffer.

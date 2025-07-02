@@ -6,7 +6,7 @@ import (
 	"math/big"
 	"testing"
 
-	scep_depot "github.com/notawar/mobius/v4/server/mdm/scep/depot"
+	scep_depot "github.com/notawar/mobius/server/mdm/scep/depot"
 	"github.com/stretchr/testify/require"
 )
 

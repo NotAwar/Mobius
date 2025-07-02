@@ -7,8 +7,8 @@ import (
 	"os"
 	"slices"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/urfave/cli/v2"
 )

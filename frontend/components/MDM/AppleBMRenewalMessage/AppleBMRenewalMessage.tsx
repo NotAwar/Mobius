@@ -33,8 +33,8 @@ const AppleBMRenewalMessage = ({ expired }: IAppleBMRenewalMessageProps) => {
         <>
           Your Apple Business Manager (ABM) server token is less than 30 days
           from expiration. If it expires, macOS, iOS, and iPadOS hosts won’t
-          automatically enroll to Mobius. Users with the admin role in Mobius can
-          renew ABM.
+          automatically enroll to Mobius. Users with the admin role in Mobius
+          can renew ABM.
         </>
       )}
     </InfoBanner>

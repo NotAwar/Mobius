@@ -6,7 +6,7 @@
 //
 // As the returned data is a complex nested plist, this uses the
 // dataflatten tooling. (See
-// https://github.com/notawar/mobius/v4/orbit/pkg/dataflatten)
+// https://github.com/notawar/mobius/orbit/pkg/dataflatten)
 // based on github.com/kolide/launcher/pkg/osquery/tables
 package ioreg
 
@@ -14,9 +14,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/notawar/mobius set/v4/orbit/pkg/dataflatten"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/dataflattentable"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/tablehelpers"
+	"github.com/notawar/mobius/orbit/pkg/dataflatten"
+	"github.com/notawar/mobius/orbit/pkg/table/dataflattentable"
+	"github.com/notawar/mobius/orbit/pkg/table/tablehelpers"
 	"github.com/osquery/osquery-go/plugin/table"
 	"github.com/rs/zerolog"
 )

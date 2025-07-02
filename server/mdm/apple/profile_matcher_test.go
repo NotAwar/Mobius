@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/redis"
-	"github.com/notawar/mobius set/v4/server/datastore/redis/redistest"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm"
-	"github.com/notawar/mobius set/v4/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/datastore/redis"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
 	redigo "github.com/gomodule/redigo/redis"
 	"github.com/stretchr/testify/require"
 )

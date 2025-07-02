@@ -7,7 +7,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 var _ mobius.InstallerStore = (*InstallerStore)(nil)

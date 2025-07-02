@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/notawar/mobius/v4/cmd/mobiuscli/mobiuscli/testing_utils"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli/testing_utils"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service"
 	"github.com/stretchr/testify/require"
 )
 

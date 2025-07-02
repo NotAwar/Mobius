@@ -36,7 +36,7 @@ This CVE affected all versions of Mobius at the time (see the associated [GitHub
 
 ##### 1. Creating "affected" status
 
-First we would need to create a VEX entry with the "affected" status for all released Mobius versions (`<= v4.63.1`).
+First we would need to create a VEX entry with the "affected" status for all released Mobius versions (`<= v1.63.1`).
 
 > Currently, OpenVEX doesn't support version ranges, so we need to define all versions one by one.
 > We have the `./tools/github-releases` tooling to help list all released versions of Mobius.
@@ -54,14 +54,14 @@ vexctl create --product="$all_mobius_releases" \
 
 ##### 2. Updating "fixed" status
 
-Once the fix was released in `v4.64.2`, `v4.63.2`, `v4.62.4`, `v4.58.1` and `v4.53.2` we would issue a new "fixed" statement on the existing VEX document:
+Once the fix was released in `v1.64.2`, `v1.63.2`, `v1.62.4`, `v1.58.1` and `v1.53.2` we would issue a new "fixed" statement on the existing VEX document:
 
 ```sh
 vexctl add \
   --document=./security/vex/mobius/CVE-2025-27509.vex.json \
   --vuln="CVE-2025-27509" \
   --status="fixed" \
-  --product="cpe:2.3:a:mobiusmdm:mobius:v4.64.2:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v4.63.2:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v4.62.4:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v4.58.1:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v4.53.2:*:*:*:*:*:*:*" \
+  --product="cpe:2.3:a:mobiusmdm:mobius:v1.64.2:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v1.63.2:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v1.62.4:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v1.58.1:*:*:*:*:*:*:*,cpe:2.3:a:mobiusmdm:mobius:v1.53.2:*:*:*:*:*:*:*" \
   --aliases="https://github.com/notawar/mobiuset/security/advisories/GHSA-52jx-g6m5-h735" \
   --in-place
 ```

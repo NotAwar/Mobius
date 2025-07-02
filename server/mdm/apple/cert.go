@@ -14,8 +14,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/tokenpki"
-	"github.com/notawar/mobius set/v4/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
+	"github.com/notawar/mobius/server/mdm/scep/depot"
 )
 
 const (

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/storage"
+	"github.com/notawar/mobius/server/mdm/nanomdm/storage"
 )
 
 type tokenTallyDevice interface {

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/server/ptr"
 	"golang.org/x/exp/slices"
 )
 

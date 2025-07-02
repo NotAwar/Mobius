@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/retry"
+	"github.com/notawar/mobius/pkg/retry"
 )
 
 func lock(lockFilePath string) {

@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/tokenpki"
+	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
 )
 
 const (

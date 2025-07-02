@@ -1,4 +1,4 @@
-package mobiusdbase
+package mobiusdaemonbase
 
 import (
 	"encoding/json"

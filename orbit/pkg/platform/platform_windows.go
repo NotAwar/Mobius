@@ -16,7 +16,7 @@ import (
 	"unsafe"
 
 	"github.com/digitalocean/go-smbios/smbios"
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/constant"
 	"github.com/google/uuid"
 	"github.com/hectane/go-acl"
 	"github.com/rs/zerolog/log"
@@ -441,7 +441,7 @@ func versionCheckForfixSymlinkNotPresentQuirk(orbitPath string) error {
 }
 
 // fixSymlinkNotPresent fixes the issue where the symlink to the orbit service binary is not present
-// this is a workaround for the issue described here https://github.com/notawar/mobius set/issues/10300
+// this is a workaround for the issue described here https://github.com/notawar/mobius/issues/10300
 func fixSymlinkNotPresent() error {
 	// getting current working directory
 	execPath, err := getExecutablePath()

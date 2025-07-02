@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/log/ctxlog"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm/nanodep/log"
+	"github.com/notawar/mobius/server/mdm/nanodep/log/ctxlog"
 )
 
 type AssignerProfileRetriever interface {

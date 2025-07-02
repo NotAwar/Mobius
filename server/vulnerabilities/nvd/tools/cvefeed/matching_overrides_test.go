@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/wfn"
 )
 
 func TestMatchOverrides(t *testing.T) {

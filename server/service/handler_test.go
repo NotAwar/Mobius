@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius/v4/server/mock"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mock"
 	kitlog "github.com/go-kit/log"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"

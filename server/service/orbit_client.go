@@ -20,12 +20,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius/v4/orbit/pkg/logging"
-	"github.com/notawar/mobius/v4/orbit/pkg/luks"
-	"github.com/notawar/mobius/v4/orbit/pkg/platform"
-	"github.com/notawar/mobius/v4/pkg/retry"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/logging"
+	"github.com/notawar/mobius/orbit/pkg/luks"
+	"github.com/notawar/mobius/orbit/pkg/platform"
+	"github.com/notawar/mobius/pkg/retry"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/rs/zerolog/log"
 )
 
@@ -255,7 +255,7 @@ func (oc *OrbitClient) RunConfigReceivers() error {
 			defer func() {
 				if err := recover(); err != nil {
 					errMu.Lock()
-					errs = append(errs, fmt.Errorf("panic occured in receiver: %v", err))
+					errs = append(errs, fmt.Errorf("panic occurred in receiver: %v", err))
 					errMu.Unlock()
 				}
 				wg.Done()

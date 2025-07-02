@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 func (mw validationMiddleware) NewAppConfig(ctx context.Context, payload mobius.AppConfig) (*mobius.AppConfig, error) {

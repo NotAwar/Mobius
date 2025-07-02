@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/test/httptest"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/test/httptest"
 	"github.com/go-json-experiment/json"
 	"github.com/stretchr/testify/require"
 )

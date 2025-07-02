@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
+	"github.com/notawar/mobius/server"
 
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/stretchr/testify/require"
 )
 

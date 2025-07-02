@@ -23,8 +23,8 @@ func createHttpClient(m dsl.Matcher) {
 }
 
 func txCheck(m dsl.Matcher) {
-	m.Import("github.com/notawar/mobius/v4/server/datastore/mysql")
-	m.Import("github.com/notawar/mobius set/v4/server/mdm/android/mysql")
+	m.Import("github.com/notawar/mobius/server/datastore/mysql")
+	m.Import("github.com/notawar/mobius/server/mdm/android/mysql")
 	m.Import("github.com/jmoiron/sqlx")
 
 	isDatastoreType := func(v dsl.Var) bool {
@@ -70,7 +70,7 @@ func txCheck(m dsl.Matcher) {
 				containsIllegal(m["fn"])).
 		Report("improper use of ds.reader or ds.writer in function literal")
 
-	// TODO: https://github.com/notawar/mobius set/pull/8621#pullrequestreview-1172676063
+	// TODO: https://github.com/notawar/mobius/pull/8621#pullrequestreview-1172676063
 	// This misses the case where a call to a Datastore method is done in one of
 	// those functions and that method uses the reader/writer (and does not
 	// receive a Tx as argument).

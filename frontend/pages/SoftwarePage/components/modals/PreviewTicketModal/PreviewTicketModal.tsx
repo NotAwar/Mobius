@@ -6,10 +6,7 @@ import Modal from "components/Modal";
 import Button from "components/buttons/Button";
 import CustomLink from "components/CustomLink";
 
-import JiraPreview from "../../../../../../assets/images/jira-vuln-software-preview-400x517@2x.png";
-import ZendeskPreview from "../../../../../../assets/images/zendesk-vuln-software-preview-400x455@2x.png";
-import JiraPreviewPremium from "../../../../../../assets/images/jira-vuln-software-preview-premium-400x517@2x.png";
-import ZendeskPreviewPremium from "../../../../../../assets/images/zendesk-vuln-software-preview-premium-400x455@2x.png";
+import PlaceholderImage from "../../../../../../assets/images/mobius-logo.png";
 
 const baseClass = "preview-ticket-modal";
 
@@ -26,13 +23,13 @@ const PreviewTicketModal = ({
   const screenshot =
     integrationType === "jira" ? (
       <img
-        src={isPremiumTier ? JiraPreviewPremium : JiraPreview}
+        src={PlaceholderImage}
         alt="Jira ticket"
         className={`${baseClass}__jira-screenshot`}
       />
     ) : (
       <img
-        src={isPremiumTier ? ZendeskPreviewPremium : ZendeskPreview}
+        src={PlaceholderImage}
         alt="Zendesk ticket"
         className={`${baseClass}__zendesk-screenshot`}
       />

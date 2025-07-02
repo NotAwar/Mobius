@@ -13,18 +13,18 @@ import (
 	"time"
 
 	"fyne.io/systray"
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/go-paniclog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/migration"
-	"github.com/notawar/mobius set/v4/orbit/pkg/profiles"
-	"github.com/notawar/mobius set/v4/orbit/pkg/token"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update"
-	"github.com/notawar/mobius set/v4/orbit/pkg/useraction"
-	"github.com/notawar/mobius set/v4/pkg/certificate"
-	"github.com/notawar/mobius set/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius set/v4/pkg/open"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/go-paniclog"
+	"github.com/notawar/mobius/orbit/pkg/migration"
+	"github.com/notawar/mobius/orbit/pkg/profiles"
+	"github.com/notawar/mobius/orbit/pkg/token"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/orbit/pkg/useraction"
+	"github.com/notawar/mobius/pkg/certificate"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/open"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service"
 	"github.com/gofrs/flock"
 	"github.com/oklog/run"
 	"github.com/rs/zerolog"
@@ -65,7 +65,7 @@ func setupRunners() {
 
 func main() {
 	// FIXME: we need to do a better job of graceful shutdown, releasing resources, stopping
-	// tickers, etc. (https://github.com/notawar/mobius set/issues/21256)
+	// tickers, etc. (https://github.com/notawar/mobius/issues/21256)
 	// This context will be used as a general context to handle graceful shutdown in the future.
 	offlineWatcherCtx, cancelOfflineWatcherCtx := context.WithCancel(context.Background())
 
@@ -475,7 +475,7 @@ func main() {
 	}
 
 	// FIXME: it doesn't look like this is actually triggering, at least when desktop gets
-	// killed (https://github.com/notawar/mobius set/issues/21256)
+	// killed (https://github.com/notawar/mobius/issues/21256)
 	onExit := func() {
 		log.Info().Msg("exiting")
 		if mdmMigrator != nil {

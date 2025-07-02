@@ -47,14 +47,25 @@ export default {
     return sendRequest("POST", USER_PORTAL_ENROLLMENT, { user_id: userId });
   },
 
-  downloadEnrollmentProfile: (platform: string, userId: number): Promise<Blob> => {
+  downloadEnrollmentProfile: (
+    platform: string,
+    userId: number
+  ): Promise<Blob> => {
     const { USER_PORTAL_PROFILE } = endpoints;
-    return sendRequest("GET", `${USER_PORTAL_PROFILE}?platform=${platform}&user_id=${userId}`, undefined, "blob");
+    return sendRequest(
+      "GET",
+      `${USER_PORTAL_PROFILE}?platform=${platform}&user_id=${userId}`,
+      undefined,
+      "blob"
+    );
   },
 
   requestSupport: (message: string, userId: number): Promise<any> => {
     const { USER_PORTAL_SUPPORT } = endpoints;
-    return sendRequest("POST", USER_PORTAL_SUPPORT, { message, user_id: userId });
+    return sendRequest("POST", USER_PORTAL_SUPPORT, {
+      message,
+      user_id: userId,
+    });
   },
 
   // Portal authentication and user management
@@ -63,7 +74,10 @@ export default {
     return sendRequest("GET", `${PORTAL_USER}/${userId}`);
   },
 
-  updatePortalUser: (userId: number, userData: Partial<IPortalUser>): Promise<IPortalUser> => {
+  updatePortalUser: (
+    userId: number,
+    userData: Partial<IPortalUser>
+  ): Promise<IPortalUser> => {
     const { PORTAL_USER } = endpoints;
     return sendRequest("PATCH", `${PORTAL_USER}/${userId}`, userData);
   },

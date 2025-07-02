@@ -20,8 +20,8 @@ builds:
   - -trimpath
   ldflags:
   - -X github.com/notawar/mobius/v4/orbit/pkg/build.Version={{.Version}}
-  - -X github.com/notawar/mobiuset/v4/orbit/pkg/build.Commit={{.Commit}}
-  - -X github.com/notawar/mobiuset/v4/orbit/pkg/build.Date={{.Date}}
+  - -X github.com/notawar/mobius/orbit/pkg/build.Commit={{.Commit}}
+  - -X github.com/notawar/mobius/orbit/pkg/build.Date={{.Date}}
   hooks:
     pre: "go run ./orbit/tools/build/build-windows.go -version {{.Version}} -input ./orbit/cmd/orbit -resource=true"
 

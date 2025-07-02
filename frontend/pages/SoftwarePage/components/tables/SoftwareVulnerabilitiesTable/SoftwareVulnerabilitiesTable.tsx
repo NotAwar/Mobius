@@ -11,7 +11,10 @@ import PATHS from "router/paths";
 
 import { AppContext } from "context/app";
 import { ISoftwareVulnerability } from "interfaces/software";
-import { CONTACT_MOBIUS_LINK, GITHUB_NEW_ISSUE_LINK } from "utilities/constants";
+import {
+  CONTACT_MOBIUS_LINK,
+  GITHUB_NEW_ISSUE_LINK,
+} from "utilities/constants";
 import { DisplayPlatform } from "interfaces/platform";
 import { getPathWithQueryParams } from "utilities/url";
 import TableContainer from "components/TableContainer";

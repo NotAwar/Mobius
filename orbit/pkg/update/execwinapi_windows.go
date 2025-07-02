@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
@@ -73,7 +73,7 @@ func readInstallationType() (string, error) {
 }
 
 // TODO(mna): refactor to a Windows-specific package to constrain usage of
-// unsafe to that package, once https://github.com/notawar/mobius set/pull/12387
+// unsafe to that package, once https://github.com/notawar/mobius/pull/12387
 // lands.
 
 // Perform the host MDM enrollment process using MS-MDE protocol:
@@ -136,7 +136,7 @@ func unenrollHostFromMDM() error {
 	}
 
 	// must explicitly pass 0 here, see for details:
-	// https://github.com/notawar/mobius set/issues/12342#issuecomment-1608190367
+	// https://github.com/notawar/mobius/issues/12342#issuecomment-1608190367
 	code, _, err := procUnregisterDeviceWithManagement.Call(0)
 	log.Debug().Msgf("UnregisterDeviceWithManagement returned code: %#x ; message: %v", code, err)
 	if code != uintptr(windows.ERROR_SUCCESS) {

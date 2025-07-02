@@ -10,9 +10,9 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/semver"
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update"
-	"github.com/notawar/mobius set/v4/pkg/secure"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/pkg/secure"
 	"github.com/goreleaser/nfpm/v2"
 	"github.com/goreleaser/nfpm/v2/files"
 	"github.com/goreleaser/nfpm/v2/rpm"
@@ -229,7 +229,7 @@ func buildNFPM(opt Options, pkger nfpm.Packager) (string, error) {
 		Arch:        opt.Architecture,
 		Maintainer:  "Mobius Device Management",
 		Vendor:      "Mobius Device Management",
-		License:     "https://github.com/notawar/mobius set/blob/main/LICENSE",
+		License:     "https://github.com/notawar/mobius/blob/main/LICENSE",
 		Homepage:    "https://mobiusmdm.com",
 		Overridables: nfpm.Overridables{
 			Contents: contents,

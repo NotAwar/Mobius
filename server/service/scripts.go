@@ -15,14 +15,14 @@ import (
 	"time"
 
 	"github.com/docker/go-units"
-	"github.com/notawar/mobius/v4/pkg/file"
-	"github.com/notawar/mobius/v4/pkg/scripts"
-	"github.com/notawar/mobius/v4/server/authz"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/contexts/license"
-	"github.com/notawar/mobius/v4/server/contexts/logging"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/file"
+	"github.com/notawar/mobius/pkg/scripts"
+	"github.com/notawar/mobius/server/authz"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/license"
+	"github.com/notawar/mobius/server/contexts/logging"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/gorilla/mux"
 )
 

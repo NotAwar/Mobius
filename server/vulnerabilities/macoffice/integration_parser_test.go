@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/nettest"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/macoffice"
+	"github.com/notawar/mobius/pkg/nettest"
+	"github.com/notawar/mobius/server/vulnerabilities/macoffice"
 	"github.com/stretchr/testify/require"
 )
 

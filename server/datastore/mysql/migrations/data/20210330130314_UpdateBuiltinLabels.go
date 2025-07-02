@@ -3,7 +3,7 @@ package data
 import (
 	"database/sql"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/pkg/errors"
 )
 

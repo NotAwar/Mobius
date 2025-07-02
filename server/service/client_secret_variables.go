@@ -1,6 +1,6 @@
 package service
 
-import "github.com/notawar/mobius/v4/server/mobius"
+import "github.com/notawar/mobius/server/mobius"
 
 func (c *Client) SaveSecretVariables(secretVariables []mobius.SecretVariable, dryRun bool) error {
 	verb, path := "PUT", "/api/latest/mobius/spec/secret_variables"

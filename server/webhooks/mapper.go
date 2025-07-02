@@ -6,7 +6,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 // VulnMapper used for mapping vulnerabilities and their associated data into the payload that

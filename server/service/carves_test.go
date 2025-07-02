@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/authz"
-	hostctx "github.com/notawar/mobius/v4/server/contexts/host"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/mock"
-	"github.com/notawar/mobius/v4/server/test"
+	"github.com/notawar/mobius/server/authz"
+	hostctx "github.com/notawar/mobius/server/contexts/host"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
+	"github.com/notawar/mobius/server/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

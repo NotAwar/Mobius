@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm"
-	"github.com/notawar/mobius/v4/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
 )
 
 type MDMAppleCommandIssuer interface {

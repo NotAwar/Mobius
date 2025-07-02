@@ -7,11 +7,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/bitlocker"
-	"github.com/notawar/mobius set/v4/orbit/pkg/profiles"
-	"github.com/notawar/mobius set/v4/orbit/pkg/scripts"
-	mobiusscripts "github.com/notawar/mobius set/v4/pkg/scripts"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/bitlocker"
+	"github.com/notawar/mobius/orbit/pkg/profiles"
+	"github.com/notawar/mobius/orbit/pkg/scripts"
+	mobiusscripts "github.com/notawar/mobius/pkg/scripts"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/rs/zerolog/log"
 )
 
@@ -65,7 +65,7 @@ func (h *renewEnrollmentProfileConfigReceiver) Run(config *mobius.OrbitConfig) e
 			// until the Mobius server gets notified that the device is now properly
 			// enrolled (after the user's manual steps, and osquery reporting the
 			// updated mdm enrollment).
-			// See https://github.com/notawar/mobius set/pull/9409#discussion_r1084382455
+			// See https://github.com/notawar/mobius/pull/9409#discussion_r1084382455
 			if time.Since(h.lastRun) >= h.Frequency {
 				// we perform this check locally on the client too to avoid showing the
 				// dialog if the client is enrolled to an MDM server.

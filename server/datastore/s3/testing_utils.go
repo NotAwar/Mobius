@@ -6,7 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/notawar/mobius/v4/server/config"
+	"github.com/notawar/mobius/server/config"
 	"github.com/stretchr/testify/require"
 )
 

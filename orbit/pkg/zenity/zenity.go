@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dialog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/execuser"
+	"github.com/notawar/mobius/orbit/pkg/dialog"
+	"github.com/notawar/mobius/orbit/pkg/execuser"
 )
 
 const zenityProcessName = "zenity"

@@ -1,7 +1,7 @@
 package logging
 
 import (
-	nanodep_log "github.com/notawar/mobius/v4/server/mdm/nanodep/log"
+	nanodep_log "github.com/notawar/mobius/server/mdm/nanodep/log"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

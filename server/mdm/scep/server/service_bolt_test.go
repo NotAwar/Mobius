@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	scepdepot "github.com/notawar/mobius/v4/server/mdm/scep/depot"
-	boltdepot "github.com/notawar/mobius set/v4/server/mdm/scep/depot/bolt"
-	scepserver "github.com/notawar/mobius set/v4/server/mdm/scep/server"
+	scepdepot "github.com/notawar/mobius/server/mdm/scep/depot"
+	boltdepot "github.com/notawar/mobius/server/mdm/scep/depot/bolt"
+	scepserver "github.com/notawar/mobius/server/mdm/scep/server"
 
 	"github.com/smallstep/scep"
 	bolt "go.etcd.io/bbolt"

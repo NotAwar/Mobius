@@ -14,21 +14,21 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/notawar/mobius/v4/cmd/mobiuscli/mobiuscli"
-	"github.com/notawar/mobius set/v4/cmd/mobiuscli/mobiuscli/testing_utils"
-	"github.com/notawar/mobius set/v4/cmd/mobiuscli/integrationtest"
-	eeservice "github.com/notawar/mobius set/v4/ee/server/service"
-	"github.com/notawar/mobius set/v4/ee/server/service/digicert"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql"
-	"github.com/notawar/mobius set/v4/server/datastore/redis/redistest"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	appleMdm "github.com/notawar/mobius set/v4/server/mdm/apple"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/tokenpki"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/service"
-	"github.com/notawar/mobius set/v4/server/service/integrationtest/scep_server"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli/testing_utils"
+	"github.com/notawar/mobius/cmd/mobiuscli/integrationtest"
+	eeservice "github.com/notawar/mobius/ee/server/service"
+	"github.com/notawar/mobius/ee/server/service/digicert"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/mobius"
+	appleMdm "github.com/notawar/mobius/server/mdm/apple"
+	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service"
+	"github.com/notawar/mobius/server/service/integrationtest/scep_server"
+	"github.com/notawar/mobius/server/test"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-json-experiment/json/v1"
 	kitlog "github.com/go-kit/log"
@@ -155,11 +155,11 @@ func (s *enterpriseIntegrationGitopsTestSuite) TearDownTest() {
 	}
 }
 
-// TestMobiusGitops runs `mobiuscli gitops` command on configs in https://github.com/notawar/mobius set-gitops repo.
+// TestMobiusGitops runs `mobiuscli gitops` command on configs in https://github.com/notawar/mobius-gitops repo.
 // Changes to that repo may cause this test to fail.
 func (s *enterpriseIntegrationGitopsTestSuite) TestMobiusGitops() {
 	t := s.T()
-	const mobiusGitopsRepo = "https://github.com/notawar/mobius set-gitops"
+	const mobiusGitopsRepo = "https://github.com/notawar/mobius-gitops"
 
 	user := s.createGitOpsUser(t)
 	mobiuscliConfig := s.createMobiusctlConfig(t, user)

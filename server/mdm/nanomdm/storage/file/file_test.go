@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/test/e2e"
+	"github.com/notawar/mobius/server/mdm/nanomdm/test/e2e"
 )
 
 func TestFileStorage(t *testing.T) {

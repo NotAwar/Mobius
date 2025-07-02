@@ -3,7 +3,7 @@ package tables
 import (
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
 	"github.com/stretchr/testify/require"
 	"howett.net/plist"
 )

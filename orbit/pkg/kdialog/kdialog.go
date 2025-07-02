@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/dialog"
-	"github.com/notawar/mobius set/v4/orbit/pkg/execuser"
-	"github.com/notawar/mobius set/v4/orbit/pkg/platform"
+	"github.com/notawar/mobius/orbit/pkg/dialog"
+	"github.com/notawar/mobius/orbit/pkg/execuser"
+	"github.com/notawar/mobius/orbit/pkg/platform"
 )
 
 const kdialogProcessName = "kdialog"

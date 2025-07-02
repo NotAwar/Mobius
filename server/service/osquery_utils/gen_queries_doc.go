@@ -10,9 +10,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/service/osquery_utils"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service/osquery_utils"
 )
 
 func main() {

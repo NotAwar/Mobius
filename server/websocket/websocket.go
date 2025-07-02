@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/contexts/token"
+	"github.com/notawar/mobius/server/contexts/token"
 	"github.com/igm/sockjs-go/v3/sockjs"
 )
 

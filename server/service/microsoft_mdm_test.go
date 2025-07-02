@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	microsoft_mdm "github.com/notawar/mobius/v4/server/mdm/microsoft"
-	"github.com/notawar/mobius/v4/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius/v4/server/mobius"
-	mdm_types "github.com/notawar/mobius/v4/server/mobius"
+	microsoft_mdm "github.com/notawar/mobius/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mobius"
+	mdm_types "github.com/notawar/mobius/server/mobius"
 	"github.com/stretchr/testify/require"
 )
 

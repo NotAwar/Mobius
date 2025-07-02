@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mock"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 )

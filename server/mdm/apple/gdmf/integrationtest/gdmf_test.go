@@ -3,7 +3,7 @@ package integrationtest
 import (
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mdm/apple/gdmf"
+	"github.com/notawar/mobius/server/mdm/apple/gdmf"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

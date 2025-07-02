@@ -17,18 +17,18 @@ import (
 	"github.com/XSAM/otelsql"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/exp"
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxdb"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/migrations/data"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/migrations/tables"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/goose"
-	"github.com/notawar/mobius set/v4/server/mdm/android"
-	android_mysql "github.com/notawar/mobius set/v4/server/mdm/android/mysql"
-	nano_push "github.com/notawar/mobius set/v4/server/mdm/nanomdm/push"
-	scep_depot "github.com/notawar/mobius set/v4/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/contexts/ctxdb"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/datastore/mysql/migrations/data"
+	"github.com/notawar/mobius/server/datastore/mysql/migrations/tables"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/goose"
+	"github.com/notawar/mobius/server/mdm/android"
+	android_mysql "github.com/notawar/mobius/server/mdm/android/mysql"
+	nano_push "github.com/notawar/mobius/server/mdm/nanomdm/push"
+	scep_depot "github.com/notawar/mobius/server/mdm/scep/depot"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/go-sql-driver/mysql"
@@ -140,7 +140,7 @@ func (ds *Datastore) writer(ctx context.Context) *sqlx.DB {
 // IMPORTANT: Adding prepare statements consumes MySQL server resources, and is limited by MySQL max_prepared_stmt_count
 // system variable. This method may create 1 prepare statement for EACH database connection. Customers must be notified
 // to update their MySQL configurations when additional prepare statements are added.
-// For more detail, see: https://github.com/notawar/mobius set/issues/15476
+// For more detail, see: https://github.com/notawar/mobius/issues/15476
 func (ds *Datastore) loadOrPrepareStmt(ctx context.Context, query string) *sqlx.Stmt {
 	// the cache is only available on the replica
 	if ctxdb.IsPrimaryRequired(ctx) {
@@ -484,7 +484,7 @@ var (
 		// column doesn't exist anymore).
 		20171212182459: {},
 		// Deleted in
-		// https://github.com/notawar/mobius set/commit/fd61dcab67f341c9e47fb6cb968171650c19a681
+		// https://github.com/notawar/mobius/commit/fd61dcab67f341c9e47fb6cb968171650c19a681
 		20161223115449: {},
 		20170309091824: {},
 		20171027173700: {},

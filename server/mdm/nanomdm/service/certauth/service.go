@@ -1,7 +1,7 @@
 package certauth
 
 import (
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 func (s *CertAuth) Authenticate(r *mdm.Request, m *mdm.Authenticate) error {

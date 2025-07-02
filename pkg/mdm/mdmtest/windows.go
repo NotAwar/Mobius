@@ -10,11 +10,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius/v4/server/mobius"
-	microsoft_mdm "github.com/notawar/mobius/v4/server/mdm/microsoft"
-	"github.com/notawar/mobius/v4/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/mobius"
+	microsoft_mdm "github.com/notawar/mobius/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 )

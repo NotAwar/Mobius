@@ -7,12 +7,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius/v4/server/service/middleware/auth"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/service/middleware/auth"
 
-	"github.com/notawar/mobius/v4/server/contexts/viewer"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/websocket"
+	"github.com/notawar/mobius/server/contexts/viewer"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/websocket"
 	kitlog "github.com/go-kit/log"
 	gws "github.com/gorilla/websocket"
 	"github.com/igm/sockjs-go/v3/sockjs"

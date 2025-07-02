@@ -42,10 +42,10 @@ const BootstrapAdvancedOptions = ({
 
   const tooltip = (
     <>
-      Use this option if you&apos;re deploying a custom mobiusdaemon via bootstrap
-      package. If enabled, Mobius won&apos;t install mobiusdaemon automatically. To use
-      this option upload a bootstrap package first, and make sure to not use{" "}
-      <b>Install software</b> and <b>Run script</b>.
+      Use this option if you&apos;re deploying a custom mobiusdaemon via
+      bootstrap package. If enabled, Mobius won&apos;t install mobiusdaemon
+      automatically. To use this option upload a bootstrap package first, and
+      make sure to not use <b>Install software</b> and <b>Run script</b>.
     </>
   );
 

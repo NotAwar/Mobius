@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/ptr"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/msrc/parsed"
-	msrcxml "github.com/notawar/mobius/v4/server/vulnerabilities/msrc/xml"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/vulnerabilities/msrc/parsed"
+	msrcxml "github.com/notawar/mobius/server/vulnerabilities/msrc/xml"
 	"github.com/stretchr/testify/require"
 )
 

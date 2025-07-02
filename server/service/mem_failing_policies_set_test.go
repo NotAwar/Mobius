@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mobius/policytest"
+	"github.com/notawar/mobius/server/mobius/policytest"
 )
 
 func TestMemFailingPolicySet(t *testing.T) {

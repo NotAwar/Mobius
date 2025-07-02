@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

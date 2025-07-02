@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	authz_ctx "github.com/notawar/mobius/v4/server/contexts/authz"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
+	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/throttled/throttled/v2"

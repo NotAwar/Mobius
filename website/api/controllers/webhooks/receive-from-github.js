@@ -434,7 +434,7 @@ module.exports = {
           // [?] https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#remove-a-label-from-an-issue
           await sails.helpers.http.del(`https://api.github.com/repos/${owner}/${repo}/issues/${prNumber}/labels/${encodeURIComponent('#handbook')}`, {}, baseHeaders)
           .tolerate({ exit: 'non200Response', raw: {statusCode: 404} }, (err)=>{// if the PR has gone missing, swallow the error and warn instead.
-            sails.log.warn(`When trying to send a request to remove the #handbook label from PR #${prNumber} in the ${owner}/${repo} repo, an error occured. Raw error: ${require('util').inspect(err)}`);
+            sails.log.warn(`When trying to send a request to remove the #handbook label from PR #${prNumber} in the ${owner}/${repo} repo, an error occurred. Raw error: ${require('util').inspect(err)}`);
           });
         }//ﬁ
 
@@ -450,7 +450,7 @@ module.exports = {
           // [?] https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#remove-a-label-from-an-issue
           await sails.helpers.http.del(`https://api.github.com/repos/${owner}/${repo}/issues/${prNumber}/labels/${encodeURIComponent('~ceo')}`, {}, baseHeaders)
           .tolerate({ exit: 'non200Response', raw: {statusCode: 404} }, (err)=>{// if the PR has gone missing, swallow the error and warn instead.
-            sails.log.warn(`When trying to send a request to remove the ~ceo label from PR #${prNumber} in the ${owner}/${repo} repo, an error occured. Raw error: ${require('util').inspect(err)}`);
+            sails.log.warn(`When trying to send a request to remove the ~ceo label from PR #${prNumber} in the ${owner}/${repo} repo, an error occurred. Raw error: ${require('util').inspect(err)}`);
           });
         }//ﬁ
 
@@ -582,7 +582,7 @@ module.exports = {
           .timeout(5000)
           .tolerate(['non200Response', 'requestFailed', {name: 'TimeoutError'}], (err)=>{
             // Note that Zapier responds with a 2xx status code even if something goes wrong, so just because this message is not logged doesn't mean everything is hunky dory.  More info: https://github.com/notawar/mobius/pull/6380#issuecomment-1204395762
-            sails.log.warn(`When trying to send information about a merged pull request to Zapier, an error occured. Raw error: ${require('util').inspect(err)}`);
+            sails.log.warn(`When trying to send information about a merged pull request to Zapier, an error occurred. Raw error: ${require('util').inspect(err)}`);
             return;
           });
         }
@@ -696,7 +696,7 @@ module.exports = {
           .timeout(5000)
           .tolerate(['non200Response', 'requestFailed', {name: 'TimeoutError'}], (err)=>{
             // Note that Zapier responds with a 2xx status code even if something goes wrong, so just because this message is not logged doesn't mean everything is hunky dory.  More info: https://github.com/notawar/mobius/pull/6380#issuecomment-1204395762
-            sails.log.warn(`When trying to send information about a new Mobius release to Zapier, an error occured. Raw error: ${require('util').inspect(err)}`);
+            sails.log.warn(`When trying to send information about a new Mobius release to Zapier, an error occurred. Raw error: ${require('util').inspect(err)}`);
             return;
           });
         }

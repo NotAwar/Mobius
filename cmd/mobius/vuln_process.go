@@ -7,12 +7,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/contexts/license"
+	"github.com/notawar/mobius/server/contexts/license"
 
 	"github.com/WatchBeam/clock"
-	"github.com/notawar/mobius set/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/mobius"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/spf13/cobra"

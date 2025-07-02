@@ -9,8 +9,8 @@ import (
 	"math/big"
 	"strings"
 
-	apple_mdm "github.com/notawar/mobius/v4/server/mdm/apple"
-	microsoft_mdm "github.com/notawar/mobius set/v4/server/mdm/microsoft"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	microsoft_mdm "github.com/notawar/mobius/server/mdm/microsoft"
 )
 
 // CertStore implements storage tasks associated with MS-WSTEP messages in the MS-MDE2

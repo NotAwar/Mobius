@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/goose"
+	"github.com/notawar/mobius/server/goose"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"

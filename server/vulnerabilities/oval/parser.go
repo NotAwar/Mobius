@@ -7,8 +7,8 @@ import (
 	"io"
 	"os"
 
-	oval_input "github.com/notawar/mobius/v4/server/vulnerabilities/oval/input"
-	oval_parsed "github.com/notawar/mobius/v4/server/vulnerabilities/oval/parsed"
+	oval_input "github.com/notawar/mobius/server/vulnerabilities/oval/input"
+	oval_parsed "github.com/notawar/mobius/server/vulnerabilities/oval/parsed"
 )
 
 func parseDefinitions(platform Platform, inputFile string, outputFile string) error {

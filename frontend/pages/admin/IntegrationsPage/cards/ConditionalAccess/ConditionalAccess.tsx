@@ -56,8 +56,8 @@ const DeleteConditionalAccessModal = ({
     >
       <>
         <p>
-          Mobius will be disconnected from Microsoft Entra and will stop blocking
-          end users from logging in with single sign-on.
+          Mobius will be disconnected from Microsoft Entra and will stop
+          blocking end users from logging in with single sign-on.
         </p>
         <div className="modal-cta-wrap">
           <Button

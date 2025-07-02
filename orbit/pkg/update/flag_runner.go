@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/rs/zerolog/log"
 )
 

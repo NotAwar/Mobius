@@ -5,10 +5,7 @@ import { AppContext } from "context/app";
 import { IIntegrationType } from "interfaces/integration";
 
 import Card from "components/Card";
-import JiraPreview from "../../../../../../assets/images/jira-policy-automation-preview-400x419@2x.png";
-import ZendeskPreview from "../../../../../../assets/images/zendesk-policy-automation-preview-400x515@2x.png";
-import JiraPreviewPremium from "../../../../../../assets/images/jira-policy-automation-preview-premium-400x316@2x.png";
-import ZendeskPreviewPremium from "../../../../../../assets/images/zendesk-policy-automation-preview-premium-400x483@2x.png";
+import PlaceholderImage from "../../../../../../assets/images/mobius-logo.png";
 
 const baseClass = "example-ticket";
 
@@ -24,13 +21,13 @@ const ExampleTicket = ({
   const screenshot =
     integrationType === "jira" ? (
       <img
-        src={isPremiumTier ? JiraPreviewPremium : JiraPreview}
+        src={PlaceholderImage}
         alt="Jira example policy automation ticket"
         className={`${baseClass}__screenshot`}
       />
     ) : (
       <img
-        src={isPremiumTier ? ZendeskPreviewPremium : ZendeskPreview}
+        src={PlaceholderImage}
         alt="Zendesk example policy automation ticket"
         className={`${baseClass}__screenshot`}
       />

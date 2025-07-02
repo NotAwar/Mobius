@@ -5,12 +5,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius/v4/server/datastore/mysql"
-	"github.com/notawar/mobius/v4/server/datastore/redis/redistest"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/service"
-	"github.com/notawar/mobius/v4/server/test"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service"
+	"github.com/notawar/mobius/server/test"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 )

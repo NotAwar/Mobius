@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 )
 
 // LoadPEM loads certificates from a PEM file and returns a cert pool containing

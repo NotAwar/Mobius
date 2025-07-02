@@ -16,8 +16,8 @@ import (
 	"fmt"
 
 	"github.com/apex/log"
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/mdm"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/mdm"
 )
 
 func main() {

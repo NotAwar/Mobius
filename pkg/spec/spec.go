@@ -12,7 +12,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/ghodss/yaml"
 	"github.com/hashicorp/go-multierror"
 )

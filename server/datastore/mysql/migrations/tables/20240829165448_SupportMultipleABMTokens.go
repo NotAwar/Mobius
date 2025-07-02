@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/mobius"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/reflectx"
@@ -136,7 +136,7 @@ LIMIT 1
 	// cron job ("apple_mdm_dep_profile_assigner") that runs regularly (and
 	// ~immediately at Mobius startup) to ensure the token's information is
 	// filled.
-	// https://github.com/notawar/mobius set/pull/21287#discussion_r1715891448
+	// https://github.com/notawar/mobius/pull/21287#discussion_r1715891448
 
 	// insert the token in the new table
 	const insABM = `

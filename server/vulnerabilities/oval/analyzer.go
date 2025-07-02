@@ -8,9 +8,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	oval_parsed "github.com/notawar/mobius/v4/server/vulnerabilities/oval/parsed"
-	utils "github.com/notawar/mobius/v4/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/mobius"
+	oval_parsed "github.com/notawar/mobius/server/vulnerabilities/oval/parsed"
+	utils "github.com/notawar/mobius/server/vulnerabilities/utils"
 )
 
 const (

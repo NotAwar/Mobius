@@ -20,8 +20,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
 )
 
 var cpeParts = map[string]string{

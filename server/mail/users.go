@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/notawar/mobius/v4/server"
+	"github.com/notawar/mobius/server"
 )
 
 type ChangeEmailMailer struct {

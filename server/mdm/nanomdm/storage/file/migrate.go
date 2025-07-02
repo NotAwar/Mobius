@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 func sendCheckinMessage(e *enrollment, filename string, c chan<- interface{}) {

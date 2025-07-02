@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/retry"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
+	"github.com/notawar/mobius/pkg/retry"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	osquery_gen "github.com/osquery/osquery-go/gen/osquery"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"

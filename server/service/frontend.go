@@ -8,9 +8,9 @@ import (
 	"net/url"
 
 	assetfs "github.com/elazarl/go-bindata-assetfs"
-	"github.com/notawar/mobius/v4/server/bindata"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/bindata"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	"github.com/go-kit/log"
 	"github.com/klauspost/compress/gzhttp"
 )

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Mobius logo text in white -->
-  <text x="10" y="40" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white">Mobius</text>
-  <!-- Simple mobius strip symbol -->
-  <path d="M20 10 Q30 5 40 10 T60 10 Q50 20 40 15 T20 15 Z" fill="white" opacity="0.8"/>
-</svg>

@@ -2,7 +2,7 @@ import React from "react";
 
 import Modal from "components/Modal";
 import Button from "components/buttons/Button";
-import CategoriesEndnUserExperiencePreview from "../../../../../../assets/images/categories-end-user-experience-preview-570x259@2x.png";
+import CategoriesEndnUserExperiencePreview from "../../../../../../assets/images/mobius-logo.png";
 
 const baseClass = "categories-end-user-experience-preview-modal";
 

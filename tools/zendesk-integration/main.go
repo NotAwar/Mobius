@@ -14,11 +14,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/notawar/mobius/v4/server/contexts/license"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mock"
-	"github.com/notawar/mobius set/v4/server/service/externalsvc"
-	"github.com/notawar/mobius set/v4/server/worker"
+	"github.com/notawar/mobius/server/contexts/license"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mock"
+	"github.com/notawar/mobius/server/service/externalsvc"
+	"github.com/notawar/mobius/server/worker"
 	kitlog "github.com/go-kit/log"
 )
 

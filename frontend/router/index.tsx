@@ -84,9 +84,6 @@ import SoftwareMobiusMaintained from "pages/SoftwarePage/SoftwareAddPage/Softwar
 import SoftwareCustomPackage from "pages/SoftwarePage/SoftwareAddPage/SoftwareCustomPackage";
 import SoftwareAppStore from "pages/SoftwarePage/SoftwareAddPage/SoftwareAppStoreVpp";
 import MobiusMaintainedAppDetailsPage from "pages/SoftwarePage/SoftwareAddPage/SoftwareMobiusMaintained/MobiusMaintainedAppDetailsPage";
-import InternalPortal from "pages/InternalPortal";
-import UserPortal from "pages/UserPortal";
-import PortalPage from "pages/PortalPage";
 
 import PATHS from "router/paths";
 
@@ -161,16 +158,6 @@ const routes = (
         <Route path="logout" component={LogoutPage} />
         <Route component={CoreLayout}>
           <IndexRedirect to="/dashboard" />
-
-          {/* Portal navigation entry point */}
-          <Route path="portals" component={PortalPage} />
-
-          {/* Individual portal routes */}
-          <Route path="internal-portal" component={AuthGlobalAdminRoutes}>
-            <Route component={InternalPortal} />
-          </Route>
-          <Route path="user-portal" component={UserPortal} />
-
           <Route path="dashboard" component={DashboardPage}>
             <Route path="linux" component={DashboardPage} />
             <Route path="mac" component={DashboardPage} />

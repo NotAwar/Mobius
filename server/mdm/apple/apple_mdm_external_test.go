@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql"
-	"github.com/notawar/mobius set/v4/server/mobius"
-	apple_mdm "github.com/notawar/mobius set/v4/server/mdm/apple"
-	nanodep_client "github.com/notawar/mobius set/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/mobius"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	nanodep_client "github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/test"
 	"github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 )

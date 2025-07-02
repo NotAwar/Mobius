@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/notawar/mobius/v4/pkg/certificate"
-	"github.com/notawar/mobius set/v4/server/config"
+	"github.com/notawar/mobius/pkg/certificate"
+	"github.com/notawar/mobius/server/config"
 )
 
 func main() {

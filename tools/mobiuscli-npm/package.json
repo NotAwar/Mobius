@@ -1,6 +1,6 @@
 {
   "name": "mobiuscli",
-  "version": "v4.69.0",
+  "version": "1.0.0",
   "description": "Installer for the mobiuscli CLI tool",
   "bin": {
     "mobiuscli": "./run.js"

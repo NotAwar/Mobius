@@ -3,8 +3,8 @@ package mock
 import (
 	"context"
 
-	"github.com/notawar/mobius/v4/server/mdm/android"
-	"github.com/notawar/mobius set/v4/server/mdm/android/service/androidmgmt"
+	"github.com/notawar/mobius/server/mdm/android"
+	"github.com/notawar/mobius/server/mdm/android/service/androidmgmt"
 	"google.golang.org/api/androidmanagement/v1"
 )
 

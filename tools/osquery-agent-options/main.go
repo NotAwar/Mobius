@@ -20,9 +20,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/constant"
-	"github.com/notawar/mobius set/v4/pkg/download"
-	"github.com/notawar/mobius set/v4/server/mobius"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/pkg/download"
+	"github.com/notawar/mobius/server/mobius"
 )
 
 var (

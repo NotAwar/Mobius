@@ -70,7 +70,7 @@ module.exports = {
       return await salesforceConnection.sobject('Account')
       .retrieve(salesforceAccountId);
     }).intercept((err)=>{
-      return new Error(`When attempting to create a Lead record using an exisitng Account record (ID: ${salesforceAccountId}), An error occured when retreiving the specified record. Error: ${err}`);
+      return new Error(`When attempting to create a Lead record using an existing Account record (ID: ${salesforceAccountId}), An error occurred when retrieving the specified record. Error: ${err}`);
     });
     let salesforceAccountOwnerId = accountRecord.OwnerId;
     // If the account record is owned by the integrations admin user and is not the account where unenriched contacts go, we'll round robin it and reassign it to an AE.

@@ -232,7 +232,9 @@ const Smtp = ({
             To configure SMTP,{" "}
             <CustomLink
               url={
-                isPremiumTier ? CONTACT_MOBIUS_LINK : "https://mobius-mdm.org/slack"
+                isPremiumTier
+                  ? CONTACT_MOBIUS_LINK
+                  : "https://mobius-mdm.org/slack"
               }
               text="get help"
               newTab

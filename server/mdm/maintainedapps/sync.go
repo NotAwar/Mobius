@@ -10,10 +10,10 @@ import (
 	"os"
 	"time"
 
-	// ma "github.com/notawar/mobius/v4/ee/maintained-apps" // Removed enterprise dependency
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
-	"github.com/notawar/mobius/v4/server/contexts/ctxerr"
-	"github.com/notawar/mobius/v4/server/mobius"
+	// ma "github.com/notawar/mobius/ee/maintained-apps" // Removed enterprise dependency
+	"github.com/notawar/mobius/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/mobius"
 	kitlog "github.com/go-kit/log"
 )
 

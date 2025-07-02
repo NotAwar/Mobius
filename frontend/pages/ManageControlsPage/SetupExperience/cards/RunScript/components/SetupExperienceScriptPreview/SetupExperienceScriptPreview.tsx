@@ -2,7 +2,7 @@ import React from "react";
 
 import Card from "components/Card";
 
-import SetupExperienceRunScriptPreview from "../../../../../../../../assets/images/run-script-preview.png";
+import SetupExperienceRunScriptPreview from "../../../../../../../../assets/images/mobius-logo.png";
 
 const baseClass = "setup-experience-script-preview";
 

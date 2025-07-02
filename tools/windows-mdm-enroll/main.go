@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/update"
+	"github.com/notawar/mobius/orbit/pkg/update"
 )
 
 func main() {

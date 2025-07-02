@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/notawar/mobius/v4/orbit/pkg/migration"
-	"github.com/notawar/mobius set/v4/server/service"
+	"github.com/notawar/mobius/orbit/pkg/migration"
+	"github.com/notawar/mobius/server/service"
 )
 
 func NewMDMMigrator(path string, frequency time.Duration, handler MDMMigratorHandler, mrw *migration.ReadWriter, mobiusURL string, showCh chan struct{}) MDMMigrator {

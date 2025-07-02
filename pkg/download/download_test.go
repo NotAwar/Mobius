@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/pkg/mobiushttp"
+	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/stretchr/testify/require"
 )
 

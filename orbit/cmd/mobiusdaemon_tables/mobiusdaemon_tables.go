@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	orbittable "github.com/notawar/mobius/v4/orbit/pkg/table"
+	orbittable "github.com/notawar/mobius/orbit/pkg/table"
 	"github.com/osquery/osquery-go"
 )
 

@@ -63,7 +63,7 @@ const PortalNavigation = ({ router }: IPortalNavigationProps): JSX.Element => {
           <div className={`${baseClass}__portal-actions`}>
             <Button
               onClick={handleMainDashboard}
-              variant="brand"
+              variant="success"
               className={`${baseClass}__portal-button`}
             >
               Access Dashboard

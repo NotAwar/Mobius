@@ -34,7 +34,8 @@ const DeviceUserBanners = ({
   const isMdmUnenrolled =
     mdmEnrollmentStatus === "Off" || mdmEnrollmentStatus === null;
 
-  const mdmEnabledAndConnected = mdmEnabledAndConfigured && connectedToMobiusMdm;
+  const mdmEnabledAndConnected =
+    mdmEnabledAndConfigured && connectedToMobiusMdm;
 
   const showTurnOnAppleMdmBanner =
     hostPlatform === "darwin" && isMdmUnenrolled && mdmEnabledAndConfigured;

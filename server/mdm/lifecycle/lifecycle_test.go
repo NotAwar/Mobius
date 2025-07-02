@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/mock"
+	"github.com/notawar/mobius/server/mock"
 	kitlog "github.com/go-kit/log"
 	"github.com/stretchr/testify/require"
 )

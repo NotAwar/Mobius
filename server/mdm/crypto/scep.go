@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/mdm/assets"
-	"github.com/notawar/mobius set/v4/server/mdm/nanomdm/http/mdm"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/mdm/assets"
+	"github.com/notawar/mobius/server/mdm/nanomdm/http/mdm"
 )
 
 var _ mdm.CertVerifier = (*SCEPVerifier)(nil)

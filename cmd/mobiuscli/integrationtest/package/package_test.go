@@ -7,10 +7,10 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/notawar/mobius/v4/cmd/mobiuscli/mobiuscli"
-	"github.com/notawar/mobius set/v4/orbit/pkg/packaging"
-	"github.com/notawar/mobius set/v4/orbit/pkg/update"
-	"github.com/notawar/mobius set/v4/pkg/nettest"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli"
+	"github.com/notawar/mobius/orbit/pkg/packaging"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/pkg/nettest"
 	"github.com/stretchr/testify/require"
 )
 

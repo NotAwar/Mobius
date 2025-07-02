@@ -35,7 +35,9 @@ describe("TargetOption - component", () => {
       />
     );
     expect(container.querySelectorAll(".is-host").length).toEqual(1);
-    expect(container.querySelectorAll("i.mobiusicon-windows").length).toEqual(1);
+    expect(container.querySelectorAll("i.mobiusicon-windows").length).toEqual(
+      1
+    );
     expect(screen.getByText(createMockHost().primary_ip)).toBeInTheDocument();
   });
 

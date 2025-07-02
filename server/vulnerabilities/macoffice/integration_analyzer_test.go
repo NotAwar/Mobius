@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/datastore/mysql"
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius/v4/server/test"
-	"github.com/notawar/mobius/v4/server/vulnerabilities/macoffice"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/test"
+	"github.com/notawar/mobius/server/vulnerabilities/macoffice"
 	"github.com/stretchr/testify/require"
 )
 

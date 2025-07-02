@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/go-kit/log"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"

@@ -338,9 +338,7 @@ describe("Software Vulnerabilities table", () => {
         user.hover(screen.getByText("Exploited vulnerabilities"));
       });
 
-      expect(
-        screen.getByText(/Available in Mobius Pro./i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Available in Mobius Pro./i)).toBeInTheDocument();
     });
   });
 });

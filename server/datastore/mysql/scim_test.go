@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/ptr"
-	"github.com/notawar/mobius set/v4/server/test"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/test"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
@@ -2130,7 +2130,7 @@ func testTriggerResendIdPProfiles(t *testing.T, ds *Datastore) {
 		hostProfileStatus{profAll.ProfileUUID, mobius.MDMDeliveryVerifying})
 }
 
-// for https://github.com/notawar/mobius set/issues/28820
+// for https://github.com/notawar/mobius/issues/28820
 func testTriggerResendIdPProfilesOnTeam(t *testing.T, ds *Datastore) {
 	ctx := t.Context()
 

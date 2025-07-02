@@ -8,12 +8,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/notawar/mobius/v4/server/mobius"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/goval_dictionary"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/nvd"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/nvd/tools/cvefeed"
-	feednvd "github.com/notawar/mobius set/v4/server/vulnerabilities/nvd/tools/cvefeed/nvd"
-	"github.com/notawar/mobius set/v4/server/vulnerabilities/oval"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/vulnerabilities/goval_dictionary"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd"
+	"github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed"
+	feednvd "github.com/notawar/mobius/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/notawar/mobius/server/vulnerabilities/oval"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notawar/mobius/v4/server/config"
-	"github.com/notawar/mobius set/v4/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql/common_mysql"
 	"github.com/go-kit/log"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
@@ -190,7 +190,7 @@ func ProcessOptions(t testing.TB, opts *DatastoreTestOptions) (string, *Datastor
 	}
 
 	cleanTestName := strings.ReplaceAll(
-		strings.TrimPrefix(details.Name(), "github.com/notawar/mobius set/v4/"), "/", "_",
+		strings.TrimPrefix(details.Name(), "github.com/notawar/mobius/"), "/", "_",
 	)
 	cleanTestName = strings.ReplaceAll(cleanTestName, ".", "_")
 	if len(cleanTestName) > 60 {

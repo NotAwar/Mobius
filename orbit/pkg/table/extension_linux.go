@@ -3,13 +3,13 @@
 package table
 
 import (
-	"github.com/notawar/mobius/v4/orbit/pkg/table/containerd_containers"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/crowdstrike/falcon_kernel_check"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/crowdstrike/falconctl"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/cryptsetup"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/cryptsetup_luks_salt"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/dataflattentable"
-	"github.com/notawar/mobius set/v4/orbit/pkg/table/dconf_read"
+	"github.com/notawar/mobius/orbit/pkg/table/containerd_containers"
+	"github.com/notawar/mobius/orbit/pkg/table/crowdstrike/falcon_kernel_check"
+	"github.com/notawar/mobius/orbit/pkg/table/crowdstrike/falconctl"
+	"github.com/notawar/mobius/orbit/pkg/table/cryptsetup"
+	"github.com/notawar/mobius/orbit/pkg/table/cryptsetup_luks_salt"
+	"github.com/notawar/mobius/orbit/pkg/table/dataflattentable"
+	"github.com/notawar/mobius/orbit/pkg/table/dconf_read"
 	"github.com/osquery/osquery-go"
 	"github.com/osquery/osquery-go/plugin/table"
 	"github.com/rs/zerolog/log"

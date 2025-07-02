@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 )
 
 func (s *FileStorage) EnrollmentHasCertHash(r *mdm.Request, _ string) (bool, error) {

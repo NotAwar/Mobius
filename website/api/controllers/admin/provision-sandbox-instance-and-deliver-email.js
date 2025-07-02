@@ -37,7 +37,7 @@ module.exports = {
       emailAddress: userToRemoveFromSandboxWaitlist.emailAddress,
     })
     .intercept((err)=>{
-      return new Error(`When attempting to provision a new Mobius Sandbox instance for a User (id:${userToRemoveFromSandboxWaitlist.id}), an error occured. Full error: ${err}`);
+      return new Error(`When attempting to provision a new Mobius Sandbox instance for a User (id:${userToRemoveFromSandboxWaitlist.id}), an error occurred. Full error: ${err}`);
     });
 
     await User.updateOne({id: userId}).set({

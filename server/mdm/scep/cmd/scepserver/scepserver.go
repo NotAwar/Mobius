@@ -14,11 +14,11 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/notawar/mobius/v4/server/mdm/scep/csrverifier"
-	executablecsrverifier "github.com/notawar/mobius set/v4/server/mdm/scep/csrverifier/executable"
-	scepdepot "github.com/notawar/mobius set/v4/server/mdm/scep/depot"
-	"github.com/notawar/mobius set/v4/server/mdm/scep/depot/file"
-	scepserver "github.com/notawar/mobius set/v4/server/mdm/scep/server"
+	"github.com/notawar/mobius/server/mdm/scep/csrverifier"
+	executablecsrverifier "github.com/notawar/mobius/server/mdm/scep/csrverifier/executable"
+	scepdepot "github.com/notawar/mobius/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/mdm/scep/depot/file"
+	scepserver "github.com/notawar/mobius/server/mdm/scep/server"
 	"github.com/gorilla/mux"
 
 	"github.com/go-kit/log"

@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/v4/server/mdm/nanodep/client"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/storage"
-	"github.com/notawar/mobius set/v4/server/mdm/nanodep/tokenpki"
+	"github.com/notawar/mobius/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/mdm/nanodep/storage"
+	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
 )
 
 // Run runs a battery of tests on the storage.AllStorage returned by storageFn.

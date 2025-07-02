@@ -1,6 +1,6 @@
 package update
 
-import "github.com/notawar/mobius/v4/server/mobius"
+import "github.com/notawar/mobius/server/mobius"
 
 // OrbitConfigFetcher allows fetching Orbit configuration.
 type OrbitConfigFetcher interface {

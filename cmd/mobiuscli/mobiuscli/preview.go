@@ -18,7 +18,8 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"github.com/notawar/mobius/ee/server/licensing"
+	"github.com/google/go-github/v37/github"
+	"github.com/mitchellh/go-ps"
 	"github.com/notawar/mobius/orbit/pkg/constant"
 	"github.com/notawar/mobius/orbit/pkg/packaging"
 	"github.com/notawar/mobius/orbit/pkg/update"
@@ -26,10 +27,9 @@ import (
 	"github.com/notawar/mobius/pkg/open"
 	"github.com/notawar/mobius/pkg/spec"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/licensing"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/service"
-	"github.com/google/go-github/v37/github"
-	"github.com/mitchellh/go-ps"
 	"github.com/urfave/cli/v2"
 )
 

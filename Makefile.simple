@@ -1,6 +1,4 @@
 # Simplified Makefile for Single Developer - GitHub-centric workflow
-# Load development profile
-include dev-config.yml
 
 .PHONY: help dev dev-core dev-full build test clean setup github-build github-push
 
@@ -114,5 +112,5 @@ deploy-prod: ## Deploy using GitHub Container Registry images
 	@echo "   Using images: $(IMAGE_NAME):latest"
 	docker-compose -f docker-compose.prod.yml up -d
 
-# Include original Makefile for advanced commands
-include Makefile.advanced
+# Include original Makefile for advanced commands (optional)
+# -include Makefile

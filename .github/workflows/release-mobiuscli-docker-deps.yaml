@@ -41,20 +41,21 @@ jobs:
         with:
           go-version-file: 'go.mod'
 
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build mobiusmdm/wix
+      - name: Build ghcr.io/notawar/wix
         run: make wix-docker
 
-      - name: Build mobiusmdm/bomutils
+      - name: Build ghcr.io/notawar/bomutils
         run: make bomutils-docker
 
       #
-      # After mobiusmdm/wix and mobiusmdm/bomutils are built,
+      # After ghcr.io/notawar/wix and ghcr.io/notawar/bomutils are built,
       # let's smoke test pkg/msi generation before pushing.
       #
 

@@ -35,7 +35,6 @@ import (
 	"github.com/notawar/mobius/server/datastore/redis"
 	"github.com/notawar/mobius/server/datastore/s3"
 	"github.com/notawar/mobius/server/errorstore"
-	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/health"
 	"github.com/notawar/mobius/server/launcher"
 	"github.com/notawar/mobius/server/live_query"
@@ -48,16 +47,14 @@ import (
 	"github.com/notawar/mobius/server/mdm/nanomdm/push"
 	"github.com/notawar/mobius/server/mdm/nanomdm/push/buford"
 	nanomdm_pushsvc "github.com/notawar/mobius/server/mdm/nanomdm/push/service"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/pubsub"
 	"github.com/notawar/mobius/server/service"
 	"github.com/notawar/mobius/server/service/async"
 	"github.com/notawar/mobius/server/service/conditional_access_microsoft_proxy"
 	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
+
 	// "github.com/notawar/mobius/server/service/redis_key_value" // Removed unused import
-	"github.com/notawar/mobius/server/service/redis_lock"
-	"github.com/notawar/mobius/server/service/redis_policy_set"
-	"github.com/notawar/mobius/server/sso"
-	"github.com/notawar/mobius/server/version"
 	"github.com/getsentry/sentry-go"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/go-kit/log"
@@ -65,6 +62,10 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
 	"github.com/ngrok/sqlmw"
+	"github.com/notawar/mobius/server/service/redis_lock"
+	"github.com/notawar/mobius/server/service/redis_policy_set"
+	"github.com/notawar/mobius/server/sso"
+	"github.com/notawar/mobius/server/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
@@ -754,7 +755,7 @@ the way that the Mobius server works.
 				mdmPushService,
 				cronSchedules,
 				wstepCertManager,
-				nil, // eeservice.NewSCEPConfigService(logger, nil), // Enterprise removed
+				nil, // service.NewSCEPConfigService(logger, nil), // Enterprise removed
 				nil, // digicert.NewService(digicert.WithLogger(logger)), // Enterprise removed
 				conditionalAccessMicrosoftProxy,
 			)
@@ -833,25 +834,25 @@ the way that the Mobius server works.
 				distributedLock = redis_lock.NewLock(redisPool)
 				// Enterprise service wrapper removed - using open-source service only
 				/*
-				svc, err = eeservice.NewService(
-					svc,
-					ds,
-					logger,
-					config,
-					mailService,
-					clock.C,
-					depStorage,
-					apple_mdm.NewMDMAppleCommander(mdmStorage, mdmPushService),
-					ssoSessionStore,
-					profileMatcher,
-					softwareInstallStore,
-					bootstrapPackageStore,
-					distributedLock,
-					redis_key_value.New(redisPool),
-				)
-				if err != nil {
-					initFatal(err, "initial Mobius Premium service")
-				}
+					svc, err = service.NewService(
+						svc,
+						ds,
+						logger,
+						config,
+						mailService,
+						clock.C,
+						depStorage,
+						apple_mdm.NewMDMAppleCommander(mdmStorage, mdmPushService),
+						ssoSessionStore,
+						profileMatcher,
+						softwareInstallStore,
+						bootstrapPackageStore,
+						distributedLock,
+						redis_key_value.New(redisPool),
+					)
+					if err != nil {
+						initFatal(err, "initial Mobius Premium service")
+					}
 				*/
 			}
 
@@ -1219,9 +1220,9 @@ the way that the Mobius server works.
 				}
 				// Enterprise SCIM removed
 				/*
-				if err = scim.RegisterSCIM(rootMux, ds, svc, logger); err != nil {
-					initFatal(err, "setup SCIM")
-				}
+					if err = scim.RegisterSCIM(rootMux, ds, svc, logger); err != nil {
+						initFatal(err, "setup SCIM")
+					}
 				*/
 			}
 
@@ -1633,7 +1634,7 @@ func argsToString(args []driver.NamedValue) string {
 // command.
 type debugMux struct {
 	mobiusAuthenticatedHandler http.Handler
-	tokenAuthenticatedHandler http.Handler
+	tokenAuthenticatedHandler  http.Handler
 }
 
 func (m *debugMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {

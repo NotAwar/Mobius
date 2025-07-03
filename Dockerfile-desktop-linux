@@ -8,7 +8,6 @@ WORKDIR /usr/src/mobius
 
 COPY orbit ./orbit
 COPY server ./server
-COPY ee ./ee
 COPY pkg ./pkg
 COPY go.mod go.sum ./
 

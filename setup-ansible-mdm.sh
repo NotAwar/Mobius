@@ -1,19 +1,14 @@
 #!/bin/bash
 
 # Mobius MDM Setup Script
-# Run this script after removing the ee/ folder to complete the transition
+# Setup script for the open-source Mobius MDM platform
 
 set -e
 
 echo "🚀 Setting up Mobius MDM Platform..."
 
-# Step 1: Clean up enterprise references
-echo "📝 Cleaning up enterprise edition references..."
-if [ -f "./cleanup-ee-references.sh" ]; then
-    ./cleanup-ee-references.sh
-else
-    echo "⚠️  Warning: cleanup-ee-references.sh not found. You may need to manually remove ee/ imports."
-fi
+# Step 1: Clean up any remaining references (this step is now complete)
+echo "📝 All enterprise edition references have been removed..."
 
 # Step 2: Install Ansible if not present
 echo "🔧 Checking Ansible installation..."

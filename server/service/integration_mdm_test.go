@@ -34,7 +34,7 @@ import (
 	"testing"
 	"time"
 
-	eeservice "github.com/notawar/mobius/ee/server/service"
+	service "github.com/notawar/mobius/server/service"
 	"github.com/notawar/mobius/pkg/file"
 	"github.com/notawar/mobius/pkg/mobiusdbase"
 	"github.com/notawar/mobius/pkg/mdm/mdmtest"
@@ -111,7 +111,7 @@ type integrationMDMTestSuite struct {
 	appleITunesSrvData        map[string]string
 	appleGDMFSrv              *httptest.Server
 	mockedDownloadMobiusdmMeta mobiusdbase.Metadata
-	scepConfig                *eeservice.SCEPConfigService
+	scepConfig                *service.SCEPConfigService
 }
 
 // appleVPPConfigSrvConf is used to configure the mock server that mocks Apple's VPP endpoints.
@@ -234,7 +234,7 @@ func (s *integrationMDMTestSuite) SetupSuite() {
 		bootstrapPackageStore = s3.SetupTestBootstrapPackageStore(s.T(), "integration-tests", "")
 	}
 	scepTimeout := ptr.Duration(10 * time.Second)
-	s.scepConfig = eeservice.NewSCEPConfigService(serverLogger, scepTimeout).(*eeservice.SCEPConfigService)
+	s.scepConfig = service.NewSCEPConfigService(serverLogger, scepTimeout).(*service.SCEPConfigService)
 
 	serverConfig := TestServerOpts{
 		License: &mobiuss.LicenseInfo{
@@ -13834,18 +13834,18 @@ func (s *integrationMDMTestSuite) TestSCEPProxy() {
 	res = s.DoRawWithHeaders("GET", apple_mdm.SCEPProxyPath+identifier, nil, http.StatusBadRequest, nil, "operation", "GetCACaps")
 	errBody, err = io.ReadAll(res.Body)
 	require.NoError(t, err)
-	assert.Contains(t, string(errBody), eeservice.MessageSCEPProxyNotConfigured)
+	assert.Contains(t, string(errBody), service.MessageSCEPProxyNotConfigured)
 	// Provide SCEP operation (GetCACerts)
 	res = s.DoRawWithHeaders("GET", apple_mdm.SCEPProxyPath+identifier, nil, http.StatusBadRequest, nil, "operation", "GetCACert")
 	errBody, err = io.ReadAll(res.Body)
 	require.NoError(t, err)
-	assert.Contains(t, string(errBody), eeservice.MessageSCEPProxyNotConfigured)
+	assert.Contains(t, string(errBody), service.MessageSCEPProxyNotConfigured)
 	// Provide SCEP operation (PKIOperation)
 	res = s.DoRawWithHeaders("GET", apple_mdm.SCEPProxyPath+identifier, nil, http.StatusBadRequest, nil, "operation", "PKIOperation",
 		"message", message)
 	errBody, err = io.ReadAll(res.Body)
 	require.NoError(t, err)
-	assert.Contains(t, string(errBody), eeservice.MessageSCEPProxyNotConfigured)
+	assert.Contains(t, string(errBody), service.MessageSCEPProxyNotConfigured)
 	// Provide SCEP operation (GetNextCACert)
 	res = s.DoRawWithHeaders("GET", apple_mdm.SCEPProxyPath+identifier, nil, http.StatusBadRequest, nil, "operation", "GetNextCACert")
 	errBody, err = io.ReadAll(res.Body)
@@ -13961,7 +13961,7 @@ func (s *integrationMDMTestSuite) TestSCEPProxy() {
 		{
 			HostUUID:             host.UUID,
 			ProfileUUID:          profileUUID,
-			ChallengeRetrievedAt: ptr.Time(time.Now().Add(-eeservice.NDESChallengeInvalidAfter)),
+			ChallengeRetrievedAt: ptr.Time(time.Now().Add(-service.NDESChallengeInvalidAfter)),
 			Type:                 mobiuss.CAConfigNDES,
 			CAName:               "NDES",
 		},
@@ -13978,7 +13978,7 @@ func (s *integrationMDMTestSuite) TestSCEPProxy() {
 		{
 			HostUUID:             host.UUID,
 			ProfileUUID:          profileUUID,
-			ChallengeRetrievedAt: ptr.Time(time.Now().Add(-eeservice.NDESChallengeInvalidAfter + time.Minute)),
+			ChallengeRetrievedAt: ptr.Time(time.Now().Add(-service.NDESChallengeInvalidAfter + time.Minute)),
 			Type:                 mobiuss.CAConfigNDES,
 			CAName:               "NDES",
 		},

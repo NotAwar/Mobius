@@ -11,35 +11,35 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-kit/kit/endpoint"
+	kitlog "github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/notawar/mobius/pkg/spec"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
-	"github.com/go-kit/kit/endpoint"
-	kitlog "github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 )
 
 const (
-	starterLibraryURL = "https://raw.githubusercontent.com/mobiusmdm/mobius/main/docs/01-Using-Mobius/starter-library/starter-library.yml"
-	scriptsBaseURL    = "https://raw.githubusercontent.com/mobiusmdm/mobius/main/"
+	starterLibraryURL = "https://raw.githubusercontent.com/notawar/mobius/main/docs/01-Using-Mobius/starter-library/starter-library.yml"
+	scriptsBaseURL    = "https://raw.githubusercontent.com/notawar/mobius/main/"
 )
 
 type setupRequest struct {
 	Admin        *mobius.UserPayload `json:"admin"`
 	OrgInfo      *mobius.OrgInfo     `json:"org_info"`
-	ServerURL    *string            `json:"server_url,omitempty"`
-	EnrollSecret *string            `json:"osquery_enroll_secret,omitempty"`
+	ServerURL    *string             `json:"server_url,omitempty"`
+	EnrollSecret *string             `json:"osquery_enroll_secret,omitempty"`
 }
 
 type setupResponse struct {
 	Admin        *mobius.User    `json:"admin,omitempty"`
 	OrgInfo      *mobius.OrgInfo `json:"org_info,omitempty"`
-	ServerURL    *string        `json:"server_url"`
-	EnrollSecret *string        `json:"osquery_enroll_secret"`
-	Token        *string        `json:"token,omitempty"`
-	Err          error          `json:"error,omitempty"`
+	ServerURL    *string         `json:"server_url"`
+	EnrollSecret *string         `json:"osquery_enroll_secret"`
+	Token        *string         `json:"token,omitempty"`
+	Err          error           `json:"error,omitempty"`
 }
 
 type applyGroupFunc func(context.Context, *spec.Group) error

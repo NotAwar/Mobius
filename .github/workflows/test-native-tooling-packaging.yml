@@ -1,5 +1,5 @@
 # This workflow tests generation of mobiusdaemon packages with the
-# `mobiusmdm/mobiuscli` Docker image.
+# `ghcr.io/notawar/mobiuscli` Container image.
 name: Test native tooling packaging
 
 on:
@@ -15,7 +15,7 @@ on:
       - 'server/service/**.go'
       - 'server/context/**.go'
       - 'orbit/**.go'
-      - 'ee/mobiuscli/**.go'
+      - 'tools/mobiuscli/**.go'
       - 'tools/mobiuscli-docker/**'
       - 'tools/wix-docker/**'
       - 'tools/bomutils-docker/**'
@@ -43,7 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        # build_type == 'remote' means this job will test the mobiusmdm/mobiuscli:latest from Docker Hub.
+        # build_type == 'remote' means this job will test the ghcr.io/notawar/mobiuscli:latest from GitHub Packages.
         # build_type == 'local' means this job will build the the image locally.
         #
         # TODO(lucas): We should only run 'remote' on schedule
@@ -64,38 +64,38 @@ jobs:
       with:
         go-version-file: 'go.mod'
 
-    - name: Build mobiusmdm/wix
+    - name: Build ghcr.io/notawar/wix
       if: ${{ matrix.build_type ==  'local' }}
       run: make wix-docker
 
-    - name: Build mobiusmdm/bomutils
+    - name: Build ghcr.io/notawar/bomutils
       if: ${{ matrix.build_type ==  'local' }}
       run: make bomutils-docker
 
-    - name: Build mobiusmdm/mobiuscli
+    - name: Build ghcr.io/notawar/mobiuscli
       if: ${{ matrix.build_type ==  'local' }}
       run: make mobiuscli-docker
 
     - name: Build DEB
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type deb --enroll-secret=foo --mobius-url=https://localhost:8080
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type deb --enroll-secret=foo --mobius-url=https://localhost:8080
 
     - name: Build DEB with Mobius Desktop
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type deb --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type deb --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
 
     - name: Build RPM
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type rpm --enroll-secret=foo --mobius-url=https://localhost:8080
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type rpm --enroll-secret=foo --mobius-url=https://localhost:8080
 
     - name: Build RPM with Mobius Desktop
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type rpm --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type rpm --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
 
     - name: Build MSI
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type msi --enroll-secret=foo --mobius-url=https://localhost:8080
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type msi --enroll-secret=foo --mobius-url=https://localhost:8080
 
     - name: Build MSI with Mobius Desktop
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type msi --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type msi --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
 
     - name: Build PKG
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type pkg --enroll-secret=foo --mobius-url=https://localhost:8080
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type pkg --enroll-secret=foo --mobius-url=https://localhost:8080
 
     - name: Build PKG with Mobius Desktop
-      run: docker run -v "$(pwd):/build" mobiusmdm/mobiuscli package --type pkg --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop
+      run: docker run -v "$(pwd):/build" ghcr.io/notawar/mobiuscli package --type pkg --enroll-secret=foo --mobius-url=https://localhost:8080 --mobius-desktop

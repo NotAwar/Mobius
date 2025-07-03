@@ -13,12 +13,8 @@ The `releaser.sh` script automates the building and releasing of mobiusdaemon an
 graph LR;
 subgraph Workstation;
     releaser[releaser.sh];
-    1password("<div><img src='../../website/assets/images/articles/tales-from-mobius-security-securing-1password-cover-1600x900@2x.jpg' /></div>1Password");
-    usb("<div><img src='../../website/assets/images/articles/config-less-mobiusdaemon-agent-deployment-1600x900@2x.png' /></div>USB flash drive");
     repository[(./repository)];
 end;
-r2_staging("<div><img src='../../website/assets/images/app-icon-cloudflare-warp-60x60@2x.png' /></div>r2://updates-staging");
-github("<div><img src='../../website/assets/images/github-mark-white-24x24@2x.png' /></div>Github Action\n(signing and notarization)");
 
 usb--(1) copy encrypted signing keys-->releaser;
 1password--(2) get passphrases to decrypt encrypted signing keys-->releaser;

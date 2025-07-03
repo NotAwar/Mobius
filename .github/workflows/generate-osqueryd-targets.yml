@@ -1,4 +1,4 @@
-name: Generate osqueryd targets for Mobiusd
+name: Generate osqueryd targets for MobiusDaemon
 
 on:
   push:

@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/ee/server/service/digicert"
+	"github.com/go-kit/log"
 	"github.com/notawar/mobius/pkg/optjson"
 	"github.com/notawar/mobius/server"
 	"github.com/notawar/mobius/server/config"
@@ -29,8 +29,8 @@ import (
 	nanodep_mock "github.com/notawar/mobius/server/mock/nanodep"
 	scep_mock "github.com/notawar/mobius/server/mock/scep"
 	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service/digicert"
 	"github.com/notawar/mobius/server/test"
-	"github.com/go-kit/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -1,4 +1,4 @@
-name: Build mobiuscli docker dependencies and check vulnerabilities
+name: Build mobiuscli container dependencies and check vulnerabilities
 
 on:
   workflow_dispatch:
@@ -21,8 +21,9 @@ permissions:
 jobs:
   build-and-check:
     runs-on: ubuntu-22.04
-    environment: Docker Hub
     permissions:
+      packages: write
+      contents: read
       id-token: write # for aws-actions/configure-aws-credentials
     steps:
       - name: Checkout
@@ -33,13 +34,13 @@ jobs:
         with:
           go-version-file: "go.mod"
 
-      - name: Build mobiusmdm/wix
+      - name: Build ghcr.io/notawar/wix
         run: make wix-docker
 
-      - name: Build mobiusmdm/bomutils
+      - name: Build ghcr.io/notawar/bomutils
         run: make bomutils-docker
 
-      - name: Build mobiusmdm/mobiuscli
+      - name: Build ghcr.io/notawar/mobiuscli
         run: make mobiuscli-docker
 
       - name: List VEX files
@@ -48,7 +49,7 @@ jobs:
           echo "VEX_FILES=$(ls -1 ./security/vex/mobiuscli/ | while IFS= read -r line; do echo "./security/vex/mobiuscli/$line"; done | tr '\n' ',' | sed 's/.$//')" >> $GITHUB_OUTPUT
 
       # We use the trivy command and not the github action because it doesn't support loading VEX files yet.
-      - name: Run Trivy vulnerability scanner on mobiusmdm/mobiuscli
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/mobiuscli
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -66,28 +67,28 @@ jobs:
             --pkg-types=os,library \
             --severity=HIGH,CRITICAL \
             --vex="${{ steps.generate_vex_files.outputs.VEX_FILES }}" \
-            mobiusmdm/mobiuscli
+            ghcr.io/notawar/mobiuscli
 
-      - name: Run Trivy vulnerability scanner on mobiusmdm/wix
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/wix
         uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # 0.30.0
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: "mobiusmdm/wix"
+          image-ref: "ghcr.io/notawar/wix"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL"
 
-      - name: Run Trivy vulnerability scanner on mobiusmdm/bomutils
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/bomutils
         uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # 0.30.0
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: "mobiusmdm/bomutils"
+          image-ref: "ghcr.io/notawar/bomutils"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true

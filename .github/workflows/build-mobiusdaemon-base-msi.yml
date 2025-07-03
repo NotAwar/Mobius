@@ -67,12 +67,7 @@ jobs:
     with:
       filename: mobiusdaemon-base.msi
       upload_name: mobiusdaemon-base-msi
-    secrets:
-      DIGICERT_KEYLOCKER_CERTIFICATE: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE }}
-      DIGICERT_KEYLOCKER_PASSWORD: ${{ secrets.DIGICERT_KEYLOCKER_PASSWORD }}
-      DIGICERT_KEYLOCKER_HOST_URL: ${{ secrets.DIGICERT_KEYLOCKER_HOST_URL }}
-      DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
-      DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT }}
+    # Note: DigiCert signing removed - using GitHub's free signing/attestation instead
 
   generate:
     needs: [build, code-sign]

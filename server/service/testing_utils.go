@@ -15,16 +15,17 @@ import (
 	"time"
 
 	"github.com/WatchBeam/clock"
-	// "github.com/notawar/mobius/ee/server/scim" // Removed enterprise dependency
-	// eeservice "github.com/notawar/mobius/ee/server/service" // Removed enterprise dependency
-	// "github.com/notawar/mobius/ee/server/service/digicert" // Removed enterprise dependency
+	// "github.com/notawar/mobius/server/scim" // Removed enterprise dependency
+	// service "github.com/notawar/mobius/server/service" // Removed enterprise dependency
+	// "github.com/notawar/mobius/server/service/digicert" // Removed enterprise dependency
+	kitlog "github.com/go-kit/log"
+	"github.com/google/uuid"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/contexts/license"
 	"github.com/notawar/mobius/server/datastore/cached_mysql"
 	"github.com/notawar/mobius/server/datastore/filesystem"
 	"github.com/notawar/mobius/server/errorstore"
-	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/logging"
 	"github.com/notawar/mobius/server/mail"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
@@ -34,6 +35,7 @@ import (
 	"github.com/notawar/mobius/server/mdm/nanomdm/push"
 	nanomdm_push "github.com/notawar/mobius/server/mdm/nanomdm/push"
 	scep_depot "github.com/notawar/mobius/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/mobius"
 	nanodep_mock "github.com/notawar/mobius/server/mock/nanodep"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/service/async"
@@ -43,8 +45,6 @@ import (
 	"github.com/notawar/mobius/server/service/redis_lock"
 	"github.com/notawar/mobius/server/sso"
 	"github.com/notawar/mobius/server/test"
-	kitlog "github.com/go-kit/log"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/throttled/throttled/v2"
@@ -64,13 +64,13 @@ func newTestServiceWithConfig(t *testing.T, ds mobius.Datastore, mobiusConfig co
 	logger := kitlog.NewNopLogger()
 
 	var (
-		failingPolicySet                mobius.FailingPolicySet        = NewMemFailingPolicySet()
-		enrollHostLimiter               mobius.EnrollHostLimiter       = nopEnrollHostLimiter{}
+		failingPolicySet                mobius.FailingPolicySet       = NewMemFailingPolicySet()
+		enrollHostLimiter               mobius.EnrollHostLimiter      = nopEnrollHostLimiter{}
 		depStorage                      nanodep_storage.AllDEPStorage = &nanodep_mock.Storage{}
-		mailer                          mobius.MailService             = &mockMailService{SendEmailFn: func(e mobius.Email) error { return nil }}
+		mailer                          mobius.MailService            = &mockMailService{SendEmailFn: func(e mobius.Email) error { return nil }}
 		c                               clock.Clock                   = clock.C
-		scepConfigService               mobius.SCEPConfigService       = nil // eeservice.NewSCEPConfigService(logger, nil) // Removed enterprise dependency
-		digiCertService                 mobius.DigiCertService         = nil // digicert.NewService(digicert.WithLogger(logger)) // Removed enterprise dependency
+		scepConfigService               mobius.SCEPConfigService      = nil // service.NewSCEPConfigService(logger, nil) // Removed enterprise dependency
+		digiCertService                 mobius.DigiCertService        = nil // digicert.NewService(digicert.WithLogger(logger)) // Removed enterprise dependency
 		conditionalAccessMicrosoftProxy ConditionalAccessMicrosoftProxy
 
 		mdmStorage            mobius.MDMAppleStore
@@ -348,7 +348,7 @@ type TestServerOpts struct {
 	Task                            *async.Task
 	EnrollHostLimiter               mobius.EnrollHostLimiter
 	Is                              mobius.InstallerStore
-	MobiusConfig                     *config.MobiusConfig
+	MobiusConfig                    *config.MobiusConfig
 	MDMStorage                      mobius.MDMAppleStore
 	DEPStorage                      nanodep_storage.AllDEPStorage
 	SCEPStorage                     scep_depot.Depot
@@ -435,7 +435,7 @@ func RunServerForTestsWithServiceWithDS(t *testing.T, ctx context.Context, ds mo
 			// Enterprise SCEP service removed - skip SCEP proxy configuration
 			/*
 				if opts[0].SCEPConfigService != nil {
-					scepConfig, ok := opts[0].SCEPConfigService.(*eeservice.SCEPConfigService)
+					scepConfig, ok := opts[0].SCEPConfigService.(*service.SCEPConfigService)
 					if ok {
 						// In tests, we share the same Timeout pointer between SCEPConfigService and SCEPProxy
 						timeout = scepConfig.Timeout

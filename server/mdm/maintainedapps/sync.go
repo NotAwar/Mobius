@@ -10,28 +10,28 @@ import (
 	"os"
 	"time"
 
-	// ma "github.com/notawar/mobius/ee/maintained-apps" // Removed enterprise dependency
+	// ma "github.com/notawar/mobius/maintained-apps" // Removed enterprise dependency
+	kitlog "github.com/go-kit/log"
 	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/mobius"
-	kitlog "github.com/go-kit/log"
 )
 
 // Local replacement for enterprise types
 type FMAManifestFile struct {
-	Versions []FMAVersion          `json:"versions"`
-	Refs     map[string]string     `json:"refs"`
+	Versions []FMAVersion      `json:"versions"`
+	Refs     map[string]string `json:"refs"`
 }
 
 type FMAVersion struct {
-	Version              string   `json:"version"`
-	Slug                 string   `json:"slug"`
-	InstallerURL         string   `json:"installer_url"`
-	SHA256               string   `json:"sha256"`
-	InstallScriptRef     string   `json:"install_script_ref"`
-	UninstallScriptRef   string   `json:"uninstall_script_ref"`
-	DefaultCategories    []string `json:"default_categories"`
-	Queries              FMAQueries `json:"queries"`
+	Version            string     `json:"version"`
+	Slug               string     `json:"slug"`
+	InstallerURL       string     `json:"installer_url"`
+	SHA256             string     `json:"sha256"`
+	InstallScriptRef   string     `json:"install_script_ref"`
+	UninstallScriptRef string     `json:"uninstall_script_ref"`
+	DefaultCategories  []string   `json:"default_categories"`
+	Queries            FMAQueries `json:"queries"`
 }
 
 type FMAQueries struct {
@@ -55,7 +55,7 @@ type AppsList struct {
 	Apps    []appListing `json:"apps"`
 }
 
-const fmaOutputsBase = "https://raw.githubusercontent.com/mobiusmdm/mobius/refs/heads/main/ee/maintained-apps/outputs"
+const fmaOutputsBase = "https://raw.githubusercontent.com/notawar/mobius/refs/heads/main/maintained-apps/outputs"
 
 // Refresh fetches the latest information about maintained apps from FMA's
 // apps list on GitHub and updates the Mobius database with the new information.

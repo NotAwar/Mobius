@@ -119,8 +119,8 @@ dockers:
   - mobiuscli
   dockerfile: tools/mobius-docker/Dockerfile
   image_templates:
-  - "mobiusmdm/mobius:{{ .Tag }}"
-  - "mobiusmdm/mobius:v{{ .Major }}"
+  - "ghcr.io/notawar/mobius:{{ .Tag }}"
+  - "ghcr.io/notawar/mobius:v{{ .Major }}"
 
 - goos: linux
   goarch: amd64
@@ -130,8 +130,8 @@ dockers:
   build_flag_templates:
   - "--build-arg=binpath=mobiuscli"
   image_templates:
-  - "mobiusmdm/mobiuscli:{{ .Tag }}"
-  - "mobiusmdm/mobiuscli:v{{ .Major }}"
+  - "ghcr.io/notawar/mobiuscli:{{ .Tag }}"
+  - "ghcr.io/notawar/mobiuscli:v{{ .Major }}"
 
 checksum:
   name_template: "checksums.txt"

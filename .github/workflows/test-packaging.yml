@@ -19,7 +19,7 @@ on:
       - 'pkg/**.go'
       - 'server/context/**.go'
       - 'orbit/**.go'
-      - 'ee/mobiuscli/**.go'
+      - 'tools/mobiuscli/**.go'
       - 'tools/mobiuscli-docker/**'
       - 'tools/wix-docker/**'
       - 'tools/bomutils-docker/**'
@@ -30,7 +30,7 @@ on:
       - 'pkg/**.go'
       - 'server/context/**.go'
       - 'orbit/**.go'
-      - 'ee/mobiuscli/**.go'
+      - 'tools/mobiuscli/**.go'
       - 'tools/mobiuscli-docker/**'
       - 'tools/wix-docker/**'
       - 'tools/bomutils-docker/**'
@@ -61,17 +61,17 @@ jobs:
     steps:
  
 
-      - name: Pull mobiusmdm/wix
+      - name: Pull ghcr.io/notawar/wix
         if: ${{ !startsWith(matrix.os, 'macos') }}
         # Run in background while other steps complete to speed up the workflow
         run: |
-          docker pull mobiusmdm/wix:latest &
+          docker pull ghcr.io/notawar/wix:latest &
 
-      - name: Pull mobiusmdm/bomutils
+      - name: Pull ghcr.io/notawar/bomutils
         if: ${{ !startsWith(matrix.os, 'macos') }}
         # Run in background while other steps complete to speed up the workflow
         run: |
-          docker pull mobiusmdm/bomutils:latest &
+          docker pull ghcr.io/notawar/bomutils:latest &
 
       - name: Checkout Code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3

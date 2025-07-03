@@ -21,7 +21,6 @@ permissions:
 jobs:
   goreleaser:
     runs-on: ubuntu-22.04-4-cores
-    environment: Docker Hub
     permissions:
       contents: write
       id-token: write
@@ -35,11 +34,12 @@ jobs:
         with:
           fetch-depth: 0 # Needed for goreleaser
 
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Go
         uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
@@ -100,9 +100,9 @@ jobs:
         continue-on-error: true
         id: image_digests
         run: |
-          digest_mobius=$(cat ./dist/artifacts.json | jq -r 'first(.[]|select(.type == "Published Docker Image" and (.name == "mobiusmdm/mobius:${{ steps.docker.outputs.tag }}")) | select(. != null)|.extra.Digest)')
+          digest_mobius=$(cat ./dist/artifacts.json | jq -r 'first(.[]|select(.type == "Published Docker Image" and (.name == "ghcr.io/notawar/mobius:${{ steps.docker.outputs.tag }}")) | select(. != null)|.extra.Digest)')
           echo "digest_mobius=$digest_mobius" >> "$GITHUB_OUTPUT"
-          digest_mobiuscli=$(cat ./dist/artifacts.json | jq -r 'first(.[]|select(.type == "Published Docker Image" and (.name  == "mobiusmdm/mobiuscli:${{ steps.docker.outputs.tag }}")) | select(. != null)|.extra.Digest)')
+          digest_mobiuscli=$(cat ./dist/artifacts.json | jq -r 'first(.[]|select(.type == "Published Docker Image" and (.name  == "ghcr.io/notawar/mobiuscli:${{ steps.docker.outputs.tag }}")) | select(. != null)|.extra.Digest)')
           echo "digest_mobiuscli=$digest_mobiuscli" >> "$GITHUB_OUTPUT"
 
       - name: Attest Mobius image
@@ -110,7 +110,7 @@ jobs:
         continue-on-error: true
         with:
           subject-digest: ${{steps.image_digests.outputs.digest_mobius}}
-          subject-name: "docker.io/mobiusmdm/mobius"
+          subject-name: "ghcr.io/notawar/mobius"
           push-to-registry: true
 
       - name: Attest mobiuscli image
@@ -118,38 +118,24 @@ jobs:
         continue-on-error: true
         with:
           subject-digest: ${{steps.image_digests.outputs.digest_mobiuscli}}
-          subject-name: "docker.io/mobiusmdm/mobiuscli"
+          subject-name: "ghcr.io/notawar/mobiuscli"
           push-to-registry: true
 
-      - name: Update mobiusmdm/mobius:latest and mobiusmdm/mobiuscli:latest
+      - name: Update latest tags
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          highest_release=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/mobiusmdm/mobius/releases | jq -r '.[].tag_name' | sort -r | head -n 1 | sed -e "s/^mobius-//")
+          highest_release=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/notawar/mobius/releases | jq -r '.[].tag_name' | sort -r | head -n 1 | sed -e "s/^mobius-//")
           tag=${{ steps.docker.outputs.tag }}
           if [[ $(printf "$highest_release\n$tag" | sort -r | head -n 1) = "$tag" ]]; then
-            docker tag mobiusmdm/mobius:$tag mobiusmdm/mobius:latest
-            docker push mobiusmdm/mobius:latest
-            docker tag mobiusmdm/mobiuscli:$tag mobiusmdm/mobiuscli:latest
-            docker push mobiusmdm/mobiuscli:latest
+            docker tag ghcr.io/notawar/mobius:$tag ghcr.io/notawar/mobius:latest
+            docker push ghcr.io/notawar/mobius:latest
+            docker tag ghcr.io/notawar/mobiuscli:$tag ghcr.io/notawar/mobiuscli:latest
+            docker push ghcr.io/notawar/mobiuscli:latest
           else
-            echo "Skipping tagging of mobiusmdm/mobius:latest and mobiusmdm/mobiuscli:latest because existing release $highest_release is higher than $tag"
+            echo "Skipping tagging of ghcr.io/notawar/mobius:latest and ghcr.io/notawar/mobiuscli:latest because existing release $highest_release is higher than $tag"
           fi
 
       - name: List tags for push
         run: |
           echo "The following TAGs are to be pushed: ${{ steps.docker.outputs.TAG }}"
-
-      - name: Login to quay.io
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          registry: quay.io
-          username: mobiusmdm+mobiusreleaser
-          password: ${{ secrets.QUAY_REGISTRY_PASSWORD }}
-
-      - name: Tag and push to quay.io
-        run: |
-          for TAG in ${{ steps.docker.outputs.TAG }}; do
-            docker tag mobiusmdm/mobius:${TAG} quay.io/mobiusmdm/mobius:${TAG}
-            docker push quay.io/mobiusmdm/mobius:${TAG}
-          done

@@ -5,9 +5,7 @@ on:
     paths:
       - "website/**"
       - "docs/**"
-      - "handbook/**"
       - "schema/**"
-      - "articles/**"
       - ".github/workflows/test-website.yml"
 
 # This allows a subsequently queued workflow run to interrupt previous runs

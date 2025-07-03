@@ -15,7 +15,7 @@ applications:
     mobius prepare --no-prompt=true db && \
     mobius serve
   docker:
-    image: mobiusmdm/mobius:latest
+    image: ghcr.io/notawar/mobius:latest
   services:
     - mobiusmdm-mysql
     - mobiusmdm-redis

@@ -36,7 +36,6 @@ import (
 	"strings"
 
 	"github.com/notawar/mobius/server/mobius"
-	"github.com/pmezard/go-difflib/difflib"
 )
 
 // If you add a new cacheable struct, make sure to add it to this list.
@@ -45,7 +44,6 @@ var cacheableItems = []mobius.Cloner{
 	&mobius.Pack{},
 	&mobius.ScheduledQuery{},
 	&mobius.Features{},
-	&mobius.TeamMDM{},
 	&mobius.Query{},
 	&mobius.MDMProfileSpec{},
 	&mobius.MDMConfigAsset{},

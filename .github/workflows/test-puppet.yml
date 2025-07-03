@@ -39,18 +39,18 @@ jobs:
         fetch-depth: 0
 
     - name: Install Ruby Gems
-      working-directory: ./ee/tools/puppet/mobiusmdm/
+      working-directory: ./tools/puppet/mobiusmdm/
       run: /opt/puppetlabs/pdk/bin/pdk bundle install
 
     - name: Run Tests
-      working-directory: ./ee/tools/puppet/mobiusmdm/
+      working-directory: ./tools/puppet/mobiusmdm/
       run: /opt/puppetlabs/pdk/bin/pdk test unit
 
     - name: Run Rubocop
-      working-directory: ./ee/tools/puppet/mobiusmdm/
+      working-directory: ./tools/puppet/mobiusmdm/
       run: /opt/puppetlabs/pdk/bin/pdk bundle exec rubocop
 
     - name: Run Linter
-      working-directory: ./ee/tools/puppet/mobiusmdm/
+      working-directory: ./tools/puppet/mobiusmdm/
       run: /opt/puppetlabs/pdk/bin/pdk bundle exec puppet-lint .
       

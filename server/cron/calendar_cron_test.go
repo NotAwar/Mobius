@@ -11,14 +11,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/ee/server/calendar"
+	kitlog "github.com/go-kit/log"
+	"github.com/notawar/mobius/server/calendar"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/datastore/redis/redistest"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mock"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/service/redis_lock"
-	kitlog "github.com/go-kit/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

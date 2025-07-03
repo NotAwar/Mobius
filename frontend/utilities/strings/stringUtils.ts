@@ -30,7 +30,7 @@ export const STYLIZATIONS_AND_ACRONYMS = [
   "JSON",
 ];
 
-// mobiusdm.com/handbook/marketing/content-style-guide#sentence-case
+
 /** Does not recognize proper nouns! */
 export const enforceMobiusSentenceCasing = (s: string) => {
   const resArr = s.split(" ").map((word, i) => {

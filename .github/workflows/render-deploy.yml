@@ -4,7 +4,7 @@ name: Render deploy
 #
 # Render (https://render.com/) is hosting 2 Mobius servers that are used by our gitops repos:
 # - https://github.com/notawar/mobius-gitops
-# - https://gitlab.com/mobiusmdm/mobius-gitops
+# - https://gitlab.com/notawar/mobius-gitops
 #
 # The premium server (mobius-gitops-ci-premium) is used by GitHub CI and the free server (mobius-gitops-ci-free) is used by GitLab CI.
 # Both servers share a MySQL service (mobius-gitops-ci-mysql).

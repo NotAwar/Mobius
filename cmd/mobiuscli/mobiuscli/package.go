@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	eemobiuscli "github.com/notawar/mobius/ee/mobiuscli"
+	eemobiuscli "github.com/notawar/mobius/mobiuscli"
 	"github.com/notawar/mobius/orbit/pkg/packaging"
 	"github.com/notawar/mobius/orbit/pkg/update"
 	"github.com/notawar/mobius/pkg/filepath_windows"

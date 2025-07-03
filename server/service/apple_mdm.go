@@ -27,8 +27,12 @@ import (
 	"time"
 
 	"github.com/docker/go-units"
-	// eeservice "github.com/notawar/mobius/ee/server/service" // Removed enterprise dependency
-	// "github.com/notawar/mobius/ee/server/service/digicert" // Removed enterprise dependency
+	// service "github.com/notawar/mobius/server/service" // Removed enterprise dependency
+	// "github.com/notawar/mobius/server/service/digicert" // Removed enterprise dependency
+	kitlog "github.com/go-kit/log"
+	"github.com/go-kit/log/level"
+	"github.com/google/uuid"
+	"github.com/micromdm/plist"
 	"github.com/notawar/mobius/pkg/file"
 	"github.com/notawar/mobius/pkg/optjson"
 	"github.com/notawar/mobius/server"
@@ -38,7 +42,6 @@ import (
 	"github.com/notawar/mobius/server/contexts/license"
 	"github.com/notawar/mobius/server/contexts/logging"
 	"github.com/notawar/mobius/server/contexts/viewer"
-	"github.com/notawar/mobius/server/mobius"
 	mdm_types "github.com/notawar/mobius/server/mdm"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
 	"github.com/notawar/mobius/server/mdm/apple/appmanifest"
@@ -50,14 +53,11 @@ import (
 	"github.com/notawar/mobius/server/mdm/nanomdm/cryptoutil"
 	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 	nano_service "github.com/notawar/mobius/server/mdm/nanomdm/service"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	"github.com/notawar/mobius/server/sso"
 	"github.com/notawar/mobius/server/worker"
-	kitlog "github.com/go-kit/log"
-	"github.com/go-kit/log/level"
-	"github.com/google/uuid"
-	"github.com/micromdm/plist"
 	"github.com/smallstep/pkcs7"
 )
 
@@ -96,7 +96,7 @@ type getMDMAppleCommandResultsRequest struct {
 
 type getMDMAppleCommandResultsResponse struct {
 	Results []*mobius.MDMCommandResult `json:"results,omitempty"`
-	Err     error                     `json:"error,omitempty"`
+	Err     error                      `json:"error,omitempty"`
 }
 
 func (r getMDMAppleCommandResultsResponse) Error() error { return r.Err }
@@ -198,7 +198,7 @@ type listMDMAppleCommandsRequest struct {
 
 type listMDMAppleCommandsResponse struct {
 	Results []*mobius.MDMAppleCommand `json:"results"`
-	Err     error                    `json:"error,omitempty"`
+	Err     error                     `json:"error,omitempty"`
 }
 
 func (r listMDMAppleCommandsResponse) Error() error { return r.Err }
@@ -1005,7 +1005,7 @@ type listMDMAppleConfigProfilesRequest struct {
 
 type listMDMAppleConfigProfilesResponse struct {
 	ConfigProfiles []*mobius.MDMAppleConfigProfile `json:"profiles"`
-	Err            error                          `json:"error,omitempty"`
+	Err            error                           `json:"error,omitempty"`
 }
 
 func (r listMDMAppleConfigProfilesResponse) Error() error { return r.Err }
@@ -1588,7 +1588,7 @@ type listMDMAppleDevicesRequest struct{}
 
 type listMDMAppleDevicesResponse struct {
 	Devices []mobius.MDMAppleDevice `json:"devices"`
-	Err     error                  `json:"error,omitempty"`
+	Err     error                   `json:"error,omitempty"`
 }
 
 func (r listMDMAppleDevicesResponse) Error() error { return r.Err }
@@ -2216,7 +2216,7 @@ type listMDMAppleInstallersRequest struct{}
 
 type listMDMAppleInstallersResponse struct {
 	Installers []mobius.MDMAppleInstaller `json:"installers"`
-	Err        error                     `json:"error,omitempty"`
+	Err        error                      `json:"error,omitempty"`
 }
 
 func (r listMDMAppleInstallersResponse) Error() error { return r.Err }
@@ -2328,9 +2328,9 @@ type getHostProfilesRequest struct {
 }
 
 type getHostProfilesResponse struct {
-	HostID   uint                           `json:"host_id"`
+	HostID   uint                            `json:"host_id"`
 	Profiles []*mobius.MDMAppleConfigProfile `json:"profiles"`
-	Err      error                          `json:"error,omitempty"`
+	Err      error                           `json:"error,omitempty"`
 }
 
 func (r getHostProfilesResponse) Error() error { return r.Err }
@@ -2802,7 +2802,7 @@ type bootstrapPackageMetadataRequest struct {
 }
 
 type bootstrapPackageMetadataResponse struct {
-	Err                             error `json:"error,omitempty"`
+	Err                              error `json:"error,omitempty"`
 	*mobius.MDMAppleBootstrapPackage `json:",omitempty"`
 }
 
@@ -3741,9 +3741,9 @@ type installedApplicationListResult struct {
 	hostUUID      string
 }
 
-func (i *installedApplicationListResult) Raw() []byte                     { return i.raw }
-func (i *installedApplicationListResult) UUID() string                    { return i.uuid }
-func (i *installedApplicationListResult) HostUUID() string                { return i.hostUUID }
+func (i *installedApplicationListResult) Raw() []byte                      { return i.raw }
+func (i *installedApplicationListResult) UUID() string                     { return i.uuid }
+func (i *installedApplicationListResult) HostUUID() string                 { return i.hostUUID }
 func (i *installedApplicationListResult) AvailableApps() []mobius.Software { return i.availableApps }
 
 func NewInstalledApplicationListResult(ctx context.Context, rawResult []byte, uuid, hostUUID string) (InstalledApplicationListResult, error) {
@@ -4384,7 +4384,7 @@ func ReconcileAppleProfiles(
 
 	// Insert variables into profile contents of install targets. Variables may be host-specific.
 	err = preprocessProfileContents(ctx, appConfig, ds,
-		nil, // eeservice.NewSCEPConfigService(logger, nil), // Removed enterprise dependency
+		nil, // service.NewSCEPConfigService(logger, nil), // Removed enterprise dependency
 		nil, // digicert.NewService(digicert.WithLogger(logger)), // Removed enterprise dependency
 		logger, installTargets, profileContents, hostProfilesToInstallMap, userEnrollmentsToHostUUIDsMap)
 	if err != nil {
@@ -6148,7 +6148,7 @@ func (uploadABMTokenRequest) DecodeRequest(ctx context.Context, r *http.Request)
 
 type uploadABMTokenResponse struct {
 	Token *mobius.ABMToken `json:"abm_token,omitempty"`
-	Err   error           `json:"error,omitempty"`
+	Err   error            `json:"error,omitempty"`
 }
 
 func (r uploadABMTokenResponse) Error() error { return r.Err }
@@ -6216,7 +6216,7 @@ func (svc *Service) DeleteABMToken(ctx context.Context, tokenID uint) error {
 ////////////////////////////////////////////////////////////////////////////////
 
 type listABMTokensResponse struct {
-	Err    error             `json:"error,omitempty"`
+	Err    error              `json:"error,omitempty"`
 	Tokens []*mobius.ABMToken `json:"abm_tokens"`
 }
 
@@ -6285,7 +6285,7 @@ type updateABMTokenTeamsRequest struct {
 
 type updateABMTokenTeamsResponse struct {
 	ABMToken *mobius.ABMToken `json:"abm_token,omitempty"`
-	Err      error           `json:"error,omitempty"`
+	Err      error            `json:"error,omitempty"`
 }
 
 func (r updateABMTokenTeamsResponse) Error() error { return r.Err }
@@ -6348,7 +6348,7 @@ func (renewABMTokenRequest) DecodeRequest(ctx context.Context, r *http.Request) 
 
 type renewABMTokenResponse struct {
 	ABMToken *mobius.ABMToken `json:"abm_token,omitempty"`
-	Err      error           `json:"error,omitempty"`
+	Err      error            `json:"error,omitempty"`
 }
 
 func (r renewABMTokenResponse) Error() error { return r.Err }

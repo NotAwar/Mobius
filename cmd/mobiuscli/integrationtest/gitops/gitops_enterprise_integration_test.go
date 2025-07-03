@@ -14,26 +14,26 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli"
-	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli/testing_utils"
-	"github.com/notawar/mobius/cmd/mobiuscli/integrationtest"
-	eeservice "github.com/notawar/mobius/ee/server/service"
-	"github.com/notawar/mobius/ee/server/service/digicert"
-	"github.com/notawar/mobius/server/config"
-	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/datastore/redis/redistest"
-	"github.com/notawar/mobius/server/mobius"
-	appleMdm "github.com/notawar/mobius/server/mdm/apple"
-	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
-	"github.com/notawar/mobius/server/ptr"
-	"github.com/notawar/mobius/server/service"
-	"github.com/notawar/mobius/server/service/integrationtest/scep_server"
-	"github.com/notawar/mobius/server/test"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-json-experiment/json/v1"
 	kitlog "github.com/go-kit/log"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/notawar/mobius/cmd/mobiuscli/integrationtest"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli"
+	"github.com/notawar/mobius/cmd/mobiuscli/mobiuscli/testing_utils"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/datastore/redis/redistest"
+	appleMdm "github.com/notawar/mobius/server/mdm/apple"
+	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/service"
+	service "github.com/notawar/mobius/server/service"
+	"github.com/notawar/mobius/server/service/digicert"
+	"github.com/notawar/mobius/server/service/integrationtest/scep_server"
+	"github.com/notawar/mobius/server/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -90,13 +90,13 @@ func (s *enterpriseIntegrationGitopsTestSuite) SetupSuite() {
 		License: &mobius.LicenseInfo{
 			Tier: mobius.TierPremium,
 		},
-		MobiusConfig:       &mobiusCfg,
+		MobiusConfig:      &mobiusCfg,
 		MDMStorage:        mdmStorage,
 		DEPStorage:        depStorage,
 		SCEPStorage:       scepStorage,
 		Pool:              redisPool,
 		APNSTopic:         "com.apple.mgmt.External.10ac3ce5-4668-4e58-b69a-b2b5ce667589",
-		SCEPConfigService: eeservice.NewSCEPConfigService(kitlog.NewLogfmtLogger(os.Stdout), nil),
+		SCEPConfigService: service.NewSCEPConfigService(kitlog.NewLogfmtLogger(os.Stdout), nil),
 		DigiCertService:   digicert.NewService(),
 	}
 	err = s.DS.InsertMDMConfigAssets(context.Background(), []mobius.MDMConfigAsset{

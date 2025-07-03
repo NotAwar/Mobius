@@ -1,0 +1,89 @@
+/**
+ * importer.less
+ *
+ * By default, new Sails projects are configured to compile this file
+ * from LESS to CSS.  Unlike CSS files, LESS files are not compiled and
+ * included automatically unless they are imported below.
+ *
+ * For more information see:
+ *   https://sailsjs.com/anatomy/assets/styles/importer-less
+ */
+
+// Mixins and variables  (LESS mixins/variables only, no global selectors)
+@import 'mixins-and-variables/index.less';
+
+// Overall layout  (contains global selectors)
+@import 'bootstrap-overrides.less';
+@import 'layout.less';
+@import 'docsearch.less';
+
+// Per-component styles
+@import 'components/stripe-card-element.component.less';
+@import 'components/ajax-button.component.less';
+@import 'components/modal.component.less';
+@import 'components/cloud-error.component.less';
+@import 'components/bar-chart.component.less';
+@import 'components/call-to-action.component.less';
+@import 'components/scrollable-tweets.component.less';
+@import 'components/parallax-city.component.less';
+@import 'components/logo-carousel.component.less';
+@import 'components/animated-arrow-button.component.less';
+@import 'components/docs-nav-and-search.component.less';
+
+// Per-page styles
+@import 'pages/homepage.less';
+@import 'pages/mobiuscli-preview.less';
+@import 'pages/pricing.less';
+@import 'pages/dashboard/welcome.less';
+@import 'pages/entrance/signup.less';
+@import 'pages/entrance/confirmed-email.less';
+@import 'pages/entrance/login.less';
+@import 'pages/entrance/forgot-password.less';
+@import 'pages/entrance/new-password.less';
+@import 'pages/account/account-overview.less';
+@import 'pages/account/edit-password.less';
+@import 'pages/account/edit-profile.less';
+@import 'pages/legal/terms.less';
+@import 'pages/legal/privacy.less';
+@import 'pages/faq.less';
+@import 'pages/contact.less';
+@import 'pages/404.less';
+@import 'pages/500.less';
+@import 'pages/498.less';
+@import 'pages/customers/new-license.less';
+@import 'pages/customers/dashboard.less';
+@import 'pages/try-mobius/sandbox-teleporter.less';
+@import 'pages/try-mobius/sandbox-expired.less';
+@import 'pages/query-detail.less';
+@import 'pages/query-library.less';
+@import 'pages/docs/basic-documentation.less';
+@import 'pages/reports/state-of-device-management.less';
+@import 'pages/admin/email-templates.less';
+@import 'pages/admin/email-preview.less';
+@import 'pages/osquery-table-details.less';
+@import 'pages/connect-vanta.less';
+@import 'pages/vanta-authorization.less';
+@import 'pages/admin/generate-license.less';
+@import 'pages/device-management.less';
+@import 'pages/observability.less';
+@import 'pages/transparency.less';
+@import 'pages/press-kit.less';
+@import 'pages/software-management.less';
+@import 'pages/support.less';
+@import 'pages/try-mobius/waitlist.less';
+@import 'pages/admin/sandbox-waitlist.less';
+@import 'pages/integrations.less';
+@import 'pages/start.less';
+@import 'pages/deals.less';
+@import 'pages/testimonials.less';
+@import 'pages/app-library.less';
+@import 'pages/app-details.less';
+@import 'pages/meetups.less';
+@import 'pages/admin/query-generator.less';
+@import 'pages/vital-details.less';
+@import 'pages/policy-library.less';
+@import 'pages/policy-details.less';
+@import 'pages/os-settings.less';
+@import 'pages/configuration-builder.less';
+@import 'pages/microsoft-proxy/turn-on-mdm.less';
+@import 'pages/microsoft-proxy/remediate.less';

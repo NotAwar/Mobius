@@ -25,13 +25,16 @@ import (
 	"testing"
 	"time"
 
-	ma "github.com/notawar/mobius/ee/maintained-apps"
-	"github.com/notawar/mobius/ee/server/calendar"
-	eeservice "github.com/notawar/mobius/ee/server/service"
+	"github.com/go-kit/log"
+	kitlog "github.com/go-kit/log"
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	ma "github.com/notawar/mobius/maintained-apps"
 	"github.com/notawar/mobius/pkg/file"
 	"github.com/notawar/mobius/pkg/optjson"
 	"github.com/notawar/mobius/pkg/scripts"
 	"github.com/notawar/mobius/server"
+	"github.com/notawar/mobius/server/calendar"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/contexts/license"
 	"github.com/notawar/mobius/server/cron"
@@ -44,15 +47,12 @@ import (
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/pubsub"
+	service "github.com/notawar/mobius/server/service"
 	commonCalendar "github.com/notawar/mobius/server/service/calendar"
 	"github.com/notawar/mobius/server/service/conditional_access_microsoft_proxy"
 	"github.com/notawar/mobius/server/service/redis_lock"
 	"github.com/notawar/mobius/server/service/schedule"
 	"github.com/notawar/mobius/server/test"
-	"github.com/go-kit/log"
-	kitlog "github.com/go-kit/log"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -11297,7 +11297,7 @@ func (s *integrationEnterpriseTestSuite) TestSoftwareInstallerUploadDownloadAndD
 		logger := kitlog.NewLogfmtLogger(os.Stderr)
 
 		// Run the migration when nothing is to be done
-		err = eeservice.UninstallSoftwareMigration(context.Background(), s.ds, s.softwareInstallStore, logger)
+		err = service.UninstallSoftwareMigration(context.Background(), s.ds, s.softwareInstallStore, logger)
 		require.NoError(t, err)
 
 		// check the software installer
@@ -11335,7 +11335,7 @@ func (s *integrationEnterpriseTestSuite) TestSoftwareInstallerUploadDownloadAndD
 		assert.Equal(t, "exit 1", respTitle.SoftwareTitle.SoftwarePackage.UninstallScript)
 
 		// Run the migration
-		err = eeservice.UninstallSoftwareMigration(context.Background(), s.ds, s.softwareInstallStore, logger)
+		err = service.UninstallSoftwareMigration(context.Background(), s.ds, s.softwareInstallStore, logger)
 		require.NoError(t, err)
 
 		// Check package ID and extension
@@ -11368,7 +11368,7 @@ func (s *integrationEnterpriseTestSuite) TestSoftwareInstallerUploadDownloadAndD
 		assert.Equal(t, uninstallScript, respTitle.SoftwareTitle.SoftwarePackage.UninstallScript)
 
 		// Running the migration again causes no issues.
-		err = eeservice.UninstallSoftwareMigration(context.Background(), s.ds, s.softwareInstallStore, logger)
+		err = service.UninstallSoftwareMigration(context.Background(), s.ds, s.softwareInstallStore, logger)
 		require.NoError(t, err)
 
 		// delete the installer

@@ -5,14 +5,14 @@ import (
 	"testing"
 	"time"
 
-	eeservice "github.com/notawar/mobius/ee/server/service"
+	"github.com/jmoiron/sqlx"
 	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
 	"github.com/notawar/mobius/server/contexts/viewer"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mock"
 	"github.com/notawar/mobius/server/ptr"
+	service "github.com/notawar/mobius/server/service"
 	"github.com/notawar/mobius/server/test"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 )
 
@@ -169,7 +169,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 
 	t.Run("validate no update", func(t *testing.T) {
 		t.Run("no auth context", func(t *testing.T) {
-			_, err := eeservice.ValidateSoftwareLabels(context.Background(), svc, nil, nil)
+			_, err := service.ValidateSoftwareLabels(context.Background(), svc, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -177,7 +177,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 		ctx = authz_ctx.NewContext(ctx, &authCtx)
 
 		t.Run("no auth checked", func(t *testing.T) {
-			_, err := eeservice.ValidateSoftwareLabels(ctx, svc, nil, nil)
+			_, err := service.ValidateSoftwareLabels(ctx, svc, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -287,7 +287,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 		}
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
-				got, err := eeservice.ValidateSoftwareLabels(ctx, svc, tt.payloadIncludeAny, tt.payloadExcludeAny)
+				got, err := service.ValidateSoftwareLabels(ctx, svc, tt.payloadIncludeAny, tt.payloadExcludeAny)
 				if tt.expectError != "" {
 					require.Error(t, err)
 					require.Contains(t, err.Error(), tt.expectError)
@@ -303,7 +303,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 
 	t.Run("validate update", func(t *testing.T) {
 		t.Run("no auth context", func(t *testing.T) {
-			_, _, err := eeservice.ValidateSoftwareLabelsForUpdate(context.Background(), svc, nil, nil, nil)
+			_, _, err := service.ValidateSoftwareLabelsForUpdate(context.Background(), svc, nil, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -311,7 +311,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 		ctx = authz_ctx.NewContext(ctx, &authCtx)
 
 		t.Run("no auth checked", func(t *testing.T) {
-			_, _, err := eeservice.ValidateSoftwareLabelsForUpdate(ctx, svc, nil, nil, nil)
+			_, _, err := service.ValidateSoftwareLabelsForUpdate(ctx, svc, nil, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -429,7 +429,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
-				shouldUpate, got, err := eeservice.ValidateSoftwareLabelsForUpdate(ctx, svc, tt.existingInstaller, tt.payloadIncludeAny, tt.payloadExcludeAny)
+				shouldUpate, got, err := service.ValidateSoftwareLabelsForUpdate(ctx, svc, tt.existingInstaller, tt.payloadIncludeAny, tt.payloadExcludeAny)
 				if tt.expectError != "" {
 					require.Error(t, err)
 					require.Contains(t, err.Error(), tt.expectError)

@@ -11,18 +11,21 @@ import (
 	"strings"
 	"time"
 
+	kitlog "github.com/go-kit/log"
+	"github.com/go-kit/log/level"
+	"github.com/hashicorp/go-multierror"
 	"github.com/notawar/mobius/server"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/contexts/license"
 	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mdm"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
 	"github.com/notawar/mobius/server/mdm/apple/vpp"
 	"github.com/notawar/mobius/server/mdm/assets"
 	maintained_apps "github.com/notawar/mobius/server/mdm/maintainedapps"
 	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/policies"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/service"
@@ -37,9 +40,6 @@ import (
 	"github.com/notawar/mobius/server/vulnerabilities/utils"
 	"github.com/notawar/mobius/server/webhooks"
 	"github.com/notawar/mobius/server/worker"
-	kitlog "github.com/go-kit/log"
-	"github.com/go-kit/log/level"
-	"github.com/hashicorp/go-multierror"
 )
 
 func errHandler(ctx context.Context, logger kitlog.Logger, msg string, err error) {
@@ -216,9 +216,9 @@ func scanVulnerabilities(
 			mapper := webhooks.NewMapper()
 			// Enterprise webhook features removed
 			/*
-			if license.IsPremium(ctx) {
-				mapper = eewebhooks.NewMapper()
-			}
+				if license.IsPremium(ctx) {
+					mapper = eewebhooks.NewMapper()
+				}
 			*/
 			// send recent vulnerabilities via webhook
 			if err := webhooks.TriggerVulnerabilitiesWebhook(
@@ -1486,7 +1486,7 @@ func cronUninstallSoftwareMigration(
 		schedule.WithRunOnce(true),
 		schedule.WithJob(name, func(ctx context.Context) error {
 			// Enterprise software uninstall migration removed
-			return nil // eeservice.UninstallSoftwareMigration(ctx, ds, softwareInstallStore, logger)
+			return nil // service.UninstallSoftwareMigration(ctx, ds, softwareInstallStore, logger)
 		}),
 	)
 	return s, nil

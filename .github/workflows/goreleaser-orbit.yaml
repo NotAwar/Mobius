@@ -200,12 +200,7 @@ jobs:
     with:
       filename: orbit.exe
       upload_name: orbit-windows
-    secrets:
-      DIGICERT_KEYLOCKER_CERTIFICATE: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE }}
-      DIGICERT_KEYLOCKER_PASSWORD: ${{ secrets.DIGICERT_KEYLOCKER_PASSWORD }}
-      DIGICERT_KEYLOCKER_HOST_URL: ${{ secrets.DIGICERT_KEYLOCKER_HOST_URL }}
-      DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
-      DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT }}
+    # Note: DigiCert signing removed - using GitHub's free signing/attestation instead
 
   goreleaser-windows-arm64:
     runs-on: windows-2022
@@ -253,9 +248,4 @@ jobs:
       filename: orbit.exe
       upload_name: orbit-windows-arm64
       download_name: unsigned-windows-arm64
-    secrets:
-      DIGICERT_KEYLOCKER_CERTIFICATE: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE }}
-      DIGICERT_KEYLOCKER_PASSWORD: ${{ secrets.DIGICERT_KEYLOCKER_PASSWORD }}
-      DIGICERT_KEYLOCKER_HOST_URL: ${{ secrets.DIGICERT_KEYLOCKER_HOST_URL }}
-      DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
-      DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT: ${{ secrets.DIGICERT_KEYLOCKER_CERTIFICATE_FINGERPRINT }}
+    # Note: DigiCert signing removed - using GitHub's free signing/attestation instead

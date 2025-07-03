@@ -35,7 +35,6 @@ var zendeskTemplates = struct {
 
 	// Zendesk uses markdown for formatting. Some reference documentation about
 	// it can be found here:
-	// https://support.zendesk.com/hc/en-us/articles/4408846544922-Formatting-text-with-Markdown
 	VulnDescription: template.Must(template.New("").Funcs(template.FuncMap{
 		// CISAKnownExploit is *bool, so any condition check on it in the template
 		// will test if nil or not, and not its actual boolean value. Hence, "deref".

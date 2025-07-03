@@ -1,4 +1,4 @@
-name: Check critical vulnerabilities in released docker images
+name: Check critical vulnerabilities in released GitHub Package images
 
 on:
   workflow_dispatch:
@@ -22,7 +22,8 @@ permissions:
 jobs:
   build-and-check:
     runs-on: ubuntu-22.04
-    environment: Docker Hub
+    permissions:
+      packages: read
     steps:
  
 
@@ -39,11 +40,11 @@ jobs:
         run: |
           echo "MOBIUS_LATEST_RELEASES=$(go run ./tools/github-releases --last-minor-releases 5)" >> $GITHUB_OUTPUT
 
-      - name: Pull docker images
+      - name: Pull container images
         run: |
           RELEASES="${{ steps.get_latest_releases.outputs.MOBIUS_LATEST_RELEASES }}"
           for version in $RELEASES; do
-            docker pull mobiusmdm/mobius:$version
+            docker pull ghcr.io/notawar/mobius:$version
           done
 
       - name: List mobius VEX files
@@ -55,7 +56,7 @@ jobs:
 
       # We use the trivy command and not the github action because it doesn't support loading
       # VEX files yet and looks like we can't run the action on multiple images.
-      - name: Run trivy vulnerability scanner on mobiusmdm/mobius images
+      - name: Run trivy vulnerability scanner on ghcr.io/notawar/mobius images
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -74,7 +75,7 @@ jobs:
               --pkg-types=os,library \
               --severity=CRITICAL \
               --vex="${{ steps.generate_mobius_vex_files.outputs.MOBIUS_VEX_FILES }}" \
-              mobiusmdm/mobius:$version
+              ghcr.io/notawar/mobius:$version
           done
 
       - name: List mobiuscli VEX files
@@ -85,7 +86,7 @@ jobs:
           echo "MOBIUSCTL_VEX_FILES=$VEX_FILES" >> $GITHUB_OUTPUT
 
       # We use the trivy command and not the github action because it doesn't support loading VEX files yet.
-      - name: Run trivy vulnerability scanner on latest released mobiusmdm/mobiuscli image
+      - name: Run trivy vulnerability scanner on latest released ghcr.io/notawar/mobiuscli image
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -95,4 +96,4 @@ jobs:
             --pkg-types=os,library \
             --severity=CRITICAL \
             --vex="${{ steps.generate_mobiuscli_vex_files.outputs.MOBIUSCTL_VEX_FILES }}" \
-            mobiusmdm/mobiuscli:latest
+            ghcr.io/notawar/mobiuscli:latest

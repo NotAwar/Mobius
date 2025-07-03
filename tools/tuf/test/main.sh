@@ -24,16 +24,16 @@ if { [ -n "$GENERATE_PKG" ] || [ -n "$GENERATE_DEB" ] || [ -n "$GENERATE_RPM" ] 
 fi
 
 if [ -n "$KEY_EXPIRATION_DURATION" ]; then
-  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/ee/mobiuscli.keyExpirationDuration=$KEY_EXPIRATION_DURATION"
+  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/mobiuscli.keyExpirationDuration=$KEY_EXPIRATION_DURATION"
 fi
 if [ -n "$SNAPSHOT_EXPIRATION_DURATION" ]; then
-  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/ee/mobiuscli.snapshotExpirationDuration=$SNAPSHOT_EXPIRATION_DURATION"
+  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/mobiuscli.snapshotExpirationDuration=$SNAPSHOT_EXPIRATION_DURATION"
 fi
 if [ -n "$TARGETS_EXPIRATION_DURATION" ]; then
-  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/ee/mobiuscli.targetsExpirationDuration=$TARGETS_EXPIRATION_DURATION"
+  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/mobiuscli.targetsExpirationDuration=$TARGETS_EXPIRATION_DURATION"
 fi
 if [ -n "$TIMESTAMP_EXPIRATION_DURATION" ]; then
-  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/ee/mobiuscli.timestampExpirationDuration=$TIMESTAMP_EXPIRATION_DURATION"
+  export EXTRA_MOBIUSCTL_LDFLAGS="$EXTRA_MOBIUSCTL_LDFLAGS -X github.com/notawar/mobius/v4/mobiuscli.timestampExpirationDuration=$TIMESTAMP_EXPIRATION_DURATION"
 fi
 
 make mobiuscli

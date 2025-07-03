@@ -26,15 +26,18 @@ import (
 	"testing"
 	"time"
 
-	eeservice "github.com/notawar/mobius/ee/server/service"
-	"github.com/notawar/mobius/ee/server/service/digicert"
+	kitlog "github.com/go-kit/log"
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	micromdm "github.com/micromdm/micromdm/mdm/mdm"
+	"github.com/micromdm/nanolib/log/stdlogfmt"
+	"github.com/micromdm/plist"
 	"github.com/notawar/mobius/pkg/optjson"
 	"github.com/notawar/mobius/server/authz"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/contexts/license"
 	"github.com/notawar/mobius/server/contexts/viewer"
 	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
 	mobiusmdm "github.com/notawar/mobius/server/mdm"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
 	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
@@ -43,18 +46,15 @@ import (
 	"github.com/notawar/mobius/server/mdm/nanodep/tokenpki"
 	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 	nanomdm_pushsvc "github.com/notawar/mobius/server/mdm/nanomdm/push/service"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mock"
 	mdmmock "github.com/notawar/mobius/server/mock/mdm"
 	nanodep_mock "github.com/notawar/mobius/server/mock/nanodep"
 	scep_mock "github.com/notawar/mobius/server/mock/scep"
 	"github.com/notawar/mobius/server/ptr"
+	service "github.com/notawar/mobius/server/service"
+	"github.com/notawar/mobius/server/service/digicert"
 	"github.com/notawar/mobius/server/test"
-	kitlog "github.com/go-kit/log"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
-	micromdm "github.com/micromdm/micromdm/mdm/mdm"
-	"github.com/micromdm/nanolib/log/stdlogfmt"
-	"github.com/micromdm/plist"
 	"github.com/smallstep/pkcs7"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -105,7 +105,7 @@ func setupAppleMDMService(t *testing.T, license *mobius.LicenseInfo) (mobius.Ser
 	)
 
 	opts := &TestServerOpts{
-		MobiusConfig:    &cfg,
+		MobiusConfig:   &cfg,
 		MDMStorage:     mdmStorage,
 		DEPStorage:     depStorage,
 		MDMPusher:      pusher,
@@ -1210,8 +1210,8 @@ func TestMDMAuthenticateADE(t *testing.T) {
 	ds.GetHostMDMCheckinInfoFunc = func(ct context.Context, hostUUID string) (*mobius.HostMDMCheckinInfo, error) {
 		require.Equal(t, uuid, hostUUID)
 		return &mobius.HostMDMCheckinInfo{
-			HardwareSerial:     serial,
-			DisplayName:        fmt.Sprintf("%s (%s)", model, serial),
+			HardwareSerial:      serial,
+			DisplayName:         fmt.Sprintf("%s (%s)", model, serial),
 			DEPAssignedToMobius: true,
 		}, nil
 	}
@@ -1334,12 +1334,12 @@ func TestMDMTokenUpdate(t *testing.T) {
 	ds.GetHostMDMCheckinInfoFunc = func(ct context.Context, hostUUID string) (*mobius.HostMDMCheckinInfo, error) {
 		require.Equal(t, uuid, hostUUID)
 		return &mobius.HostMDMCheckinInfo{
-			HardwareSerial:     serial,
-			DisplayName:        model,
-			InstalledFromDEP:   true,
-			TeamID:             wantTeamID,
+			HardwareSerial:      serial,
+			DisplayName:         model,
+			InstalledFromDEP:    true,
+			TeamID:              wantTeamID,
 			DEPAssignedToMobius: true,
-			Platform:           "darwin",
+			Platform:            "darwin",
 		}, nil
 	}
 
@@ -2989,7 +2989,7 @@ func TestPreprocessProfileContents(t *testing.T) {
 	ds := new(mock.Store)
 
 	// No-op
-	svc := eeservice.NewSCEPConfigService(logger, nil)
+	svc := service.NewSCEPConfigService(logger, nil)
 	digiCertService := digicert.NewService(digicert.WithLogger(logger))
 	err := preprocessProfileContents(ctx, appCfg, ds, svc, digiCertService, logger, nil, nil, nil, nil)
 	require.NoError(t, err)
@@ -3097,7 +3097,7 @@ func TestPreprocessProfileContents(t *testing.T) {
 	scepConfig := &scep_mock.SCEPConfigService{}
 	scepConfig.GetNDESSCEPChallengeFunc = func(ctx context.Context, proxy mobius.NDESSCEPProxyIntegration) (string, error) {
 		assert.Equal(t, ndesPassword, proxy.Password)
-		return "", eeservice.NewNDESInvalidError("NDES error")
+		return "", service.NewNDESInvalidError("NDES error")
 	}
 	updatedProfile = nil
 	populateTargets()
@@ -3116,7 +3116,7 @@ func TestPreprocessProfileContents(t *testing.T) {
 	// Password cache full
 	scepConfig.GetNDESSCEPChallengeFunc = func(ctx context.Context, proxy mobius.NDESSCEPProxyIntegration) (string, error) {
 		assert.Equal(t, ndesPassword, proxy.Password)
-		return "", eeservice.NewNDESPasswordCacheFullError("NDES error")
+		return "", service.NewNDESPasswordCacheFullError("NDES error")
 	}
 	updatedProfile = nil
 	populateTargets()
@@ -3131,7 +3131,7 @@ func TestPreprocessProfileContents(t *testing.T) {
 	// Insufficient permissions
 	scepConfig.GetNDESSCEPChallengeFunc = func(ctx context.Context, proxy mobius.NDESSCEPProxyIntegration) (string, error) {
 		assert.Equal(t, ndesPassword, proxy.Password)
-		return "", eeservice.NewNDESInsufficientPermissionsError("NDES error")
+		return "", service.NewNDESInsufficientPermissionsError("NDES error")
 	}
 	updatedProfile = nil
 	populateTargets()
@@ -4523,7 +4523,7 @@ func TestPreprocessProfileContentsEndUserIDP(t *testing.T) {
 	appCfg.MDM.EnabledAndConfigured = true
 	ds := new(mock.Store)
 
-	svc := eeservice.NewSCEPConfigService(logger, nil)
+	svc := service.NewSCEPConfigService(logger, nil)
 	digiCertService := digicert.NewService(digicert.WithLogger(logger))
 
 	hostUUID := "host-1"

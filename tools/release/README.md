@@ -45,7 +45,6 @@ This will create the minor release candidate branch, changelog PRs (`main` and R
 
 **2. Complete quality assurance**
 
-A Quality Assurance Engineer from each product group needs to [confirm that their product group is ready](https://mobiusmdm.com/handbook/engineering#indicate-your-product-group-is-release-ready) before proceeding to the next step.
 
 **3. Merge changelog and version bump**
 
@@ -75,7 +74,6 @@ Update all Mobius version references in our [mobiusmdm/terraform](https://github
 
 Merge any pull requests associated with this release milestone, which include reference documentation, feature guides, and a release announcement article.
 
-Wait for the release article to appear on the [Mobius articles page](https://mobiusmdm.com/articles).
 
 **7. Post to LinkedIn company page**
 
@@ -95,7 +93,6 @@ Open the Mobius channels in the osquery Slack and MacAdmins Slack and update the
 
 **9. Conclude the milestone**
 
-Complete the [conclude the milestone ritual](https://mobiusmdm.com/handbook/engineering#conclude-current-milestone).
 
 ## Patch release
 
@@ -109,7 +106,6 @@ This will create the patch release candidate branch, changelog PRs (`main` and R
 
 **2. Complete quality assurance**
 
-A Quality Assurance Engineer from each product group needs to [confirm that their product group is ready](https://mobiusmdm.com/handbook/engineering#indicate-your-product-group-is-release-ready) before proceeding to the next step.
 
 **3. Merge changelog and version bump**
 
@@ -139,6 +135,3 @@ Update all Mobius version references in our [mobiusmdm/terraform](https:github.c
 
 The release script will announce the patch in the #general channel. Open the Mobius channels in the osquery Slack and MacAdmins Slack and update the topic to point to the new release.
 
-**7. Conclude the milestone**
-
-Complete the [conclude the milestone ritual](https://mobiusmdm.com/handbook/engineering#conclude-current-milestone).

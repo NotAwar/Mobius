@@ -535,7 +535,6 @@ Content-Type: application/soap+xml; charset=utf-8
                       <Format xmlns="syncml:metinf">chr</Format>
                       <Type>text/plain</Type>
                     </Meta>
-                    <Data>https://mobiusmdm.com/images/articles/mobius-4.24.0-cover-1600x900@2x.jpg</Data>
                   </Item>
                 </Replace>
                 <Replace>
@@ -548,7 +547,6 @@ Content-Type: application/soap+xml; charset=utf-8
                       <Format xmlns="syncml:metinf">chr</Format>
                       <Type>text/plain</Type>
                     </Meta>
-                    <Data>https://mobiusmdm.com/images/articles/mobius-4.24.0-cover-1600x900@2x.jpg</Data>
                   </Item>
                 </Replace>
                 <Final />

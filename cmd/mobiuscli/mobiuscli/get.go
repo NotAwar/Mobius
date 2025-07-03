@@ -637,7 +637,6 @@ func getPacksCommand() *cli.Command {
 				log(c, fmt.Sprintf(`Found %d 2017 "Packs".
 
 Querying in Mobius is becoming more powerful. To learn more, visit:
-https://mobiusmdm.com/handbook/company/why-this-way#why-does-mobius-support-query-packs
 
 To retrieve "Pack" data in a portable format for upgrading, run `+"`mobiuscli upgrade-packs`"+`.
 `, len(packs)))

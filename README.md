@@ -1,5 +1,56 @@
 # Mobius MDM Platform
 
+> **Complete Mobile Device Management platform - optimized for single developer workflow**
+
+## 🚀 Quick Start (Single Developer)
+
+For simplified development workflow, see **[README-single-dev.md](README-single-dev.md)**
+
+```bash
+# Get started in 3 commands
+git clone <repo>
+cd mobius
+make -f Makefile.simple setup && make -f Makefile.simple dev
+```
+
+## 📋 Development Options
+
+- **Single Developer**: Use `Makefile.simple` for streamlined GitHub-centric workflow
+- **Enterprise Development**: Use original `Makefile` for full enterprise features
+- **Optional Components**: Advanced features in `optional/components/`
+
+## 🎯 Repository Structure
+
+```
+mobius/
+├── 🔧 Single Developer Workflow
+│   ├── Makefile.simple         # Simplified commands
+│   ├── README-single-dev.md    # Single dev guide
+│   ├── dev-config.yml          # Development profiles
+│   └── docker-compose.dev.yml  # Development environment
+├── 
+├── 💻 Core Application (All MDM Features)
+│   ├── cmd/                    # Application entry points
+│   ├── server/                 # Go backend
+│   ├── frontend/               # React frontend
+│   ├── pkg/                    # Go packages
+│   └── schema/                 # Database schemas
+├── 
+├── 🎨 Optional Components
+│   └── optional/components/
+│       ├── website/            # Marketing site
+│       ├── ansible-mdm/        # Ansible automation
+│       ├── terraform/          # Infrastructure
+│       ├── charts/             # Kubernetes
+│       └── infrastructure/     # Cloud deployment
+└── 
+└── 🔧 Enterprise Development
+    ├── Makefile                # Full enterprise build
+    └── docs/                   # Complete documentation
+```
+
+---
+
 ## 🚀 An Open-Source Device Management Platform
 
 **Mobius MDM** is a powerful device management platform that combines the visibility of osquery with the automation capabilities of Ansible. This platform provides IT and security teams with a unified solution for monitoring and managing thousands of computers across different operating systems.
@@ -233,11 +284,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📖 Documentation: [docs/](docs/)
-- 🐛 Bug Reports: [GitHub Issues](../../issues)
-- 💬 Discussion: [GitHub Discussions](../../discussions)
-
-In keeping with Mobius's value of openness, [Mobius Device Management's company handbook](https://mobiusmdm.com/handbook/company) is public and open source.  You can read about the [history of Mobius and osquery](https://mobiusmdm.com/handbook/company#history) and our commitment to improving the product.
+- Documentation: [docs/](docs/)
+- Bug Reports: [GitHub Issues](../../issues)
+- Discussion: [GitHub Discussions](../../discussions)
 
 <!-- > To upgrade from Mobius ≤3.2.0, just follow the upgrading steps for the earliest subsequent major release from this repository (it'll work out of the box until the release of Mobius 5.0). -->
 
@@ -245,11 +294,7 @@ In keeping with Mobius's value of openness, [Mobius Device Management's company 
 
 Mobius is used in production by IT and security teams with thousands of laptops and servers.  Many deployments support tens of thousands of hosts, and a few large organizations manage deployments as large as 400,000+ hosts.
 
-## Chat
 
-Please join us in [MacAdmins Slack](https://www.macadmins.org/) or in [osquery Slack](https://mobiusmdm.com/slack).
-
-The Mobius community is full of [kind and helpful people](https://mobiusmdm.com/handbook/company#empathy).  Whether or not you are a paying customer, if you need help, just ask.
 
 ## Contributing &nbsp; [![Run Tests](https://github.com/notawar/mobius/actions/workflows/test.yml/badge.svg)](https://github.com/notawar/mobius/actions/workflows/test.yml) &nbsp; [![Go Report Card](https://goreportcard.com/badge/github.com/notawar/mobius)](https://goreportcard.com/report/github.com/notawar/mobius) &nbsp; [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5537/badge)](https://bestpractices.coreinfrastructure.org/projects/5537) &nbsp; [![Twitter Follow](https://img.shields.io/twitter/follow/mobiuscli.svg?style=social&maxAge=3600)](https://twitter.com/mobiuscli) &nbsp;
 

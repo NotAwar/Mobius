@@ -6,8 +6,6 @@ on:
     paths:
       - 'website/**'
       - 'docs/**'
-      - 'handbook/**'
-      - 'articles/**'
       - 'schema/**'
 
 # This allows a subsequently queued workflow run to interrupt previous runs
@@ -25,7 +23,7 @@ permissions:
 
 jobs:
   build:
-    if: ${{ github.repository == 'mobiusmdm/mobius' }}
+    if: ${{ github.repository == 'notawar/mobius' }}
 
     runs-on: ubuntu-22.04
 
@@ -76,7 +74,7 @@ jobs:
     # > Turns out there's a similar issue with how eslint plugins are looked up, so we
     # > delete the top level .eslintrc file too.
     - run: rm -f .eslintrc.js
-    # > And, as a change to the top-level mobiusmdm/mobius .gitignore on May 2, 2022 revealed,
+    # > And, as a change to the top-level notawar/mobius .gitignore on May 2, 2022 revealed,
     # > we also need to delete the top level .gitignore file too, so that its rules don't
     # > interfere with the committing and force-pushing we're doing as part of our deploy
     # > script here.  For more info, see: https://github.com/notawar/mobius/pull/5549
@@ -92,7 +90,7 @@ jobs:
     - run: cd website/ && BUILD_SCRIPT_ARGS="--githubAccessToken=${{ secrets.MOBIUS_GITHUB_TOKEN_FOR_WEBSITE_TEST }}" npm run build-for-prod
 
     # Build the go binary we use to sign APNS certificates in the website/.tools/ folder.
-    - run: cd ee/tools/mdm/ && GOOS=linux GOARCH=amd64 go build -o ../../../website/.tools/mdm-gen-cert .
+    - run: cd tools/mdm/ && GOOS=linux GOARCH=amd64 go build -o ../../website/.tools/mdm-gen-cert .
 
     # Reset the Heroku app's git repo to prevent errors when pushing to the repo. (See https://github.com/notawar/mobius/issues/14162 for more details)
     - run: heroku repo:reset -a production-mobiusmdm-website

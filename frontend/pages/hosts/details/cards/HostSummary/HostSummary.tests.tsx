@@ -184,8 +184,8 @@ describe("Host Summary section", () => {
         },
       });
       const summaryData = createMockHostSummary({
-        platform: "chrome",
-        osquery_version: "mobiusdaemon-chrome 1.2.0",
+        platform: "darwin",
+        osquery_version: "mobiusdaemon 1.2.0",
       });
 
       const mobiusdChromeVersion = summaryData.osquery_version as string;

@@ -349,7 +349,7 @@ changelog_and_versions() {
         cp /tmp/CHANGELOG.md .
         git add CHANGELOG.md
         escaped_start_version=$(echo "$start_milestone" | sed 's/\./\\./g')
-        version_files=$(ack -l --ignore-dir=tools/release --ignore-dir=articles --ignore-dir=orbit --ignore-dir=server/service --ignore-file=is:CHANGELOG.md "$escaped_start_version")
+        version_files=$(ack -l --ignore-dir=tools/release --ignore-dir=orbit --ignore-dir=server/service --ignore-file=is:CHANGELOG.md "$escaped_start_version")
         unameOut="$(uname -s)"
         case "${unameOut}" in
             Linux*)     echo "$version_files" | xargs sed -i "s/$escaped_start_version/$target_milestone/g";

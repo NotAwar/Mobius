@@ -30,7 +30,6 @@ const OSSettingsModal = ({
   onProfileResent,
 }: IOSSettingsModalProps) => {
   // the caller should ensure that hostMDMData is not undefined and that platform is supported otherwise we will allow an empty modal will be rendered.
-  // https://mobius-mdm.org/handbook/company/why-this-way#why-make-it-obvious-when-stuff-breaks
 
   const memoizedTableData = useMemo(
     () => generateTableData(hostMDMData, platform),

@@ -511,8 +511,8 @@ endif
 
 binary-arch: .pre-binary-arch .pre-binary-bundle .pre-mobius
 	mkdir -p build/binary-bundle/${GOARCH}-${GOOS}
-       CGO_ENABLED=1 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobius -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
-       CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobiuscli -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobiuscli
+	CGO_ENABLED=1 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobius -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
+	CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobiuscli -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobiuscli
 	cd build/binary-bundle/${GOARCH}-${GOOS} && tar -czf mobiuscli-${GOARCH}-${GOOS}.tar.gz mobiuscli mobius
 
 

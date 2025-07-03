@@ -100,7 +100,7 @@ describe("Vpp Section", () => {
       />
     );
     expect(
-      await screen.findByText("This feature is included in Mobius Pro.")
+      await screen.findByText("This feature is included in Mobius MDM.")
     ).toBeInTheDocument();
   });
 });

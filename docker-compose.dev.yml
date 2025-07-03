@@ -1,0 +1,77 @@
+# Development Docker Compose - GitHub-centric workflow
+version: '3.8'
+
+services:
+  # Core Services (always needed)
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: mobius
+      MYSQL_DATABASE: mobius
+      MYSQL_USER: mobius
+      MYSQL_PASSWORD: mobius
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  # Main Application - Build locally or use GitHub Container Registry
+  mobius-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # For production, use: image: ghcr.io/yourusername/mobius:latest
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - MOBIUS_MYSQL_ADDRESS=mysql:3306
+      - MOBIUS_REDIS_ADDRESS=redis:6379
+      - MOBIUS_MYSQL_DATABASE=mobius
+      - MOBIUS_MYSQL_USERNAME=mobius
+      - MOBIUS_MYSQL_PASSWORD=mobius
+      - MOBIUS_DEV_MODE=true
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - ./build:/app/build
+
+  # Frontend Development
+  mobius-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      # For production, use: image: ghcr.io/yourusername/mobius-frontend:latest
+    depends_on:
+      - mobius-server
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_DEV_MODE=true
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  # Optional Services (for full profile)
+  mobius-website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile.dev
+      # For production, use: image: ghcr.io/yourusername/mobius-website:latest
+    profiles:
+      - full
+    ports:
+      - "1337:1337"
+    volumes:
+      - ./website:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:

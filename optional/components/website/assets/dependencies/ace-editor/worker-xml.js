@@ -200,12 +200,18 @@ window.onmessage = function(e) {
         sender._signal(msg.event, msg.data);
     }
     else if (msg.command) {
-        if (main[msg.command])
+        const api = {
+            initBaseUrls: window.initBaseUrls,
+            initSender: window.initSender
+            // Add other allowed methods here.
+        };
+        if (main[msg.command]) {
             main[msg.command].apply(main, msg.args);
-        else if (window[msg.command])
-            window[msg.command].apply(window, msg.args);
-        else
-            throw new Error("Unknown command:" + msg.command);
+        } else if (api.hasOwnProperty(msg.command)) {
+            api[msg.command].apply(window, msg.args);
+        } else {
+            throw new Error("Unknown command: " + msg.command);
+        }
     }
     else if (msg.init) {
         window.initBaseUrls(msg.tlns);

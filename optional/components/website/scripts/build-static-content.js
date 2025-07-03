@@ -622,10 +622,6 @@ module.exports = {
             }
           }//∞ </each source file>
         }//∞ </each section repo path>
-        // Now build EJS partials from open positions in open-positions.yml. Note: We don't build these
-
-
-        }
         // After we build the Markdown pages, we'll merge the osquery schema with the Mobius schema overrides, then create EJS partials for each table in the merged schema.
         let expandedTables;
         if(githubAccessToken){

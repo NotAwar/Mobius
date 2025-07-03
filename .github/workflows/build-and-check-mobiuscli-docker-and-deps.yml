@@ -23,7 +23,8 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       packages: write
-      contents: read
+      contents: write
+      actions: write
       id-token: write # for aws-actions/configure-aws-credentials
     steps:
       - name: Checkout

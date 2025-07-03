@@ -313,7 +313,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        docker pull mobiusmdm/wix:latest &
+        docker pull ghcr.io/notawar/wix:latest &
         npm install -g mobiuscli
         mobiuscli config set --address ${{ needs.gen.outputs.address }} --token ${{ needs.login.outputs.token }}
 

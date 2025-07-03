@@ -15,7 +15,7 @@ Highlights include:
 - Bundled fonts redistributed under the SIL Open Font License
 - Third-party directories located under `server/`, `orbit/`, and `tools/`
 
-All other source code and assets are copyrighted by Mobius Device Management Inc.
+All other source code and assets are copyrighted by Mobius Device Management, also refered to as "Mobius" and "Möbius".
 
 ## License
 

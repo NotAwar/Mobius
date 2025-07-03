@@ -625,7 +625,6 @@ module.exports = {
         // Now build EJS partials from open positions in open-positions.yml. Note: We don't build these
 
         // Get last modified timestamp using git, and represent it as a JS timestamp.
-        let lastModifiedAt;
         if(!githubAccessToken) {
           lastModifiedAt = Date.now();
         } else {

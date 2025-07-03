@@ -622,37 +622,6 @@ module.exports = {
             }
           }//∞ </each source file>
         }//∞ </each section repo path>
-        // Now build EJS partials from open positions in open-positions.yml. Note: We don't build these
-
-        // Get last modified timestamp using git, and represent it as a JS timestamp.
-        let lastModifiedAt;
-        if(!githubAccessToken) {
-          lastModifiedAt = Date.now();
-        } else {
-          // If we're including a lastModifiedAt value for schema tables, we'll send a request to the GitHub API to get a timestamp of when the last commit
-          let responseData = await sails.helpers.http.get.with({// [?]: https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#list-commits
-            url: 'https://api.github.com/repos/mobiusmdm/mobius/commits',
-            data: {
-              path: RELATIVE_PATH_TO_OPEN_POSITIONS_YML_IN_MOBIUS_REPO,
-              page: 1,
-              per_page: 1,//eslint-disable-line camelcase
-            },
-            headers: baseHeadersForGithubRequests,
-          }).intercept((err)=>{
-            return new Error(`When getting the commit history for the open positions YAML to get a lastModifiedAt timestamp, an error occured.`, err);
-          });
-          // The value we'll use for the lastModifiedAt timestamp will be date value of the `commiter` property of the `commit` we got in the API response from github.
-          let mostRecentCommitToThisFile = responseData[0];
-          if(!mostRecentCommitToThisFile.commit || !mostRecentCommitToThisFile.commit.committer) {
-            // Throw an error if the the response from GitHub is missing a commit or commiter.
-            throw new Error(`When trying to get a lastModifiedAt timestamp for the open positions YAML, the response from the GitHub API did not include information about the most recent commit. Response from GitHub: ${util.inspect(responseData, {depth:null})}`);
-          }
-          lastModifiedAt = (new Date(mostRecentCommitToThisFile.commit.committer.date)).getTime(); // Convert the UTC timestamp from GitHub to a JS timestamp.
-        }
-
-
-
-        }
         // After we build the Markdown pages, we'll merge the osquery schema with the Mobius schema overrides, then create EJS partials for each table in the merged schema.
         let expandedTables;
         if(githubAccessToken){

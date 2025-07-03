@@ -5,8 +5,7 @@ export GO111MODULE=on
 PATH := $(shell npm bin):$(PATH)
 VERSION = $(shell git describe --tags --always --dirty)
 BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
-REVISION = $(	go list $(VULN_PKGS_TO_TEST) \
-	;} | sort) | sed -e 's|github.com/notawar/mobius/||g')"ell git rev-parse HEAD)
+REVISION = $(shell git rev-parse HEAD)
 REVSHORT = $(shell git rev-parse --short HEAD)
 USER = $(shell whoami)
 DOCKER_IMAGE_NAME = ghcr.io/notawar/mobius
@@ -51,14 +50,14 @@ ifdef CIRCLE_TAG
 	DOCKER_IMAGE_TAG = ${CIRCLE_TAG}
 endif
 
-LDFLAGS_VERSION = "\
-	-X github.com/notawar/mobius/v4/server/version.appName=${APP_NAME} \
-	-X github.com/notawar/mobius/v4/server/version.version=${VERSION} \
-	-X github.com/notawar/mobius/v4/server/version.branch=${BRANCH} \
-	-X github.com/notawar/mobius/v4/server/version.revision=${REVISION} \
-	-X github.com/notawar/mobius/v4/server/version.buildDate=${NOW} \
-	-X github.com/notawar/mobius/v4/server/version.buildUser=${USER} \
-	-X github.com/notawar/mobius/v4/server/version.goVersion=${GOVERSION}"
+LDFLAGS_VERSION = \
+        -X github.com/notawar/mobius/v4/server/version.appName=$(APP_NAME) \
+        -X github.com/notawar/mobius/v4/server/version.version=$(VERSION) \
+        -X github.com/notawar/mobius/v4/server/version.branch=$(BRANCH) \
+        -X github.com/notawar/mobius/v4/server/version.revision=$(REVISION) \
+        -X github.com/notawar/mobius/v4/server/version.buildDate=$(NOW) \
+        -X github.com/notawar/mobius/v4/server/version.buildUser=$(USER) \
+        -X github.com/notawar/mobius/v4/server/version.goVersion=$(GOVERSION)
 
 # Macro to allow targets to filter out their own arguments from the arguments
 # passed to the final command.
@@ -189,7 +188,7 @@ serve:
 endif
 
 mobius: .prefix .pre-build .pre-mobius
-	CGO_ENABLED=1 go build -race=${GO_BUILD_RACE_ENABLED_VAR} -tags full,fts5,netgo -o build/${OUTPUT} -ldflags ${LDFLAGS_VERSION} ./cmd/mobius
+       CGO_ENABLED=1 go build -race=${GO_BUILD_RACE_ENABLED_VAR} -tags full,fts5,netgo -o build/${OUTPUT} -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
 
 mobius-dev: GO_BUILD_RACE_ENABLED_VAR=true
 mobius-dev: mobius
@@ -463,14 +462,14 @@ wix-docker:
 	mkdir -p build/binary-bundle/darwin
 
 xp-mobius: .pre-binary-bundle .pre-mobius generate
-	CGO_ENABLED=1 GOOS=linux go build -tags full,fts5,netgo -trimpath -o build/binary-bundle/linux/mobius -ldflags ${LDFLAGS_VERSION} ./cmd/mobius
-	CGO_ENABLED=1 GOOS=darwin go build -tags full,fts5,netgo -trimpath -o build/binary-bundle/darwin/mobius -ldflags ${LDFLAGS_VERSION} ./cmd/mobius
-	CGO_ENABLED=1 GOOS=windows go build -tags full,fts5,netgo -trimpath -o build/binary-bundle/windows/mobius.exe -ldflags ${LDFLAGS_VERSION} ./cmd/mobius
+       CGO_ENABLED=1 GOOS=linux go build -tags full,fts5,netgo -trimpath -o build/binary-bundle/linux/mobius -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
+       CGO_ENABLED=1 GOOS=darwin go build -tags full,fts5,netgo -trimpath -o build/binary-bundle/darwin/mobius -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
+       CGO_ENABLED=1 GOOS=windows go build -tags full,fts5,netgo -trimpath -o build/binary-bundle/windows/mobius.exe -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
 
 xp-mobiuscli: .pre-binary-bundle .pre-mobiuscli generate-go
-	CGO_ENABLED=0 GOOS=linux go build -trimpath -o build/binary-bundle/linux/mobiuscli -ldflags ${LDFLAGS_VERSION} ./cmd/mobiuscli
-	CGO_ENABLED=0 GOOS=darwin go build -trimpath -o build/binary-bundle/darwin/mobiuscli -ldflags ${LDFLAGS_VERSION} ./cmd/mobiuscli
-	CGO_ENABLED=0 GOOS=windows go build -trimpath -o build/binary-bundle/windows/mobiuscli.exe -ldflags ${LDFLAGS_VERSION} ./cmd/mobiuscli
+       CGO_ENABLED=0 GOOS=linux go build -trimpath -o build/binary-bundle/linux/mobiuscli -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobiuscli
+       CGO_ENABLED=0 GOOS=darwin go build -trimpath -o build/binary-bundle/darwin/mobiuscli -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobiuscli
+       CGO_ENABLED=0 GOOS=windows go build -trimpath -o build/binary-bundle/windows/mobiuscli.exe -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobiuscli
 
 binary-bundle: xp-mobius xp-mobiuscli
 	cd build/binary-bundle && zip -r mobius.zip darwin/ linux/ windows/
@@ -512,8 +511,8 @@ endif
 
 binary-arch: .pre-binary-arch .pre-binary-bundle .pre-mobius
 	mkdir -p build/binary-bundle/${GOARCH}-${GOOS}
-	CGO_ENABLED=1 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobius -ldflags ${LDFLAGS_VERSION} ./cmd/mobius
-	CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobiuscli -ldflags ${LDFLAGS_VERSION} ./cmd/mobiuscli
+       CGO_ENABLED=1 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobius -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobius
+       CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} go build -tags full,fts5,netgo -o build/binary-bundle/${GOARCH}-${GOOS}/mobiuscli -ldflags "$(LDFLAGS_VERSION)" ./cmd/mobiuscli
 	cd build/binary-bundle/${GOARCH}-${GOOS} && tar -czf mobiuscli-${GOARCH}-${GOOS}.tar.gz mobiuscli mobius
 
 

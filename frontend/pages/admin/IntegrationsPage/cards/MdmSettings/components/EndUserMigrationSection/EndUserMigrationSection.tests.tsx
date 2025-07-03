@@ -132,7 +132,7 @@ describe("EndUserMigrationSection", () => {
     render(<EndUserMigrationSection router={mockRouter} />);
 
     expect(
-      screen.getByText("This feature is included in Mobius Pro.")
+      screen.getByText("This feature is included in Mobius MDM.")
     ).toBeInTheDocument();
   });
 });

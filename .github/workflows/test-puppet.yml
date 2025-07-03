@@ -5,9 +5,12 @@ on:
     branches:
       - main
       - patch-*
+    paths:
+      - 'tools/puppet/mobiusmdm/**'
+      - '.github/workflows/test-puppet.yml'
   pull_request:
     paths:
-      - 'ee/tools/puppet/mobiusmdm/**'
+      - 'tools/puppet/mobiusmdm/**'
       - '.github/workflows/test-puppet.yml'
   workflow_dispatch: # Manual
 
@@ -26,6 +29,7 @@ permissions:
 
 jobs:
   test-puppet:
+    if: ${{ hashFiles('tools/puppet/mobiusmdm/**') != '' }}
     runs-on: macos-latest
     steps:
      

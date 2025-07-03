@@ -1,5 +1,5 @@
 # Development Docker Compose - GitHub-centric workflow
-version: '3.8'
+version: "3.8"
 
 services:
   # Core Services (always needed)

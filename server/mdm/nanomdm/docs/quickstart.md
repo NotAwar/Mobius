@@ -8,7 +8,7 @@ This guide is intended to get NanoMDM *working* and *does not represent best pra
 
 ## Requirements
 
-- You'll need an MDM push certificate and private key. Documentation on how to attain one is out of scope for this document. You may refer to [MicroMDM's documentation](https://github.com/micromdm/micromdm/blob/main/docs/user-guide/quickstart.md#configure-an-apns-certificate) for further information, but this guide assumes you have one at the ready. Note this is the _push_ certificate and _not_ the initial step of an _MDM CSR/vendor_ certificate.
+- You'll need an MDM push certificate and private key. Documentation on how to attain one is out of scope for this document. You may refer to [MicroMDM's documentation](https://github.com/micromdm/micromdm/blob/main/docs/user-guide/quickstart.md#configure-an-apns-certificate) for further information, but this guide assumes you have one at the ready. Note this is the *push* certificate and *not* the initial step of an *MDM CSR/vendor* certificate.
 - A posix-ish computer with a set of normal command-line tools available: `cat`, `curl`, Python 3, etc.
 - Direct internet access (i.e. not proxied or outbound firewalled)
 
@@ -74,7 +74,7 @@ The "8080"  is the listen address (port) of the  running SCEP server, above. Not
 Get a copy of your server's CA certificate. If you deployed the above SCEP server you can do this to save the CA:
 
 ```
-$ curl 'https://fd2a766cc645.ngrok.io/scep?operation=GetCACert' | openssl x509 -inform DER > ca.pem 
+curl 'https://fd2a766cc645.ngrok.io/scep?operation=GetCACert' | openssl x509 -inform DER > ca.pem 
 ```
 
 This requests the CA certificate from the SCEP server, converts it into a PEM file and saves it to `ca.pem`.
@@ -106,7 +106,7 @@ We'll also supply the `-api` switch to set an API key and turn on API functional
 
 By default the file storage backend will write enrollment data into a directory called `db`.
 
-*Note: API keys are simple HTTP Basic Authorization passwords with a username of "nanomdm". This means that any proxies, like ngrok, will have access to API authentication.* 
+*Note: API keys are simple HTTP Basic Authorization passwords with a username of "nanomdm". This means that any proxies, like ngrok, will have access to API authentication.*
 
 ### Run (another) ngrok for NanoMDM
 
@@ -127,6 +127,7 @@ Forwarding                    https://625ae9460120.ngrok.io -> http://localhost:
 The "9000" is the listen address (port) of the running NanoMDM server. Again, take note of the "forwarding" addresses.
 
 If you get an error about being limited to 1 simultaneous ngrok agent, you can workaround this by launching both tunnels simultaneously via the `tunnels` stanza in the [ngrok agent config file](https://ngrok.com/docs/ngrok-agent/config#config-ngrok-tunnel-definitions). Add the following to your `ngrok.yml` config file, stop your ngrok agents, and then start them both with `ngrok start --all`.
+
 ```
 tunnels:
   scep:
@@ -144,7 +145,7 @@ To store the Push Certificate in NanoMDM we use the API:
 ```
 $ cat /path/to/push.pem /path/to/push.key | curl -T - -u nanomdm:nanomdm 'http://127.0.0.1:9000/v1/pushcert'
 {
-	"topic": "com.apple.mgmt.External.e3b8ceac-1f18-2c8e-8a63-dd17d99435d9"
+ "topic": "com.apple.mgmt.External.e3b8ceac-1f18-2c8e-8a63-dd17d99435d9"
 }
 ```
 
@@ -157,19 +158,18 @@ From the server logs you should also see something like:
 
 This concatenates the certificate and private key PEM files with `cat` and then sends them to the "/v1/pushcert" endpoint using `curl`. Here we supplied the API key of "nanomdm" (and required username of nanomdm with the `-u` switch to `curl`). Note the push certificate private key needs to be unencrypted here. NanoMDM decodes the certificate and key, uploads them to storage, and returns the APNS "topic" that the push certificate contains. Keep note of this topic, you'll need it later.
 
-
 ## Configure enrollment profile
 
 We'll need to author our enrollment profile for devices to know how to enroll in this MDM service. You can take a copy of the [example profile provided with NanoMDM](enroll.mobileconfig).
 
 Make sure your enrollment profile contains the correct values for the SCEP payload URL as well as the MDM server URL. These will be from ngrok, above, If you followed this guide's instructions then those values would as follows. We also need to provide the SCEP challenge and MDM topic; also be from above. **Your values will be different, do not just copy/paste these values**:
 
-* `URL` (in SCEP payload): `https://fd2a766cc645.ngrok.io/scep`
-* `Challenge` (in SCEP payload): `nanomdm`
-* `ServerURL` (in MDM payload): `https://625ae9460120.ngrok.io/mdm` (note the trailing `/mdm` here)
-* `Topic`  (in MDM payload): `com.apple.mgmt.External.e3b8ceac-1f18-2c8e-8a63-dd17d99435d9`
+- `URL` (in SCEP payload): `https://fd2a766cc645.ngrok.io/scep`
+- `Challenge` (in SCEP payload): `nanomdm`
+- `ServerURL` (in MDM payload): `https://625ae9460120.ngrok.io/mdm` (note the trailing `/mdm` here)
+- `Topic`  (in MDM payload): `com.apple.mgmt.External.e3b8ceac-1f18-2c8e-8a63-dd17d99435d9`
 
-## Enroll your machine!
+## Enroll your machine
 
 WIth this modified enrollment profile you should now be able to enroll a device. Go ahead and do that—if its a Mac just double-click the (modified) `.mobileconfig` enrollment profile. If it worked you should see an `Authenticate` and `TokenUpdate` messages from NanoMDM:
 
@@ -190,11 +190,11 @@ To send a push notification to the device asking it to check-in to our MDM servi
 ```
 $ curl -u nanomdm:nanomdm 'http://127.0.0.1:9000/v1/push/99385AF6-44CB-5621-A678-A321F4D9A2C8'
 {
-	"status": {
-		"99385AF6-44CB-5621-A678-A321F4D9A2C8": {
-			"push_result": "8B16D295-AB2C-EAB9-90FF-8615C0DFBB08"
-		}
-	}
+ "status": {
+  "99385AF6-44CB-5621-A678-A321F4D9A2C8": {
+   "push_result": "8B16D295-AB2C-EAB9-90FF-8615C0DFBB08"
+  }
+ }
 ```
 
 The `push_result` UUID (and absence of an error) is an indicator the push notification succeeded. Our push on the server should look like:
@@ -229,13 +229,13 @@ $ ./tools/cmdr.py SecurityInfo
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Command</key>
-	<dict>
-		<key>RequestType</key>
-		<string>SecurityInfo</string>
-	</dict>
-	<key>CommandUUID</key>
-	<string>d1b7fdda-52e1-45d1-80e6-8bf3b5d76f17</string>
+ <key>Command</key>
+ <dict>
+  <key>RequestType</key>
+  <string>SecurityInfo</string>
+ </dict>
+ <key>CommandUUID</key>
+ <string>d1b7fdda-52e1-45d1-80e6-8bf3b5d76f17</string>
 </dict>
 </plist>
 ```
@@ -245,13 +245,13 @@ It also has a `-r` mode to pick a random read-only command to generate. We'll us
 ```
 $ ./tools/cmdr.py -r | curl -T - -u nanomdm:nanomdm 'http://127.0.0.1:9000/v1/enqueue/E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8'
 {
-	"status": {
-		"E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
-			"push_result": "16C80450-B79F-E23B-F99B-0810179F244E"
-		}
-	},
-	"command_uuid": "1ec2a267-1b32-4843-8ba0-2b06e80565c4",
-	"request_type": "ProfileList"
+ "status": {
+  "E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
+   "push_result": "16C80450-B79F-E23B-F99B-0810179F244E"
+  }
+ },
+ "command_uuid": "1ec2a267-1b32-4843-8ba0-2b06e80565c4",
+ "request_type": "ProfileList"
 ```
 
 On the server side we should see the command being queued and push notification sent.
@@ -277,12 +277,12 @@ And shortly thereafter we should see the client check-in, receive/de-queue/pop t
 
 This indiciates the full command->push->client check-in round trips all worked successfully.
 
-## Setup a more production-ready service!
+## Setup a more production-ready service
 
 Great! You've verified the basics of getting NanoMDM going! Now you can move on to setting up a more production-ready service for actual real enrollments. This might include things like:
 
-* A proper URL/domain name.
-* A proper TLS certificate (possibly using Let's Encrypt, even).
-* A proper reverse-proxy/load balancer (Nginx, HAProxy, Apache, etc.)
-* A proper deployment, perhaps in a container environment like Docker, Kubernetes, etc. or even just running as a service with systemctl.
-* More advanced configuration of NanoMDM including backend storage options, etc.
+- A proper URL/domain name.
+- A proper TLS certificate (possibly using Let's Encrypt, even).
+- A proper reverse-proxy/load balancer (Nginx, HAProxy, Apache, etc.)
+- A proper deployment, perhaps in a container environment like Docker, Kubernetes, etc. or even just running as a service with systemctl.
+- More advanced configuration of NanoMDM including backend storage options, etc.

@@ -1,5 +1,5 @@
 # Production Docker Compose - Uses GitHub Container Registry
-version: '3.8'
+version: "3.8"
 
 services:
   # Database
@@ -84,7 +84,6 @@ services:
 volumes:
   mysql_data:
   redis_data:
-
 # Example .env file:
 # GITHUB_USER=yourusername
 # GITHUB_REPO=mobius

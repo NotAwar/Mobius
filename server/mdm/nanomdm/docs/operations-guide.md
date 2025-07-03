@@ -20,7 +20,7 @@ NanoMDM tries to reduce this complexity by collapsing these various identifiers 
 
 ## Switches
 
-###  -api string
+### -api string
 
 * API key for API endpoints
 
@@ -56,7 +56,7 @@ Enable additional debug logging.
 
 The `-storage`, `-storage-dsn`, & `-storage-options` flags together configure the storage backend(s). `-storage` specifies the name of the backend while `-storage-dsn` specifies the backend data source name (e.g. the connection string). The optional `-storage-options` flag specifies options for the backend if it supports them. If no storage flags are supplied then it is as if you specified `-storage file -storage-dsn db` meaning we use the `file` storage backend with `db` as its DSN.
 
-_Note:_ NanoMDM versions v0.5.0 and below used the `-dsn` flag while later versions switched to the `-storage-dsn` flag.
+*Note:* NanoMDM versions v0.5.0 and below used the `-dsn` flag while later versions switched to the `-storage-dsn` flag.
 
 #### file storage backend
 
@@ -90,8 +90,9 @@ Configures the PostgreSQL storage backend. The `-storage-dsn` flag should be in 
 *Example:* `-storage pgsql -storage-dsn postgres://postgres:toor@localhost:5432/nanomdm`
 
 Options are specified as a comma-separated list of "key=value" pairs. The pgsql backend supports these options:
+
 * `delete=1`, `delete=0`
-    * This option turns on or off the command and response deleter. It is disabled by default. When enabled (with `delete=1`) command responses, queued commands, and commands themselves will be deleted from the database after enrollments have responded to a command.
+  * This option turns on or off the command and response deleter. It is disabled by default. When enabled (with `delete=1`) command responses, queued commands, and commands themselves will be deleted from the database after enrollments have responded to a command.
 
 *Example:* `-storage pgsql -storage-dsn postgres://postgres:toor@localhost/nanomdm -storage-options delete=1`
 
@@ -196,7 +197,7 @@ The push cert API endpoint allows for uploading an APNS push certificate. It tak
 ```bash
 $ cat /path/to/push.pem /path/to/push.key | curl -T - -u nanomdm:nanomdm 'http://127.0.0.1:9000/v1/pushcert'
 {
-	"topic": "com.apple.mgmt.External.e3b8ceac-1f18-2c8e-8a63-dd17d99435d9"
+ "topic": "com.apple.mgmt.External.e3b8ceac-1f18-2c8e-8a63-dd17d99435d9"
 }
 ```
 
@@ -211,11 +212,11 @@ The push API endpoint sends APNs push notifications to enrollments (which ask th
 ```bash
 $ curl -u nanomdm:nanomdm 'http://127.0.0.1:9000/v1/push/99385AF6-44CB-5621-A678-A321F4D9A2C8'
 {
-	"status": {
-		"99385AF6-44CB-5621-A678-A321F4D9A2C8": {
-			"push_result": "8B16D295-AB2C-EAB9-90FF-8615C0DFBB08"
-		}
-	}
+ "status": {
+  "99385AF6-44CB-5621-A678-A321F4D9A2C8": {
+   "push_result": "8B16D295-AB2C-EAB9-90FF-8615C0DFBB08"
+  }
+ }
 }
 ```
 
@@ -226,14 +227,14 @@ We can queue multiple pushes at the same time, too (note the separating comma in
 ```bash
 $ curl -u nanomdm:nanomdm '[::1]:9000/v1/push/99385AF6-44CB-5621-A678-A321F4D9A2C8,E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8'
 {
-	"status": {
-		"99385AF6-44CB-5621-A678-A321F4D9A2C8": {
-			"push_result": "5736F13F-E2A2-E8B9-E21C-3973BDAA4054"
-		},
-		"E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
-			"push_result": "A70400AA-C5D8-DBA7-D66E-1296B36FA7F5"
-		}
-	}
+ "status": {
+  "99385AF6-44CB-5621-A678-A321F4D9A2C8": {
+   "push_result": "5736F13F-E2A2-E8B9-E21C-3973BDAA4054"
+  },
+  "E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
+   "push_result": "A70400AA-C5D8-DBA7-D66E-1296B36FA7F5"
+  }
+ }
 }
 
 ```
@@ -250,13 +251,13 @@ $ ./cmdr.py -r
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Command</key>
-	<dict>
-		<key>RequestType</key>
-		<string>ProfileList</string>
-	</dict>
-	<key>CommandUUID</key>
-	<string>d7408b5d-f314-461f-bc5e-4ff107c03857</string>
+ <key>Command</key>
+ <dict>
+  <key>RequestType</key>
+  <string>ProfileList</string>
+ </dict>
+ <key>CommandUUID</key>
+ <string>d7408b5d-f314-461f-bc5e-4ff107c03857</string>
 </dict>
 </plist>
 ```
@@ -268,13 +269,13 @@ Then, to submit a command to a NanoMDM enrollment:
 ```bash
 $ ./cmdr.py -r | curl -T - -u nanomdm:nanomm 'http://127.0.0.1:9000/v1/enqueue/E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8'
 {
-	"status": {
-		"E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
-			"push_result": "16C80450-B79F-E23B-F99B-0810179F244E"
-		}
-	},
-	"command_uuid": "1ec2a267-1b32-4843-8ba0-2b06e80565c4",
-	"request_type": "ProfileList"
+ "status": {
+  "E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
+   "push_result": "16C80450-B79F-E23B-F99B-0810179F244E"
+  }
+ },
+ "command_uuid": "1ec2a267-1b32-4843-8ba0-2b06e80565c4",
+ "request_type": "ProfileList"
 
 ```
 
@@ -285,16 +286,16 @@ Note here, too, we can queue a command to multiple enrollments:
 ```bash
 $ ./cmdr.py -r | curl -T - -u nanomdm:nanomm 'http://127.0.0.1:9000/v1/enqueue/99385AF6-44CB-5621-A678-A321F4D9A2C8,E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8'
 
-	"status": {
-		"99385AF6-44CB-5621-A678-A321F4D9A2C8": {
-			"push_result": "4DE6E126-CC6C-37B2-7350-3AD1871C298F"
-		},
-		"E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
-			"push_result": "7B9D73CD-186B-CCF4-D585-AEE9E8E4F0F3"
-		}
-	},
-	"command_uuid": "9b7c63eb-14b4-4739-96b0-750a5c967371",
-	"request_type": "ProvisioningProfileList"
+ "status": {
+  "99385AF6-44CB-5621-A678-A321F4D9A2C8": {
+   "push_result": "4DE6E126-CC6C-37B2-7350-3AD1871C298F"
+  },
+  "E9085AF6-DCCB-5661-A678-BCE8F4D9A2C8": {
+   "push_result": "7B9D73CD-186B-CCF4-D585-AEE9E8E4F0F3"
+  }
+ },
+ "command_uuid": "9b7c63eb-14b4-4739-96b0-750a5c967371",
+ "request_type": "ProvisioningProfileList"
 }
 ```
 
@@ -303,9 +304,9 @@ Finally you can skip sending the push notification request by appending `?nopush
 ```bash
 $ ./cmdr.py -r | curl -v -T - -u nanomdm:nanomdm '[::1]:9000/v1/enqueue/99385AF6-44CB-5621-A678-A321F4D9A2C8?nopush=1'
 {
-	"no_push": true,
-	"command_uuid": "598544b5-b681-4ce2-8914-ba7f45ff5c02",
-	"request_type": "CertificateList"
+ "no_push": true,
+ "command_uuid": "598544b5-b681-4ce2-8914-ba7f45ff5c02",
+ "request_type": "CertificateList"
 }
 ```
 
@@ -363,7 +364,7 @@ The NanoMDM API key used to authenticate to the migration endpoint.
 
 * NanoMDM migration URL
 
-The URL of the NanoMDM migration endpoint. For example "http://127.0.0.1:9000/migration".
+The URL of the NanoMDM migration endpoint. For example "<http://127.0.0.1:9000/migration>".
 
 ### -version
 

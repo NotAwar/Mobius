@@ -4,13 +4,13 @@
 github:
   # All container images through GitHub Container Registry
   container_registry: "ghcr.io"
-  
+
   # GitHub Actions for CI/CD
   use_github_actions: true
-  
+
   # GitHub Releases for distribution
   use_github_releases: true
-  
+
   # GitHub Pages for documentation
   use_github_pages: true
 
@@ -19,65 +19,65 @@ deployment:
   skip_docker_hub: true
   skip_aws_ecr: true
   skip_gcp_gcr: true
-  
+
   # Simple deployment targets
   targets:
-    - local_development
-    - github_codespaces
-    - self_hosted
-    - github_actions_runners
+  - local_development
+  - github_codespaces
+  - self_hosted
+  - github_actions_runners
 
 profiles:
   # Minimal setup - Core MDM functionality only
   core:
     services:
-      - mysql
-      - redis
-      - mobius-server
-      - mobius-frontend
+    - mysql
+    - redis
+    - mobius-server
+    - mobius-frontend
     features:
-      - device_management
-      - osquery_integration
-      - policy_management
-      - user_authentication
-      - basic_mdm
+    - device_management
+    - osquery_integration
+    - policy_management
+    - user_authentication
+    - basic_mdm
     deployment:
-      - local_only
-      - github_actions_ci
+    - local_only
+    - github_actions_ci
 
   # Full development - Everything enabled
   full:
     services:
-      - mysql
-      - redis
-      - mobius-server
-      - mobius-frontend
-      - mobius-website
-      - chrome-extension
+    - mysql
+    - redis
+    - mobius-server
+    - mobius-frontend
+    - mobius-website
+    - chrome-extension
     features:
-      - all
+    - all
     deployment:
-      - local_full_stack
-      - github_actions_ci
-      - github_pages_docs
+    - local_full_stack
+    - github_actions_ci
+    - github_pages_docs
 
   # Production-like - Enterprise features
   enterprise:
     services:
-      - mysql
-      - redis
-      - mobius-server
-      - mobius-frontend
+    - mysql
+    - redis
+    - mobius-server
+    - mobius-frontend
     features:
-      - all_mdm_features
-      - sso_integrations
-      - enterprise_logging
-      - vulnerability_scanning
-      - advanced_policies
+    - all_mdm_features
+    - sso_integrations
+    - enterprise_logging
+    - vulnerability_scanning
+    - advanced_policies
     deployment:
-      - github_container_registry
-      - github_releases
-      - self_hosted_production
+    - github_container_registry
+    - github_releases
+    - self_hosted_production
 
 # Default profile for single developer
 default_profile: core

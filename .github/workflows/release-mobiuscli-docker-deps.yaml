@@ -1,9 +1,10 @@
-# Builds and releases to production the mobiusmdm/bomutils:latest and mobiusmdm/wix:latest
-# docker images, which are the docker image dependencies of the mobiuscli command.
+# Builds and releases to production the ghcr.io/notawar/bomutils:latest and
+# ghcr.io/notawar/wix:latest Docker images, which are the docker image
+# dependencies of the mobiuscli command.
 #
 # This is separate from Mobius releases because we only release
-# mobiusmdm/bomutils and mobiusmdm/wix only if we add new dependencies
-# or for security updates.
+# ghcr.io/notawar/bomutils and ghcr.io/notawar/wix only if we add new
+# dependencies or for security updates.
 name: Release mobiuscli docker dependencies
 
 on:
@@ -27,7 +28,6 @@ permissions:
 jobs:
   push_latest:
     runs-on: ubuntu-latest
-    environment: Docker Hub
     permissions:
       contents: write
     steps:
@@ -72,8 +72,8 @@ jobs:
       # Now push to production
       #
 
-      - name: Push mobiusmdm/bomutils to docker hub
-        run: docker push mobiusmdm/bomutils:latest
+      - name: Push ghcr.io/notawar/bomutils
+        run: docker push ghcr.io/notawar/bomutils:latest
 
-      - name: Push mobiusmdm/wix to docker hub
-        run: docker push mobiusmdm/wix:latest
+      - name: Push ghcr.io/notawar/wix
+        run: docker push ghcr.io/notawar/wix:latest

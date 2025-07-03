@@ -544,4 +544,4 @@ projects. Each directory retains the original license file.
 - tools/mdm/windows/poc-mdm-server
 
 All other source code and assets in this repository are copyright
-Mobius Device Management Inc. and are not open source.
+Mobius is not open source.

@@ -10,6 +10,7 @@ import (
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
+	"math"
 )
 
 //////////////////////////////////////////////////////////////////////////////
@@ -231,7 +232,14 @@ func (patchVPPTokenRenewRequest) DecodeRequest(ctx context.Context, r *http.Requ
 		return nil, ctxerr.Wrap(ctx, err, "failed to parse vpp token id")
 	}
 
-	decoded.ID = uint(id) //nolint:gosec // dismiss G115
+	if id > math.MaxUint64 { // Ensure id fits within the range of the uint type
+		return nil, &mobius.BadRequestError{
+			Message:     "vpp token id exceeds allowable range",
+			InternalErr: nil,
+		}
+	}
+
+	decoded.ID = uint(id)
 
 	return &decoded, nil
 }

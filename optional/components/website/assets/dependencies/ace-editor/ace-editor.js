@@ -23602,12 +23602,16 @@ window.onmessage = function(e) {
         sender._signal(msg.event, msg.data);
     }
     else if (msg.command) {
-        if (main[msg.command])
+        const whitelistedCommands = {
+            // Add allowed commands here, e.g., 'exampleCommand': window.exampleCommand
+        };
+        if (main[msg.command]) {
             main[msg.command].apply(main, msg.args);
-        else if (window[msg.command])
-            window[msg.command].apply(window, msg.args);
-        else
-            throw new Error("Unknown command:" + msg.command);
+        } else if (whitelistedCommands[msg.command]) {
+            whitelistedCommands[msg.command].apply(window, msg.args);
+        } else {
+            console.error("Unknown or disallowed command:", msg.command);
+        }
     }
     else if (msg.init) {
         window.initBaseUrls(msg.tlns);

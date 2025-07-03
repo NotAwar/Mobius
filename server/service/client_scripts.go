@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/server/mobius"
+	mobiuss "github.com/notawar/mobius/server/mobius"
 )
 
 const pollWaitTime = 5 * time.Second
@@ -136,7 +136,7 @@ func (c *Client) pollForResult(id string) (*mobiuss.HostScriptResult, error) {
 
 // ApplyNoTeamScripts sends the list of scripts to be applied for the hosts in
 // no team.
-func (c *Client) ApplyNoTeamScripts(scripts []mobiuss.ScriptPayload, optsmobiusus.ApplySpecOptions) (mobiusius.ScriptResponse, error) {
+func (c *Client) ApplyNoTeamScripts(scripts []mobiuss.ScriptPayload, opts mobiuss.ApplySpecOptions) ([]mobiuss.ScriptResponse, error) {
 	verb, path := "POST", "/api/latest/mobiuss/scripts/batch"
 	var resp batchSetScriptsResponse
 	err := c.authenticatedRequestWithQuery(map[string]interface{}{"scripts": scripts}, verb, path, &resp, opts.RawQuery())

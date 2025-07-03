@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	eemobiuscli "github.com/notawar/mobius/mobiuscli"
 	"github.com/notawar/mobius/orbit/pkg/packaging"
 	"github.com/notawar/mobius/orbit/pkg/update"
 	"github.com/notawar/mobius/pkg/filepath_windows"
@@ -187,7 +186,11 @@ func packageCommand() *cli.Command {
 				EnvVars:     []string{"MOBIUSCTL_NATIVE_TOOLING"},
 				Destination: &opt.NativeTooling,
 			},
-			eemobiuscli.LocalWixDirFlag(&opt.LocalWixDir),
+			&cli.StringFlag{
+				Name:        "local-wix-dir",
+				Usage:       "Use a local WiX directory instead of containerized tooling",
+				Destination: &opt.LocalWixDir,
+			},
 			&cli.StringFlag{
 				Name:        "macos-devid-pem-content",
 				Usage:       "Dev ID certificate keypair content in PEM format",

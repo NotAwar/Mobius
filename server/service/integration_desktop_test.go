@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -7,12 +10,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/datastore/mysql"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

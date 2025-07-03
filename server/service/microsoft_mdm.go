@@ -20,26 +20,26 @@ import (
 	"text/template"
 	"time"
 
+	kitlog "github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/notawar/mobius/pkg/mobiusdbase"
 	"github.com/notawar/mobius/server"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/contexts/logging"
-	"github.com/notawar/mobius/server/mobius"
 	mdmlifecycle "github.com/notawar/mobius/server/mdm/lifecycle"
 	microsoft_mdm "github.com/notawar/mobius/server/mdm/microsoft"
 	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
-	kitlog "github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 
-	mdm_types "github.com/notawar/mobius/server/mobius"
 	"github.com/google/uuid"
+	mdm_types "github.com/notawar/mobius/server/mobius"
 )
 
 const maxRequestLogSize = 10240
 
 type SoapRequestContainer struct {
-	Data   *mobiuss.SoapRequest
+	Data   *mobius.SoapRequest
 	Params url.Values
 	Err    error
 }
@@ -56,14 +56,14 @@ func (req *SoapRequestContainer) DecodeBody(ctx context.Context, r io.Reader, u 
 	req.Params = u
 
 	// Handle empty body scenario
-	req.Data = &mobiuss.SoapRequest{Raw: reqBytes}
+	req.Data = &mobius.SoapRequest{Raw: reqBytes}
 
 	if len(reqBytes) != 0 {
 		// Unmarshal the XML data from the request into the SoapRequest struct
 		err = xml.Unmarshal(reqBytes, &req.Data)
 		if err != nil {
 			// We log the request body for debug by using an error implementing ErrWithInternal interface.
-			return ctxerr.Wrap(ctx, &mobiuss.BadRequestError{Message: "unmarshalling soap mdm request: " + err.Error(),
+			return ctxerr.Wrap(ctx, &mobius.BadRequestError{Message: "unmarshalling soap mdm request: " + err.Error(),
 				InternalErr: fmt.Errorf("request: %s", truncateString(string(reqBytes), maxRequestLogSize))})
 		}
 	}
@@ -72,7 +72,7 @@ func (req *SoapRequestContainer) DecodeBody(ctx context.Context, r io.Reader, u 
 }
 
 type SoapResponseContainer struct {
-	Data *mobiuss.SoapResponse
+	Data *mobius.SoapResponse
 	Err  error
 }
 
@@ -98,7 +98,7 @@ func (r SoapResponseContainer) HijackRender(ctx context.Context, w http.Response
 }
 
 type SyncMLReqMsgContainer struct {
-	Data   *mobiuss.SyncML
+	Data   *mobius.SyncML
 	Params url.Values
 	Certs  []*x509.Certificate
 	Err    error
@@ -119,7 +119,7 @@ func (req *SyncMLReqMsgContainer) DecodeBody(ctx context.Context, r io.Reader, u
 	req.Certs = c
 
 	// Handle empty body scenario
-	req.Data = &mobiuss.SyncML{Raw: reqBytes}
+	req.Data = &mobius.SyncML{Raw: reqBytes}
 
 	if len(reqBytes) != 0 {
 		// Unmarshal the XML data from the request into the SoapRequest struct
@@ -133,7 +133,7 @@ func (req *SyncMLReqMsgContainer) DecodeBody(ctx context.Context, r io.Reader, u
 }
 
 type SyncMLResponseMsgContainer struct {
-	Data *mobiuss.SyncML
+	Data *mobius.SyncML
 	Err  error
 }
 
@@ -427,10 +427,10 @@ func getSoapResponseFault(relatesTo string, soapFault *mdm_types.SoapFault) mdm_
 }
 
 // NewSoapResponse creates a new SoapRequest struct based on the message type and the message content
-func NewSoapResponse(payload interface{}, relatesTo string) (mobiuss.SoapResponse, error) {
+func NewSoapResponse(payload interface{}, relatesTo string) (mobius.SoapResponse, error) {
 	// Sanity check
 	if len(relatesTo) == 0 {
-		return mobiuss.SoapResponse{}, errors.New("relatesTo is invalid")
+		return mobius.SoapResponse{}, errors.New("relatesTo is invalid")
 	}
 
 	// Useful constants
@@ -517,11 +517,11 @@ func NewSoapResponse(payload interface{}, relatesTo string) (mobiuss.SoapRespons
 		body.SoapFault = msg
 
 	default:
-		return mobiuss.SoapResponse{}, errors.New("mdm response message not supported")
+		return mobius.SoapResponse{}, errors.New("mdm response message not supported")
 	}
 
 	// Return the SoapRequest type with the appropriate fields set
-	return mobiuss.SoapResponse{
+	return mobius.SoapResponse{
 		XMLNSS: urlNSS,
 		XMLNSA: urlNSA,
 		XMLNSU: headerXsu,
@@ -539,20 +539,20 @@ func NewSoapResponse(payload interface{}, relatesTo string) (mobiuss.SoapRespons
 }
 
 // NewBinarySecurityTokenPayload returns the BinarySecurityTokenPayload type
-func NewBinarySecurityTokenPayload(encodedToken string) (mobiuss.WindowsMDMAccessTokenPayload, error) {
+func NewBinarySecurityTokenPayload(encodedToken string) (mobius.WindowsMDMAccessTokenPayload, error) {
 	if len(encodedToken) == 0 {
-		return mobiuss.WindowsMDMAccessTokenPayload{}, errors.New("binary security token: token is empty")
+		return mobius.WindowsMDMAccessTokenPayload{}, errors.New("binary security token: token is empty")
 	}
 
 	rawBytes, err := base64.StdEncoding.DecodeString(encodedToken)
 	if err != nil {
-		return mobiuss.WindowsMDMAccessTokenPayload{}, fmt.Errorf("binary security token: %v", err)
+		return mobius.WindowsMDMAccessTokenPayload{}, fmt.Errorf("binary security token: %v", err)
 	}
 
-	var tokenPayload mobiuss.WindowsMDMAccessTokenPayload
+	var tokenPayload mobius.WindowsMDMAccessTokenPayload
 	err = json.Unmarshal(rawBytes, &tokenPayload)
 	if err != nil {
-		return mobiuss.WindowsMDMAccessTokenPayload{}, fmt.Errorf("binary security token: %v", err)
+		return mobius.WindowsMDMAccessTokenPayload{}, fmt.Errorf("binary security token: %v", err)
 	}
 
 	return tokenPayload, nil
@@ -622,7 +622,7 @@ func NewCertStoreProvisioningData(enrollmentType string, identityFingerprint str
 
 // isEligibleForWindowsMDMEnrollment returns true if the host can be enrolled
 // in Mobius's Windows MDM (if it was enabled).
-func isEligibleForWindowsMDMEnrollment(host *mobiuss.Host, mdmInfo mobiusus.HostMDM) bool {
+func isEligibleForWindowsMDMEnrollment(host *mobius.Host, mdmInfo *mobius.HostMDM) bool {
 	return host.MobiusPlatform() == "windows" &&
 		host.IsOsqueryEnrolled() &&
 		(mdmInfo == nil || (!mdmInfo.IsServer && !mdmInfo.Enrolled))
@@ -630,10 +630,10 @@ func isEligibleForWindowsMDMEnrollment(host *mobiuss.Host, mdmInfo mobiusus.Host
 
 // isEligibleForWindowsMDMMigration returns true if the host can be migrated to
 // Mobius's Windows MDM (if it was enabled).
-func isEligibleForWindowsMDMMigration(host *mobiuss.Host, mdmInfo mobiusus.HostMDM) bool {
+func isEligibleForWindowsMDMMigration(host *mobius.Host, mdmInfo *mobius.HostMDM) bool {
 	return host.MobiusPlatform() == "windows" &&
 		host.IsOsqueryEnrolled() &&
-		(mdmInfo != nil && !mdmInfo.IsServer && mdmInfo.Enrolled && mdmInfo.Name != mobiuss.WellKnownMDMMobius)
+		(mdmInfo != nil && !mdmInfo.IsServer && mdmInfo.Enrolled && mdmInfo.Name != mobius.WellKnownMDMMobius)
 }
 
 // NewApplicationProvisioningData returns a new ApplicationProvisioningData Characteristic
@@ -757,7 +757,7 @@ func NewProvisioningDoc(certStoreData mdm_types.Characteristic, applicationData 
 
 // mdmMicrosoftDiscoveryEndpoint handles the Discovery message and returns a valid DiscoveryResponse message
 // DiscoverResponse message contains the Uniform Resource Locators (URLs) of service endpoints required for the following enrollment steps
-func mdmMicrosoftDiscoveryEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) (mdm_types.Errorer, error) {
+func mdmMicrosoftDiscoveryEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mdm_types.Errorer, error) {
 	req := request.(*SoapRequestContainer).Data
 
 	// Checking first if Discovery message is valid and returning error if this is not the case
@@ -787,7 +787,7 @@ func mdmMicrosoftDiscoveryEndpoint(ctx context.Context, request interface{}, svc
 }
 
 // mdmMicrosoftAuthEndpoint handles the Security Token Service (STS) implementation
-func mdmMicrosoftAuthEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) (mdm_types.Errorer, error) {
+func mdmMicrosoftAuthEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mdm_types.Errorer, error) {
 	params := request.(*SoapRequestContainer).Params
 
 	// Sanity check on the expected query params
@@ -813,7 +813,7 @@ func mdmMicrosoftAuthEndpoint(ctx context.Context, request interface{}, svc mobi
 
 // mdmMicrosoftPolicyEndpoint handles the GetPolicies message and returns a valid GetPoliciesResponse message
 // GetPoliciesResponse message contains the certificate policies required for the next enrollment step. For more information about these messages, see [MS-XCEP] sections 3.1.4.1.1.1 and 3.1.4.1.1.2.
-func mdmMicrosoftPolicyEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) (mdm_types.Errorer, error) {
+func mdmMicrosoftPolicyEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mdm_types.Errorer, error) {
 	req := request.(*SoapRequestContainer).Data
 
 	// Checking first if GetPolicies message is valid and returning error if this is not the case
@@ -851,7 +851,7 @@ func mdmMicrosoftPolicyEndpoint(ctx context.Context, request interface{}, svc mo
 
 // mdmMicrosoftEnrollEndpoint handles the RequestSecurityToken message and returns a valid RequestSecurityTokenResponseCollection message
 // RequestSecurityTokenResponseCollection message contains the identity and provisioning information for the device management client.
-func mdmMicrosoftEnrollEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) (mdm_types.Errorer, error) {
+func mdmMicrosoftEnrollEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mdm_types.Errorer, error) {
 	req := request.(*SoapRequestContainer).Data
 
 	// Checking first if RequestSecurityToken message is valid and returning error if this is not the case
@@ -899,7 +899,7 @@ func mdmMicrosoftEnrollEndpoint(ctx context.Context, request interface{}, svc mo
 // SyncML message with protocol commands results and more protocol commands for the calling host
 // Note: This logic needs to be improved with better SyncML message parsing, better message tracking
 // and better security authentication (done through TLS and in-message hash)
-func mdmMicrosoftManagementEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) (mdm_types.Errorer, error) {
+func mdmMicrosoftManagementEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mdm_types.Errorer, error) {
 	reqSyncML := request.(*SyncMLReqMsgContainer).Data
 
 	// Checking first if incoming SyncML message is valid and returning error if this is not the case
@@ -922,7 +922,7 @@ func mdmMicrosoftManagementEndpoint(ctx context.Context, request interface{}, sv
 }
 
 // mdmMicrosoftTOSEndpoint handles the TOS content for the incoming MDM enrollment request
-func mdmMicrosoftTOSEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) (mdm_types.Errorer, error) {
+func mdmMicrosoftTOSEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mdm_types.Errorer, error) {
 	params := request.(*MDMWebContainer).Params
 
 	// Sanity check on the expected query params
@@ -950,7 +950,7 @@ func mdmMicrosoftTOSEndpoint(ctx context.Context, request interface{}, svc mobiu
 // authBinarySecurityToken checks if the provided token is valid. For programmatic enrollment, it
 // returns the orbit node key and host uuid. For automatic enrollment, it returns only the UPN (the
 // host uuid will be an empty string).
-func (svc *Service) authBinarySecurityToken(ctx context.Context, authToken *mobiuss.HeaderBinarySecurityToken) (claim string, hostUUID string, err error) {
+func (svc *Service) authBinarySecurityToken(ctx context.Context, authToken *mobius.HeaderBinarySecurityToken) (claim string, hostUUID string, err error) {
 	if authToken == nil {
 		return "", "", errors.New("authToken is empty")
 	}
@@ -1026,7 +1026,7 @@ func (svc *Service) authBinarySecurityToken(ctx context.Context, authToken *mobi
 }
 
 // GetMDMMicrosoftDiscoveryResponse returns a valid DiscoveryResponse message
-func (svc *Service) GetMDMMicrosoftDiscoveryResponse(ctx context.Context, upnEmail string) (*mobiuss.DiscoverResponse, error) {
+func (svc *Service) GetMDMMicrosoftDiscoveryResponse(ctx context.Context, upnEmail string) (*mobius.DiscoverResponse, error) {
 	// skipauth: This endpoint does not use authentication
 	svc.authz.SkipAuthorization(ctx)
 
@@ -1064,7 +1064,7 @@ func (svc *Service) GetMDMMicrosoftSTSAuthResponse(ctx context.Context, appru st
 	// In the future, the following calls would have to be made to support user-driven enrollment
 	// encodedBST will carry the token to return
 	// authToken, err := svc.wstepCertManager.NewSTSAuthToken(loginHint)
-	// encodedBST, err := GetEncodedBinarySecurityToken(mobiuss.WindowsMDMAutomaticEnrollmentType, authToken)
+	// encodedBST, err := GetEncodedBinarySecurityToken(mobius.WindowsMDMAutomaticEnrollmentType, authToken)
 	encodedBST := "user_driven_enrollment_not_implemented"
 
 	// STS Auth Endpoint returns HTML content that gets render in a webview container
@@ -1110,9 +1110,9 @@ func (svc *Service) GetMDMMicrosoftSTSAuthResponse(ctx context.Context, appru st
 }
 
 // GetMDMWindowsPolicyResponse returns a valid GetPoliciesResponse message
-func (svc *Service) GetMDMWindowsPolicyResponse(ctx context.Context, authToken *mobiuss.HeaderBinarySecurityToken) (mobiusus.GetPoliciesResponse, error) {
+func (svc *Service) GetMDMWindowsPolicyResponse(ctx context.Context, authToken *mobius.HeaderBinarySecurityToken) (*mobius.GetPoliciesResponse, error) {
 	if authToken == nil {
-		return nil, mobiuss.NewInvalidArgumentError("policy response", "authToken is invalid")
+		return nil, mobius.NewInvalidArgumentError("policy response", "authToken is invalid")
 	}
 
 	// Validate the binary security token
@@ -1136,9 +1136,9 @@ func (svc *Service) GetMDMWindowsPolicyResponse(ctx context.Context, authToken *
 // GetMDMWindowsEnrollResponse returns a valid RequestSecurityTokenResponseCollection message
 // secTokenMsg is the RequestSecurityToken message
 // authToken is the base64 encoded binary security token
-func (svc *Service) GetMDMWindowsEnrollResponse(ctx context.Context, secTokenMsg *mobiuss.RequestSecurityToken, authToken mobiusus.HeaderBinarySecurityToken) mobiusius.RequestSecurityTokenResponseCollection, error) {
+func (svc *Service) GetMDMWindowsEnrollResponse(ctx context.Context, secTokenMsg *mobius.RequestSecurityToken, authToken *mobius.HeaderBinarySecurityToken) (*mobius.RequestSecurityTokenResponseCollection, error) {
 	if authToken == nil {
-		return nil, mobiuss.NewInvalidArgumentError("enroll response", "authToken is not present")
+		return nil, mobius.NewInvalidArgumentError("enroll response", "authToken is not present")
 	}
 
 	// Auth the binary security token
@@ -1186,9 +1186,9 @@ func (svc *Service) GetMDMWindowsEnrollResponse(ctx context.Context, secTokenMsg
 }
 
 // GetMDMWindowsManagementResponse returns a valid SyncML response message
-func (svc *Service) GetMDMWindowsManagementResponse(ctx context.Context, reqSyncML *mobiuss.SyncML, reqCerts []*x509.Certificate) (mobiusus.SyncML, error) {
+func (svc *Service) GetMDMWindowsManagementResponse(ctx context.Context, reqSyncML *mobius.SyncML, reqCerts []*x509.Certificate) (*mobius.SyncML, error) {
 	if reqSyncML == nil {
-		return nil, mobiuss.NewInvalidArgumentError("syncml req message", "message is not present")
+		return nil, mobius.NewInvalidArgumentError("syncml req message", "message is not present")
 	}
 
 	// Checking if the incoming request is trusted
@@ -1234,9 +1234,9 @@ func isValidUPN(userID string) bool {
 }
 
 // isTrustedRequest checks if the incoming request was sent from MDM enrolled device
-func (svc *Service) isTrustedRequest(ctx context.Context, reqSyncML *mobiuss.SyncML, reqCerts []*x509.Certificate) error {
+func (svc *Service) isTrustedRequest(ctx context.Context, reqSyncML *mobius.SyncML, reqCerts []*x509.Certificate) error {
 	if reqSyncML == nil {
-		return mobiuss.NewInvalidArgumentError("syncml req message", "message is not present")
+		return mobius.NewInvalidArgumentError("syncml req message", "message is not present")
 	}
 
 	// Checking if calling request is coming from an already MDM enrolled device
@@ -1305,12 +1305,12 @@ func (svc *Service) isMobiusdPresentOnDevice(ctx context.Context, deviceID strin
 		var isPresent bool
 		if enrolledDevice.HostUUID != "" {
 			host, err := svc.ds.HostLiteByIdentifier(ctx, enrolledDevice.HostUUID)
-			if err != nil && !mobiuss.IsNotFound(err) {
+			if err != nil && !mobius.IsNotFound(err) {
 				return false, ctxerr.Wrap(ctx, err, "get host lite by identifier")
 			}
 			if host != nil {
 				orbitInfo, err := svc.ds.GetHostOrbitInfo(ctx, host.ID)
-				if err != nil && !mobiuss.IsNotFound(err) {
+				if err != nil && !mobius.IsNotFound(err) {
 					return false, ctxerr.Wrap(ctx, err, "get host orbit info")
 				}
 				if orbitInfo != nil {
@@ -1406,7 +1406,7 @@ func (svc *Service) enqueueInstallMobiusdCommand(ctx context.Context, deviceID s
 `)
 
 	// TODO: add ability to batch-enqueue multiple commands at the same time
-	addMobiusdCmd := &mobiuss.MDMWindowsCommand{
+	addMobiusdCmd := &mobius.MDMWindowsCommand{
 		CommandUUID:  addCommandUUID,
 		RawCommand:   rawAddCmd,
 		TargetLocURI: syncml.MobiusdWindowsInstallerGUID,
@@ -1415,7 +1415,7 @@ func (svc *Service) enqueueInstallMobiusdCommand(ctx context.Context, deviceID s
 		return ctxerr.Wrap(ctx, err, "insert add command to install mobiusdaemon")
 	}
 
-	execMobiusCmd := &mobiuss.MDMWindowsCommand{
+	execMobiusCmd := &mobius.MDMWindowsCommand{
 		CommandUUID:  execCommandUUID,
 		RawCommand:   rawExecCmd,
 		TargetLocURI: syncml.MobiusdWindowsInstallerGUID,
@@ -1495,8 +1495,8 @@ func (svc *Service) processIncomingAlertsCommands(ctx context.Context, messageID
 
 // processIncomingMDMCmds process the incoming message from the device
 // It will return the list of operations that need to be sent to the device
-func (svc *Service) processIncomingMDMCmds(ctx context.Context, deviceID string, reqMsg *mobiuss.SyncML) ([]mobiusus.SyncMLCmd, error) {
-	var responseCmds []*mobiuss.SyncMLCmd
+func (svc *Service) processIncomingMDMCmds(ctx context.Context, deviceID string, reqMsg *mobius.SyncML) ([]*mobius.SyncMLCmd, error) {
+	var responseCmds []*mobius.SyncMLCmd
 
 	// Get the incoming MessageID
 	reqMessageID, err := reqMsg.GetMessageID()
@@ -1511,7 +1511,7 @@ func (svc *Service) processIncomingMDMCmds(ctx context.Context, deviceID string,
 		responseCmds = append(responseCmds, ackMsg)
 	}
 
-	enrichedSyncML := mobiuss.NewEnrichedSyncML(reqMsg)
+	enrichedSyncML := mobius.NewEnrichedSyncML(reqMsg)
 	if enrichedSyncML.HasCommands() {
 		if err := svc.ds.MDMWindowsSaveResponse(ctx, deviceID, enrichedSyncML); err != nil {
 			return nil, fmt.Errorf("store incoming msgs: %w", err)
@@ -1567,7 +1567,7 @@ func (svc *Service) getPendingMDMCmds(ctx context.Context, deviceID string) ([]*
 }
 
 // createResponseSyncML returns a valid SyncML message
-func (svc *Service) createResponseSyncML(ctx context.Context, req *mobiuss.SyncML, responseOps []*mdm_types.SyncMLCmd) (mobiusus.SyncML, error) {
+func (svc *Service) createResponseSyncML(ctx context.Context, req *mobius.SyncML, responseOps []*mdm_types.SyncMLCmd) (*mobius.SyncML, error) {
 	// Get the DeviceID
 	deviceID, err := req.GetSource()
 	if err != nil || deviceID == "" {
@@ -1607,9 +1607,9 @@ func (svc *Service) createResponseSyncML(ctx context.Context, req *mobiuss.SyncM
 }
 
 // getManagementResponse returns a valid SyncML response message
-func (svc *Service) getManagementResponse(ctx context.Context, reqMsg *mobiuss.SyncML) (*mdm_types.SyncML, error) {
+func (svc *Service) getManagementResponse(ctx context.Context, reqMsg *mobius.SyncML) (*mdm_types.SyncML, error) {
 	if reqMsg == nil {
-		return nil, mobiuss.NewInvalidArgumentError("syncml req message", "message is not present")
+		return nil, mobius.NewInvalidArgumentError("syncml req message", "message is not present")
 	}
 
 	// Get the DeviceID
@@ -1641,7 +1641,7 @@ func (svc *Service) getManagementResponse(ctx context.Context, reqMsg *mobiuss.S
 
 // removeWindowsDeviceIfAlreadyMDMEnrolled removes the device if already MDM enrolled
 // HW DeviceID is used to check the list of enrolled devices
-func (svc *Service) removeWindowsDeviceIfAlreadyMDMEnrolled(ctx context.Context, secTokenMsg *mobiuss.RequestSecurityToken) error {
+func (svc *Service) removeWindowsDeviceIfAlreadyMDMEnrolled(ctx context.Context, secTokenMsg *mobius.RequestSecurityToken) error {
 	// Getting the HW DeviceID from the RequestSecurityToken msg
 	reqHWDeviceID, err := GetContextItem(secTokenMsg, syncml.ReqSecTokenContextItemHWDevID)
 	if err != nil {
@@ -1651,7 +1651,7 @@ func (svc *Service) removeWindowsDeviceIfAlreadyMDMEnrolled(ctx context.Context,
 	// Device is already enrolled, let's remove it
 	err = svc.ds.MDMWindowsDeleteEnrolledDevice(ctx, reqHWDeviceID)
 	if err != nil {
-		if mobiuss.IsNotFound(err) {
+		if mobius.IsNotFound(err) {
 			return nil
 		}
 		return err
@@ -1665,7 +1665,7 @@ func (svc *Service) removeWindowsDeviceIfAlreadyMDMEnrolled(ctx context.Context,
 // This information is used to configure the device management client
 // See section 2.2.9.1 for more details on the XML provision schema used here
 // https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-mde2/35e1aca6-1b8a-48ba-bbc0-23af5d46907a
-func (svc *Service) getDeviceProvisioningInformation(ctx context.Context, secTokenMsg *mobiuss.RequestSecurityToken) (string, error) {
+func (svc *Service) getDeviceProvisioningInformation(ctx context.Context, secTokenMsg *mobius.RequestSecurityToken) (string, error) {
 	// Getting the HW DeviceID from the RequestSecurityToken msg
 	reqHWDeviceID, err := GetContextItem(secTokenMsg, syncml.ReqSecTokenContextItemHWDevID)
 	if err != nil {
@@ -1739,7 +1739,7 @@ func (svc *Service) getDeviceProvisioningInformation(ctx context.Context, secTok
 }
 
 // storeWindowsMDMEnrolledDevice stores the device information to the list of MDM enrolled devices
-func (svc *Service) storeWindowsMDMEnrolledDevice(ctx context.Context, userID string, hostUUID string, secTokenMsg *mobiuss.RequestSecurityToken) error {
+func (svc *Service) storeWindowsMDMEnrolledDevice(ctx context.Context, userID string, hostUUID string, secTokenMsg *mobius.RequestSecurityToken) error {
 	const (
 		error_tag = "windows MDM enrolled storage: "
 	)
@@ -1787,7 +1787,7 @@ func (svc *Service) storeWindowsMDMEnrolledDevice(ctx context.Context, userID st
 	}
 
 	// Getting the Windows Enrolled Device Information
-	enrolledDevice := &mobiuss.MDMWindowsEnrolledDevice{
+	enrolledDevice := &mobius.MDMWindowsEnrolledDevice{
 		MDMDeviceID:            reqDeviceID,
 		MDMHardwareID:          reqHWDevID,
 		MDMDeviceState:         microsoft_mdm.MDMDeviceStateEnrolled,
@@ -1821,8 +1821,8 @@ func (svc *Service) storeWindowsMDMEnrolledDevice(ctx context.Context, userID st
 		}
 
 		// Get the host in order to get the correct display name and serial number for the activity
-		adminTeamFilter := mobiuss.TeamFilter{
-			User: &mobiuss.User{GlobalRole: ptr.Stringmobiusus.RoleAdmin)},
+		adminTeamFilter := mobius.TeamFilter{
+			User: &mobius.User{GlobalRole: ptr.String(mobius.RoleAdmin)},
 		}
 
 		hosts, err := svc.ds.ListHostsLiteByUUIDs(ctx, adminTeamFilter, []string{hostUUID})
@@ -1843,9 +1843,9 @@ func (svc *Service) storeWindowsMDMEnrolledDevice(ctx context.Context, userID st
 	}
 
 	err = svc.NewActivity(
-		ctx, nil, &mobiuss.ActivityTypeMDMEnrolled{
+		ctx, nil, &mobius.ActivityTypeMDMEnrolled{
 			HostDisplayName: displayName,
-			MDMPlatform:     mobiuss.MDMPlatformMicrosoft,
+			MDMPlatform:     mobius.MDMPlatformMicrosoft,
 			HostSerial:      serial,
 		})
 	if err != nil {
@@ -1861,7 +1861,7 @@ func (svc *Service) storeWindowsMDMEnrolledDevice(ctx context.Context, userID st
 }
 
 // GetContextItem returns the context item from the RequestSecurityToken message
-func GetContextItem(secTokenMsg *mobiuss.RequestSecurityToken, contextItem string) (string, error) {
+func GetContextItem(secTokenMsg *mobius.RequestSecurityToken, contextItem string) (string, error) {
 	reqHWDeviceID, err := secTokenMsg.GetContextItem(contextItem)
 	if err != nil {
 		return "", fmt.Errorf("%s token context information is not present: %v", contextItem, err)
@@ -1871,7 +1871,7 @@ func GetContextItem(secTokenMsg *mobiuss.RequestSecurityToken, contextItem strin
 }
 
 // GetAuthorizedSoapFault authorize the request so SoapFault message can be returned
-func (svc *Service) GetAuthorizedSoapFault(ctx context.Context, eType string, origMsg int, errorMsg error) *mobiuss.SoapFault {
+func (svc *Service) GetAuthorizedSoapFault(ctx context.Context, eType string, origMsg int, errorMsg error) *mobius.SoapFault {
 	svc.authz.SkipAuthorization(ctx)
 	logging.WithErr(ctx, ctxerr.Wrap(ctx, errorMsg, "soap fault"))
 	soapFault := NewSoapFault(eType, origMsg, errorMsg)
@@ -1935,7 +1935,7 @@ func createSyncMLMessage(sessionID string, msgID string, deviceID string, source
 
 	// iterate over operations and append them to the SyncML message
 	for _, protoCmd := range protoCommands {
-		msg.AppendCommand(mobiuss.MDMRaw, *protoCmd)
+		msg.AppendCommand(mobius.MDMRaw, *protoCmd)
 	}
 
 	// If there was no error, return the SyncML and a nil error
@@ -2178,13 +2178,13 @@ func NewSyncMLCmdStatus(msgRef string, cmdRef string, cmdOrig string, statusCode
 	}
 }
 
-func (svc *Service) GetMDMWindowsProfilesSummary(ctx context.Context, teamID *uint) (*mobiuss.MDMProfilesSummary, error) {
-	if err := svc.authz.Authorize(ctx, mobiuss.MDMConfigProfileAuthz{TeamID: teamID},mobiusus.ActionRead); err != nil {
+func (svc *Service) GetMDMWindowsProfilesSummary(ctx context.Context, teamID *uint) (*mobius.MDMProfilesSummary, error) {
+	if err := svc.authz.Authorize(ctx, mobius.MDMConfigProfileAuthz{TeamID: teamID}, mobius.ActionRead); err != nil {
 		return nil, ctxerr.Wrap(ctx, err)
 	}
 
 	if err := svc.VerifyMDMWindowsConfigured(ctx); err != nil {
-		return &mobiuss.MDMProfilesSummary{}, nil
+		return &mobius.MDMProfilesSummary{}, nil
 	}
 
 	ps, err := svc.ds.GetMDMWindowsProfilesSummary(ctx, teamID)
@@ -2195,7 +2195,7 @@ func (svc *Service) GetMDMWindowsProfilesSummary(ctx context.Context, teamID *ui
 	return ps, nil
 }
 
-func ReconcileWindowsProfiles(ctx context.Context, ds mobiuss.Datastore, logger kitlog.Logger) error {
+func ReconcileWindowsProfiles(ctx context.Context, ds mobius.Datastore, logger kitlog.Logger) error {
 	appConfig, err := ds.AppConfig(ctx)
 	if err != nil {
 		return fmt.Errorf("reading app config: %w", err)
@@ -2222,7 +2222,7 @@ func ReconcileWindowsProfiles(ctx context.Context, ds mobiuss.Datastore, logger 
 
 	// hostProfilesToUpdate tracks each host_mdm_windows_profile we need to upsert
 	// with the new status, operation_type, etc.
-	hostProfilesToUpdate := make([]*mobiuss.MDMWindowsBulkUpsertHostProfilePayload, 0, len(toInstall))
+	hostProfilesToUpdate := make([]*mobius.MDMWindowsBulkUpsertHostProfilePayload, 0, len(toInstall))
 
 	// install are maps from profileUUID -> command uuid and host
 	// UUIDs as the underlying MDM services are optimized to send one command to
@@ -2247,13 +2247,13 @@ func ReconcileWindowsProfiles(ctx context.Context, ds mobiuss.Datastore, logger 
 		}
 		target.hostUUIDs = append(target.hostUUIDs, p.HostUUID)
 
-		hostProfilesToUpdate = append(hostProfilesToUpdate, &mobiuss.MDMWindowsBulkUpsertHostProfilePayload{
+		hostProfilesToUpdate = append(hostProfilesToUpdate, &mobius.MDMWindowsBulkUpsertHostProfilePayload{
 			ProfileUUID:   p.ProfileUUID,
 			HostUUID:      p.HostUUID,
 			ProfileName:   p.ProfileName,
 			CommandUUID:   target.cmdUUID,
-			OperationType: mobiuss.MDMOperationTypeInstall,
-			Status:        &mobiuss.MDMDeliveryPending,
+			OperationType: mobius.MDMOperationTypeInstall,
+			Status:        &mobius.MDMDeliveryPending,
 			Checksum:      p.Checksum,
 		})
 		level.Debug(logger).Log("msg", "installing profile", "profile_uuid", p.ProfileUUID, "host_id", p.HostUUID, "name", p.ProfileName)
@@ -2311,7 +2311,7 @@ func ReconcileWindowsProfiles(ctx context.Context, ds mobiuss.Datastore, logger 
 // TODO(roberto): I think this should live separately in the
 // Windows equivalent of Apple's Commander struct, but I'd like
 // to keep it simpler for now until we understand more.
-func buildCommandFromProfileBytes(profileBytes []byte, commandUUID string) (*mobiuss.MDMWindowsCommand, error) {
+func buildCommandFromProfileBytes(profileBytes []byte, commandUUID string) (*mobius.MDMWindowsCommand, error) {
 	rawCommand := []byte(fmt.Sprintf(`<Atomic>%s</Atomic>`, profileBytes))
 	cmd := new(mdm_types.SyncMLCmd)
 	if err := xml.Unmarshal(rawCommand, cmd); err != nil {
@@ -2319,13 +2319,13 @@ func buildCommandFromProfileBytes(profileBytes []byte, commandUUID string) (*mob
 	}
 	// set the CmdID for the <Atomic> command
 	cmd.CmdID = mdm_types.CmdID{
-		Value:               commandUUID,
+		Value:                commandUUID,
 		IncludeMobiusComment: true,
 	}
 	// generate a CmdID for any nested <Replace>
 	for i := range cmd.ReplaceCommands {
 		cmd.ReplaceCommands[i].CmdID = mdm_types.CmdID{
-			Value:               uuid.NewString(),
+			Value:                uuid.NewString(),
 			IncludeMobiusComment: true,
 		}
 	}
@@ -2333,7 +2333,7 @@ func buildCommandFromProfileBytes(profileBytes []byte, commandUUID string) (*mob
 	// generate a CmdID for any nested <Add>
 	for i := range cmd.AddCommands {
 		cmd.AddCommands[i].CmdID = mdm_types.CmdID{
-			Value:               uuid.NewString(),
+			Value:                uuid.NewString(),
 			IncludeMobiusComment: true,
 		}
 	}
@@ -2343,7 +2343,7 @@ func buildCommandFromProfileBytes(profileBytes []byte, commandUUID string) (*mob
 		return nil, fmt.Errorf("marshalling command: %w", err)
 	}
 
-	command := &mobiuss.MDMWindowsCommand{
+	command := &mobius.MDMWindowsCommand{
 		CommandUUID: commandUUID,
 		RawCommand:  rawCommand,
 		// Atomic commands don't have a Target element.

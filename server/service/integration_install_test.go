@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -13,14 +16,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-kit/log"
+	kitlog "github.com/go-kit/log"
+	"github.com/jmoiron/sqlx"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/datastore/mysql"
 	"github.com/notawar/mobius/server/datastore/s3"
 	"github.com/notawar/mobius/server/mobius"
 	software_mock "github.com/notawar/mobius/server/mock/software"
-	"github.com/go-kit/log"
-	kitlog "github.com/go-kit/log"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -55,7 +58,7 @@ func (s *integrationInstallTestSuite) SetupSuite() {
 		Logger:               log.NewLogfmtLogger(os.Stdout),
 		EnableCachedDS:       true,
 		SoftwareInstallStore: softwareInstallStore,
-		MobiusConfig:          &mobiusConfig,
+		MobiusConfig:         &mobiusConfig,
 	}
 	if os.Getenv("MOBIUS_INTEGRATION_TESTS_DISABLE_LOG") != "" {
 		installConfig.Logger = kitlog.NewNopLogger()

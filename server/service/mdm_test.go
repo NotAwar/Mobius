@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -18,24 +21,24 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
 	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
 	nanodep_client "github.com/notawar/mobius/server/mdm/nanodep/client"
 	nanodep_mock "github.com/notawar/mobius/server/mock/nanodep"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/google/uuid"
 	"github.com/notawar/mobius/server/authz"
 	"github.com/notawar/mobius/server/config"
 	authz_ctx "github.com/notawar/mobius/server/contexts/authz"
 	"github.com/notawar/mobius/server/contexts/license"
 	"github.com/notawar/mobius/server/contexts/viewer"
-	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mdm/scep/x509util"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mock"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/test"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"io"
 
-	mobiuscli "github.com/notawar/mobius/mobiuscli"
 	"github.com/notawar/mobius/server/version"
 	"github.com/urfave/cli/v2"
 )
@@ -53,7 +52,6 @@ func CreateApp(
 		userCommand(),
 		debugCommand(),
 		previewCommand(),
-		eemobiuscli.UpdatesCommand(),
 		hostsCommand(),
 		vulnerabilityDataStreamCommand(),
 		packageCommand(),

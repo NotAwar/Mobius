@@ -19,20 +19,20 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ghodss/yaml"
+	kitlog "github.com/go-kit/log"
+	"github.com/jmoiron/sqlx"
 	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/datastore/mysql"
 	"github.com/notawar/mobius/server/datastore/redis/redistest"
-	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/live_query/live_query_mock"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/pubsub"
 	"github.com/notawar/mobius/server/service/contract"
 	"github.com/notawar/mobius/server/sso"
 	"github.com/notawar/mobius/server/test"
 	mobius_httptest "github.com/notawar/mobius/server/test/httptest"
-	"github.com/ghodss/yaml"
-	kitlog "github.com/go-kit/log"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -70,7 +70,7 @@ type withServer struct {
 	withDS
 
 	server           *httptest.Server
-	users            map[string]mobiuss.User
+	users            map[string]mobius.User
 	token            string
 	cachedAdminToken string
 
@@ -87,10 +87,10 @@ func (ts *withServer) SetupSuite(dbName string) {
 	cfg := config.TestConfig()
 	cfg.Osquery.EnrollCooldown = 0
 	opts := &TestServerOpts{
-		Rs:          rs,
-		Lq:          ts.lq,
+		Rs:           rs,
+		Lq:           ts.lq,
 		MobiusConfig: &cfg,
-		Pool:        redistest.SetupRedis(ts.s.T(), "integration_core", false, false, false),
+		Pool:         redistest.SetupRedis(ts.s.T(), "integration_core", false, false, false),
 	}
 	if os.Getenv("MOBIUS_INTEGRATION_TESTS_DISABLE_LOG") != "" {
 		opts.Logger = kitlog.NewNopLogger()
@@ -116,8 +116,8 @@ func (ts *withServer) commonTearDownTest(t *testing.T) {
 	ctx := context.Background()
 
 	u := ts.users["admin1@example.com"]
-	filter := mobiuss.TeamFilter{User: &u}
-	hosts, err := ts.ds.ListHosts(ctx, filter, mobiuss.HostListOptions{})
+	filter := mobius.TeamFilter{User: &u}
+	hosts, err := ts.ds.ListHosts(ctx, filter, mobius.HostListOptions{})
 	require.NoError(t, err)
 	for _, host := range hosts {
 		_, err := ts.ds.UpdateHostSoftware(context.Background(), host.ID, nil)
@@ -125,7 +125,7 @@ func (ts *withServer) commonTearDownTest(t *testing.T) {
 		require.NoError(t, ts.ds.DeleteHost(ctx, host.ID))
 	}
 
-	teams, err := ts.ds.ListTeams(ctx, mobiuss.TeamFilter{User: &u},mobiusus.ListOptions{})
+	teams, err := ts.ds.ListTeams(ctx, mobius.TeamFilter{User: &u}, mobius.ListOptions{})
 	require.NoError(t, err)
 	for _, tm := range teams {
 		err := ts.ds.DeleteTeam(ctx, tm.ID)
@@ -143,16 +143,16 @@ func (ts *withServer) commonTearDownTest(t *testing.T) {
 		return err
 	})
 
-	lbls, err := ts.ds.ListLabels(ctx, mobiuss.TeamFilter{},mobiusus.ListOptions{})
+	lbls, err := ts.ds.ListLabels(ctx, mobius.TeamFilter{}, mobius.ListOptions{})
 	require.NoError(t, err)
 	for _, lbl := range lbls {
-		if lbl.LabelType != mobiuss.LabelTypeBuiltIn {
+		if lbl.LabelType != mobius.LabelTypeBuiltIn {
 			err := ts.ds.DeleteLabel(ctx, lbl.Name)
 			require.NoError(t, err)
 		}
 	}
 
-	queries, _, _, err := ts.ds.ListQueries(ctx, mobiuss.ListQueryOptions{})
+	queries, _, _, err := ts.ds.ListQueries(ctx, mobius.ListQueryOptions{})
 	require.NoError(t, err)
 	queryIDs := make([]uint, 0, len(queries))
 	for _, query := range queries {
@@ -164,7 +164,7 @@ func (ts *withServer) commonTearDownTest(t *testing.T) {
 		require.EqualValues(t, len(queries), count)
 	}
 
-	users, err := ts.ds.ListUsers(ctx, mobiuss.UserListOptions{})
+	users, err := ts.ds.ListUsers(ctx, mobius.UserListOptions{})
 	require.NoError(t, err)
 	for _, u := range users {
 		if _, ok := ts.users[u.Email]; !ok {
@@ -179,7 +179,7 @@ func (ts *withServer) commonTearDownTest(t *testing.T) {
 		return err
 	})
 
-	globalPolicies, err := ts.ds.ListGlobalPolicies(ctx, mobiuss.ListOptions{})
+	globalPolicies, err := ts.ds.ListGlobalPolicies(ctx, mobius.ListOptions{})
 	require.NoError(t, err)
 	if len(globalPolicies) > 0 {
 		var globalPolicyIDs []uint
@@ -190,7 +190,7 @@ func (ts *withServer) commonTearDownTest(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	packs, err := ts.ds.ListPacks(ctx, mobiuss.PackListOptions{})
+	packs, err := ts.ds.ListPacks(ctx, mobius.PackListOptions{})
 	require.NoError(t, err)
 	for _, pack := range packs {
 		err := ts.ds.DeletePack(ctx, pack.Name)
@@ -280,7 +280,7 @@ func (ts *withServer) DoJSON(verb, path string, params interface{}, expectedStat
 	resp := ts.Do(verb, path, params, expectedStatusCode, queryParams...)
 	err := json.NewDecoder(resp.Body).Decode(v)
 	require.NoError(ts.s.T(), err)
-	if e, ok := v.(mobiuss.Errorer); ok {
+	if e, ok := v.(mobius.Errorer); ok {
 		require.NoError(ts.s.T(), e.Error())
 	}
 }
@@ -295,7 +295,7 @@ func (ts *withServer) DoJSONWithoutAuth(verb, path string, params interface{}, e
 	})
 	err = json.NewDecoder(resp.Body).Decode(v)
 	require.NoError(ts.s.T(), err)
-	if e, ok := v.(mobiuss.Errorer); ok {
+	if e, ok := v.(mobius.Errorer); ok {
 		require.NoError(ts.s.T(), e.Error())
 	}
 }
@@ -358,7 +358,7 @@ func GetToken(t *testing.T, email string, password string, serverURL string) str
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	jsn := struct {
-		User  *mobiuss.User         `json:"user"`
+		User  *mobius.User        `json:"user"`
 		Token string              `json:"token"`
 		Err   []map[string]string `json:"errors,omitempty"`
 	}{}
@@ -394,7 +394,7 @@ func (ts *withServer) applyTeamSpec(yamlSpec []byte) {
 	ts.Do("POST", "/api/latest/mobiuss/spec/teams", specsReq, http.StatusOK)
 }
 
-func (ts *withServer) LoginSSOUser(username, password string) (mobiuss.Auth, string) {
+func (ts *withServer) LoginSSOUser(username, password string) (mobius.Auth, string) {
 	t := ts.s.T()
 	auth, res := ts.loginSSOUser(username, password, "/api/v1/mobiuss/sso", http.StatusOK)
 	defer res.Body.Close()
@@ -408,7 +408,7 @@ func (ts *withServer) LoginMDMSSOUser(username, password string) *http.Response 
 	return res
 }
 
-func (ts *withServer) loginSSOUser(username, password string, basePath string, callbackStatus int) (mobiuss.Auth, *http.Response) {
+func (ts *withServer) loginSSOUser(username, password string, basePath string, callbackStatus int) (mobius.Auth, *http.Response) {
 	t := ts.s.T()
 
 	if _, ok := os.LookupEnv("SAML_IDP_TEST"); !ok {
@@ -545,7 +545,7 @@ func (ts *withServer) lastActivityOfTypeDoesNotMatch(name, details string, id ui
 
 func (ts *withServer) uploadSoftwareInstaller(
 	t *testing.T,
-	payload *mobiuss.UploadSoftwareInstallerPayload,
+	payload *mobius.UploadSoftwareInstallerPayload,
 	expectedStatus int,
 	expectedError string,
 ) {
@@ -554,18 +554,18 @@ func (ts *withServer) uploadSoftwareInstaller(
 
 func (ts *withServer) uploadSoftwareInstallerWithErrorNameReason(
 	t *testing.T,
-	payload *mobiuss.UploadSoftwareInstallerPayload,
+	payload *mobius.UploadSoftwareInstallerPayload,
 	expectedStatus int,
 	expectedErrorReason string,
 	expectedErrorName string,
 ) {
 	t.Helper()
 
-	tfr, err := mobiuss.NewKeepFileReader(filepath.Join("testdata", "software-installers", payload.Filename))
+	tfr, err := mobius.NewKeepFileReader(filepath.Join("testdata", "software-installers", payload.Filename))
 	// Try the test installers in the pkg/file testdata (to reduce clutter/copies).
 	if errors.Is(err, os.ErrNotExist) {
 		var err2 error
-		tfr, err2 = mobiuss.NewKeepFileReader(filepath.Join("..", "..", "pkg", "file", "testdata", "software-installers", payload.Filename))
+		tfr, err2 = mobius.NewKeepFileReader(filepath.Join("..", "..", "pkg", "file", "testdata", "software-installers", payload.Filename))
 		if err2 == nil {
 			err = nil
 		}
@@ -635,7 +635,7 @@ func (ts *withServer) uploadSoftwareInstallerWithErrorNameReason(
 
 func (ts *withServer) updateSoftwareInstaller(
 	t *testing.T,
-	payload *mobiuss.UpdateSoftwareInstallerPayload,
+	payload *mobius.UpdateSoftwareInstallerPayload,
 	expectedStatus int,
 	expectedError string,
 ) {

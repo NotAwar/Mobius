@@ -11,7 +11,7 @@ import (
 	"github.com/notawar/mobius/server/contexts/logging"
 	"github.com/notawar/mobius/server/contexts/token"
 	"github.com/notawar/mobius/server/errorstore"
-	"github.com/notawar/mobius/server/mobius"
+	mobiuss "github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/service/middleware/auth"
 
 	kithttp "github.com/go-kit/kit/transport/http"
@@ -80,7 +80,7 @@ func jsonHandler(
 }
 
 // MakeDebugHandler creates an HTTP handler for the Mobius debug endpoints.
-func MakeDebugHandler(svc mobiuss.Service, config config.MobiusConfig, logger kitlog.Logger, eh *errorstore.Handler, dsmobiusus.Datastore) http.Handler {
+func MakeDebugHandler(svc mobiuss.Service, config config.MobiusConfig, logger kitlog.Logger, eh *errorstore.Handler, ds mobiuss.Datastore) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
 	r.HandleFunc("/debug/pprof/profile", pprof.Profile)

@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -15,22 +18,22 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/pkg/mobiusdbase"
-	"github.com/notawar/mobius/pkg/mdm/mdmtest"
-	"github.com/notawar/mobius/server/config"
-	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
-	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
-	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/mdm/nanomdm/push"
-	"github.com/notawar/mobius/server/ptr"
 	kitlog "github.com/go-kit/log"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	micromdm "github.com/micromdm/micromdm/mdm/mdm"
 	"github.com/micromdm/plist"
+	"github.com/notawar/mobius/pkg/mdm/mdmtest"
+	"github.com/notawar/mobius/pkg/mobiusdbase"
+	"github.com/notawar/mobius/server/config"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
+	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
+	"github.com/notawar/mobius/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mdm/nanomdm/push"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
 	"github.com/smallstep/pkcs7"
 	"github.com/stretchr/testify/require"
 )

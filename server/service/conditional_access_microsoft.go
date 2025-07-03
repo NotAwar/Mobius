@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
+	"github.com/go-kit/log/level"
 	"github.com/notawar/mobius/server/authz"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
 	"github.com/notawar/mobius/server/mobius"
-	"github.com/go-kit/log/level"
 )
 
 type conditionalAccessMicrosoftCreateRequest struct {
@@ -24,7 +24,7 @@ type conditionalAccessMicrosoftCreateResponse struct {
 
 func (r conditionalAccessMicrosoftCreateResponse) Error() error { return r.Err }
 
-func conditionalAccessMicrosoftCreateEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) mobiusus.Errorer, error) {
+func conditionalAccessMicrosoftCreateEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mobius.Errorer, error) {
 	req := request.(*conditionalAccessMicrosoftCreateRequest)
 	adminConsentURL, err := svc.ConditionalAccessMicrosoftCreateIntegration(ctx, req.MicrosoftTenantID)
 	if err != nil {
@@ -37,12 +37,12 @@ func conditionalAccessMicrosoftCreateEndpoint(ctx context.Context, request inter
 
 func (svc *Service) ConditionalAccessMicrosoftCreateIntegration(ctx context.Context, tenantID string) (adminConsentURL string, err error) {
 	// 0. Check user is authorized to create an integration.
-	if err := svc.authz.Authorize(ctx, &mobiuss.ConditionalAccessMicrosoftIntegration{},mobiusus.ActionWrite); err != nil {
+	if err := svc.authz.Authorize(ctx, &mobius.ConditionalAccessMicrosoftIntegration{}, mobius.ActionWrite); err != nil {
 		return "", ctxerr.Wrap(ctx, err, "failed to authorize")
 	}
 
 	if !svc.config.MicrosoftCompliancePartner.IsSet() {
-		return "", &mobiuss.BadRequestError{Message: "microsoft conditional access configuration not set"}
+		return "", &mobius.BadRequestError{Message: "microsoft conditional access configuration not set"}
 	}
 
 	// Load current integration, if any.
@@ -60,7 +60,7 @@ func (svc *Service) ConditionalAccessMicrosoftCreateIntegration(ctx context.Cont
 		}
 		return getResponse.AdminConsentURL, nil
 	case existingIntegration != nil && existingIntegration.SetupDone:
-		return "", &mobiuss.BadRequestError{Message: "integration already setup"}
+		return "", &mobius.BadRequestError{Message: "integration already setup"}
 	}
 
 	//
@@ -97,7 +97,7 @@ type conditionalAccessMicrosoftConfirmResponse struct {
 
 func (r conditionalAccessMicrosoftConfirmResponse) Error() error { return r.Err }
 
-func conditionalAccessMicrosoftConfirmEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) mobiusus.Errorer, error) {
+func conditionalAccessMicrosoftConfirmEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mobius.Errorer, error) {
 	_ = request.(*conditionalAccessMicrosoftConfirmRequest)
 	configurationCompleted, err := svc.ConditionalAccessMicrosoftConfirm(ctx)
 	if err != nil {
@@ -110,12 +110,12 @@ func conditionalAccessMicrosoftConfirmEndpoint(ctx context.Context, request inte
 
 func (svc *Service) ConditionalAccessMicrosoftConfirm(ctx context.Context) (configurationCompleted bool, err error) {
 	// Check user is authorized to write integrations.
-	if err := svc.authz.Authorize(ctx, &mobiuss.ConditionalAccessMicrosoftIntegration{},mobiusus.ActionWrite); err != nil {
+	if err := svc.authz.Authorize(ctx, &mobius.ConditionalAccessMicrosoftIntegration{}, mobius.ActionWrite); err != nil {
 		return false, ctxerr.Wrap(ctx, err, "failed to authorize")
 	}
 
 	if !svc.config.MicrosoftCompliancePartner.IsSet() {
-		return false, &mobiuss.BadRequestError{Message: "microsoft conditional access configuration not set"}
+		return false, &mobius.BadRequestError{Message: "microsoft conditional access configuration not set"}
 	}
 
 	// Load current integration.
@@ -145,7 +145,7 @@ func (svc *Service) ConditionalAccessMicrosoftConfirm(ctx context.Context) (conf
 	if err := svc.NewActivity(
 		ctx,
 		authz.UserFromContext(ctx),
-		mobiuss.ActivityTypeAddedConditionalAccessIntegrationMicrosoft{},
+		mobius.ActivityTypeAddedConditionalAccessIntegrationMicrosoft{},
 	); err != nil {
 		return false, ctxerr.Wrap(ctx, err, "create activity for conditional access integration microsoft")
 	}
@@ -161,7 +161,7 @@ type conditionalAccessMicrosoftDeleteResponse struct {
 
 func (r conditionalAccessMicrosoftDeleteResponse) Error() error { return r.Err }
 
-func conditionalAccessMicrosoftDeleteEndpoint(ctx context.Context, request interface{}, svc mobiuss.Service) mobiusus.Errorer, error) {
+func conditionalAccessMicrosoftDeleteEndpoint(ctx context.Context, request interface{}, svc mobius.Service) (mobius.Errorer, error) {
 	_ = request.(*conditionalAccessMicrosoftDeleteRequest)
 	if err := svc.ConditionalAccessMicrosoftDelete(ctx); err != nil {
 		return conditionalAccessMicrosoftDeleteResponse{Err: err}, nil
@@ -171,19 +171,19 @@ func conditionalAccessMicrosoftDeleteEndpoint(ctx context.Context, request inter
 
 func (svc *Service) ConditionalAccessMicrosoftDelete(ctx context.Context) error {
 	// Check user is authorized to delete an integration.
-	if err := svc.authz.Authorize(ctx, &mobiuss.ConditionalAccessMicrosoftIntegration{},mobiusus.ActionWrite); err != nil {
+	if err := svc.authz.Authorize(ctx, &mobius.ConditionalAccessMicrosoftIntegration{}, mobius.ActionWrite); err != nil {
 		return ctxerr.Wrap(ctx, err, "failed to authorize")
 	}
 
 	if !svc.config.MicrosoftCompliancePartner.IsSet() {
-		return &mobiuss.BadRequestError{Message: "microsoft conditional access configuration not set"}
+		return &mobius.BadRequestError{Message: "microsoft conditional access configuration not set"}
 	}
 
 	// Load current integration.
 	integration, err := svc.ds.ConditionalAccessMicrosoftGet(ctx)
 	if err != nil {
-		if mobiuss.IsNotFound(err) {
-			return &mobiuss.BadRequestError{Message: "integration not found"}
+		if mobius.IsNotFound(err) {
+			return &mobius.BadRequestError{Message: "integration not found"}
 		}
 		return ctxerr.Wrap(ctx, err, "failed to load the integration")
 	}
@@ -191,7 +191,7 @@ func (svc *Service) ConditionalAccessMicrosoftDelete(ctx context.Context) error 
 	// Delete integration on the proxy.
 	deleteResponse, err := svc.conditionalAccessMicrosoftProxy.Delete(ctx, integration.TenantID, integration.ProxyServerSecret)
 	if err != nil {
-		if mobiuss.IsNotFound(err) {
+		if mobius.IsNotFound(err) {
 			// In case there's an issue on the Proxy database we want to make sure to
 			// allow deleting the integration in Mobius, so we continue.
 			svc.logger.Log("msg", "delete returned not found, continuing...")
@@ -210,7 +210,7 @@ func (svc *Service) ConditionalAccessMicrosoftDelete(ctx context.Context) error 
 	if err := svc.NewActivity(
 		ctx,
 		authz.UserFromContext(ctx),
-		mobiuss.ActivityTypeDeletedConditionalAccessIntegrationMicrosoft{},
+		mobius.ActivityTypeDeletedConditionalAccessIntegrationMicrosoft{},
 	); err != nil {
 		return ctxerr.Wrap(ctx, err, "create activity for deletion of conditional access integration microsoft")
 	}
@@ -218,9 +218,9 @@ func (svc *Service) ConditionalAccessMicrosoftDelete(ctx context.Context) error 
 	return nil
 }
 
-func (svc *Service) ConditionalAccessMicrosoftGet(ctx context.Context) (*mobiuss.ConditionalAccessMicrosoftIntegration, error) {
+func (svc *Service) ConditionalAccessMicrosoftGet(ctx context.Context) (*mobius.ConditionalAccessMicrosoftIntegration, error) {
 	// Check user is authorized to read app config (which is where expose integration information)
-	if err := svc.authz.Authorize(ctx, &mobiuss.AppConfig{},mobiusus.ActionRead); err != nil {
+	if err := svc.authz.Authorize(ctx, &mobius.AppConfig{}, mobius.ActionRead); err != nil {
 		return nil, ctxerr.Wrap(ctx, err, "failed to authorize")
 	}
 
@@ -231,7 +231,7 @@ func (svc *Service) ConditionalAccessMicrosoftGet(ctx context.Context) (*mobiuss
 	// Load current integration.
 	integration, err := svc.ds.ConditionalAccessMicrosoftGet(ctx)
 	if err != nil {
-		if mobiuss.IsNotFound(err) {
+		if mobius.IsNotFound(err) {
 			return nil, nil
 		}
 		return nil, ctxerr.Wrap(ctx, err, "failed to load the integration")

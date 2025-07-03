@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -16,10 +19,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	"github.com/micromdm/plist"
 	"github.com/notawar/mobius/pkg/mdm/mdmtest"
 	"github.com/notawar/mobius/pkg/optjson"
 	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
 	servermdm "github.com/notawar/mobius/server/mdm"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
 	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
@@ -27,11 +32,9 @@ import (
 	"github.com/notawar/mobius/server/mdm/microsoft/syncml"
 	"github.com/notawar/mobius/server/mdm/nanodep/godep"
 	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/test"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
-	"github.com/micromdm/plist"
 	"github.com/smallstep/pkcs7"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -4078,7 +4081,7 @@ func (s *integrationMDMTestSuite) TestWindowsProfileManagement() {
 	// purposefully using deprecated path for backwards compatibility
 	_ = s.DoRaw("POST", fmt.Sprintf("/api/latest/mobius/hosts/%d/configuration_profiles/resend/%s", host.ID, globalProfiles[0]), nil,
 		http.StatusAccepted)
-	verifyProfiles(mdmDevice, 1, false)                                                 // trigger a profile sync, device gets the profile resent
+	verifyProfiles(mdmDevice, 1, false)                                                  // trigger a profile sync, device gets the profile resent
 	checkHostProfileStatus(t, host.UUID, globalProfiles[0], mobius.MDMDeliveryVerifying) // profile was resent, so it back to verifying
 
 	// add the host to a team
@@ -4190,7 +4193,7 @@ func (s *integrationMDMTestSuite) TestWindowsProfileManagement() {
 	// can resend a profile after it has failed
 	_ = s.DoRaw("POST", fmt.Sprintf("/api/latest/mobius/hosts/%d/configuration_profiles/%s/resend", host.ID, teamProfiles[0]), nil,
 		http.StatusAccepted)
-	verifyProfiles(mdmDevice, 1, false)                                               // trigger a profile sync, device gets the profile resent
+	verifyProfiles(mdmDevice, 1, false)                                                // trigger a profile sync, device gets the profile resent
 	checkHostProfileStatus(t, host.UUID, teamProfiles[0], mobius.MDMDeliveryVerifying) // profile was resent, so back to verifying
 	s.lastActivityMatches(
 		mobius.ActivityTypeResentConfigurationProfile{}.ActivityName(),
@@ -4687,18 +4690,18 @@ func (s *integrationMDMTestSuite) TestBatchSetMDMProfilesBackwardsCompat() {
 	// profiles with reserved Windows location URIs
 	// bitlocker
 	res := s.Do("POST", "/api/v1/mobius/mdm/profiles/batch", map[string]any{"profiles": map[string][]byte{
-		"N1":                              mobileconfigForTest("N1", "I1"),
+		"N1":                               mobileconfigForTest("N1", "I1"),
 		syncml.MobiusBitLockerTargetLocURI: syncMLForTest(fmt.Sprintf("%s/Foo", syncml.MobiusBitLockerTargetLocURI)),
-		"N3":                              syncMLForTest("./Foo/Bar"),
+		"N3":                               syncMLForTest("./Foo/Bar"),
 	}}, http.StatusUnprocessableEntity, "team_id", fmt.Sprint(tm.ID))
 	errMsg := extractServerErrorText(res.Body)
 	assert.Contains(t, errMsg, syncml.DiskEncryptionProfileRestrictionErrMsg)
 
 	// os updates
 	res = s.Do("POST", "/api/v1/mobius/mdm/profiles/batch", map[string]any{"profiles": map[string][]byte{
-		"N1":                             mobileconfigForTest("N1", "I1"),
+		"N1":                              mobileconfigForTest("N1", "I1"),
 		syncml.MobiusOSUpdateTargetLocURI: syncMLForTest(fmt.Sprintf("%s/Foo", syncml.MobiusOSUpdateTargetLocURI)),
-		"N3":                             syncMLForTest("./Foo/Bar"),
+		"N3":                              syncMLForTest("./Foo/Bar"),
 	}}, http.StatusUnprocessableEntity, "team_id", fmt.Sprint(tm.ID))
 	errMsg = extractServerErrorText(res.Body)
 	require.Contains(t, errMsg, "Custom configuration profiles can't include Windows updates settings. To control these settings, use the mdm.windows_updates option.")

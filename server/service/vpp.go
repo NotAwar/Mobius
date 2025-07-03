@@ -231,7 +231,14 @@ func (patchVPPTokenRenewRequest) DecodeRequest(ctx context.Context, r *http.Requ
 		return nil, ctxerr.Wrap(ctx, err, "failed to parse vpp token id")
 	}
 
-	decoded.ID = uint(id) //nolint:gosec // dismiss G115
+	if id > uint64(^uint(0)) { // Ensure id fits within the range of the uint type
+		return nil, &mobius.BadRequestError{
+			Message:     "vpp token id exceeds allowable range",
+			InternalErr: nil,
+		}
+	}
+
+	decoded.ID = uint(id)
 
 	return &decoded, nil
 }

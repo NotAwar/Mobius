@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -22,23 +25,23 @@ import (
 	"time"
 
 	"github.com/WatchBeam/clock"
+	"github.com/ghodss/yaml"
+	"github.com/go-kit/log"
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"github.com/notawar/mobius/pkg/mobiushttp"
 	"github.com/notawar/mobius/server"
 	"github.com/notawar/mobius/server/config"
 	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/live_query/live_query_mock"
 	"github.com/notawar/mobius/server/mdm/android"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/service/async"
 	"github.com/notawar/mobius/server/service/contract"
 	"github.com/notawar/mobius/server/service/middleware/endpoint_utils"
 	"github.com/notawar/mobius/server/service/osquery_utils"
 	"github.com/notawar/mobius/server/test"
-	"github.com/ghodss/yaml"
-	"github.com/go-kit/log"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"

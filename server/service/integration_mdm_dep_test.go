@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -17,24 +20,24 @@ import (
 	"testing"
 	"time"
 
+	kitlog "github.com/go-kit/log"
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	micromdm "github.com/micromdm/micromdm/mdm/mdm"
+	"github.com/micromdm/plist"
+	"github.com/notawar/mobius/pkg/mdm/mdmtest"
 	"github.com/notawar/mobius/pkg/mobiusdbase"
 	"github.com/notawar/mobius/pkg/mobiushttp"
-	"github.com/notawar/mobius/pkg/mdm/mdmtest"
 	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
 	"github.com/notawar/mobius/server/mdm/apple/mobileconfig"
 	"github.com/notawar/mobius/server/mdm/apple/vpp"
 	"github.com/notawar/mobius/server/mdm/nanodep/godep"
 	"github.com/notawar/mobius/server/mdm/nanomdm/mdm"
 	"github.com/notawar/mobius/server/mdm/nanomdm/push"
+	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/ptr"
 	"github.com/notawar/mobius/server/worker"
-	kitlog "github.com/go-kit/log"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
-	micromdm "github.com/micromdm/micromdm/mdm/mdm"
-	"github.com/micromdm/plist"
 	"github.com/smallstep/pkcs7"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -132,7 +135,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseDeviceGlobal() {
 				EnableReleaseManually:             enableReleaseManually,
 				TeamID:                            nil,
 				CustomProfileIdent:                "I1",
-				UseOldMobiusdFlow:                  false,
+				UseOldMobiusdFlow:                 false,
 				EnrollmentProfileFromDEPUsingPost: true,
 			})
 		})
@@ -144,7 +147,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseDeviceGlobal() {
 				EnableReleaseManually: enableReleaseManually,
 				TeamID:                nil,
 				CustomProfileIdent:    "I1",
-				UseOldMobiusdFlow:      true,
+				UseOldMobiusdFlow:     true,
 			})
 		})
 	}
@@ -158,7 +161,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseDeviceGlobal() {
 				EnableReleaseManually:             enableReleaseManually,
 				TeamID:                            nil,
 				CustomProfileIdent:                "I1",
-				UseOldMobiusdFlow:                  false,
+				UseOldMobiusdFlow:                 false,
 				EnrollmentProfileFromDEPUsingPost: true,
 			})
 		})
@@ -273,7 +276,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseDeviceTeam() {
 				EnableReleaseManually:             enableReleaseManually,
 				TeamID:                            &tm.ID,
 				CustomProfileIdent:                "I2",
-				UseOldMobiusdFlow:                  false,
+				UseOldMobiusdFlow:                 false,
 				EnrollmentProfileFromDEPUsingPost: true,
 			})
 		})
@@ -285,7 +288,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseDeviceTeam() {
 				EnableReleaseManually: enableReleaseManually,
 				TeamID:                &tm.ID,
 				CustomProfileIdent:    "I2",
-				UseOldMobiusdFlow:      true,
+				UseOldMobiusdFlow:     true,
 			})
 		})
 	}
@@ -299,7 +302,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseDeviceTeam() {
 				EnableReleaseManually:             enableReleaseManually,
 				TeamID:                            &tm.ID,
 				CustomProfileIdent:                "I2",
-				UseOldMobiusdFlow:                  false,
+				UseOldMobiusdFlow:                 false,
 				EnrollmentProfileFromDEPUsingPost: true,
 			})
 		})
@@ -380,7 +383,7 @@ func (s *integrationMDMTestSuite) TestDEPEnrollReleaseIphoneTeam() {
 				EnableReleaseManually:             enableReleaseManually,
 				TeamID:                            &tm.ID,
 				CustomProfileIdent:                "I2",
-				UseOldMobiusdFlow:                  false,
+				UseOldMobiusdFlow:                 false,
 				EnrollmentProfileFromDEPUsingPost: true,
 			})
 		})
@@ -392,7 +395,7 @@ type DEPEnrollTestOpts struct {
 	EnableReleaseManually             bool
 	TeamID                            *uint
 	CustomProfileIdent                string
-	UseOldMobiusdFlow                  bool
+	UseOldMobiusdFlow                 bool
 	ManualAgentInstall                bool
 	EnrollmentProfileFromDEPUsingPost bool
 }
@@ -1374,7 +1377,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 	// run the integrations schedule during the cooldown period
 	profileAssignmentReqs = []profileAssignmentReq{}
 	s.runIntegrationsSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                                           // no new request during cooldown
+	require.Empty(t, profileAssignmentReqs)                                                                            // no new request during cooldown
 	checkHostCooldown(eHost.HardwareSerial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, expectNoJobID) // no change
 	checkNoJobsPending()
 
@@ -1394,7 +1397,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 	// expect no assign profile request during cooldown
 	profileAssignmentReqs = []profileAssignmentReq{}
 	s.runIntegrationsSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                                           // screened for cooldown
+	require.Empty(t, profileAssignmentReqs)                                                                            // screened for cooldown
 	checkHostCooldown(eHost.HardwareSerial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, expectNoJobID) // no change
 	checkNoJobsPending()
 
@@ -1403,7 +1406,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 	require.NoError(t, err)
 	checkPendingMacOSSetupAssistantJob("update_profile", &dummyTeam.ID, []string{eHost.HardwareSerial}, 0)
 	s.runIntegrationsSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                                           // screened for cooldown
+	require.Empty(t, profileAssignmentReqs)                                                                            // screened for cooldown
 	checkHostCooldown(eHost.HardwareSerial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, expectNoJobID) // no change
 	checkNoJobsPending()
 
@@ -1412,7 +1415,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 	require.NoError(t, err)
 	checkPendingMacOSSetupAssistantJob("profile_deleted", &dummyTeam.ID, []string{eHost.HardwareSerial}, 0)
 	s.runIntegrationsSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                                           // screened for cooldown
+	require.Empty(t, profileAssignmentReqs)                                                                            // screened for cooldown
 	checkHostCooldown(eHost.HardwareSerial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, expectNoJobID) // no change
 	checkNoJobsPending()
 
@@ -1434,7 +1437,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 	checkPendingMacOSSetupAssistantJob("hosts_transferred", nil, []string{eHost.HardwareSerial}, 0)
 	profileAssignmentReqs = []profileAssignmentReq{}
 	s.runIntegrationsSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                                           // screened for cooldown
+	require.Empty(t, profileAssignmentReqs)                                                                            // screened for cooldown
 	checkHostCooldown(eHost.HardwareSerial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, expectNoJobID) // no change
 	checkNoJobsPending()
 
@@ -1452,7 +1455,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 	// running the DEP schedule should not trigger a profile assignment request when the retry job is pending
 	profileAssignmentReqs = []profileAssignmentReq{}
 	s.runDEPSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                                    // assign profile request will be made when the retry job is processed on the next worker run
+	require.Empty(t, profileAssignmentReqs)                                                                     // assign profile request will be made when the retry job is processed on the next worker run
 	checkHostCooldown(eHost.HardwareSerial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, &jobID) // no change
 	checkPendingMacOSSetupAssistantJob("hosts_cooldown", nil, []string{eHost.HardwareSerial}, jobID)
 	checkListHostDEPError(eHost.HardwareSerial, "On (automatic)", true)
@@ -1497,7 +1500,7 @@ func (s *integrationMDMTestSuite) TestDEPProfileAssignment() {
 		addHostsToTeamRequest{TeamID: &team.ID, HostIDs: []uint{h.ID}}, http.StatusOK)
 	checkPendingMacOSSetupAssistantJob("hosts_transferred", &team.ID, []string{serial}, 0)
 	s.runIntegrationsSchedule()
-	require.Empty(t, profileAssignmentReqs)                                                             // screened by cooldown
+	require.Empty(t, profileAssignmentReqs)                                                              // screened by cooldown
 	checkHostCooldown(serial, profUUID, mobius.DEPAssignProfileResponseFailed, &failedAt, expectNoJobID) // no change
 	checkNoJobsPending()
 

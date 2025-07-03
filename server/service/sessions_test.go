@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -20,57 +23,57 @@ func TestSessionAuth(t *testing.T) {
 	ds := new(mock.Store)
 	svc, ctx := newTestService(t, ds, nil, nil)
 
-	ds.ListSessionsForUserFunc = func(ctx context.Context, id uint) ([]*mobiuss.Session, error) {
+	ds.ListSessionsForUserFunc = func(ctx context.Context, id uint) ([]*mobius.Session, error) {
 		if id == 999 {
-			return []*mobiuss.Session{
+			return []*mobius.Session{
 				{ID: 1, UserID: id, AccessedAt: time.Now()},
 			}, nil
 		}
 		return nil, nil
 	}
-	ds.SessionByIDFunc = func(ctx context.Context, id uint) (*mobiuss.Session, error) {
-		return &mobiuss.Session{ID: id, UserID: 999, AccessedAt: time.Now()}, nil
+	ds.SessionByIDFunc = func(ctx context.Context, id uint) (*mobius.Session, error) {
+		return &mobius.Session{ID: id, UserID: 999, AccessedAt: time.Now()}, nil
 	}
-	ds.DestroySessionFunc = func(ctx context.Context, ssn *mobiuss.Session) error {
+	ds.DestroySessionFunc = func(ctx context.Context, ssn *mobius.Session) error {
 		return nil
 	}
-	ds.MarkSessionAccessedFunc = func(ctx context.Context, ssn *mobiuss.Session) error {
+	ds.MarkSessionAccessedFunc = func(ctx context.Context, ssn *mobius.Session) error {
 		return nil
 	}
 
 	testCases := []struct {
 		name            string
-		user            *mobiuss.User
+		user            *mobius.User
 		shouldFailWrite bool
 		shouldFailRead  bool
 	}{
 		{
 			"global admin",
-			&mobiuss.User{ID: 111, GlobalRole: ptr.Stringmobiusus.RoleAdmin)},
+			&mobius.User{ID: 111, GlobalRole: ptr.String(mobius.RoleAdmin)},
 			false,
 			false,
 		},
 		{
 			"global maintainer",
-			&mobiuss.User{ID: 111, GlobalRole: ptr.Stringmobiusus.RoleMaintainer)},
+			&mobius.User{ID: 111, GlobalRole: ptr.String(mobius.RoleMaintainer)},
 			true,
 			true,
 		},
 		{
 			"global observer",
-			&mobiuss.User{ID: 111, GlobalRole: ptr.Stringmobiusus.RoleObserver)},
+			&mobius.User{ID: 111, GlobalRole: ptr.String(mobius.RoleObserver)},
 			true,
 			true,
 		},
 		{
 			"owner user",
-			&mobiuss.User{ID: 999},
+			&mobius.User{ID: 999},
 			false,
 			false,
 		},
 		{
 			"non-owner user",
-			&mobiuss.User{ID: 888},
+			&mobius.User{ID: 888},
 			true,
 			true,
 		},
@@ -138,16 +141,16 @@ func TestMFA(t *testing.T) {
 	ds := new(mock.Store)
 	svc, ctx := newTestService(t, ds, nil, nil)
 
-	user := &mobiuss.User{MFAEnabled: true, Name: "Bob Smith", Email: "foo@example.com"}
+	user := &mobius.User{MFAEnabled: true, Name: "Bob Smith", Email: "foo@example.com"}
 	require.NoError(t, user.SetPassword(test.GoodPassword, 10, 10))
-	ds.UserByEmailFunc = func(ctx context.Context, email string) (*mobiuss.User, error) {
+	ds.UserByEmailFunc = func(ctx context.Context, email string) (*mobius.User, error) {
 		return user, nil
 	}
 	_, _, err := svc.Login(ctx, "foo@example.com", test.GoodPassword, false)
 	require.Equal(t, err, mfaNotSupportedForClient)
 
-	var sentMail mobiuss.Email
-	mailer := &mockMailService{SendEmailFn: func(e mobiuss.Email) error {
+	var sentMail mobius.Email
+	mailer := &mockMailService{SendEmailFn: func(e mobius.Email) error {
 		sentMail = e
 		return nil
 	}}
@@ -155,8 +158,8 @@ func TestMFA(t *testing.T) {
 	ds.NewMFATokenFunc = func(ctx context.Context, userID uint) (string, error) {
 		return mfaToken, nil
 	}
-	ds.AppConfigFunc = func(ctx context.Context) (*mobiuss.AppConfig, error) {
-		return &mobiuss.AppConfig{}, nil
+	ds.AppConfigFunc = func(ctx context.Context) (*mobius.AppConfig, error) {
+		return &mobius.AppConfig{}, nil
 	}
 	svcForMailing := validationMiddleware{&Service{
 		ds:          ds,
@@ -168,9 +171,9 @@ func TestMFA(t *testing.T) {
 	require.Equal(t, "foo@example.com", sentMail.To[0])
 	require.Equal(t, "Log in to Mobius", sentMail.Subject)
 
-	var session *mobiuss.Session
-	var mfaUser *mobiuss.User
-	ds.SessionByMFATokenFunc = func(ctx context.Context, token string, sessionKeySize int) (*mobiuss.Session, mobiusus.User, error) {
+	var session *mobius.Session
+	var mfaUser *mobius.User
+	ds.SessionByMFATokenFunc = func(ctx context.Context, token string, sessionKeySize int) (*mobius.Session, mobius.User, error) {
 		if token == mfaToken {
 			return session, mfaUser, nil
 		}
@@ -180,11 +183,11 @@ func TestMFA(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, resp.Error())
 
-	session = &mobiuss.Session{}
+	session = &mobius.Session{}
 	mfaUser = user
-	ds.NewActivityFunc = func(ctx context.Context, user *mobiuss.User, activitymobiusus.ActivityDetails, details []byte, createdAt time.Time) error {
+	ds.NewActivityFunc = func(ctx context.Context, user *mobius.User, activity mobius.ActivityDetails, details []byte, createdAt time.Time) error {
 		require.Equal(t, mfaUser, user)
-		require.Equal(t, mobiuss.ActivityTypeUserLoggedIn{}.ActivityName(), activity.ActivityName())
+		require.Equal(t, mobius.ActivityTypeUserLoggedIn{}.ActivityName(), activity.ActivityName())
 		return nil
 	}
 	resp, err = sessionCreateEndpoint(ctx, &sessionCreateRequest{Token: mfaToken}, svc)
@@ -198,15 +201,15 @@ func TestGetSessionByKey(t *testing.T) {
 	svc, ctx := newTestService(t, ds, nil, nil)
 	cfg := config.TestConfig()
 
-	theSession := &mobiuss.Session{UserID: 123, Key: "abc"}
+	theSession := &mobius.Session{UserID: 123, Key: "abc"}
 
-	ds.SessionByKeyFunc = func(ctx context.Context, key string) (*mobiuss.Session, error) {
+	ds.SessionByKeyFunc = func(ctx context.Context, key string) (*mobius.Session, error) {
 		return theSession, nil
 	}
-	ds.DestroySessionFunc = func(ctx context.Context, ssn *mobiuss.Session) error {
+	ds.DestroySessionFunc = func(ctx context.Context, ssn *mobius.Session) error {
 		return nil
 	}
-	ds.MarkSessionAccessedFunc = func(ctx context.Context, ssn *mobiuss.Session) error {
+	ds.MarkSessionAccessedFunc = func(ctx context.Context, ssn *mobius.Session) error {
 		return nil
 	}
 
@@ -223,7 +226,7 @@ func TestGetSessionByKey(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.desc, func(t *testing.T) {
-			var authErr *mobiuss.AuthRequiredError
+			var authErr *mobius.AuthRequiredError
 			ds.SessionByKeyFuncInvoked, ds.DestroySessionFuncInvoked, ds.MarkSessionAccessedFuncInvoked = false, false, false
 
 			theSession.AccessedAt = time.Now().Add(tc.accessed)
@@ -249,10 +252,10 @@ type testAuth struct {
 	userID              string
 	userDisplayName     string
 	requestID           string
-	assertionAttributes []mobiuss.SAMLAttribute
+	assertionAttributes []mobius.SAMLAttribute
 }
 
-var _ mobiuss.Auth = (*testAuth)(nil)
+var _ mobius.Auth = (*testAuth)(nil)
 
 func (a *testAuth) UserID() string {
 	return a.userID
@@ -266,27 +269,27 @@ func (a *testAuth) RequestID() string {
 	return a.requestID
 }
 
-func (a *testAuth) AssertionAttributes() []mobiuss.SAMLAttribute {
+func (a *testAuth) AssertionAttributes() []mobius.SAMLAttribute {
 	return a.assertionAttributes
 }
 
 func TestGetSSOUser(t *testing.T) {
 	ds := new(mock.Store)
 	svc, ctx := newTestService(t, ds, nil, nil, &TestServerOpts{
-		License: &mobiuss.LicenseInfo{
-			Tier: mobiuss.TierPremium,
+		License: &mobius.LicenseInfo{
+			Tier: mobius.TierPremium,
 		},
 	})
 
 	ds.NewActivityFunc = func(
-		ctx context.Context, user *mobiuss.User, activitymobiusus.ActivityDetails, details []byte, createdAt time.Time,
+		ctx context.Context, user *mobius.User, activity mobius.ActivityDetails, details []byte, createdAt time.Time,
 	) error {
 		return nil
 	}
 
-	ds.AppConfigFunc = func(ctx context.Context) (*mobiuss.AppConfig, error) {
-		return &mobiuss.AppConfig{
-			SSOSettings: &mobiuss.SSOSettings{
+	ds.AppConfigFunc = func(ctx context.Context) (*mobius.AppConfig, error) {
+		return &mobius.AppConfig{
+			SSOSettings: &mobius.SSOSettings{
 				EnableSSO:             true,
 				EnableSSOIdPLogin:     true,
 				EnableJITProvisioning: true,
@@ -294,12 +297,12 @@ func TestGetSSOUser(t *testing.T) {
 		}, nil
 	}
 
-	ds.UserByEmailFunc = func(ctx context.Context, email string) (*mobiuss.User, error) {
+	ds.UserByEmailFunc = func(ctx context.Context, email string) (*mobius.User, error) {
 		return nil, newNotFoundError()
 	}
 
-	var newUser *mobiuss.User
-	ds.NewUserFunc = func(ctx context.Context, user *mobiuss.User) (mobiusus.User, error) {
+	var newUser *mobius.User
+	ds.NewUserFunc = func(ctx context.Context, user *mobius.User) (mobius.User, error) {
 		newUser = user
 		return user, nil
 	}
@@ -308,10 +311,10 @@ func TestGetSSOUser(t *testing.T) {
 		userID:          "foo@example.com",
 		userDisplayName: "foo@example.com",
 		requestID:       "foobar",
-		assertionAttributes: []mobiuss.SAMLAttribute{
+		assertionAttributes: []mobius.SAMLAttribute{
 			{
 				Name: "MOBIUS_JIT_USER_ROLE_GLOBAL",
-				Values: []mobiuss.SAMLAttributeValue{
+				Values: []mobius.SAMLAttributeValue{
 					{Value: "admin"},
 				},
 			},
@@ -331,11 +334,11 @@ func TestGetSSOUser(t *testing.T) {
 
 	// (1) Check that when a user's role attributes are unchanged then SavedUser is not called.
 
-	ds.SaveUserFunc = func(ctx context.Context, user *mobiuss.User) error {
+	ds.SaveUserFunc = func(ctx context.Context, user *mobius.User) error {
 		return nil
 	}
 
-	ds.UserByEmailFunc = func(ctx context.Context, email string) (*mobiuss.User, error) {
+	ds.UserByEmailFunc = func(ctx context.Context, email string) (*mobius.User, error) {
 		return newUser, nil
 	}
 
@@ -346,20 +349,20 @@ func TestGetSSOUser(t *testing.T) {
 
 	// (2) Test SSO login with the same user with roles updated in its attributes.
 
-	var savedUser *mobiuss.User
-	ds.SaveUserFunc = func(ctx context.Context, user *mobiuss.User) error {
+	var savedUser *mobius.User
+	ds.SaveUserFunc = func(ctx context.Context, user *mobius.User) error {
 		savedUser = user
 		return nil
 	}
 
-	ds.TeamFunc = func(ctx context.Context, tid uint) (*mobiuss.Team, error) {
-		return &mobiuss.Team{ID: tid}, nil
+	ds.TeamFunc = func(ctx context.Context, tid uint) (*mobius.Team, error) {
+		return &mobius.Team{ID: tid}, nil
 	}
 
-	auth.assertionAttributes = []mobiuss.SAMLAttribute{
+	auth.assertionAttributes = []mobius.SAMLAttribute{
 		{
 			Name: "MOBIUS_JIT_USER_ROLE_TEAM_2",
-			Values: []mobiuss.SAMLAttributeValue{
+			Values: []mobius.SAMLAttributeValue{
 				{Value: "maintainer"},
 			},
 		},
@@ -380,9 +383,9 @@ func TestGetSSOUser(t *testing.T) {
 
 	ds.SaveUserFuncInvoked = false
 
-	ds.AppConfigFunc = func(ctx context.Context) (*mobiuss.AppConfig, error) {
-		return &mobiuss.AppConfig{
-			SSOSettings: &mobiuss.SSOSettings{
+	ds.AppConfigFunc = func(ctx context.Context) (*mobius.AppConfig, error) {
+		return &mobius.AppConfig{
+			SSOSettings: &mobius.SSOSettings{
 				EnableSSO:             true,
 				EnableSSOIdPLogin:     true,
 				EnableJITProvisioning: false,
@@ -390,10 +393,10 @@ func TestGetSSOUser(t *testing.T) {
 		}, nil
 	}
 
-	auth.assertionAttributes = []mobiuss.SAMLAttribute{
+	auth.assertionAttributes = []mobius.SAMLAttribute{
 		{
 			Name: "MOBIUS_JIT_USER_ROLE_TEAM_2",
-			Values: []mobiuss.SAMLAttributeValue{
+			Values: []mobius.SAMLAttributeValue{
 				{Value: "admin"},
 			},
 		},
@@ -406,9 +409,9 @@ func TestGetSSOUser(t *testing.T) {
 
 	// (4) Test with invalid team ID in the attributes
 
-	ds.AppConfigFunc = func(ctx context.Context) (*mobiuss.AppConfig, error) {
-		return &mobiuss.AppConfig{
-			SSOSettings: &mobiuss.SSOSettings{
+	ds.AppConfigFunc = func(ctx context.Context) (*mobius.AppConfig, error) {
+		return &mobius.AppConfig{
+			SSOSettings: &mobius.SSOSettings{
 				EnableSSO:             true,
 				EnableSSOIdPLogin:     true,
 				EnableJITProvisioning: true,
@@ -416,14 +419,14 @@ func TestGetSSOUser(t *testing.T) {
 		}, nil
 	}
 
-	ds.TeamFunc = func(ctx context.Context, tid uint) (*mobiuss.Team, error) {
+	ds.TeamFunc = func(ctx context.Context, tid uint) (*mobius.Team, error) {
 		return nil, newNotFoundError()
 	}
 
-	auth.assertionAttributes = []mobiuss.SAMLAttribute{
+	auth.assertionAttributes = []mobius.SAMLAttribute{
 		{
 			Name: "MOBIUS_JIT_USER_ROLE_TEAM_3",
-			Values: []mobiuss.SAMLAttributeValue{
+			Values: []mobius.SAMLAttributeValue{
 				{Value: "maintainer"},
 			},
 		},

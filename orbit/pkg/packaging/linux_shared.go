@@ -10,12 +10,12 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/semver"
-	"github.com/notawar/mobius/orbit/pkg/constant"
-	"github.com/notawar/mobius/orbit/pkg/update"
-	"github.com/notawar/mobius/pkg/secure"
 	"github.com/goreleaser/nfpm/v2"
 	"github.com/goreleaser/nfpm/v2/files"
 	"github.com/goreleaser/nfpm/v2/rpm"
+	"github.com/notawar/mobius/orbit/pkg/constant"
+	"github.com/notawar/mobius/orbit/pkg/update"
+	"github.com/notawar/mobius/pkg/secure"
 	"github.com/rs/zerolog/log"
 )
 
@@ -192,7 +192,7 @@ func buildNFPM(opt Options, pkger nfpm.Packager) (string, error) {
 		contents = append(contents, (&files.Content{
 			Destination: emptyFolder,
 			Type:        "dir",
-		}).WithFileInfoDefaults())
+		}).WithFileInfoDefaults(0))
 	}
 
 	if varLibSymlink {
@@ -208,7 +208,7 @@ func buildNFPM(opt Options, pkger nfpm.Packager) (string, error) {
 			})
 	}
 
-	contents, err = files.ExpandContentGlobs(contents, false)
+	contents, err = files.PrepareForPackager(contents, 0, "", false)
 	if err != nil {
 		return "", fmt.Errorf("glob contents: %w", err)
 	}

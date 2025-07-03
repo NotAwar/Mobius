@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -11,7 +14,6 @@ import (
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/mock"
 	"github.com/notawar/mobius/server/ptr"
-	service "github.com/notawar/mobius/server/service"
 	"github.com/notawar/mobius/server/test"
 	"github.com/stretchr/testify/require"
 )
@@ -169,7 +171,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 
 	t.Run("validate no update", func(t *testing.T) {
 		t.Run("no auth context", func(t *testing.T) {
-			_, err := service.ValidateSoftwareLabels(context.Background(), svc, nil, nil)
+			_, err := (ValidateSoftwareLabels)(context.Background(), svc, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -177,7 +179,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 		ctx = authz_ctx.NewContext(ctx, &authCtx)
 
 		t.Run("no auth checked", func(t *testing.T) {
-			_, err := service.ValidateSoftwareLabels(ctx, svc, nil, nil)
+			_, err := (ValidateSoftwareLabels)(ctx, svc, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -287,7 +289,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 		}
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
-				got, err := service.ValidateSoftwareLabels(ctx, svc, tt.payloadIncludeAny, tt.payloadExcludeAny)
+				got, err := (ValidateSoftwareLabels)(ctx, svc, tt.payloadIncludeAny, tt.payloadExcludeAny)
 				if tt.expectError != "" {
 					require.Error(t, err)
 					require.Contains(t, err.Error(), tt.expectError)
@@ -303,7 +305,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 
 	t.Run("validate update", func(t *testing.T) {
 		t.Run("no auth context", func(t *testing.T) {
-			_, _, err := service.ValidateSoftwareLabelsForUpdate(context.Background(), svc, nil, nil, nil)
+			_, _, err := (ValidateSoftwareLabelsForUpdate)(context.Background(), svc, nil, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -311,7 +313,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 		ctx = authz_ctx.NewContext(ctx, &authCtx)
 
 		t.Run("no auth checked", func(t *testing.T) {
-			_, _, err := service.ValidateSoftwareLabelsForUpdate(ctx, svc, nil, nil, nil)
+			_, _, err := (ValidateSoftwareLabelsForUpdate)(ctx, svc, nil, nil, nil)
 			require.ErrorContains(t, err, "Authentication required")
 		})
 
@@ -429,7 +431,7 @@ func TestValidateSoftwareLabels(t *testing.T) {
 
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
-				shouldUpate, got, err := service.ValidateSoftwareLabelsForUpdate(ctx, svc, tt.existingInstaller, tt.payloadIncludeAny, tt.payloadExcludeAny)
+				shouldUpate, got, err := (ValidateSoftwareLabelsForUpdate)(ctx, svc, tt.existingInstaller, tt.payloadIncludeAny, tt.payloadExcludeAny)
 				if tt.expectError != "" {
 					require.Error(t, err)
 					require.Contains(t, err.Error(), tt.expectError)

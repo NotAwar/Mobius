@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -16,15 +19,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notawar/mobius/server/authz"
-	"github.com/notawar/mobius/server/datastore/mysql"
-	"github.com/notawar/mobius/server/mobius"
-	"github.com/notawar/mobius/server/live_query/live_query_mock"
-	"github.com/notawar/mobius/server/ptr"
-	"github.com/notawar/mobius/server/pubsub"
 	kitlog "github.com/go-kit/log"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/notawar/mobius/server/authz"
+	"github.com/notawar/mobius/server/datastore/mysql"
+	"github.com/notawar/mobius/server/live_query/live_query_mock"
+	"github.com/notawar/mobius/server/mobius"
+	"github.com/notawar/mobius/server/ptr"
+	"github.com/notawar/mobius/server/pubsub"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

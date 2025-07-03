@@ -27,7 +27,6 @@ import (
 	"github.com/notawar/mobius/pkg/open"
 	"github.com/notawar/mobius/pkg/spec"
 	"github.com/notawar/mobius/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/licensing"
 	"github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/service"
 	"github.com/urfave/cli/v2"
@@ -161,10 +160,8 @@ Use the stop and reset subcommands to manage the server and dependencies once st
 			},
 		},
 		Action: func(c *cli.Context) error {
+			// License key validation disabled in this build
 			licenseKey := c.String(licenseKeyFlagName)
-			if _, err := licensing.LoadLicense(licenseKey); err != nil {
-				return errors.New(licenseError)
-			}
 
 			if err := checkDocker(); err != nil {
 				return err

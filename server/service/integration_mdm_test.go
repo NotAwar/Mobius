@@ -1,3 +1,6 @@
+//go:build enterprise
+// +build enterprise
+
 package service
 
 import (
@@ -44,7 +47,8 @@ import (
 	"github.com/notawar/mobius/server/datastore/mysql"
 	"github.com/notawar/mobius/server/datastore/redis/redistest"
 	"github.com/notawar/mobius/server/datastore/s3"
-	"github.com/notawar/mobius/server/mobius"
+    mobiuss "github.com/notawar/mobius/server/mobius"
+    mobiusus "github.com/notawar/mobius/server/mobius"
 	"github.com/notawar/mobius/server/live_query/live_query_mock"
 	servermdm "github.com/notawar/mobius/server/mdm"
 	apple_mdm "github.com/notawar/mobius/server/mdm/apple"
@@ -1168,7 +1172,7 @@ func createHostThenEnrollMDM(ds mobiuss.Datastore, mobiusServerURL string, t *te
 	return mobiusHost, mdmDevice
 }
 
-func enrollMacOSHostInMDM(t *testing.T, host *mobiuss.Host, dsmobiusus.Datastore, mobiusServerURL string) *mdmtest.TestAppleMDMClient {
+func enrollMacOSHostInMDM(t *testing.T, host *mobiuss.Host, ds mobiuss.Datastore, mobiusServerURL string) *mdmtest.TestAppleMDMClient {
 	desktopToken := uuid.New().String()
 	mdmDevice := mdmtest.NewTestMDMClientAppleDesktopManual(mobiusServerURL, desktopToken)
 	mdmDevice.UUID = host.UUID
@@ -1224,7 +1228,7 @@ func createWindowsHostThenEnrollMDM(ds mobiuss.Datastore, mobiusServerURL string
 	return host, mdmDevice
 }
 
-func enrollWindowsHostInMDM(t *testing.T, host *mobiuss.Host, dsmobiusus.Datastore, mobiusServerURL string) *mdmtest.TestWindowsMDMClient {
+func enrollWindowsHostInMDM(t *testing.T, host *mobiuss.Host, ds mobiuss.Datastore, mobiusServerURL string) *mdmtest.TestWindowsMDMClient {
 	mdmDevice := mdmtest.NewTestMDMClientWindowsProgramatic(mobiusServerURL, *host.OrbitNodeKey)
 	err := mdmDevice.Enroll()
 	require.NoError(t, err)
@@ -1441,8 +1445,13 @@ func (s *integrationMDMTestSuite) TestGetMDMCSR() {
 	// Delete APNS cert, should soft delete all certs and keys created in this test
 	s.Do("DELETE", "/api/latest/mobiuss/mdm/apple/apns_certificate", nil, http.StatusOK)
 
-	assets, err := s.ds.GetAllMDMConfigAssetsByName(ctx,
-		[]mobiuss.MDMAssetNamemobiusus.MDMAssetCACertmobiusius.MDMAssetCAKemobiusbius.MDMAssetAPNSKmobiusobius.MDMAssetAPNSCert}, nil)
+        assets, err := s.ds.GetAllMDMConfigAssetsByName(ctx,
+                []mobiuss.MDMAssetName{
+                        mobiuss.MDMAssetCACert,
+                        mobiuss.MDMAssetCAKey,
+                        mobiuss.MDMAssetAPNSKey,
+                        mobiuss.MDMAssetAPNSCert,
+                }, nil)
 	var nfe mobiuss.NotFoundError
 	require.ErrorAs(t, err, &nfe)
 	require.Nil(t, assets)
@@ -10546,8 +10555,12 @@ func (s *integrationMDMTestSuite) appleCoreCertsSetup() {
 	require.Equal(t, "CERTIFICATE REQUEST", block.Type)
 
 	// Check that we created the right assets
-	originalAssets, err := s.ds.GetAllMDMConfigAssetsByName(ctx,
-		[]mobiuss.MDMAssetNamemobiusus.MDMAssetCACertmobiusius.MDMAssetCAKemobiusbius.MDMAssetAPNSKey}, nil)
+        originalAssets, err := s.ds.GetAllMDMConfigAssetsByName(ctx,
+                []mobiuss.MDMAssetName{
+                        mobiuss.MDMAssetCACert,
+                        mobiuss.MDMAssetCAKey,
+                        mobiuss.MDMAssetAPNSKey,
+                }, nil)
 	require.NoError(t, err)
 	require.Len(t, originalAssets, 3)
 
@@ -10560,8 +10573,12 @@ func (s *integrationMDMTestSuite) appleCoreCertsSetup() {
 	require.Equal(t, "CERTIFICATE REQUEST", block.Type)
 
 	// Check that the assets stayed the same in the subsequent call
-	assets, err := s.ds.GetAllMDMConfigAssetsByName(ctx,
-		[]mobiuss.MDMAssetNamemobiusus.MDMAssetCACertmobiusius.MDMAssetCAKemobiusbius.MDMAssetAPNSKey}, nil)
+        assets, err := s.ds.GetAllMDMConfigAssetsByName(ctx,
+                []mobiuss.MDMAssetName{
+                        mobiuss.MDMAssetCACert,
+                        mobiuss.MDMAssetCAKey,
+                        mobiuss.MDMAssetAPNSKey,
+                }, nil)
 	require.NoError(t, err)
 	require.Equal(t, originalAssets, assets)
 
@@ -10594,8 +10611,13 @@ func (s *integrationMDMTestSuite) appleCoreCertsSetup() {
 	certPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certDER})
 	s.uploadDataViaForm("/api/latest/mobiuss/mdm/apple/apns_certificate", "certificate", "certificate.pem", certPEM, http.StatusAccepted, "", nil)
 
-	assets, err = s.ds.GetAllMDMConfigAssetsByName(ctx,
-		[]mobiuss.MDMAssetNamemobiusus.MDMAssetCACertmobiusius.MDMAssetCAKemobiusbius.MDMAssetAPNSKmobiusobius.MDMAssetAPNSCert}, nil)
+        assets, err = s.ds.GetAllMDMConfigAssetsByName(ctx,
+                []mobiuss.MDMAssetName{
+                        mobiuss.MDMAssetCACert,
+                        mobiuss.MDMAssetCAKey,
+                        mobiuss.MDMAssetAPNSKey,
+                        mobiuss.MDMAssetAPNSCert,
+                }, nil)
 	require.NoError(t, err)
 	require.Len(t, assets, 4)
 }

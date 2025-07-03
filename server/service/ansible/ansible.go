@@ -8,18 +8,18 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/notawar/mobius/server/mobius"
+	kitlog "github.com/go-kit/log"
 )
 
 // AnsibleService provides Ansible integration for MDM functionality
 type AnsibleService struct {
-	playbookPath string
+	playbookPath  string
 	inventoryPath string
-	logger       mobius.Logger
+	logger        kitlog.Logger
 }
 
 // NewAnsibleService creates a new Ansible service instance
-func NewAnsibleService(playbookPath, inventoryPath string, logger mobius.Logger) *AnsibleService {
+func NewAnsibleService(playbookPath, inventoryPath string, logger kitlog.Logger) *AnsibleService {
 	return &AnsibleService{
 		playbookPath:  playbookPath,
 		inventoryPath: inventoryPath,
@@ -53,14 +53,14 @@ type Playbook struct {
 
 // Job represents an Ansible job execution
 type Job struct {
-	ID         string    `json:"id"`
-	PlaybookID string    `json:"playbook_id"`
-	HostIDs    []string  `json:"host_ids"`
-	Status     string    `json:"status"`
+	ID         string     `json:"id"`
+	PlaybookID string     `json:"playbook_id"`
+	HostIDs    []string   `json:"host_ids"`
+	Status     string     `json:"status"`
 	StartedAt  *time.Time `json:"started_at,omitempty"`
 	FinishedAt *time.Time `json:"finished_at,omitempty"`
-	Output     string    `json:"output,omitempty"`
-	Error      string    `json:"error,omitempty"`
+	Output     string     `json:"output,omitempty"`
+	Error      string     `json:"error,omitempty"`
 }
 
 // ListHosts returns all hosts from Ansible inventory

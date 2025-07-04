@@ -46,6 +46,6 @@
     "url": "git://github.com/notawar/mobiusmdm-com.git"
   },
   "engines": {
-    "node": "^24.3"
+    "node": ">=24.3.0"
   }
 }

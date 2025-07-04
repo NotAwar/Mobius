@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "The premier osquery mobius manager.",
   "engines": {
-    "node": ">=20.18.1",
-    "yarn": ">=1.22.21"
+    "node": ">=24.3.0",
+    "yarn": ">=1.22.22"
   },
   "private": true,
   "scripts": {
@@ -185,5 +185,5 @@
     "defaults"
   ],
   "license": "SEE LICENSE IN ./LICENSE",
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  "packageManager": "yarn@1.22.22"
 }

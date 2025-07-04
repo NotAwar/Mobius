@@ -1,6 +1,7 @@
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import { createCustomRenderer, createMockRouter } from "test/test-utils";
 import SoftwareNameCell from "./SoftwareNameCell";
 
@@ -39,7 +40,9 @@ describe("SoftwareNameCell icon rendering", () => {
     const render = createCustomRenderer();
     render(<SoftwareNameCell {...defaultProps} hasInstaller />);
     const icon = screen.getByTestId("install-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(
         /Software can be installed on the host details page/i
@@ -57,7 +60,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("install-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(await screen.findByText(/on the Library tab/i)).toBeInTheDocument();
   });
 
@@ -78,7 +83,9 @@ describe("SoftwareNameCell icon rendering", () => {
     const render = createCustomRenderer();
     render(<SoftwareNameCell {...defaultProps} hasInstaller isSelfService />);
     const icon = screen.getByTestId("user-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/End users can install from/i)
     ).toBeInTheDocument();
@@ -95,7 +102,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("user-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/End users can install from/i)
     ).toBeInTheDocument();
@@ -112,7 +121,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("user-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/End users can install from/i)
     ).toBeInTheDocument();
@@ -129,7 +140,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("refresh-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/2 policies trigger install./i)
     ).toBeInTheDocument();
@@ -146,7 +159,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("refresh-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/3 policies trigger install./i)
     ).toBeInTheDocument();
@@ -163,7 +178,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("refresh-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/A policy triggers install./i)
     ).toBeInTheDocument();
@@ -181,7 +198,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("automatic-self-service-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/2 policies trigger install./i)
     ).toBeInTheDocument();
@@ -202,7 +221,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("automatic-self-service-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/2 policies trigger install./i)
     ).toBeInTheDocument();
@@ -223,7 +244,9 @@ describe("SoftwareNameCell icon rendering", () => {
       />
     );
     const icon = screen.getByTestId("automatic-self-service-icon");
-    await userEvent.hover(icon);
+    await act(async () => {
+      await userEvent.hover(icon);
+    });
     expect(
       await screen.findByText(/2 policies trigger install./i)
     ).toBeInTheDocument();

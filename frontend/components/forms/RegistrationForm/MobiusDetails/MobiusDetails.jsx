@@ -44,11 +44,11 @@ class MobiusDetails extends Component {
           {...fields.server_url}
           label="Mobius web address"
           tabIndex={tabIndex}
-          helpText={[
-            "Don’t include ",
-            <code key="helpText">/latest</code>,
-            " or any other path.",
-          ]}
+          helpText={
+            <>
+              Don’t include <code>/latest</code> or any other path.
+            </>
+          }
           ref={(input) => {
             this.firstInput = input;
           }}

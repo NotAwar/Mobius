@@ -1,6 +1,7 @@
 import React from "react";
 
 import { fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import paths from "router/paths";
 import HostCountCard from "./HostCountCard";
 
@@ -53,7 +54,9 @@ describe("HostCountCard - component", () => {
       />
     );
 
-    await fireEvent.mouseEnter(screen.getByText("Windows hosts"));
+    await act(async () => {
+      fireEvent.mouseEnter(screen.getByText("Windows hosts"));
+    });
 
     expect(screen.getByText("Hosts on any Windows device")).toBeInTheDocument();
   });

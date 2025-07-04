@@ -1,5 +1,6 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 
 import LastUpdatedHostCount from ".";
 
@@ -28,7 +29,9 @@ describe("Last updated host count", () => {
   it("renders tooltip on hover", async () => {
     render(<LastUpdatedHostCount hostCount={0} />);
 
-    await fireEvent.mouseEnter(screen.getByText("Updated never"));
+    await act(async () => {
+      fireEvent.mouseEnter(screen.getByText("Updated never"));
+    });
 
     expect(
       screen.getByText(/last time host data was updated/i)

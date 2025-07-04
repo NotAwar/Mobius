@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 
 import StatusIndicator from "./StatusIndicator";
 
@@ -16,7 +17,9 @@ describe("Status indicator", () => {
       <StatusIndicator value="online" tooltip={{ tooltipText: TOOLTIP_TEXT }} />
     );
 
-    await fireEvent.mouseEnter(screen.getByText("Online"));
+    await act(async () => {
+      fireEvent.mouseEnter(screen.getByText("Online"));
+    });
 
     expect(screen.getByText(TOOLTIP_TEXT)).toBeInTheDocument();
   });

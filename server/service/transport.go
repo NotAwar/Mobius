@@ -609,7 +609,10 @@ func userListOptionsFromRequest(r *http.Request) (mobius.UserListOptions, error)
 		if err != nil {
 			return userOpts, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("Invalid team_id: %s", tid)))
 		}
-		// GitHub CodeQL flags this as: Incorrect conversion between integer types. Previously waived: https://github.com/notawar/mobius/security/code-scanning/516
+		// Check if the parsed teamID exceeds the maximum value of uint.
+		if teamID > uint64(^uint(0)) {
+			return userOpts, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("team_id out of range: %s", tid)))
+		}
 		userOpts.TeamID = uint(teamID)
 	}
 

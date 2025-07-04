@@ -140,8 +140,10 @@ func (setSetupExperienceScriptRequest) DecodeRequest(ctx context.Context, r *htt
 		if err != nil {
 			return nil, &mobius.BadRequestError{Message: fmt.Sprintf("failed to decode team_id in multipart form: %s", err.Error())}
 		}
-		// // TODO: do we want to allow end users to specify team_id=0? if so, we'll need to convert it to nil here so that we can
-		// // use it in the auth layer where team_id=0 is not allowed?
+		// Ensure the parsed value is within the range of the uint type
+		if teamID > math.MaxUint {
+			return nil, &mobius.BadRequestError{Message: fmt.Sprintf("team_id exceeds the maximum value of %d", math.MaxUint)}
+		}
 		decoded.TeamID = ptr.Uint(uint(teamID))
 	}
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import BootstrapPackageEndUserPreview from "../../../../../../../../assets/videos/bootstrap-package-preview.mp4";
+import BootstrapPackageEndUserPreview from "../../../../../../../../assets/bootstrap-package-preview@6ee62ccd9121c4b1cf36.mp4";
 
 const baseClass = "bootstrap-package-preview";
 

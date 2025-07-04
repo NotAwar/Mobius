@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math"
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
@@ -142,7 +143,7 @@ func (setSetupExperienceScriptRequest) DecodeRequest(ctx context.Context, r *htt
 		}
 		// Ensure the parsed value is within the range of the uint type
 		if teamID > math.MaxUint {
-			return nil, &mobius.BadRequestError{Message: fmt.Sprintf("team_id exceeds the maximum value of %d", math.MaxUint)}
+			return nil, &mobius.BadRequestError{Message: fmt.Sprintf("team_id exceeds the maximum value of %d", uint64(math.MaxUint))}
 		}
 		decoded.TeamID = ptr.Uint(uint(teamID))
 	}

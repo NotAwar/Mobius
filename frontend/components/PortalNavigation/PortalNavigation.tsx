@@ -36,7 +36,7 @@ const PortalNavigation = ({ router }: IPortalNavigationProps): JSX.Element => {
   };
 
   const isGlobalAdmin = currentUser?.global_role?.includes("admin");
-  const isUserPortalEnabled = config?.features?.enable_user_portal !== false;
+  const isUserPortalEnabled = true; // Always enable user portal for now
 
   return (
     <div className={baseClass}>
@@ -48,11 +48,14 @@ const PortalNavigation = ({ router }: IPortalNavigationProps): JSX.Element => {
       <div className={`${baseClass}__portals`}>
         <div className={`${baseClass}__portal-card`}>
           <div className={`${baseClass}__portal-icon`}>
-            <Icon name="dashboard" />
+            <Icon name="policy" />
           </div>
           <div className={`${baseClass}__portal-content`}>
             <h3>Main Dashboard</h3>
-            <p>Primary administrative interface for device management and monitoring</p>
+            <p>
+              Primary administrative interface for device management and
+              monitoring
+            </p>
             <div className={`${baseClass}__portal-features`}>
               <span>• Device inventory</span>
               <span>• Policy management</span>
@@ -105,7 +108,9 @@ const PortalNavigation = ({ router }: IPortalNavigationProps): JSX.Element => {
             </div>
             <div className={`${baseClass}__portal-content`}>
               <h3>User Portal</h3>
-              <p>Self-service interface for end users to manage their devices</p>
+              <p>
+                Self-service interface for end users to manage their devices
+              </p>
               <div className={`${baseClass}__portal-features`}>
                 <span>• Device enrollment</span>
                 <span>• Personal device status</span>
@@ -129,10 +134,12 @@ const PortalNavigation = ({ router }: IPortalNavigationProps): JSX.Element => {
       <div className={`${baseClass}__info`}>
         <div className={`${baseClass}__info-section`}>
           <h4>Current User</h4>
-          <p><strong>{currentUser?.name}</strong> ({currentUser?.email})</p>
+          <p>
+            <strong>{currentUser?.name}</strong> ({currentUser?.email})
+          </p>
           <p>Role: {currentUser?.global_role || "User"}</p>
         </div>
-        
+
         <div className={`${baseClass}__info-section`}>
           <h4>System Information</h4>
           <p>Mobius MDM v{config?.version || "Unknown"}</p>

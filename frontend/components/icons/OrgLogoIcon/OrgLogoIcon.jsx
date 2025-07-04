@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 
-import mobiusAvatar from "../../../../assets/images/mobius-avatar-24x24@2x.png";
+import mobiusAvatar from "../../../../assets/images/icon-avatar-default-dark-24x24@2x.png";
 
 const baseClass = "org-logo-icon";
 

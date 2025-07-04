@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 
-import mobiusAvatar from "../../../../assets/images/mobius-avatar-24x24@2x.png";
+import mobiusAvatar from "../../../../assets/images/icon-avatar-default-dark-24x24@2x.png";
 import OrgLogoIcon from "./OrgLogoIcon";
 
 describe("OrgLogoIcon - component", () => {

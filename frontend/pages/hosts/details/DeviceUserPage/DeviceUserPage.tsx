@@ -57,7 +57,7 @@ import PoliciesCard from "../cards/Policies";
 import InfoModal from "./InfoModal";
 import { getErrorMessage } from "./helpers";
 
-import MobiusIcon from "../../../../../assets/images/mobius-avatar-24x24@2x.png";
+import MobiusIcon from "../../../../../assets/images/icon-avatar-default-dark-24x24@2x.png";
 import PolicyDetailsModal from "../cards/Policies/HostPoliciesTable/PolicyDetailsModal";
 import AutoEnrollMdmModal from "./AutoEnrollMdmModal";
 import ManualEnrollMdmModal from "./ManualEnrollMdmModal";

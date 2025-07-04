@@ -2,7 +2,7 @@ import React from "react";
 
 import Card from "components/Card";
 
-import InstallSoftwareEndUserPreview from "../../../../../../../../assets/videos/install-software-preview.mp4";
+import InstallSoftwareEndUserPreview from "../../../../../../../../assets/install-software-preview@2d61227ef199d9c8c951.mp4";
 
 const baseClass = "install-software-preview";
 

@@ -2,6 +2,7 @@
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import TooltipWrapper from "./TooltipWrapper";
 
 describe("TooltipWrapper", () => {
@@ -13,7 +14,9 @@ describe("TooltipWrapper", () => {
     );
 
     const trigger = screen.getByText("Hover me");
-    userEvent.hover(trigger);
+    await act(async () => {
+      await userEvent.hover(trigger);
+    });
 
     // Wait for tooltip content to appear in the DOM
     expect(await screen.findByText("Tooltip text")).toBeInTheDocument();

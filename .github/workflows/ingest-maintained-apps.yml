@@ -48,7 +48,7 @@ jobs:
         run: |
           cd mobius
           go mod download
-          go run cmd/maintained-apps/main.go
+          go run cmd/mobius/main.go
 
       - name: Search for Existing PRs
         id: search_pr

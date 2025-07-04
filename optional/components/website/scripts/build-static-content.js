@@ -620,8 +620,8 @@ module.exports = {
                 meta: _.omit(embeddedMetadata, ['title', 'pageOrderInSection']),
               });
             }
-          }//∞ </each source file>
-        }//∞ </each section repo path>
+          }
+        }
         // After we build the Markdown pages, we'll merge the osquery schema with the Mobius schema overrides, then create EJS partials for each table in the merged schema.
         let expandedTables;
         if(githubAccessToken){
@@ -909,9 +909,9 @@ module.exports = {
         }
         builtStaticContent.testimonials = testimonials;
       },
-
-        if(githubAccessToken) {
+      async()=>{
         // Validate all GitHub labels used in all ritual yaml files. Note: We check these here to minimize requests to the GitHub API.
+        if(githubAccessToken) {
           for(let repo in githubLabelsToCheck){
             let allExistingLabelsInSpecifiedRepo = [];
             let pageOfResultsReturned = 0;
@@ -935,8 +935,7 @@ module.exports = {
               }
             });//∞
           }
-        }//ﬁ
-
+        }
         // Add the rituals dictionary to builtStaticContent.rituals
         builtStaticContent.rituals = rituals;
       },

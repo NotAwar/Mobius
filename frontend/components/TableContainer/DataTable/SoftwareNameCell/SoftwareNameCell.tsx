@@ -121,6 +121,7 @@ const InstallIconWithTooltip = ({
           name={iconName}
           className={`${baseClass}__install-icon`}
           color="ui-mobius-black-50"
+          data-testid={`${iconName}-icon`}
         />
       </TooltipWrapper>
     </div>

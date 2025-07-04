@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 
-import EndUserAuthEndUserPreview from "../../../../../../../../assets/videos/end-user-auth-preview.mp4";
+import EndUserAuthEndUserPreview from "../../../../../../../../assets/end-user-auth-preview@15cd5aa8fe3da2239746.mp4";
 
 const baseClass = "end-user-experience-preview";
 

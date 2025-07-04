@@ -2,7 +2,7 @@ import React from "react";
 
 import Card from "components/Card";
 
-import SetupAssistantEndUserPreview from "../../../../../../../../assets/videos/setup-assistant-preview.mp4";
+import SetupAssistantEndUserPreview from "../../../../../../../../assets/setup-assistant-preview@eae6928943e8ca5bd028.mp4";
 
 const baseClass = "setup-assistant-preview";
 

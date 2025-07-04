@@ -53,13 +53,9 @@ module.exports = {
       '/support',
       '/integrations',
       '/logos',// « brand usage guidelines
-      '/releases',// « article category page
-      '/success-stories',// « article category page
       '/securing',// « article category page
       '/guides',// « article category page
-      '/announcements',// « article category page
       '/deploy',// « article category page
-      '/podcasts',// « article category page
       // Product category pages:
       '/orchestration',
       '/device-management',

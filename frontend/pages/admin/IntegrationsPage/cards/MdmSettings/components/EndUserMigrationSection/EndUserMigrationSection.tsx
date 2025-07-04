@@ -27,7 +27,7 @@ import GitOpsModeTooltipWrapper from "components/GitOpsModeTooltipWrapper";
 
 import ExampleWebhookUrlPayloadModal from "../ExampleWebhookUrlPayloadModal/ExampleWebhookUrlPayloadModal";
 
-import MdmMigrationPreview from "../../../../../../../../assets/images/mdm-migration-preview.gif";
+import MdmMigrationPreview from "../../../../../../../../assets/mdm-migration-preview@2aaa6da0bfc4cc86d060.gif";
 
 const baseClass = "end-user-migration-section";
 

@@ -30,7 +30,6 @@ export const STYLIZATIONS_AND_ACRONYMS = [
   "JSON",
 ];
 
-
 /** Does not recognize proper nouns! */
 export const enforceMobiusSentenceCasing = (s: string) => {
   const resArr = s.split(" ").map((word, i) => {

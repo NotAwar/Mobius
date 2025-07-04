@@ -1070,6 +1070,12 @@ function set (target, key, val) {
   ) {
     warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
   }
+  if (key === '__proto__' || key === 'constructor') {
+    !IS_VUE_RUNNING_IN_PRODUCTION_OR_STAGING_OR_ON_ERR_PAGE && warn(
+      "Avoid setting prototype-polluting property: " + key
+    );
+    return val
+  }
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key);
     target.splice(key, 1, val);

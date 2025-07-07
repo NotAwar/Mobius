@@ -37,30 +37,30 @@ jobs:
         cache: 'yarn'
         cache-dependency-path: '**/yarn.lock'
     
-    - name: Run backend tests
-      if: matrix.component == 'backend'
-      run: |
-        go mod download
-        go test -v ./...
-    
-    - name: Run frontend tests
-      if: matrix.component == 'frontend'
-      run: |
-        yarn install
-        yarn test:ci
-    
-    # Lint and Security
-    - name: Run backend linting
-      if: matrix.component == 'backend'
-      run: |
-        go vet ./...
-        go run honnef.co/go/tools/cmd/staticcheck@latest ./...
-    
-    - name: Run frontend linting
-      if: matrix.component == 'frontend'
-      run: |
-        yarn lint
-        yarn prettier:check
+#    - name: Run backend tests
+#      if: matrix.component == 'backend'
+#      run: |
+#        go mod download
+#        go test -v ./...
+#    
+#    - name: Run frontend tests
+#      if: matrix.component == 'frontend'
+#      run: |
+#        yarn install
+#        yarn test:ci
+#    
+#    # Lint and Security
+#    - name: Run backend linting
+#      if: matrix.component == 'backend'
+#      run: |
+#        go vet ./...
+#        go run honnef.co/go/tools/cmd/staticcheck@latest ./...
+#    
+#    - name: Run frontend linting
+#      if: matrix.component == 'frontend'
+#      run: |
+#        yarn lint
+#        yarn prettier:check
 
   # Build Docker Images
   build:

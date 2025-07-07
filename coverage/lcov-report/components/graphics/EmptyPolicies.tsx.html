@@ -1,0 +1,448 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for components/graphics/EmptyPolicies.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/graphics</a> EmptyPolicies.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+&nbsp;
+const EmptyPolicies = () =&gt; {
+  return (
+    &lt;svg
+      width="322"
+      height="176"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    &gt;
+      &lt;circle cx="162.5" cy="101" r="75" fill="#F1F0FF" /&gt;
+      &lt;path fill="#C5C7D1" d="M161.5 43h1v17h-1z" /&gt;
+      &lt;circle cx="162.5" cy="24" r="24" fill="#C98DEF" /&gt;
+      &lt;g clipPath="url(#a)"&gt;
+        &lt;path
+          d="M172.566 20.294c0 1.453-.217 3.258-.639 5.01-.424 1.762-1.039 3.403-1.797 4.565-.716 1.099-2.085 2.16-3.724 3.126-1.474.87-3.071 1.61-4.406 2.203-1.335-.593-2.932-1.333-4.406-2.203-1.639-.967-3.008-2.027-3.724-3.126-.758-1.163-1.373-2.803-1.797-4.564-.422-1.753-.639-3.558-.639-5.01V16.37L162 12.768l10.566 3.602v3.924Z"
+          stroke="#fff"
+          strokeWidth="1.869"
+        /&gt;
+        &lt;path
+          d="m166.108 19.313-5.056 5.606-3.318-2.156c-.474-.288-.948-.288-1.264.143-.316.432-.316.863.158 1.15l4.74 3.163 6.162-6.9c.316-.431.316-.863-.158-1.15-.316-.288-.948-.288-1.264.144Z"
+          fill="#fff"
+        /&gt;
+      &lt;/g&gt;
+      &lt;g filter="url(#b)"&gt;
+        &lt;rect x="1" y="61" width="320" height="80" rx="8" fill="#fff" /&gt;
+        &lt;rect
+          x=".5"
+          y="60.5"
+          width="321"
+          height="81"
+          rx="8.5"
+          stroke="#C5C7D1"
+        /&gt;
+      &lt;/g&gt;
+      &lt;rect
+        x="13.5"
+        y="100.5"
+        width="11"
+        height="11"
+        rx="3.5"
+        fill="#fff"
+        stroke="#C5C7D1"
+      /&gt;
+      &lt;rect
+        x="13.5"
+        y="120.5"
+        width="11"
+        height="11"
+        rx="3.5"
+        fill="#fff"
+        stroke="#C5C7D1"
+      /&gt;
+      &lt;rect x="37" y="103" width="132" height="6" rx="3" fill="#C5C7D1" /&gt;
+      &lt;rect x="37" y="123" width="44" height="6" rx="3" fill="#E2E4EA" /&gt;
+      &lt;rect x="85" y="123" width="72" height="6" rx="3" fill="#E2E4EA" /&gt;
+      &lt;rect x="251" y="103" width="58" height="6" rx="3" fill="#C5C7D1" /&gt;
+      &lt;rect x="251" y="123" width="34" height="6" rx="3" fill="#E2E4EA" /&gt;
+      &lt;rect x="181" y="103" width="58" height="6" rx="3" fill="#C5C7D1" /&gt;
+      &lt;rect x="181" y="123" width="46" height="6" rx="3" fill="#E2E4EA" /&gt;
+      &lt;path
+        d="M321 91.5h.5V69a8.5 8.5 0 0 0-8.5-8.5H9A8.5 8.5 0 0 0 .5 69v22.5H321Z"
+        fill="#F9FAFC"
+        stroke="#C5C7D1"
+      /&gt;
+      &lt;rect
+        x="13.5"
+        y="70.5"
+        width="11"
+        height="11"
+        rx="3.5"
+        fill="#fff"
+        stroke="#C5C7D1"
+      /&gt;
+      &lt;path
+        d="M37.924 80v-8.46h1.152l4.548 5.904V71.54h1.428V80h-1.14l-4.56-5.928V80h-1.428Zm10.765.12a2.62 2.62 0 0 1-1.14-.24 2.067 2.067 0 0 1-.78-.672 1.688 1.688 0 0 1-.276-.948c0-.432.112-.772.336-1.02.224-.256.588-.44 1.092-.552.504-.112 1.18-.168 2.028-.168h.42v-.252c0-.4-.088-.688-.264-.864-.176-.176-.472-.264-.888-.264-.328 0-.664.052-1.008.156a4.364 4.364 0 0 0-1.044.456l-.432-1.02c.208-.144.452-.268.732-.372.288-.112.588-.196.9-.252.32-.064.62-.096.9-.096.856 0 1.492.2 1.908.6.416.392.624 1.004.624 1.836V80h-1.404v-.936a1.672 1.672 0 0 1-.648.78c-.296.184-.648.276-1.056.276ZM49 79.088c.392 0 .716-.136.972-.408.264-.272.396-.616.396-1.032v-.264h-.408c-.752 0-1.276.06-1.572.18-.288.112-.432.32-.432.624 0 .264.092.48.276.648.184.168.44.252.768.252Zm4.342.912v-5.868h1.464v.9c.176-.32.42-.568.732-.744a2.086 2.086 0 0 1 1.08-.276c.88 0 1.456.384 1.728 1.152.184-.36.448-.64.792-.84a2.228 2.228 0 0 1 1.176-.312c1.32 0 1.98.804 1.98 2.412V80h-1.5v-3.516c0-.448-.076-.776-.228-.984-.144-.208-.392-.312-.744-.312-.392 0-.7.14-.924.42-.224.272-.336.652-.336 1.14V80h-1.5v-3.516c0-.448-.076-.776-.228-.984-.144-.208-.388-.312-.732-.312-.392 0-.7.14-.924.42-.224.272-.336.652-.336 1.14V80h-1.5Zm13.391.12c-.663 0-1.235-.124-1.715-.372s-.853-.6-1.117-1.056c-.255-.456-.383-.996-.383-1.62 0-.608.123-1.14.372-1.596a2.79 2.79 0 0 1 1.044-1.068 2.945 2.945 0 0 1 1.523-.396c.832 0 1.489.264 1.969.792.487.528.731 1.248.731 2.16v.444h-4.2c.112 1.048.713 1.572 1.8 1.572.329 0 .657-.048.985-.144.328-.104.628-.264.9-.48l.42 1.008c-.28.232-.633.416-1.056.552a4.144 4.144 0 0 1-1.273.204Zm-.215-5.088c-.44 0-.797.136-1.069.408-.272.272-.436.64-.492 1.104h2.953c-.032-.488-.168-.86-.409-1.116-.231-.264-.56-.396-.983-.396ZM183.94 80v-3.888l-3.252-4.572h1.788l2.256 3.204L187 71.54h1.716l-3.24 4.584V80h-1.536Zm7.154.12c-.664 0-1.236-.124-1.716-.372s-.852-.6-1.116-1.056c-.256-.456-.384-.996-.384-1.62 0-.608.124-1.14.372-1.596a2.79 2.79 0 0 1 1.044-1.068 2.945 2.945 0 0 1 1.524-.396c.832 0 1.488.264 1.968.792.488.528.732 1.248.732 2.16v.444h-4.2c.112 1.048.712 1.572 1.8 1.572.328 0 .656-.048.984-.144.328-.104.628-.264.9-.48l.42 1.008c-.28.232-.632.416-1.056.552a4.144 4.144 0 0 1-1.272.204Zm-.216-5.088c-.44 0-.796.136-1.068.408-.272.272-.436.64-.492 1.104h2.952c-.032-.488-.168-.86-.408-1.116-.232-.264-.56-.396-.984-.396Zm5.976 5.088c-.496 0-.96-.06-1.392-.18a3.084 3.084 0 0 1-1.08-.516l.384-.984c.296.2.628.356.996.468.368.104.736.156 1.104.156.384 0 .668-.064.852-.192a.621.621 0 0 0 .288-.528c0-.336-.248-.552-.744-.648l-1.2-.228c-1.016-.192-1.524-.72-1.524-1.584 0-.384.104-.716.312-.996.216-.28.512-.496.888-.648a3.437 3.437 0 0 1 1.296-.228 4 4 0 0 1 1.2.18c.384.112.712.284.984.516l-.408.984a2.641 2.641 0 0 0-.84-.456 2.793 2.793 0 0 0-.924-.168c-.392 0-.684.068-.876.204a.64.64 0 0 0-.276.54c0 .352.228.568.684.648l1.2.228c.52.096.912.272 1.176.528.272.256.408.6.408 1.032 0 .584-.228 1.044-.684 1.38-.456.328-1.064.492-1.824.492ZM251.924 80v-8.46h1.152l4.548 5.904V71.54h1.428V80h-1.14l-4.56-5.928V80h-1.428Zm11.509.12c-.608 0-1.136-.124-1.584-.372a2.602 2.602 0 0 1-1.044-1.056c-.248-.464-.372-1.008-.372-1.632 0-.624.124-1.164.372-1.62a2.602 2.602 0 0 1 1.044-1.056c.448-.248.976-.372 1.584-.372.608 0 1.136.124 1.584.372.448.248.796.6 1.044 1.056.248.456.372.996.372 1.62 0 .624-.124 1.168-.372 1.632a2.602 2.602 0 0 1-1.044 1.056c-.448.248-.976.372-1.584.372Zm0-1.14c.448 0 .808-.16 1.08-.48.272-.328.408-.808.408-1.44 0-.64-.136-1.116-.408-1.428-.272-.32-.632-.48-1.08-.48-.448 0-.808.16-1.08.48-.272.312-.408.788-.408 1.428 0 .632.136 1.112.408 1.44.272.32.632.48 1.08.48Z"
+        fill="#8B8FA2"
+      /&gt;
+      &lt;defs&gt;
+        &lt;clipPath id="a"&gt;
+          &lt;path fill="#fff" transform="translate(150.5 11)" d="M0 0h23v26H0z" /&gt;
+        &lt;/clipPath&gt;
+        &lt;filter
+          id="b"
+          x="0"
+          y="60"
+          width="322"
+          height="87"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        &gt;
+          &lt;feFlood floodOpacity="0" result="BackgroundImageFix" /&gt;
+          &lt;feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          /&gt;
+          &lt;feMorphology
+            radius="5"
+            in="SourceAlpha"
+            result="effect1_dropShadow_315_618"
+          /&gt;
+          &lt;feOffset dy="7" /&gt;
+          &lt;feGaussianBlur stdDeviation="1.5" /&gt;
+          &lt;feColorMatrix values="0 0 0 0 0.0980392 0 0 0 0 0.129412 0 0 0 0 0.278431 0 0 0 0.1 0" /&gt;
+          &lt;feBlend
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_315_618"
+          /&gt;
+          &lt;feBlend
+            in="SourceGraphic"
+            in2="effect1_dropShadow_315_618"
+            result="shape"
+          /&gt;
+        &lt;/filter&gt;
+      &lt;/defs&gt;
+    &lt;/svg&gt;
+  );
+};
+&nbsp;
+export default EmptyPolicies;
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-07-04T14:35:25.548Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

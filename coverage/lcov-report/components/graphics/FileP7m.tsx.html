@@ -1,0 +1,256 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for components/graphics/FileP7m.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/graphics</a> FileP7m.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">50% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>1/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">50% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>1/2</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line medium'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+&nbsp;
+const FileP7m = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >  return (</span>
+    &lt;svg xmlns="http://www.w3.org/2000/svg" width="34" height="40" fill="none"&gt;
+      &lt;g clipPath="url(#filep7m_clippath)"&gt;
+        &lt;path
+          fill="#fff"
+          stroke="#192147"
+          strokeWidth={0.5}
+          d="M29.333 39.75H4.667a2.417 2.417 0 0 1-2.417-2.416V2.667A2.417 2.417 0 0 1 4.667.25h19.562c.64 0 1.255.255 1.709.708l5.104 5.105c.453.453.708 1.068.708 1.709v29.562a2.417 2.417 0 0 1-2.417 2.416Z"
+        /&gt;
+        &lt;path
+          fill="#C5C7D1"
+          d="M23.5.5h.834l.5 6.5 6.666.5v1h-6a2 2 0 0 1-2-2v-6Z"
+        /&gt;
+        &lt;path
+          stroke="#192147"
+          strokeWidth={0.5}
+          d="M24.5.334v5.667c0 .736.597 1.333 1.333 1.333h6"
+        /&gt;
+        &lt;path
+          fill="#C5C7D1"
+          d="M2.5 20h25a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-25V20Z"
+        /&gt;
+        &lt;rect
+          width={27.7}
+          height={16.35}
+          x={0.25}
+          y={18.25}
+          fill="#515774"
+          rx={1.75}
+        /&gt;
+        &lt;path
+          fill="#fff"
+          d="M5 31v-6.882h1.82v.873h.04c.066-.169.164-.324.292-.465a1.39 1.39 0 0 1 .478-.343c.19-.086.412-.13.665-.13.336 0 .656.088.96.264.305.176.553.453.743.83.193.379.29.87.29 1.474 0 .578-.093 1.056-.276 1.437-.182.38-.425.663-.731.85a1.87 1.87 0 0 1-1 .28 1.7 1.7 0 0 1-.64-.114 1.482 1.482 0 0 1-.479-.316 1.46 1.46 0 0 1-.302-.456h-.027V31H5Zm1.793-4.38c0 .244.033.455.097.633.066.176.16.313.279.41a.683.683 0 0 0 .435.144.666.666 0 0 0 .428-.14.88.88 0 0 0 .273-.408c.064-.178.096-.39.096-.638s-.032-.46-.096-.636a.858.858 0 0 0-.273-.407.657.657 0 0 0-.428-.143.684.684 0 0 0-.435.143.9.9 0 0 0-.28.407 1.86 1.86 0 0 0-.096.636ZM10.88 29.123l2.67-5.187v-.04h-3.135V22.45h5.048v1.447l-2.683 5.226h-1.9ZM16.109 29.123v-5.005h1.74v.952h.053c.107-.313.288-.56.545-.743.257-.183.562-.274.917-.274.358 0 .667.093.926.28.26.185.415.43.469.737h.053c.086-.307.27-.552.551-.737.281-.186.611-.28.99-.28.489 0 .885.154 1.189.463.305.308.458.719.458 1.232v3.375h-1.833v-2.92c0-.219-.057-.39-.17-.514a.58.58 0 0 0-.455-.19.566.566 0 0 0-.448.19c-.109.124-.163.295-.163.515v2.92h-1.753v-2.92c0-.22-.057-.391-.17-.515a.58.58 0 0 0-.455-.19.604.604 0 0 0-.325.086.567.567 0 0 0-.213.244.878.878 0 0 0-.073.375v2.92H16.11Z"
+        /&gt;
+        &lt;rect
+          width={27.7}
+          height={16.35}
+          x={0.25}
+          y={18.25}
+          stroke="#192147"
+          strokeWidth={0.5}
+          rx={1.75}
+        /&gt;
+      &lt;/g&gt;
+      &lt;defs&gt;
+        &lt;clipPath id="filep7m_clippath"&gt;
+          &lt;path fill="#fff" d="M0 0h34v40H0z" /&gt;
+        &lt;/clipPath&gt;
+      &lt;/defs&gt;
+    &lt;/svg&gt;
+  );
+};
+&nbsp;
+export default FileP7m;
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-07-04T14:35:25.548Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

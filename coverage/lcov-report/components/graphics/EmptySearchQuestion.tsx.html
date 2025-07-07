@@ -1,0 +1,319 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for components/graphics/EmptySearchQuestion.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/graphics</a> EmptySearchQuestion.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">90% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>9/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">75% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>3/4</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>3/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">88.88% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>8/9</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+&nbsp;
+export const renderEmptySearch = (
+  type: "exclamation" | "question" | "check"
+) =&gt; {
+  const renderIconPath = () =&gt; {
+    switch (type) {
+      case "exclamation":
+        return (
+          &lt;path
+            d="m24.24 28.656-1.022-9.774a2.5 2.5 0 1 1 4.973-.003l-1.012 9.775a1.478 1.478 0 0 1-2.94.002h.001Zm-.803 4.951a2.28 2.28 0 1 1 4.562 0 2.28 2.28 0 0 1-4.562 0Z"
+            fill="#9C9EDB"
+          /&gt;
+        );
+      case "question":
+        return (
+          &lt;path
+            d="M25.836 30.184a1.966 1.966 0 0 1-1.954-2.167c.059-.587.182-1.194.422-1.682.235-.477.995-1.115 2.166-1.979.613-.45 1.04-.87 1.28-1.259.24-.388.36-.87.36-1.446 0-.71-.226-1.268-.677-1.676-.451-.408-.998-.612-1.64-.612-1.274 0-2.13.675-2.566 2.024a1.945 1.945 0 0 1-2.128 1.313 1.932 1.932 0 0 1-1.53-2.614c.416-1.064 1.017-1.933 1.799-2.608 1.29-1.112 2.866-1.668 4.727-1.668 1.86 0 3.491.547 4.777 1.64 1.285 1.094 1.928 2.48 1.928 4.159 0 2.081-1.07 3.822-3.208 5.223-.931.614-1.495 1.093-1.691 1.439-.065.113-.119.259-.162.436a1.955 1.955 0 0 1-1.903 1.478v-.001Zm.317 5.626h-.173a2.172 2.172 0 1 1 0-4.345h.173a2.173 2.173 0 0 1 0 4.345Z"
+            fill="#9C9EDB"
+          /&gt;
+        );
+      case "check":
+        return (
+          &lt;path
+            d="m31.503 18.45-8.13 10.054a.142.142 0 0 1-.202 0l-3.294-4.383a1.855 1.855 0 1 0-2.641 2.606l4.493 5.58a2.284 2.284 0 0 0 3.275-.026l9.181-11.252c.72-.752.68-1.95-.088-2.652l-.008-.007a1.856 1.856 0 0 0-2.586.08Z"
+            fill="#9C9EDB"
+          /&gt;
+        );
+<span class="branch-3 cbranch-no" title="branch not covered" >      default:</span>
+<span class="cstat-no" title="statement not covered" >        return null;</span>
+    }
+  };
+&nbsp;
+  return (
+    &lt;svg width="55" height="71" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+      &lt;path
+        d="M25.73 49.4c13.123 0 23.762-10.638 23.762-23.761S38.853 1.878 25.73 1.878c-13.123 0-23.761 10.638-23.761 23.76C1.97 38.763 12.608 49.4 25.73 49.4Z"
+        fill="#F1F0FF"
+        stroke="#fff"
+        strokeWidth="1.199"
+      /&gt;
+      &lt;path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.669 7.23a23.06 23.06 0 0 1 14.06-4.755c12.792 0 23.162 10.37 23.162 23.162a23.06 23.06 0 0 1-4.758 14.065 23.06 23.06 0 0 1-14.06 4.754c-12.792 0-23.162-10.37-23.162-23.161A23.06 23.06 0 0 1 11.67 7.23Z"
+        fill="#fff"
+      /&gt;
+      &lt;path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.669 7.809a23.06 23.06 0 0 1 14.06-4.755c12.792 0 23.162 10.37 23.162 23.162a23.06 23.06 0 0 1-4.758 14.065 23.06 23.06 0 0 1-14.06 4.754c-12.792 0-23.162-10.37-23.162-23.161A23.06 23.06 0 0 1 11.67 7.809Z"
+        fill="#fff"
+      /&gt;
+      {renderIconPath()}
+      &lt;path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M13.687 4.313C1.875 11.132-2.172 26.235 4.647 38.047c6.473 11.211 20.41 15.427 31.91 9.994l4.452 7.712 4.074-2.352-4.48-7.76c10.074-7.34 13.19-21.252 6.818-32.29C40.6 1.542 25.498-2.506 13.687 4.314Zm-6 31.98C1.835 26.158 5.306 13.201 15.44 7.35c10.133-5.85 23.09-2.378 28.941 7.755 5.85 10.133 2.379 23.09-7.755 28.941-10.133 5.85-23.09 2.379-28.94-7.755Z"
+        fill="#E3E3FE"
+        stroke="#9C9EDB"
+        strokeWidth=".882"
+      /&gt;
+      &lt;path
+        d="M37.443 52.516a1 1 0 0 1 .366-1.366l4.888-2.822a1 1 0 0 1 1.366.366l9.171 15.886a3 3 0 0 1-1.098 4.098l-1.423.822a3 3 0 0 1-4.098-1.098l-9.172-15.886Z"
+        fill="#9C9EDB"
+      /&gt;
+      &lt;path
+        d="M37.825 52.296a.559.559 0 0 1 .205-.764l4.887-2.822a.559.559 0 0 1 .764.205L52.853 64.8a2.56 2.56 0 0 1-.937 3.495l-1.423.822a2.559 2.559 0 0 1-3.496-.937l-9.172-15.885Z"
+        stroke="#9C9EDB"
+        strokeWidth=".882"
+      /&gt;
+    &lt;/svg&gt;
+  );
+};
+&nbsp;
+const EmptySearchQuestion = () =&gt; renderEmptySearch("question");
+&nbsp;
+export default EmptySearchQuestion;
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-07-04T14:35:25.548Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

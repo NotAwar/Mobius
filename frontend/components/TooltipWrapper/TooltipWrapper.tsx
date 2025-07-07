@@ -87,7 +87,6 @@ const TooltipWrapper = ({
           delayHide={isDelayed ? 500 : undefined}
           noArrow={!showArrow}
           place={position}
-          opacity={1}
           disableStyleInjection
           clickable={clickable}
           offset={tipOffset}

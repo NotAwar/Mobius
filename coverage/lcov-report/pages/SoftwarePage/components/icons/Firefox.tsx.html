@@ -1,0 +1,949 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for pages/SoftwarePage/components/icons/Firefox.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">pages/SoftwarePage/components/icons</a> Firefox.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">50% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>1/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">50% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>1/2</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line medium'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a>
+<a name='L216'></a><a href='#L216'>216</a>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a>
+<a name='L219'></a><a href='#L219'>219</a>
+<a name='L220'></a><a href='#L220'>220</a>
+<a name='L221'></a><a href='#L221'>221</a>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a>
+<a name='L224'></a><a href='#L224'>224</a>
+<a name='L225'></a><a href='#L225'>225</a>
+<a name='L226'></a><a href='#L226'>226</a>
+<a name='L227'></a><a href='#L227'>227</a>
+<a name='L228'></a><a href='#L228'>228</a>
+<a name='L229'></a><a href='#L229'>229</a>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a>
+<a name='L236'></a><a href='#L236'>236</a>
+<a name='L237'></a><a href='#L237'>237</a>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+&nbsp;
+import type { SVGProps } from "react";
+&nbsp;
+const Firefox = <span class="fstat-no" title="function not covered" >(p</span>rops: SVGProps&lt;SVGSVGElement&gt;) =&gt; (
+<span class="cstat-no" title="statement not covered" >  &lt;svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}&gt;</span>
+    &lt;path fill="#fff" d="M0 0h32v32H0z" /&gt;
+    &lt;g clipPath="url(#firefox_svg__clippath)"&gt;
+      &lt;path
+        d="M23.288 6.233c-.584.68-.857 2.21-.264 3.762.591 1.552 1.5 1.215 2.066 2.797.747 2.087.399 4.892.399 4.892s.898 2.6 1.523-.162c1.384-5.186-3.724-10.011-3.724-11.29Z"
+        fill="url(#firefox_svg__b)"
+      /&gt;
+      &lt;path
+        d="M16.16 27.771c5.981 0 10.826-4.872 10.826-10.878S22.141 6.015 16.166 6.015c-5.976 0-10.82 4.871-10.82 10.878-.012 6.013 4.839 10.878 10.814 10.878Z"
+        fill="url(#firefox_svg__c)"
+      /&gt;
+      &lt;path
+        d="M24.273 23.6c-.235.166-.48.313-.735.443.338-.495.65-1.008.934-1.536.231-.256.442-.504.614-.772.084-.132.178-.294.279-.484.607-1.095 1.278-2.867 1.297-4.687v-.138a6.26 6.26 0 0 0-.14-1.36l.014.105-.016-.081.024.145c.123 1.054.035 2.083-.407 2.84l-.022.033c.23-1.152.307-2.424.05-3.698 0 0-.102-.618-.862-2.498-.438-1.082-1.215-1.97-1.903-2.615-.602-.745-1.15-1.245-1.45-1.562-.63-.663-.894-1.16-1.002-1.484-.094-.048-1.296-1.215-1.392-1.26-.525.815-2.175 3.358-1.39 5.736.356 1.078 1.256 2.196 2.197 2.823.042.048.56.611.807 1.883.254 1.313.12 2.337-.404 3.853-.616 1.33-2.196 2.644-3.676 2.778-3.162.287-4.321-1.588-4.321-1.588 1.13.452 2.38.357 3.14-.112.766-.473 1.23-.825 1.605-.686.37.138.666-.262.401-.677a1.914 1.914 0 0 0-1.936-.843c-.767.125-1.469.731-2.474.144a1.751 1.751 0 0 1-.188-.124c-.067-.044.215.066.15.017a4.935 4.935 0 0 1-.632-.42c-.014-.014.153.053.137.039-.939-.773-.822-1.296-.792-1.624.023-.263.193-.599.48-.735.14.076.226.134.226.134l-.091-.185c.011-.004.021-.003.033-.008a6.1 6.1 0 0 1 .498.284c.172.122.227.23.227.23s.045-.024.012-.13a.68.68 0 0 0-.236-.321h.01c.103.06.2.126.29.201.048-.174.135-.358.116-.685-.011-.23-.007-.29-.047-.379-.036-.076.02-.106.083-.027a.826.826 0 0 0-.054-.18v-.006c.079-.273 1.665-.987 1.78-1.07.189-.135.348-.307.466-.508.088-.14.155-.338.17-.636.01-.216-.091-.36-1.695-.528-.438-.043-.695-.36-.842-.653a5.496 5.496 0 0 0-.08-.178 1.31 1.31 0 0 1-.063-.206c.263-.752.702-1.39 1.35-1.87.035-.033-.14.007-.106-.024.042-.037.31-.146.361-.17.062-.03-.265-.168-.554-.134-.294.032-.358.068-.514.135.065-.066.272-.15.224-.15-.318.048-.711.233-1.05.442a.265.265 0 0 1 .021-.106c-.157.066-.543.336-.655.564.005-.044.007-.087.007-.131-.12.1-.228.213-.322.337l-.006.005c-.91-.367-1.713-.39-2.392-.226-.148-.15-.22-.04-.559-.783-.022-.045.018.044 0 0-.055-.144.034.192 0 0-.568.449-1.315.956-1.673 1.315-.005.014.418-.12 0 0-.147.041-.137.128-.16.915-.005.06 0 .126-.005.18-.286.365-.481.674-.555.834-.371.64-.78 1.634-1.175 3.209.175-.427.385-.839.63-1.23-.33.836-.648 2.148-.71 4.169.08-.417.18-.83.305-1.235-.078 1.677.211 3.35.847 4.904.228.556.604 1.4 1.244 2.327a11 11 0 0 0 7.997 3.436c3.286 0 6.234-1.436 8.26-3.717Z"
+        fill="url(#firefox_svg__d)"
+      /&gt;
+      &lt;path
+        d="M21.844 25.139c3.973-.46 5.73-4.554 3.472-4.635-2.04-.064-5.354 4.852-3.472 4.634Z"
+        fill="url(#firefox_svg__e)"
+      /&gt;
+      &lt;path
+        d="M25.602 19.669c2.733-1.59 2.021-5.027 2.021-5.027s-1.055 1.226-1.771 3.179c-.708 1.934-1.893 2.808-.25 1.848Z"
+        fill="url(#firefox_svg__f)"
+      /&gt;
+      &lt;path
+        d="M16.925 27.172c3.81 1.216 7.086-1.787 5.068-2.789-1.836-.903-6.875 2.214-5.067 2.789Z"
+        fill="url(#firefox_svg__g)"
+      /&gt;
+      &lt;path
+        d="M25.886 21.127c.093-.13.218-.55.33-.737.672-1.086.677-1.952.677-1.97.407-2.03.37-2.859.12-4.392-.202-1.234-1.082-3.002-1.843-3.853-.786-.877-.233-.592-.993-1.232-.666-.74-1.313-1.47-1.665-1.765-2.544-2.126-2.486-2.578-2.438-2.655l-.036.04c-.03-.12-.052-.22-.052-.22s-1.39 1.39-1.682 3.706c-.192 1.513.375 3.09 1.195 4.098.427.522.909.997 1.439 1.415v-.001c.62.889.96 1.986.96 3.168a5.356 5.356 0 0 1-6.555 5.22c-1.396-.266-2.202-.97-2.604-1.448a2.636 2.636 0 0 1-.328-.474c1.25.449 2.633.354 3.474-.11.848-.47 1.36-.818 1.776-.68.41.136.737-.261.444-.672-.287-.412-1.034-1-2.143-.837-.849.124-1.627.726-2.738.142a2.149 2.149 0 0 1-.208-.123c-.073-.042.238.066.165.017a5.505 5.505 0 0 1-.698-.415c-.017-.014.168.052.15.039-1.038-.768-.909-1.285-.876-1.61a.932.932 0 0 1 .533-.729c.153.076.25.133.25.133L12.437 15c.012-.005.024-.004.036-.008.126.054.404.196.55.282.191.12.252.228.252.228s.05-.024.014-.13c-.014-.042-.071-.18-.26-.318h.01c.113.058.22.125.32.2.054-.173.15-.355.13-.68-.013-.227-.008-.287-.053-.375-.04-.075.023-.104.093-.027a.73.73 0 0 0-.06-.179l.001-.005c.087-.272 1.843-.979 1.97-1.062.206-.13.382-.301.516-.503.098-.14.172-.334.19-.63.005-.135-.035-.24-.5-.341-.28-.061-.712-.12-1.377-.183-.486-.043-.77-.358-.932-.649-.03-.063-.06-.12-.09-.176a1.312 1.312 0 0 1-.069-.204 3.867 3.867 0 0 1 1.497-1.856c.04-.032-.157.008-.117-.024.045-.037.342-.144.399-.169.068-.029-.294-.166-.613-.133-.326.033-.395.068-.57.134.072-.064.303-.148.248-.147-.351.048-.787.23-1.16.438a.226.226 0 0 1 .022-.105c-.174.067-.6.334-.725.56a.848.848 0 0 0 .007-.13c-.13.098-.25.21-.356.333l-.007.006c-1.008-.364-1.895-.388-2.647-.224-.165-.148-.428-.372-.803-1.107-.025-.044-.039.091-.058.047-.146-.337-.233-.889-.219-1.269 0 0-.3.137-.549.71-.046.102-.075.16-.104.216-.014.017.03-.189.023-.177-.043.073-.155.175-.204.307-.034.098-.081.154-.111.275l-.007.012c-.002-.036.009-.15.001-.125a5.848 5.848 0 0 0-.3.728c-.134.44-.29 1.039-.314 1.819-.006.058-.001.125-.006.178-.317.361-.533.668-.614.827-.411.631-.863 1.618-1.302 3.18.195-.427.428-.836.697-1.22-.364.828-.716 2.13-.787 4.135.088-.415.202-.824.338-1.225a10.373 10.373 0 0 0 .938 4.863c.501 1.1 1.657 3.332 4.479 5.075 2.822 1.742.96.714 2.61 1.25.121.044.245.088.372.13l-.115-.05c1.099.329 2.238.497 3.385.497 4.273.003 5.533-1.712 5.533-1.712l-.012.009c.06-.057.118-.116.174-.177-.674.637-2.212.678-2.788.633.98-.288 1.626-.532 2.882-1.013.146-.054.297-.116.45-.186l.05-.022c.03-.015.061-.027.091-.043a8.524 8.524 0 0 0 1.715-1.073c1.26-1.008 1.535-1.99 1.679-2.636-.02.062-.082.206-.126.3-.325.695-1.045 1.122-1.827 1.487.372-.488.716-.996 1.033-1.522.255-.253.335-.65.525-.916Z"
+        fill="url(#firefox_svg__h)"
+      /&gt;
+      &lt;path
+        d="M24.351 23.536a8.067 8.067 0 0 0 1.326-1.951c.9-1.892 2.291-5.039 1.196-8.324-.867-2.597-2.056-4.017-3.565-5.404C20.855 5.604 20.17 4.598 20.17 4c0 0-2.83 3.157-1.604 6.448 1.228 3.29 3.743 3.171 5.407 6.606 1.957 4.043-1.585 8.454-4.514 9.69.18-.04 6.51-1.474 6.844-5.095-.006.067-.15 1.067-1.952 1.887Z"
+        fill="url(#firefox_svg__i)"
+      /&gt;
+      &lt;path
+        d="M16.148 11.789c.01-.214-.102-.357-1.87-.523-.728-.068-1.006-.74-1.09-1.023-.26.672-.366 1.377-.309 2.231.04.56.415 1.159.594 1.511 0 0 .04-.051.059-.07.338-.352 1.755-.889 1.888-.965.145-.093.704-.5.728-1.161Z"
+        fill="url(#firefox_svg__j)"
+      /&gt;
+      &lt;path
+        d="M8.361 7.816c-.026-.044-.04.091-.058.047-.146-.337-.234-.882-.213-1.269 0 0-.301.137-.55.71-.045.102-.075.16-.104.216-.014.017.03-.189.024-.177-.043.073-.156.176-.204.302-.041.103-.082.159-.113.287-.01.035.009-.154.001-.13-.578 1.117-.689 2.807-.628 2.736 1.231-1.314 2.642-1.626 2.642-1.626-.149-.112-.476-.431-.797-1.096Z"
+        fill="url(#firefox_svg__k)"
+      /&gt;
+      &lt;path
+        d="M13.033 21.564c-1.701-.726-3.634-1.75-3.562-4.077.1-3.063 2.857-2.458 2.857-2.458-.103.025-.382.223-.48.435-.105.264-.295.86.28 1.486.906.98-1.858 2.326 2.407 4.867.108.058-.998-.036-1.502-.253Z"
+        fill="url(#firefox_svg__l)"
+      /&gt;
+      &lt;path
+        d="M12.429 20.037c1.205.419 2.61.346 3.452-.119.563-.313 1.285-.816 1.73-.692-.385-.152-.677-.223-1.027-.24-.06 0-.13-.001-.196-.008-.129 0-.257.007-.385.022-.217.02-.457.156-.676.135-.01-.001.212-.093.194-.088-.116.024-.242.03-.375.046-.085.01-.158.02-.241.024-2.512.213-4.635-1.362-4.635-1.362-.181.608.808 1.812 2.159 2.282Z"
+        fill="url(#firefox_svg__m)"
+      /&gt;
+      &lt;path
+        d="M24.347 23.552c2.54-2.494 3.826-5.526 3.282-8.928 0 0 .217 1.744-.607 3.528.396-1.741.442-3.905-.608-6.146-1.402-2.99-3.708-4.564-4.59-5.221-1.333-.995-1.886-2.007-1.896-2.217-.4.816-1.604 3.614-.13 6.024 1.382 2.257 3.558 2.928 5.08 4.998 2.808 3.816-.531 7.962-.531 7.962Z"
+        fill="url(#firefox_svg__n)"
+      /&gt;
+      &lt;path
+        d="M23.983 17.062c-.888-1.834-1.996-2.634-3.044-3.502.122.17.152.232.22.342.923.983 2.283 3.382 1.294 6.393-1.86 5.667-9.295 2.998-10.075 2.25.316 3.279 5.805 4.849 9.38 2.722 2.034-1.926 3.68-5.199 2.225-8.205Z"
+        fill="url(#firefox_svg__o)"
+      /&gt;
+    &lt;/g&gt;
+    &lt;defs&gt;
+      &lt;radialGradient
+        id="firefox_svg__b"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="rotate(2.555 -210.924 602.667) scale(8.38769 12.3287)"
+      &gt;
+        &lt;stop offset=".045" stopColor="#FFEA00" /&gt;
+        &lt;stop offset=".12" stopColor="#FFDE00" /&gt;
+        &lt;stop offset=".254" stopColor="#FFBF00" /&gt;
+        &lt;stop offset=".429" stopColor="#FF8E00" /&gt;
+        &lt;stop offset=".769" stopColor="#FF272D" /&gt;
+        &lt;stop offset=".872" stopColor="#E0255A" /&gt;
+        &lt;stop offset=".953" stopColor="#CC2477" /&gt;
+        &lt;stop offset="1" stopColor="#C42482" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;radialGradient
+        id="firefox_svg__c"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="translate(20.673 8.71) scale(23.6401)"
+      &gt;
+        &lt;stop stopColor="#00CCDA" /&gt;
+        &lt;stop offset=".22" stopColor="#0083FF" /&gt;
+        &lt;stop offset=".261" stopColor="#007AF9" /&gt;
+        &lt;stop offset=".33" stopColor="#0060E8" /&gt;
+        &lt;stop offset=".333" stopColor="#005FE7" /&gt;
+        &lt;stop offset=".438" stopColor="#2639AD" /&gt;
+        &lt;stop offset=".522" stopColor="#401E84" /&gt;
+        &lt;stop offset=".566" stopColor="#4A1475" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;radialGradient
+        id="firefox_svg__e"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="rotate(5.67 -152.86 252.646) scale(7.97377)"
+      &gt;
+        &lt;stop offset=".003" stopColor="#FFEA00" /&gt;
+        &lt;stop offset=".497" stopColor="#FF272D" /&gt;
+        &lt;stop offset="1" stopColor="#C42482" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;radialGradient
+        id="firefox_svg__f"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="rotate(5.67 -75.297 249.185) scale(13.3156)"
+      &gt;
+        &lt;stop offset=".003" stopColor="#FFE900" /&gt;
+        &lt;stop offset=".157" stopColor="#FFAF0E" /&gt;
+        &lt;stop offset=".316" stopColor="#FF7A1B" /&gt;
+        &lt;stop offset=".472" stopColor="#FF4E26" /&gt;
+        &lt;stop offset=".621" stopColor="#FF2C2E" /&gt;
+        &lt;stop offset=".762" stopColor="#FF1434" /&gt;
+        &lt;stop offset=".892" stopColor="#FF0538" /&gt;
+        &lt;stop offset="1" stopColor="#FF0039" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;radialGradient
+        id="firefox_svg__g"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="rotate(5.67 -200.873 262.03) scale(12.2185)"
+      &gt;
+        &lt;stop offset=".003" stopColor="#FF272D" /&gt;
+        &lt;stop offset=".497" stopColor="#C42482" /&gt;
+        &lt;stop offset=".986" stopColor="#620700" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;radialGradient
+        id="firefox_svg__h"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="translate(21.943 13.61) scale(19.0773)"
+      &gt;
+        &lt;stop offset=".156" stopColor="#FFEA00" /&gt;
+        &lt;stop offset=".231" stopColor="#FFDE00" /&gt;
+        &lt;stop offset=".365" stopColor="#FFBF00" /&gt;
+        &lt;stop offset=".541" stopColor="#FF8E00" /&gt;
+        &lt;stop offset=".763" stopColor="#FF272D" /&gt;
+        &lt;stop offset=".796" stopColor="#F92433" /&gt;
+        &lt;stop offset=".841" stopColor="#E91C45" /&gt;
+        &lt;stop offset=".893" stopColor="#CF0E62" /&gt;
+        &lt;stop offset=".935" stopColor="#B5007F" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;radialGradient
+        id="firefox_svg__i"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="translate(20.508 4.031) scale(22.5269)"
+      &gt;
+        &lt;stop offset=".279" stopColor="#FFEA00" /&gt;
+        &lt;stop offset=".402" stopColor="#FD0" /&gt;
+        &lt;stop offset=".63" stopColor="#FFBA00" /&gt;
+        &lt;stop offset=".856" stopColor="#FF9100" /&gt;
+        &lt;stop offset=".933" stopColor="#FF6711" /&gt;
+        &lt;stop offset=".994" stopColor="#FF4A1D" /&gt;
+      &lt;/radialGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__d"
+        x1="17.686"
+        y1="21.785"
+        x2="13.017"
+        y2="6.511"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop stopColor="#000F43" stopOpacity=".4" /&gt;
+        &lt;stop offset=".485" stopColor="#001962" stopOpacity=".173" /&gt;
+        &lt;stop offset="1" stopColor="#002079" stopOpacity="0" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__j"
+        x1="4.947"
+        y1="13.391"
+        x2="13.615"
+        y2="12.075"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop stopColor="#C42482" stopOpacity=".5" /&gt;
+        &lt;stop offset=".474" stopColor="#FF272D" stopOpacity=".5" /&gt;
+        &lt;stop offset=".486" stopColor="#FF2C2C" stopOpacity=".513" /&gt;
+        &lt;stop offset=".675" stopColor="#FF7A1A" stopOpacity=".72" /&gt;
+        &lt;stop offset=".829" stopColor="#FFB20D" stopOpacity=".871" /&gt;
+        &lt;stop offset=".942" stopColor="#FFD605" stopOpacity=".964" /&gt;
+        &lt;stop offset="1" stopColor="#FFE302" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__k"
+        x1="7.993"
+        y1="10.288"
+        x2="7.009"
+        y2="6.762"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop stopColor="#891551" stopOpacity=".6" /&gt;
+        &lt;stop offset="1" stopColor="#C42482" stopOpacity="0" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__l"
+        x1="9.878"
+        y1="15.441"
+        x2="11.902"
+        y2="18.264"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop offset=".005" stopColor="#891551" stopOpacity=".5" /&gt;
+        &lt;stop offset=".484" stopColor="#FF272D" stopOpacity=".5" /&gt;
+        &lt;stop offset="1" stopColor="#FF272D" stopOpacity="0" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__m"
+        x1="13.743"
+        y1="20.39"
+        x2="13.927"
+        y2="18.576"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop stopColor="#C42482" /&gt;
+        &lt;stop offset=".083" stopColor="#C42482" stopOpacity=".81" /&gt;
+        &lt;stop offset=".206" stopColor="#C42482" stopOpacity=".565" /&gt;
+        &lt;stop offset=".328" stopColor="#C42482" stopOpacity=".362" /&gt;
+        &lt;stop offset=".447" stopColor="#C42482" stopOpacity=".204" /&gt;
+        &lt;stop offset=".562" stopColor="#C42482" stopOpacity=".091" /&gt;
+        &lt;stop offset=".673" stopColor="#C42482" stopOpacity=".023" /&gt;
+        &lt;stop offset=".773" stopColor="#C42482" stopOpacity="0" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__n"
+        x1="19.635"
+        y1="4.88"
+        x2="27.09"
+        y2="21.551"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop stopColor="#FFF14F" /&gt;
+        &lt;stop offset=".268" stopColor="#FFEE4C" /&gt;
+        &lt;stop offset=".452" stopColor="#FFE643" /&gt;
+        &lt;stop offset=".612" stopColor="#FFD834" /&gt;
+        &lt;stop offset=".757" stopColor="#FFC41E" /&gt;
+        &lt;stop offset=".892" stopColor="#FFAB02" /&gt;
+        &lt;stop offset=".902" stopColor="#FFA900" /&gt;
+        &lt;stop offset=".949" stopColor="#FFA000" /&gt;
+        &lt;stop offset="1" stopColor="#FF9100" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;linearGradient
+        id="firefox_svg__o"
+        x1="21.107"
+        y1="14.468"
+        x2="17.575"
+        y2="23.95"
+        gradientUnits="userSpaceOnUse"
+      &gt;
+        &lt;stop stopColor="#FF8E00" /&gt;
+        &lt;stop offset=".04" stopColor="#FF8E00" stopOpacity=".858" /&gt;
+        &lt;stop offset=".084" stopColor="#FF8E00" stopOpacity=".729" /&gt;
+        &lt;stop offset=".13" stopColor="#FF8E00" stopOpacity=".628" /&gt;
+        &lt;stop offset=".178" stopColor="#FF8E00" stopOpacity=".557" /&gt;
+        &lt;stop offset=".227" stopColor="#FF8E00" stopOpacity=".514" /&gt;
+        &lt;stop offset=".282" stopColor="#FF8E00" stopOpacity=".5" /&gt;
+        &lt;stop offset=".389" stopColor="#FF8E00" stopOpacity=".478" /&gt;
+        &lt;stop offset=".524" stopColor="#FF8E00" stopOpacity=".416" /&gt;
+        &lt;stop offset=".676" stopColor="#FF8E00" stopOpacity=".314" /&gt;
+        &lt;stop offset=".838" stopColor="#FF8E00" stopOpacity=".172" /&gt;
+        &lt;stop offset="1" stopColor="#FF8E00" stopOpacity="0" /&gt;
+      &lt;/linearGradient&gt;
+      &lt;clipPath id="firefox_svg__clippath"&gt;
+        &lt;path fill="#fff" transform="translate(4.5 4)" d="M0 0h23.253v24H0z" /&gt;
+      &lt;/clipPath&gt;
+    &lt;/defs&gt;
+  &lt;/svg&gt;
+);
+export default Firefox;
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-07-04T14:35:25.548Z
+            </div>
+        <script src="../../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
+    </body>
+</html>
+    

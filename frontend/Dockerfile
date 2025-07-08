@@ -1,19 +1,22 @@
 # Multi-stage build for React frontend
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
+
+# Install yarn
+RUN apk add --no-cache yarn
 
 WORKDIR /app
 
 # Copy package files from root directory
-COPY package.json package-lock.json ./
+COPY package.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (will generate yarn.lock)
+RUN yarn install
 
 # Copy source code from frontend directory
 COPY frontend/ .
 
 # Build the application
-RUN npm run build
+RUN yarn build
 
 # Production stage
 FROM nginx:alpine

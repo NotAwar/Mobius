@@ -13,7 +13,14 @@ COPY package.json ./
 RUN yarn install
 
 # Copy source code from frontend directory
-COPY frontend/ .
+COPY frontend/ ./frontend/
+
+# Copy webpack config and other build files
+COPY webpack.config.js ./
+COPY tsconfig.json ./
+COPY babel.config.json ./
+COPY postcss.config.js ./
+COPY .eslintrc.js ./
 
 # Build the application
 RUN yarn build
@@ -22,7 +29,7 @@ RUN yarn build
 FROM nginx:alpine
 
 # Copy built assets from builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/assets /usr/share/nginx/html
 
 # Copy nginx configuration from frontend directory
 COPY frontend/nginx.conf /etc/nginx/nginx.conf

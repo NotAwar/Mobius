@@ -3,17 +3,17 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json yarn.lock ./
+# Copy package files from parent directory (since build context is ./frontend)
+COPY ../package*.json ../package-lock.json ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN yarn build
+RUN npm run build
 
 # Production stage
 FROM nginx:alpine

@@ -1,8 +1,8 @@
 # Multi-stage build for Go backend
-FROM golang:1.24-alpine AS builder
+FROM node:24-alpine AS node-builder
 
-# Install git, ca-certificates, and nodejs/yarn for frontend build
-RUN apk add --no-cache git ca-certificates nodejs yarn
+# Install yarn
+RUN apk add --no-cache yarn
 
 WORKDIR /app
 
@@ -22,6 +22,23 @@ COPY frontend/ ./frontend/
 
 # Build frontend assets
 RUN NODE_ENV=production yarn run webpack --progress
+
+# Go builder stage
+FROM golang:1.24-alpine AS builder
+
+# Install git and ca-certificates
+RUN apk add --no-cache git ca-certificates
+
+WORKDIR /app
+
+# Copy built frontend assets from node-builder
+COPY --from=node-builder /app/assets ./assets
+
+# Copy frontend templates
+COPY frontend/templates ./frontend/templates
+
+# Copy server mail templates
+COPY server/mail/templates ./server/mail/templates
 
 # Copy go mod files
 COPY go.mod go.sum ./

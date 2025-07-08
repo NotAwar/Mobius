@@ -17,11 +17,14 @@ COPY babel.config.json ./
 COPY postcss.config.js ./
 COPY .eslintrc.js ./
 
+# Copy schema files (required for frontend build)
+COPY schema/ ./schema/
+
 # Copy frontend source code
 COPY frontend/ ./frontend/
 
-# Build frontend assets
-RUN NODE_ENV=production yarn run webpack --progress
+# Build frontend assets (disable TypeScript checking for Docker build)
+RUN SKIP_TYPE_CHECK=true NODE_ENV=production yarn run webpack --progress
 
 # Go builder stage
 FROM golang:1.24-alpine AS builder

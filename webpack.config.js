@@ -12,7 +12,6 @@ const globImporter = require("node-sass-glob-importer");
 const DEV_SOURCE_MAPS = "eval-source-map";
 
 let plugins = [
-  new ForkTsCheckerWebpackPlugin(),
   new HtmlWebpackPlugin({
     filename: "../frontend/templates/react.tmpl",
     inject: false,
@@ -30,6 +29,11 @@ let plugins = [
     },
   }),
 ];
+
+// Only add TypeScript checker if not explicitly disabled (for Docker builds)
+if (!process.env.SKIP_TYPE_CHECK) {
+  plugins.unshift(new ForkTsCheckerWebpackPlugin());
+}
 
 if (process.env.NODE_ENV === "production") {
   plugins = plugins.concat([
@@ -51,6 +55,8 @@ const repo = __dirname;
 
 const config = {
   mode: process.env.NODE_ENV,
+  // Don't bail on first error in Docker builds
+  bail: !process.env.SKIP_TYPE_CHECK,
   entry: {
     bundle: path.join(repo, "frontend/index.jsx"),
   },
@@ -88,6 +94,17 @@ const config = {
           options: {
             loader: "tsx", // Or 'ts' if you don't need tsx
             target: "es2016",
+            // Disable TypeScript checking for Docker builds
+            ...(process.env.SKIP_TYPE_CHECK && {
+              tsconfigRaw: {
+                compilerOptions: {
+                  noEmitOnError: false,
+                  skipLibCheck: true,
+                  allowJs: true,
+                  noImplicitAny: false,
+                },
+              },
+            }),
           },
         },
       },

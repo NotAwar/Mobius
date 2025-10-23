@@ -44,7 +44,7 @@ mobius-web/             # Svelte frontend application
 ```
 
 ### Technology Stack
-- **Backend**: Go 1.24.4, RESTful API, JWT auth, CORS, rate limiting
+- **Backend**: Go 1.25.3, RESTful API, JWT auth, CORS, rate limiting
 - **Frontend**: Svelte 5, TypeScript, Vite, Vitest for testing
 - **Database**: Embedded storage solutions
 - **Containerization**: Docker with security hardening
@@ -207,7 +207,7 @@ When contributing, ensure all CI checks pass and follow the established patterns
 ## Troubleshooting Common Issues
 
 ### Build Issues
-- Ensure Go 1.24.4+ is installed
+- Ensure Go 1.25.3+ is installed
 - Run `go mod tidy` in each module
 - Check frontend dependencies with `npm install`
 - Use `make clean` to reset build state
@@ -241,7 +241,7 @@ Mobius is a comprehensive Mobile Device Management (MDM) platform written in Go 
 ### Required Environment
 ```bash
 # Check versions
-go version  # Must be Go 1.24.4+
+go version  # Must be Go 1.25.3+
 node --version  # Node.js 20+ required
 npm --version   # npm 10+ required
 ```

@@ -1,6 +1,6 @@
 # Mobius Mobile Device Management Platform
 
-![Mobius logo](Mobius-Logo-Text_1.png)
+![Mobius logo](common/assets/Mobius-Logo-Text_1.png)
 
 [![Build & Deploy](https://github.com/NotAwar/Mobius/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/NotAwar/Mobius/actions/workflows/build-and-deploy.yml)
 [![Unit Tests](https://github.com/NotAwar/Mobius/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/NotAwar/Mobius/actions/workflows/unit-tests.yml)
@@ -13,12 +13,13 @@ Mobius is a modern, API-first Mobile Device Management (MDM) platform designed f
 
 ```bash
 # Build and run the API server
-cd mobius-server
+cd server/api
 go build -o mobius-api ./cmd/api-server/
 ./mobius-api
 ```
 
 The server starts on `http://localhost:8081` with these default credentials:
+
 - **Email**: `admin@mobius.local`  
 - **Password**: `admin123`
 
@@ -45,50 +46,62 @@ Mobius follows a clean, API-first architecture with clear separation of concerns
 ### Core Components
 
 ```text
-mobius-server/          # Core API server and business logic
-├── api/                # HTTP routing, handlers, middleware
-├── pkg/service/        # Business logic implementations  
-├── cmd/api-server/     # Standalone API server
-└── cmd/mobius/         # Legacy server (deprecated)
+server/
+├── api/                # Core API server and business logic
+│   ├── api/            # HTTP routing, handlers, middleware
+│   ├── pkg/service/    # Business logic implementations  
+│   ├── cmd/api-server/ # Standalone API server
+│   └── cmd/mobius/     # Legacy server (deprecated)
+├── cli/                # Command-line management tool
+│   ├── cmd/mobiuscli/  # CLI application
+│   └── pkg/            # CLI business logic
+└── package-search/     # Package search service
 
-mobius-cli/             # Command-line management tool
-├── cmd/mobiuscli/      # CLI application
-└── pkg/               # CLI business logic
+client/
+└── client/             # Device client agents
+    ├── cmd/client/     # Cross-platform device client
+    └── pkg/            # Client libraries
 
-mobius-client/          # Device client agents
-├── cmd/client/         # Cross-platform device client
-└── pkg/               # Client libraries
+ui/
+└── web/                # Svelte web application
+    ├── src/            # Frontend source code
+    └── static/         # Static assets
 
-mobius-cocoon/          # Enterprise web portal
-├── cmd/cocoon/         # Web application server
-└── pkg/               # Portal business logic
+cocoon/
+└── portal/             # Enterprise web portal
+    ├── cmd/cocoon/     # Web application server
+    └── pkg/            # Portal business logic
 
-shared/                 # Common libraries and utilities
-└── pkg/               # Shared Go packages
+common/
+├── shared/             # Common libraries and utilities
+│   └── pkg/            # Shared Go packages
+└── assets/             # Images, logos, and other assets
 ```
 
 ## Key Features
 
-###  Production Ready
+### Production Ready
+
 - **RESTful API**: Complete endpoint coverage with OpenAPI 3.1 specification
 - **Authentication**: JWT-based auth with role-based access control (admin/operator/viewer)
 - **Security**: CORS, rate limiting, security headers, input validation
 - **Monitoring**: Health checks, Prometheus metrics, structured logging
 - **Containerization**: Optimized Docker images with security best practices
 
-###  Enterprise Features
+### Enterprise Features
+
 - **License Management**: Professional, and Enterprise tiers
 - **Multi-Platform**: Support for Windows, macOS, Linux, iOS, and Android
 - **Policy Engine**: Create, assign, and enforce device policies
 - **Application Distribution**: Secure app packaging and deployment
 - **Device Management**: Enrollment, monitoring, and remote management
 
-###  Self-Hosted
+### Self-Hosted
+
 - **Data Control**: Complete ownership of device and user data
 - **Customization**: Open architecture for custom integrations
 - **Cost Effective**: No per-device licensing fees to third parties
 - **Scalable**: Microservices-ready design for enterprise deployment
-
 
 ## Products
 
@@ -156,6 +169,7 @@ This structure enables:
 For security vulnerabilities, responsible disclosure procedures, and security best practices, please see our [Security Policy](SECURITY.md).
 
 Key security features:
+
 - JWT-based authentication with RBAC
 - HTTPS/TLS encryption for all communications  
 - Rate limiting and DDoS protection

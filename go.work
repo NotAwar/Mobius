@@ -1,9 +1,10 @@
-go 1.24.4
+go 1.25.3
 
 use (
-	./mobius-cli
-	./mobius-client
-	./mobius-cocoon
-	./mobius-server
-	./shared
+	./client/client
+	./cocoon/portal
+	./common/shared
+	./server/api
+	./server/cli
+	./server/mobius-package-search
 )

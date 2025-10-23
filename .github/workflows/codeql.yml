@@ -111,7 +111,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: 'mobius-web/package-lock.json'
+          cache-dependency-path: 'ui/web/package-lock.json'
 
       #  Custom build step for Go to handle workspace
       - name: Build Go workspace
@@ -122,8 +122,8 @@ jobs:
           go work sync
 
           #  Build each module in the workspace
-          for module in mobius-server mobius-cli mobius-client \
-                        mobius-cocoon shared; do
+          for module in server/api server/cli client/client \
+                        cocoon/portal common/shared; do
             if [ -d "$module" ]; then
               echo "Building module: $module"
               (cd "$module" && go build ./...)

@@ -1,0 +1,106 @@
+# Mobius MDM Platform - Docker Compose
+# This compose file orchestrates all Mobius services
+version: '3.8'
+
+services:
+  # Database - MySQL
+  mysql:
+    image: mysql:8.0.36
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: mobius
+      MYSQL_USER: mobius
+      MYSQL_PASSWORD: insecure
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Cache - Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Core API Server with Web UI
+  mobius-api:
+    build:
+      context: .
+      dockerfile: server/api/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      MOBIUS_MYSQL_ADDRESS: mysql:3306
+      MOBIUS_MYSQL_DATABASE: mobius
+      MOBIUS_MYSQL_USERNAME: mobius
+      MOBIUS_MYSQL_PASSWORD: insecure
+      MOBIUS_REDIS_ADDRESS: redis:6379
+      MOBIUS_SERVER_ADDRESS: "0.0.0.0:8081"
+      MOBIUS_LOGGING_JSON: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # CLI Tool (runs once for testing)
+  mobius-cli:
+    build:
+      context: .
+      dockerfile: server/cli/Dockerfile
+    command: ["--help"]
+    environment:
+      MOBIUS_API_URL: http://mobius-api:8081
+    depends_on:
+      - mobius-api
+    profiles:
+      - tools
+
+  # Device Client (disabled by default, run manually)
+  mobius-client:
+    build:
+      context: .
+      dockerfile: client/client/Dockerfile
+    environment:
+      MOBIUS_API_URL: http://mobius-api:8081
+      MOBIUS_LOG_LEVEL: info
+    depends_on:
+      - mobius-api
+    profiles:
+      - client
+
+  # Enterprise Portal
+  mobius-cocoon:
+    build:
+      context: .
+      dockerfile: cocoon/portal/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      MOBIUS_API_URL: http://mobius-api:8081
+      MOBIUS_COCOON_PORT: "8082"
+      MOBIUS_LOGGING_JSON: "true"
+    depends_on:
+      - mobius-api
+    restart: unless-stopped
+    profiles:
+      - enterprise
+
+volumes:
+  mysql-data:
+
+networks:
+  default:
+    name: mobius_network

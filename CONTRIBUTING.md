@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Mobius! We welcome contributions 
 
 ### Prerequisites
 
-- Go 1.24+ 
+- Go 1.25+ 
 - Node.js 18+ (for web UI development)
 - Docker (for containerized development)
 - Git

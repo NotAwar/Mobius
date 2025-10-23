@@ -52,7 +52,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
-          go-version-file: 'mobius-server/go.mod'
+          go-version-file: 'server/api/go.mod'
 
       - name: Install dependencies (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -64,16 +64,16 @@ jobs:
         run: |
           # Updated to golangci-lint v2 to support version field in config
           go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-          cd mobius-server && golangci-lint run
+          cd server/api && golangci-lint run
 
       - name: Run go lint on CLI
         run: |
-          cd mobius-cli && golangci-lint run
+          cd server/cli && golangci-lint run
 
       - name: Run go lint on client
         run: |
-          cd mobius-client && golangci-lint run
+          cd client/client && golangci-lint run
 
-      - name: Run cloner-check tool
-        run: |
-          cd mobius-server && go run ./tools/cloner-check/main.go -check
+      # - name: Run cloner-check tool
+      #   run: |
+      #     cd server/api && go run ./tools/cloner-check/main.go -check

@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        module: [mobius-server, mobius-cli, mobius-client, mobius-cocoon, shared]
+        module: [server/api, server/cli, client/client, cocoon/portal, common/shared]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -44,22 +44,22 @@ jobs:
         with:
           go-version-file: 'go.work'
           cache-dependency-path: |
-            mobius-server/go.sum
-            mobius-cli/go.sum
-            mobius-client/go.sum
-            mobius-cocoon/go.sum
-            shared/go.sum
+            server/api/go.sum
+            server/cli/go.sum
+            client/client/go.sum
+            cocoon/portal/go.sum
+            common/shared/go.sum
 
       - name: Sync workspace and download deps
         run: |
           go work sync
           go env
           # Download deps for all modules to warm the cache
-          (cd mobius-server && go mod download)
-          (cd mobius-cli && go mod download)
-          (cd mobius-client && go mod download)
-          (cd mobius-cocoon && go mod download)
-          (cd shared && go mod download)
+          (cd server/api && go mod download)
+          (cd server/cli && go mod download)
+          (cd client/client && go mod download)
+          (cd cocoon/portal && go mod download)
+          (cd common/shared && go mod download)
 
       - name: Run unit tests (matrix module)
         run: |

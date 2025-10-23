@@ -1,0 +1,19 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: mobius-cli
+  description: Mobius CLI Management Tool
+
+containers:
+  cli:
+    image: .
+    command: [ "--help" ]
+    variables:
+      MOBIUS_API_URL: "${resources.api.url}"
+      MOBIUS_CONFIG_DIR: "/app/config"
+
+resources:
+  api:
+    type: service
+    params:
+      host: mobius-api
+      port: 8081

@@ -15,11 +15,11 @@ import (
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/service/calendar"
-	"github.com/notawar/mobius/mobius-server/server/service/schedule"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/service/calendar"
+	"github.com/notawar/mobius/server/api/server/service/schedule"
 )
 
 const (

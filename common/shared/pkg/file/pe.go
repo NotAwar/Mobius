@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"github.com/saferwall/pe"
 )
 
@@ -113,7 +113,7 @@ var exeSpecialCases = map[string]func(*InstallerMetadata, []map[string]string) *
 // parsing the installer's metadata, so we need to apply some special cases at
 // least for the most popular apps that use unusual naming.
 //
-// See https://github.com/notawar/mobius/issues/20440#issuecomment-2260500661
+// See https://github.com/MobiusDM/Mobius/issues/20440#issuecomment-2260500661
 func applySpecialCases(meta *InstallerMetadata, resources []map[string]string) *InstallerMetadata {
 	if fn := exeSpecialCases[meta.Name]; fn != nil {
 		return fn(meta, resources)

@@ -32,7 +32,7 @@ The server is organized into:
 
 ## Dependencies
 
-- `../shared` - Shared libraries with mobius-cli
+- `../shared` - Shared libraries with server/cli
 - External dependencies as defined in go.mod
 
 ## Licensing endpoints

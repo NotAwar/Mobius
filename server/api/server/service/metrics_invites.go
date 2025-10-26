@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 func (mw metricsMiddleware) InviteNewUser(ctx context.Context, payload mobius.InvitePayload) (*mobius.Invite, error) {

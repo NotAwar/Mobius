@@ -6,7 +6,7 @@ import (
 	"time"
 	_ "time/tzdata" // embed timezone information in the program
 
-	"github.com/notawar/mobius/mobius-server/server"
+	"github.com/notawar/mobius/server/api/server"
 )
 
 const (

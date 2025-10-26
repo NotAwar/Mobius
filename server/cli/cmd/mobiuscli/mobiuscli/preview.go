@@ -17,9 +17,9 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service"
 	"github.com/notawar/mobius/shared/pkg/mobiushttp"
 	"github.com/notawar/mobius/shared/pkg/open"
 	"github.com/notawar/mobius/shared/pkg/spec"

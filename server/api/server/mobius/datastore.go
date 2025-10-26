@@ -10,13 +10,13 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/health"
-	"github.com/notawar/mobius/mobius-server/server/mdm/android"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/storage"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/health"
+	"github.com/notawar/mobius/server/api/server/mdm/android"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage"
 )
 
 type CarveStore interface {

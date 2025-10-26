@@ -12,9 +12,9 @@ import (
 
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 var (

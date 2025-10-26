@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
 )
 
 // deleteEntity deletes an entity with the given id from the given DB table,

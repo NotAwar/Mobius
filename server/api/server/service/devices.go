@@ -13,14 +13,14 @@ import (
 	"time"
 
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/contexts/authz"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	hostctx "github.com/notawar/mobius/mobius-server/server/contexts/host"
-	"github.com/notawar/mobius/mobius-server/server/contexts/logging"
-	apple_mdm "github.com/notawar/mobius/mobius-server/server/mdm/apple"
-	mdmcrypto "github.com/notawar/mobius/mobius-server/server/mdm/crypto"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server/contexts/authz"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	hostctx "github.com/notawar/mobius/server/api/server/contexts/host"
+	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
+	mdmcrypto "github.com/notawar/mobius/server/api/server/mdm/crypto"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ func getDeviceHostEndpoint(ctx context.Context, request interface{}, svc mobius.
 		MDM: mobius.DeviceGlobalMDMConfig{
 			// TODO(mna): It currently only returns the Apple enabled and configured,
 			// regardless of the platform of the device. See
-			// https://github.com/notawar/mobius/pull/19304#discussion_r1618792410.
+			// https://github.com/MobiusDM/Mobius/pull/19304#discussion_r1618792410.
 			EnabledAndConfigured: ac.MDM.EnabledAndConfigured,
 		},
 		Features: mobius.DeviceFeatures{

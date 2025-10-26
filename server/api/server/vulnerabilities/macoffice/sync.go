@@ -6,8 +6,8 @@ import (
 	"sort"
 
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/io"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 )
 
 // SyncFromGithub keeps the local mac Office release notes metadata in sync with the one published in Github.

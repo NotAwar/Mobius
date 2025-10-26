@@ -34,18 +34,18 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
-          go-version-file: "mobius-server/go.mod"
+          go-version-file: "server/api/go.mod"
 
       - name: Get last 5 minor releases
         id: get_latest_releases
         run: |
-          echo "MOBIUS_LATEST_RELEASES=$(cd mobius-server && go run ./tools/github-releases --last-minor-releases 5)" >> $GITHUB_OUTPUT
+          echo "MOBIUS_LATEST_RELEASES=$(cd server/api && go run ./tools/github-releases --last-minor-releases 5)" >> $GITHUB_OUTPUT
 
       - name: Pull container images
         run: |
           RELEASES="${{ steps.get_latest_releases.outputs.MOBIUS_LATEST_RELEASES }}"
           for version in $RELEASES; do
-            docker pull ghcr.io/notawar/mobius:$version
+            docker pull ghcr.io/notawar/mobius-server:$version
           done
 
       - name: List mobius VEX files
@@ -62,7 +62,7 @@ jobs:
 
       # We use the trivy command and not the github action because it doesn't support loading
       # VEX files yet and looks like we can't run the action on multiple images.
-      - name: Run trivy vulnerability scanner on ghcr.io/notawar/mobius images
+      - name: Run trivy vulnerability scanner on ghcr.io/notawar/mobius-server images
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -81,7 +81,7 @@ jobs:
               --pkg-types=os,library \
               --severity=CRITICAL \
               --vex="${{ steps.generate_mobius_vex_files.outputs.MOBIUS_VEX_FILES }}" \
-              ghcr.io/notawar/mobius:$version
+              ghcr.io/notawar/mobius-server:$version
           done
 
       - name: List mobiuscli VEX files
@@ -97,7 +97,7 @@ jobs:
           fi
 
       # We use the trivy command and not the github action because it doesn't support loading VEX files yet.
-      - name: Run trivy vulnerability scanner on latest released ghcr.io/notawar/mobiuscli image
+      - name: Run trivy vulnerability scanner on latest released ghcr.io/notawar/mobius-cli image
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -107,4 +107,4 @@ jobs:
             --pkg-types=os,library \
             --severity=CRITICAL \
             --vex="${{ steps.generate_mobiuscli_vex_files.outputs.MOBIUSCTL_VEX_FILES }}" \
-            ghcr.io/notawar/mobiuscli:latest
+            ghcr.io/notawar/mobius-cli:latest

@@ -14,10 +14,10 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 	"github.com/notawar/mobius/shared/pkg/spec"
 )
 
@@ -124,7 +124,7 @@ func makeSetupEndpoint(svc mobius.Service, logger kitlog.Logger) endpoint.Endpoi
 // applyStarterLibrary downloads the starter library from GitHub
 // and applies it to the Mobius server using an authenticated client.
 // TODO: Move the apply starter library logic to use the serve command as an entry point to simplify and leverage the entire mobius.Service.
-// Entry point: https://github.com/notawar/mobius/blob/2dfadc0971c6ba45c19dad2f5f1f4cd0f1b89b20/cmd/mobius/serve.go#L1099-L1100
+// Entry point: https://github.com/MobiusDM/Mobius/blob/2dfadc0971c6ba45c19dad2f5f1f4cd0f1b89b20/cmd/mobius/serve.go#L1099-L1100
 func applyStarterLibrary(
 	ctx context.Context,
 	serverURL string,

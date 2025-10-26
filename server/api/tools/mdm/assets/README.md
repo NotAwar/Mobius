@@ -2,7 +2,7 @@
 
 The MDM Asset Manager is a tool designed to manage MDM assets in a Mobius database. The assets are
 exported unencrypted and imported encrypted; hence, the
-[key](https://mobiusmdm.com/docs/configuration/mobius-server-configuration#server-private-key) used for
+[key](https://mobiusmdm.com/docs/configuration/server/api-configuration#server-private-key) used for
 encrypting the assets must be provided.
 
 ## Usage

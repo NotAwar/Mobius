@@ -17,6 +17,7 @@ server/api/api-server*
 server/cli/mobiuscli
 client/client/client
 cocoon/portal/cocoon
+server/mobius-package-search/packageSearch
 
 # output directories
 /build

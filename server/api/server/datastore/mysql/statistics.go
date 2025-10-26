@@ -7,13 +7,13 @@ import (
 
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/version"
+	"github.com/notawar/mobius/server/api/server"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/version"
 )
 
 type statistics struct {

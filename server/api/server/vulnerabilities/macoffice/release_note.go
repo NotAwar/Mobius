@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/io"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/utils"
 )
 
 type ProductType int

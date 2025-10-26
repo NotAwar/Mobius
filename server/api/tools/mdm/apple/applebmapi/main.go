@@ -2,7 +2,7 @@
 // JSON format and calls the Apple BM API to retrieve and print the account
 // information or the specified enrollment profile.
 //
-// Was implemented to test out https://github.com/notawar/mobius/issues/7515#issuecomment-1330889768,
+// Was implemented to test out https://github.com/MobiusDM/Mobius/issues/7515#issuecomment-1330889768,
 // and can still be useful for debugging purposes.
 package main
 
@@ -16,9 +16,9 @@ import (
 
 	"github.com/WatchBeam/clock"
 	kitlog "github.com/go-kit/log"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/godep"
 	"github.com/notawar/mobius/shared/pkg/mobiushttp"
 )
 

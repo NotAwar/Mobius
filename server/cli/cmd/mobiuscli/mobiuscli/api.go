@@ -12,14 +12,14 @@ import (
 	"strings"
 
 	kithttp "github.com/go-kit/kit/transport/http"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service"
-	"github.com/notawar/mobius/mobius-server/server/version"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service"
+	"github.com/notawar/mobius/server/api/server/version"
 	"github.com/urfave/cli/v2"
 )
 
 var ErrGeneric = errors.New(`Something's gone wrong. Please try again. If this keeps happening please file an issue:
-https://github.com/notawar/mobius/issues/new/choose`)
+https://github.com/MobiusDM/Mobius/issues/new/choose`)
 
 func unauthenticatedClientFromCLI(c *cli.Context) (*service.Client, error) {
 	cc, err := clientConfigFromCLI(c)
@@ -138,8 +138,6 @@ func unauthenticatedClientFromConfig(cc Context, debug bool, outputWriter io.Wri
 
 	return mobius, nil
 }
-
-
 
 func clientConfigFromCLI(c *cli.Context) (Context, error) {
 	// if a config file is explicitly provided, do not return a default context,

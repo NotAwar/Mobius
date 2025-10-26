@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // CreateUser creates a new user, skipping the invitation process.

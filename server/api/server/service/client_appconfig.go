@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/version"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/version"
 )
 
 // ApplyAppConfig sends the application config to be applied to the Mobius instance.

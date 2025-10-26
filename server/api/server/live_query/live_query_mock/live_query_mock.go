@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"github.com/stretchr/testify/mock"
 )
 

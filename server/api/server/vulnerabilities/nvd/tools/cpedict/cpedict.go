@@ -22,7 +22,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 // TextType represents multi-language text

@@ -48,7 +48,7 @@ func NewRouter(deps *Dependencies) *mux.Router {
 	devices.HandleFunc("/{deviceId}/osquery", deps.handleDeviceOSQuery).Methods("POST")
 
 	// Device Groups management
-	groups := protected.PathPrefix("/device-groups").Subrouter()
+	groups := protected.PathPrefix("/devices/groups").Subrouter()
 	groups.HandleFunc("", deps.handleListDeviceGroups).Methods("GET")
 	groups.HandleFunc("", deps.handleCreateDeviceGroup).Methods("POST")
 	groups.HandleFunc("/{groupId}", deps.handleGetDeviceGroup).Methods("GET")
@@ -65,7 +65,7 @@ func NewRouter(deps *Dependencies) *mux.Router {
 	policies.HandleFunc("/{policyId}", deps.handleGetPolicy).Methods("GET")
 	policies.HandleFunc("/{policyId}", deps.handleUpdatePolicy).Methods("PUT")
 	policies.HandleFunc("/{policyId}", deps.handleDeletePolicy).Methods("DELETE")
-	
+
 	// Policy assignment endpoints
 	policies.HandleFunc("/{policyId}/devices", deps.handleGetPolicyDevices).Methods("GET")
 	policies.HandleFunc("/{policyId}/devices/{deviceId}", deps.handleAssignPolicyToDevice).Methods("POST")
@@ -92,42 +92,17 @@ func NewRouter(deps *Dependencies) *mux.Router {
 	deviceAPI.HandleFunc("/policies", deps.handleDeviceGetPolicies).Methods("GET")
 	deviceAPI.HandleFunc("/applications", deps.handleDeviceGetApplications).Methods("GET")
 
-	// Legacy CLI compatibility routes (/api/latest/mobius/*)
-	legacyAPI := r.PathPrefix("/api/latest/mobius").Subrouter()
-
-	// Legacy authentication
-	legacyAPI.HandleFunc("/login", deps.handleLegacyLogin).Methods("POST")
-	legacyAPI.HandleFunc("/logout", deps.handleLegacyLogout).Methods("POST")
-
-	// Legacy version endpoint
-	legacyAPI.HandleFunc("/version", deps.handleLegacyVersion).Methods("GET")
-
-	// Legacy protected routes
-	legacyProtected := legacyAPI.PathPrefix("").Subrouter()
-	legacyProtected.Use(deps.authMiddleware)
-
-	// Legacy config endpoint
-	legacyProtected.HandleFunc("/config", deps.handleLegacyConfig).Methods("GET")
-
-	// Legacy license endpoints
-	legacyProtected.HandleFunc("/license", deps.handleGetLicense).Methods("GET")
-	legacyProtected.HandleFunc("/license/status", deps.handleGetLicense).Methods("GET")
-	legacyProtected.HandleFunc("/license", deps.handleUpdateLicense).Methods("PUT")
-
-	// Legacy setup endpoint (for initial setup check)
-	legacyAPI.HandleFunc("/setup", deps.handleLegacySetup).Methods("GET", "POST")
-
 	// Serve static files (Svelte frontend)
 	// Only serve frontend if static files exist
 	staticDir := "./static"
 	if deps.StaticDir != "" {
 		staticDir = deps.StaticDir
 	}
-	
+
 	// Serve static assets (JS, CSS, images)
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir(filepath.Join(staticDir, "assets")))))
 	r.PathPrefix("/_app/").Handler(http.StripPrefix("/_app/", http.FileServer(http.Dir(filepath.Join(staticDir, "_app")))))
-	
+
 	// Handle SPA routes - serve index.html for all non-API routes
 	r.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Don't serve index.html for API routes
@@ -135,7 +110,7 @@ func NewRouter(deps *Dependencies) *mux.Router {
 			http.NotFound(w, r)
 			return
 		}
-		
+
 		// Serve index.html for all other routes (SPA routing)
 		indexPath := filepath.Join(staticDir, "index.html")
 		http.ServeFile(w, r, indexPath)
@@ -154,10 +129,10 @@ type Dependencies struct {
 	ApplicationService ApplicationService
 	AuthService        AuthService
 	GroupService       GroupService
-	
+
 	// WebSocket support
 	WSHub WSHub
-	
+
 	// Static file serving
 	StaticDir string
 }
@@ -199,7 +174,7 @@ type PolicyService interface {
 	DeletePolicy(id string) error
 	GetDevicePolicies(deviceID string) ([]*Policy, error)
 	AssignDevicePolicies(deviceID string, policyIDs []string) error
-	
+
 	// Policy assignment methods
 	GetPolicyDevices(policyID string) ([]*Device, error)
 	AssignPolicyToDevice(policyID, deviceID string) error
@@ -263,10 +238,10 @@ type Device struct {
 }
 
 type Group struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	Description string   `json:"description,omitempty"`
-	DeviceIDs   []string `json:"device_ids"`
+	ID          string    `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description,omitempty"`
+	DeviceIDs   []string  `json:"device_ids"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -388,8 +363,8 @@ type DeviceGroup struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description"`
 	DeviceCount int               `json:"device_count"`
-	Filters     map[string]string `json:"filters,omitempty"`     // Auto-assignment filters
-	Labels      map[string]string `json:"labels,omitempty"`      // Group metadata
+	Filters     map[string]string `json:"filters,omitempty"` // Auto-assignment filters
+	Labels      map[string]string `json:"labels,omitempty"`  // Group metadata
 	CreatedAt   time.Time         `json:"created_at"`
 	UpdatedAt   time.Time         `json:"updated_at"`
 }
@@ -430,12 +405,12 @@ func (d *Dependencies) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// Extract user info from the auth middleware context
 	userID := r.Header.Get("X-User-ID")
 	userRole := r.Header.Get("X-User-Role")
-	
+
 	if userID == "" {
 		WriteError(w, http.StatusUnauthorized, "User not authenticated")
 		return
 	}
-	
+
 	if d.WSHub != nil {
 		d.WSHub.HandleWebSocket(w, r, userID, userRole)
 	} else {

@@ -9,9 +9,16 @@ on:
       - prepare-*
     paths:
       - '**.go'
+      - 'go.work'
+      - '**/go.mod'
+      - '**/go.sum'
+      - '.github/workflows/golangci-lint.yml'
   pull_request:
     paths:
       - '**.go'
+      - 'go.work'
+      - '**/go.mod'
+      - '**/go.sum'
       - '.github/workflows/golangci-lint.yml'
   workflow_dispatch: # Manual
 

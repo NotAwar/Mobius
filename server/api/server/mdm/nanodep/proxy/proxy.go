@@ -10,9 +10,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/client"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/log"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/log/ctxlog"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/log"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/log/ctxlog"
 )
 
 // New creates new NanoDEP ReverseProxy. It dispatches requests using transport

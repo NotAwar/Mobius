@@ -13,10 +13,10 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/google/go-cmp/cmp"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/mock"
-	"github.com/notawar/mobius/mobius-server/server/service"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mock"
+	"github.com/notawar/mobius/server/api/server/service"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd"
 	"github.com/shirou/gopsutil/v3/process"
 )
 

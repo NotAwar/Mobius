@@ -8,11 +8,11 @@ import (
 	"time"
 
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/datastore/redis"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/datastore/redis"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm"
 
 	// we are using this package as we were having issues with pasrsing signed apple
 	// mobileconfig profiles with the pcks7 package we were using before.

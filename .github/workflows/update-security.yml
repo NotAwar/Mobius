@@ -67,7 +67,8 @@ jobs:
         id: security_check
         run: |
           # Check if dependencies need security updates
-          if [ -f package.json ]; then
+          if [ -f ui/web/package.json ]; then
+            cd ui/web
             if npm audit --audit-level=moderate --json > audit_result.json 2>audit_error.log; then
               VULNERABILITIES=$(cat audit_result.json | jq '.vulnerabilities | length')
               echo "npm_vulnerabilities=$VULNERABILITIES" >> $GITHUB_OUTPUT
@@ -76,6 +77,7 @@ jobs:
               echo "npm audit failed:" >&2
               cat audit_error.log >&2
             fi
+            cd ../..
           else
             echo "npm_vulnerabilities=skipped" >> $GITHUB_OUTPUT
           fi

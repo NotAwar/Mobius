@@ -70,7 +70,7 @@ func txCheck(m dsl.Matcher) {
 				containsIllegal(m["fn"])).
 		Report("improper use of ds.reader or ds.writer in function literal")
 
-	// TODO: https://github.com/notawar/mobius/pull/8621#pullrequestreview-1172676063
+	// TODO: https://github.com/MobiusDM/Mobius/pull/8621#pullrequestreview-1172676063
 	// This misses the case where a call to a Datastore method is done in one of
 	// those functions and that method uses the reader/writer (and does not
 	// receive a Tx as argument).

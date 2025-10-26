@@ -10,7 +10,7 @@ import (
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/cenkalti/backoff/v4"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 )
 
 // Jira is a Jira client to be used to make requests to a jira external

@@ -27,7 +27,7 @@ import (
 	"strings"
 
 	"github.com/facebookincubator/flog"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/providers/lib/client"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/providers/lib/client"
 )
 
 // CPE defines the CPE data feed for synchronization.

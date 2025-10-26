@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"time"
 
-	mdm_types "github.com/notawar/mobius/mobius-server/server/mdm"
+	mdm_types "github.com/notawar/mobius/server/api/server/mdm"
 )
 
 const (

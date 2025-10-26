@@ -12,8 +12,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/briandowns/spinner"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service"
 	"github.com/urfave/cli/v2"
 )
 

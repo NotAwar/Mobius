@@ -12,15 +12,15 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
 	nanomdm_log "github.com/micromdm/nanolib/log"
-	abmctx "github.com/notawar/mobius/mobius-server/server/contexts/apple_bm"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius/mobius-server/server/mdm/assets"
-	nanodep_client "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/client"
-	nanodep_mysql "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage/mysql"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	nanomdm_mysql "github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/storage/mysql"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	abmctx "github.com/notawar/mobius/server/api/server/contexts/apple_bm"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/assets"
+	nanodep_client "github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
+	nanodep_mysql "github.com/notawar/mobius/server/api/server/mdm/nanodep/storage/mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	nanomdm_mysql "github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage/mysql"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // NanoMDMStorage wraps a *nanomdm_mysql.MySQLStorage and overrides further functionality.
@@ -234,7 +234,7 @@ type NanoDEPStorage struct {
 // RetrieveAuthTokens partially implements nanodep.AuthTokensRetriever. NOTE: this method will first
 // check the context for an ABM token; if it doesn't find one, it will fall back to checking the DB.
 // This is so we can use the existing DEP client machinery without major changes. See
-// https://github.com/notawar/mobius/issues/21177 for more details.
+// https://github.com/MobiusDM/Mobius/issues/21177 for more details.
 func (s *NanoDEPStorage) RetrieveAuthTokens(ctx context.Context, name string) (*nanodep_client.OAuth1Tokens, error) {
 	if ctxTok, ok := abmctx.FromContext(ctx); ok {
 		return ctxTok, nil

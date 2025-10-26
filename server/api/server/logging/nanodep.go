@@ -3,7 +3,7 @@ package logging
 import (
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	nanodep_log "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/log"
+	nanodep_log "github.com/notawar/mobius/server/api/server/mdm/nanodep/log"
 )
 
 // NanoDEPLogger is a logger adapter for nanodep.

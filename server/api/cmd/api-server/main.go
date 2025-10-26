@@ -11,9 +11,9 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/notawar/mobius/mobius-server/api"
-	"github.com/notawar/mobius/mobius-server/pkg/service"
-	"github.com/notawar/mobius/mobius-server/pkg/websocket"
+	"github.com/notawar/mobius/server/api/api"
+	"github.com/notawar/mobius/server/api/pkg/service"
+	"github.com/notawar/mobius/server/api/pkg/websocket"
 )
 
 func main() {

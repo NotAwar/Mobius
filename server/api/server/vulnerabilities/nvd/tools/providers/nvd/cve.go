@@ -34,7 +34,7 @@ import (
 	"time"
 
 	"github.com/facebookincubator/flog"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/providers/lib/client"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/providers/lib/client"
 )
 
 // CVE defines the CVE data feed for synchronization.

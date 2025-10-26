@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 func (mw metricsMiddleware) ModifyLabel(ctx context.Context, id uint, p mobius.ModifyLabelPayload) (*mobius.Label, []uint, error) {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/ngrok/sqlmw"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
 )
 
 const (

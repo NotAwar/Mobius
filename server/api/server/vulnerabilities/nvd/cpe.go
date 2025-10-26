@@ -16,12 +16,12 @@ import (
 	"unicode"
 
 	"github.com/doug-martin/goqu/v9"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/pkg/download"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/pkg/download"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 
-	// "github.com/notawar/mobius/mobius-server/server/vulnerabilities/oval" // TODO: Fix OVAL types
+	// "github.com/notawar/mobius/server/api/server/vulnerabilities/oval" // TODO: Fix OVAL types
 	"github.com/go-kit/log"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"

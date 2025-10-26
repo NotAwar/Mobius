@@ -22,16 +22,16 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql/common_mysql"
-	mobiusmdm "github.com/notawar/mobius/mobius-server/server/mdm"
-	apple_mdm "github.com/notawar/mobius/mobius-server/server/mdm/apple"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
+	mobiusmdm "github.com/notawar/mobius/server/api/server/mdm"
+	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 // addHostMDMCommandsBatchSize is the number of host MDM commands to add in a single batch. This is a var so that it can be modified in tests.
@@ -2644,7 +2644,7 @@ func (ds *Datastore) bulkSetPendingMDMAppleHostProfilesDB(
 	// behavior but I think it can be refactored. For now leaving it as-is.
 	//
 	// TODO part II(roberto): we found this call to be a major bottleneck during load testing
-	// https://github.com/notawar/mobius/issues/21338
+	// https://github.com/MobiusDM/Mobius/issues/21338
 	if len(wantedProfiles) > 0 {
 		if err := ds.bulkDeleteMDMAppleHostsConfigProfilesDB(ctx, tx, wantedProfiles); err != nil {
 			return false, ctxerr.Wrap(ctx, err, "bulk delete all profiles")
@@ -4772,7 +4772,7 @@ func (ds *Datastore) MDMResetEnrollment(ctx context.Context, hostUUID string, sc
 		switch host.Platform {
 		case "ios", "ipados":
 			// Clear refetch commands for iOS and iPadOS hosts.
-			// FIXME: Do we care about wipe/lock commands? How can we consolidate this with host deletion? See https://github.com/notawar/mobius/pull/29283/files#r2098735905
+			// FIXME: Do we care about wipe/lock commands? How can we consolidate this with host deletion? See https://github.com/MobiusDM/Mobius/pull/29283/files#r2098735905
 			_, err = tx.ExecContext(ctx, `
 					DELETE FROM host_mdm_commands
 					WHERE host_id = ? AND instr(command_type, ?)`, host.ID, mobius.RefetchBaseCommandUUIDPrefix)

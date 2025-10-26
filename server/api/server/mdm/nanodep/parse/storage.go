@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage/file"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage/mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage/file"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage/mysql"
 )
 
 // Storage parses a storage name and dsn to determine which and return a storage backend.

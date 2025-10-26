@@ -1,5 +1,5 @@
 Proxy for MDM requests used in seamless migrations, as described in
-<https://github.com/notawar/mobius/issues/19387>.
+<https://github.com/MobiusDM/Mobius/issues/19387>.
 
 ### Usage
 

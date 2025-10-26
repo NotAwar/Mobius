@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxdb"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxdb"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 func (ds *Datastore) NewAppConfig(ctx context.Context, info *mobius.AppConfig) (*mobius.AppConfig, error) {

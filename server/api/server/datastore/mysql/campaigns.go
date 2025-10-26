@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 func (ds *Datastore) NewDistributedQueryCampaign(ctx context.Context, camp *mobius.DistributedQueryCampaign) (*mobius.DistributedQueryCampaign, error) {

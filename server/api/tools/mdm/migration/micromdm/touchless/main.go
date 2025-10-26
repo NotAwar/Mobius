@@ -19,7 +19,7 @@ import (
 	devicebuiltin "github.com/micromdm/micromdm/platform/device/builtin"
 	"github.com/micromdm/micromdm/platform/pubsub/inmem"
 	"github.com/micromdm/plist"
-	scepdepot "github.com/notawar/mobius/mobius-server/server/mdm/scep/depot/bolt"
+	scepdepot "github.com/notawar/mobius/server/api/server/mdm/scep/depot/bolt"
 	"go.etcd.io/bbolt"
 )
 

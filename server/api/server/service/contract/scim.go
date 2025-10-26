@@ -1,6 +1,6 @@
 package contract
 
-import "github.com/notawar/mobius/mobius-server/server/mobius"
+import "github.com/notawar/mobius/server/api/server/mobius"
 
 type ScimDetailsResponse struct {
 	mobius.ScimDetails

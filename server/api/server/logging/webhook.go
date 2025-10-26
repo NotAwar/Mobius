@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/go-kit/log"
-	"github.com/notawar/mobius/mobius-server/server"
+	"github.com/notawar/mobius/server/api/server"
 )
 
 type webhookLogWriter struct {

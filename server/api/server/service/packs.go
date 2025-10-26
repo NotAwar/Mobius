@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notawar/mobius/mobius-server/server/authz"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/viewer"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/authz"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/viewer"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 type packResponse struct {
@@ -511,7 +511,7 @@ func (svc *Service) ApplyPackSpecs(ctx context.Context, specs []*mobius.PackSpec
 
 	// loop over incoming specs filtering out possible edits to Global or Team Packs
 	for _, spec := range specs {
-		// see for known limitations https://github.com/notawar/mobius/pull/1558#discussion_r684218301
+		// see for known limitations https://github.com/MobiusDM/Mobius/pull/1558#discussion_r684218301
 		// check to see if incoming spec is already in the list of packs
 		if p, ok := namePacks[spec.Name]; ok {
 			// as long as pack is editable, we'll apply it

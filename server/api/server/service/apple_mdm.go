@@ -27,37 +27,37 @@ import (
 	"time"
 
 	"github.com/docker/go-units"
-	// service "github.com/notawar/mobius/mobius-server/server/service" // Removed enterprise dependency
-	// "github.com/notawar/mobius/mobius-server/server/service/digicert" // Removed enterprise dependency
+	// service "github.com/notawar/mobius/server/api/server/service" // Removed enterprise dependency
+	// "github.com/notawar/mobius/server/api/server/service/digicert" // Removed enterprise dependency
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
 	"github.com/micromdm/plist"
-	"github.com/notawar/mobius/mobius-server/server"
-	"github.com/notawar/mobius/mobius-server/server/authz"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
-	"github.com/notawar/mobius/mobius-server/server/contexts/logging"
-	"github.com/notawar/mobius/mobius-server/server/contexts/viewer"
-	mdm_types "github.com/notawar/mobius/mobius-server/server/mdm"
-	apple_mdm "github.com/notawar/mobius/mobius-server/server/mdm/apple"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/appmanifest"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/gdmf"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/mobius-server/server/mdm/assets"
-	mdmcrypto "github.com/notawar/mobius/mobius-server/server/mdm/crypto"
-	mdmlifecycle "github.com/notawar/mobius/mobius-server/server/mdm/lifecycle"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/cryptoutil"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	nano_service "github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/service"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
-	"github.com/notawar/mobius/mobius-server/server/sso"
-	"github.com/notawar/mobius/mobius-server/server/worker"
-	"github.com/notawar/mobius/mobius-server/pkg/file"
-	"github.com/notawar/mobius/mobius-server/pkg/optjson"
+	"github.com/notawar/mobius/server/api/pkg/file"
+	"github.com/notawar/mobius/server/api/pkg/optjson"
+	"github.com/notawar/mobius/server/api/server"
+	"github.com/notawar/mobius/server/api/server/authz"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	"github.com/notawar/mobius/server/api/server/contexts/viewer"
+	mdm_types "github.com/notawar/mobius/server/api/server/mdm"
+	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/appmanifest"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/gdmf"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/api/server/mdm/assets"
+	mdmcrypto "github.com/notawar/mobius/server/api/server/mdm/crypto"
+	mdmlifecycle "github.com/notawar/mobius/server/api/server/mdm/lifecycle"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cryptoutil"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	nano_service "github.com/notawar/mobius/server/api/server/mdm/nanomdm/service"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server/sso"
+	"github.com/notawar/mobius/server/api/server/worker"
 	"github.com/smallstep/pkcs7"
 )
 
@@ -1746,7 +1746,7 @@ func (mdmAppleEnrollRequest) DecodeRequest(ctx context.Context, r *http.Request)
 
 	if di != "" {
 		// parse the base64 encoded deviceinfo
-		parsed, err := apple_mdm.ParseDeviceinfo(di, false) // FIXME: use verify=true when we have better parsing for various Apple certs (https://github.com/notawar/mobius/issues/20879)
+		parsed, err := apple_mdm.ParseDeviceinfo(di, false) // FIXME: use verify=true when we have better parsing for various Apple certs (https://github.com/MobiusDM/Mobius/issues/20879)
 		if err != nil {
 			return nil, &mobius.BadRequestError{
 				Message:     "unable to parse deviceinfo header",
@@ -1767,7 +1767,7 @@ func (mdmAppleEnrollRequest) DecodeRequest(ctx context.Context, r *http.Request)
 			}
 		}
 
-		// FIXME: use verify=true when we have better parsing for various Apple certs (https://github.com/notawar/mobius/issues/20879)
+		// FIXME: use verify=true when we have better parsing for various Apple certs (https://github.com/MobiusDM/Mobius/issues/20879)
 		decoded.MachineInfo, err = apple_mdm.ParseMachineInfoFromPKCS7(body, false)
 		if err != nil {
 			return nil, &mobius.BadRequestError{
@@ -2794,7 +2794,7 @@ type bootstrapPackageMetadataRequest struct {
 	//
 	// NOTE: this parameter is going to be removed in a future version.
 	// Prefer other ways to allow gitops read access.
-	// For context, see: https://github.com/notawar/mobius/issues/15337#issuecomment-1932878997
+	// For context, see: https://github.com/MobiusDM/Mobius/issues/15337#issuecomment-1932878997
 	ForUpdate bool `query:"for_update,optional"`
 }
 
@@ -3632,7 +3632,7 @@ func (svc *MDMAppleCheckinAndCommandService) handleRefetchCertsResults(ctx conte
 		return nil, ctxerr.Wrap(ctx, err, "refetch certs: remove refetch command")
 	}
 
-	// TODO(mna): when we add iOS/iPadOS support for https://github.com/notawar/mobius/issues/26913,
+	// TODO(mna): when we add iOS/iPadOS support for https://github.com/MobiusDM/Mobius/issues/26913,
 	// this is where we'll need to identify user-keychain certs for iPad/iPhone. For now we set
 	// them all as "system" certificates.
 	var listResp mobius.MDMAppleCertificateListResponse
@@ -5610,7 +5610,7 @@ func RenewSCEPCertificates(
 	assocsWithoutRefs := []mobius.SCEPIdentityAssociation{}
 	// assocsFromMigration stores hosts that were migrated from another MDM
 	// using the process described in
-	// https://github.com/notawar/mobius/issues/19387
+	// https://github.com/MobiusDM/Mobius/issues/19387
 	assocsFromMigration := []mobius.SCEPIdentityAssociation{}
 	for _, assoc := range certAssociations {
 		if assoc.EnrolledFromMigration {
@@ -5712,7 +5712,7 @@ func renewSCEPWithProfile(
 	for _, assoc := range assocs {
 		// this should never happen if our DB logic is on point.
 		// This sanity check is in place to prevent issues like
-		// https://github.com/notawar/mobius/issues/19311 where a
+		// https://github.com/MobiusDM/Mobius/issues/19311 where a
 		// single duplicated UUID prevents _all_ the commands from
 		// being enqueued.
 		if _, ok := duplicateUUIDCheck[assoc.HostUUID]; ok {

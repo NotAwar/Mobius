@@ -15,10 +15,10 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/kolide/launcher/pkg/service"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/host"
-	"github.com/notawar/mobius/mobius-server/server/health"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/host"
+	"github.com/notawar/mobius/server/api/server/health"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"github.com/osquery/osquery-go/plugin/distributed"
 	"github.com/osquery/osquery-go/plugin/logger"
 )

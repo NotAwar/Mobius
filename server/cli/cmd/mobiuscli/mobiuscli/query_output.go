@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"github.com/gosuri/uilive"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"github.com/olekukonko/tablewriter"
 )
 

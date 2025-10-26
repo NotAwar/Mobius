@@ -119,8 +119,8 @@ Examples:
 make test
 
 # Run specific module tests
-cd mobius-server && go test ./...
-cd mobius-web && npm test
+cd server/api && go test ./...
+cd ui/web && npm test
 ```
 
 ### Writing Tests

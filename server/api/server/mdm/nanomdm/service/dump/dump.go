@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/service"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/service"
 )
 
 // Dumper is a service middleware that dumps MDM requests and responses

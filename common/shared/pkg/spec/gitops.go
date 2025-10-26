@@ -14,8 +14,8 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/hashicorp/go-multierror"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 	"golang.org/x/text/unicode/norm"
 )
 
@@ -476,7 +476,7 @@ func parseControls(top map[string]json.RawMessage, result *GitOps, multiError *m
 	// Find Mobius secrets in scripts.
 	for _, script := range result.Controls.Scripts {
 		if script.Path == nil {
-			// This should never happen because we checked for missing paths above (with code added in https://github.com/notawar/mobius/pull/24639).
+			// This should never happen because we checked for missing paths above (with code added in https://github.com/MobiusDM/Mobius/pull/24639).
 			return multierror.Append(multiError, errors.New("controls.scripts.path is missing"))
 		}
 		fileBytes, err := os.ReadFile(*script.Path)

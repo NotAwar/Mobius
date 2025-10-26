@@ -10,38 +10,38 @@ import (
 	"strings"
 	"time"
 
-	// service "github.com/notawar/mobius/mobius-server/server/service" // Removed enterprise dependency
+	// service "github.com/notawar/mobius/server/api/server/service" // Removed enterprise dependency
 	kithttp "github.com/go-kit/kit/transport/http"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/gorilla/mux"
 	nanomdm_log "github.com/micromdm/nanolib/log"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/contexts/publicip"
-	apple_mdm "github.com/notawar/mobius/mobius-server/server/mdm/apple"
-	mdmcrypto "github.com/notawar/mobius/mobius-server/server/mdm/crypto"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/cryptoutil"
-	httpmdm "github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/http/mdm"
-	nanomdm_service "github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/service"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/service/certauth"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/service/multi"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/service/nanomdm"
-	scep_depot "github.com/notawar/mobius/mobius-server/server/mdm/scep/depot"
-	scepserver "github.com/notawar/mobius/mobius-server/server/mdm/scep/server"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service/contract"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/auth"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/log"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/mdmconfigured"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/ratelimit"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/contexts/publicip"
+	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
+	mdmcrypto "github.com/notawar/mobius/server/api/server/mdm/crypto"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cryptoutil"
+	httpmdm "github.com/notawar/mobius/server/api/server/mdm/nanomdm/http/mdm"
+	nanomdm_service "github.com/notawar/mobius/server/api/server/mdm/nanomdm/service"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/service/certauth"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/service/multi"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/service/nanomdm"
+	scep_depot "github.com/notawar/mobius/server/api/server/mdm/scep/depot"
+	scepserver "github.com/notawar/mobius/server/api/server/mdm/scep/server"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service/contract"
+	"github.com/notawar/mobius/server/api/server/service/middleware/auth"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server/service/middleware/log"
+	"github.com/notawar/mobius/server/api/server/service/middleware/mdmconfigured"
+	"github.com/notawar/mobius/server/api/server/service/middleware/ratelimit"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/throttled/throttled/v2"
 	"go.elastic.co/apm/module/apmgorilla/v2"
 	otmiddleware "go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux"
 
-	microsoft_mdm "github.com/notawar/mobius/mobius-server/server/mdm/microsoft"
+	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
 )
 
 func checkLicenseExpiration(svc mobius.Service) func(context.Context, http.ResponseWriter) context.Context {
@@ -581,7 +581,7 @@ func attachMobiusAPIRoutes(r *mux.Router, svc mobius.Service, config config.Mobi
 
 	// Deprecated: GET /mdm/manual_enrollment_profile is now deprecated, replaced by the
 	// GET /enrollment_profiles/manual endpoint.
-	// Ref: https://github.com/notawar/mobius/issues/16252
+	// Ref: https://github.com/MobiusDM/Mobius/issues/16252
 	mdmAppleMW.GET("/api/_version_/mobius/mdm/manual_enrollment_profile", getManualEnrollmentProfileEndpoint, getManualEnrollmentProfileRequest{})
 	mdmAppleMW.GET("/api/_version_/mobius/enrollment_profiles/manual", getManualEnrollmentProfileEndpoint, getManualEnrollmentProfileRequest{})
 
@@ -739,10 +739,10 @@ func attachMobiusAPIRoutes(r *mux.Router, svc mobius.Service, config config.Mobi
 	// if MDM is not configured) as it bootstraps the setup of MDM
 	// (generates CSR request for APNs, plus the SCEP and ABM keypairs).
 	// Deprecated: this endpoint shouldn't be used anymore in favor of the
-	// new flow described in https://github.com/notawar/mobius/issues/10383
+	// new flow described in https://github.com/MobiusDM/Mobius/issues/10383
 	ue.POST("/api/_version_/mobius/mdm/apple/request_csr", requestMDMAppleCSREndpoint, requestMDMAppleCSRRequest{})
 	// Deprecated: this endpoint shouldn't be used anymore in favor of the
-	// new flow described in https://github.com/notawar/mobius/issues/10383
+	// new flow described in https://github.com/MobiusDM/Mobius/issues/10383
 	ue.POST("/api/_version_/mobius/mdm/apple/dep/key_pair", newMDMAppleDEPKeyPairEndpoint, nil)
 	ue.GET("/api/_version_/mobius/mdm/apple/abm_public_key", generateABMKeyPairEndpoint, nil)
 	ue.POST("/api/_version_/mobius/abm_tokens", uploadABMTokenEndpoint, uploadABMTokenRequest{})
@@ -863,7 +863,7 @@ func attachMobiusAPIRoutes(r *mux.Router, svc mobius.Service, config config.Mobi
 
 	// Note that the /osquery/ endpoints are *not* versioned, i.e. there is no
 	// `_version_` placeholder in the path. This is deliberate, see
-	// https://github.com/notawar/mobius/pull/4731#discussion_r838931732 For now
+	// https://github.com/MobiusDM/Mobius/pull/4731#discussion_r838931732 For now
 	// we add an alias to `/api/v1/osquery` so that it is backwards compatible,
 	// but even that `v1` is *not* part of the standard versioning, it will still
 	// work even after we remove support for the `v1` version for the rest of the
@@ -1252,7 +1252,7 @@ func WithMDMEnrollmentMiddleware(svc mobius.Service, logger kitlog.Logger, next 
 		// if x-apple-aspen-deviceinfo custom header is present, we need to check for minimum os version
 		di := r.Header.Get("x-apple-aspen-deviceinfo")
 		if di != "" {
-			parsed, err := apple_mdm.ParseDeviceinfo(di, false) // FIXME: use verify=true when we have better parsing for various Apple certs (https://github.com/notawar/mobius/issues/20879)
+			parsed, err := apple_mdm.ParseDeviceinfo(di, false) // FIXME: use verify=true when we have better parsing for various Apple certs (https://github.com/MobiusDM/Mobius/issues/20879)
 			if err != nil {
 				// just log the error and continue to next
 				level.Error(logger).Log("msg", "parsing x-apple-aspen-deviceinfo", "err", err)

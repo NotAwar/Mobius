@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"sync"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/api/server/mdm/scep/depot"
 )
 
 var _ depot.Depot = (*Depot)(nil)

@@ -16,31 +16,31 @@ Mobius is a modern, API-first Mobile Device Management (MDM) platform designed f
 
 ### Core Modules (Go Workspace)
 ```
-mobius-server/          # Core API server and business logic
+server/api/          # Core API server and business logic
 ├── api/                # HTTP routing, handlers, middleware
 ├── pkg/service/        # Business logic implementations  
 ├── cmd/api-server/     # Standalone API server (current)
 └── cmd/mobius/         # Legacy server (deprecated)
 
-mobius-cli/             # Command-line management tool
+server/cli/             # Command-line management tool
 ├── cmd/mobiuscli/      # CLI application
 └── pkg/               # CLI business logic
 
-mobius-client/          # Device client agents
+server/client/          # Device client agents
 ├── cmd/client/         # Cross-platform device client
 └── pkg/               # Client libraries
 
-mobius-cocoon/          # Enterprise web portal (future)
+cocoon/portal/          # Enterprise web portal (future)
 ├── cmd/cocoon/         # Web application server
 └── pkg/               # Portal business logic
 
 shared/                 # Common libraries and utilities
 └── pkg/               # Shared Go packages (crypto, http, file ops)
 
-mobius-web/             # Svelte frontend application
+ui/web/             # Svelte frontend application
 ├── src/               # Svelte source code
 ├── static/            # Static assets
-└── build/             # Build output (copied to mobius-server/static/)
+└── build/             # Build output (copied to server/api/static/)
 ```
 
 ### Technology Stack
@@ -65,9 +65,9 @@ make dev              # Start development servers
 make clean            # Clean build artifacts
 ```
 
-### Frontend Development (mobius-web/)
+### Frontend Development (ui/web/)
 ```bash
-cd mobius-web
+cd ui/web
 npm install           # Install dependencies
 npm run dev          # Development server
 npm run build        # Production build
@@ -78,8 +78,8 @@ npm run check        # TypeScript and Svelte checks
 ### Backend Development
 ```bash
 # Each Go module can be built independently
-cd mobius-server && go build -o mobius-api cmd/api-server/main.go
-cd mobius-cli && go build -o mobiuscli cmd/mobiuscli/main.go
+cd server/api && go build -o mobius-api cmd/api-server/main.go
+cd server/cli && go build -o mobiuscli cmd/mobiuscli/main.go
 
 # Run tests
 go test ./...         # In any module directory
@@ -87,7 +87,7 @@ go test ./...         # In any module directory
 
 ### API Server Quick Start
 ```bash
-cd mobius-server
+cd server/api
 go run cmd/api-server/main.go
 # Server starts on http://localhost:8081
 # Default credentials: admin@mobius.local / admin123
@@ -173,14 +173,14 @@ go run cmd/api-server/main.go
 ## Common Tasks & Patterns
 
 ### Adding New API Endpoints
-1. Define handler in `mobius-server/api/handlers/`
-2. Add route in `mobius-server/api/router/`
-3. Implement business logic in `mobius-server/pkg/service/`
+1. Define handler in `server/api/api/handlers/`
+2. Add route in `server/api/api/router/`
+3. Implement business logic in `server/api/pkg/service/`
 4. Add tests for all layers
 5. Update API documentation
 
 ### Adding Frontend Features
-1. Create Svelte components in `mobius-web/src/`
+1. Create Svelte components in `ui/web/src/`
 2. Add TypeScript types
 3. Implement API client calls
 4. Add comprehensive tests
@@ -252,25 +252,25 @@ npm --version   # npm 10+ required
 go work sync  # ~5 seconds
 
 # 2. Download Go dependencies for all modules - NEVER CANCEL: 60-70 seconds
-cd mobius-server && go mod download
-cd ../mobius-cli && go mod download  
-cd ../mobius-client && go mod download
-cd ../mobius-cocoon && go mod download
+cd server/api && go mod download
+cd ../server/cli && go mod download  
+cd ../server/client && go mod download
+cd ../cocoon/portal && go mod download
 cd ../shared && go mod download
 cd ..
 
 # 3. Install frontend dependencies - NEVER CANCEL: 8-10 seconds
-cd mobius-web && npm ci && cd ..
+cd ui/web && npm ci && cd ..
 
 # 4. Build frontend - NEVER CANCEL: 15-20 seconds
-cd mobius-web && npm run build && cd ..
+cd ui/web && npm run build && cd ..
 
 # 5. Build all Go components - NEVER CANCEL: Total 60-90 seconds
 mkdir -p build
-cd mobius-server && go build -o ../build/mobius-api ./cmd/api-server  # 10-20 seconds
-cd ../mobius-cli && go build -o ../build/mobiuscli ./cmd/mobiuscli    # 60-75 seconds
-cd ../mobius-client && go build -o ../build/mobius-client ./cmd/client  # <1 second
-cd ../mobius-cocoon && go build -o ../build/mobius-cocoon ./cmd/cocoon  # <1 second
+cd server/api && go build -o ../build/mobius-api ./cmd/api-server  # 10-20 seconds
+cd ../server/cli && go build -o ../build/mobiuscli ./cmd/mobiuscli    # 60-75 seconds
+cd ../server/client && go build -o ../build/server/client ./cmd/client  # <1 second
+cd ../cocoon/portal && go build -o ../build/cocoon/portal ./cmd/cocoon  # <1 second
 cd ..
 
 # Alternative: Use Makefile for complete build - NEVER CANCEL: 15-20 seconds
@@ -280,21 +280,21 @@ make clean && make build
 ### Testing
 ```bash
 # Run Go tests for all modules - NEVER CANCEL: 30-35 seconds
-go test -count=1 ./mobius-server/... ./mobius-cli/... ./mobius-client/... ./mobius-cocoon/... ./shared/...
+go test -count=1 ./server/api/... ./server/cli/... ./server/client/... ./cocoon/portal/... ./shared/...
 
 # Run frontend tests - NEVER CANCEL: 2-3 seconds
-cd mobius-web && npm test && cd ..
+cd ui/web && npm test && cd ..
 
 # Run frontend type checking
-cd mobius-web && npm run check && cd ..
+cd ui/web && npm run check && cd ..
 ```
 
 ### Running the Application
 ```bash
 # Start the API server (includes frontend)
 ./build/mobius-api serve --port 8081
-# OR from mobius-server directory:
-cd mobius-server && ./mobius-api serve --port 8081
+# OR from server/api directory:
+cd server/api && ./mobius-api serve --port 8081
 
 # Default credentials:
 # Email: admin@mobius.local
@@ -363,8 +363,8 @@ curl http://localhost:8081/
 Always run these before committing:
 ```bash
 # Frontend validation
-cd mobius-web && npm run check  # Type checking
-cd mobius-web && npm test       # Unit tests
+cd ui/web && npm run check  # Type checking
+cd ui/web && npm test       # Unit tests
 
 # Go validation  
 go test -count=1 ./...          # All Go tests
@@ -377,16 +377,16 @@ make clean && make build        # Complete build process
 
 ```
 /
-├── mobius-server/          # Core API server
+├── server/api/          # Core API server
 │   ├── cmd/api-server/     # Main server entry point
 │   ├── api/                # HTTP handlers and routing
 │   ├── pkg/service/        # Business logic
 │   └── static/             # Built frontend files (generated)
-├── mobius-cli/             # Command-line interface
+├── server/cli/             # Command-line interface
 │   └── cmd/mobiuscli/      # CLI entry point
-├── mobius-client/          # Device client agents
-├── mobius-cocoon/          # Enterprise web portal
-├── mobius-web/             # Svelte frontend application
+├── server/client/          # Device client agents
+├── cocoon/portal/          # Enterprise web portal
+├── ui/web/             # Svelte frontend application
 │   ├── src/                # Frontend source code
 │   └── build/              # Built frontend (generated)
 ├── shared/                 # Common Go libraries
@@ -400,14 +400,14 @@ make clean && make build        # Complete build process
 ## Key Architecture Components
 
 ### Backend (Go)
-- **mobius-server**: Core MDM server with REST API (builds to ~10MB binary)
-- **mobius-cli**: Administrative CLI tool (builds to ~49MB binary) 
-- **mobius-client**: Device client agent (builds to ~8.5MB binary)
-- **mobius-cocoon**: Enterprise portal service (builds to ~7.9MB binary)
+- **server/api**: Core MDM server with REST API (builds to ~10MB binary)
+- **server/cli**: Administrative CLI tool (builds to ~49MB binary) 
+- **server/client**: Device client agent (builds to ~8.5MB binary)
+- **cocoon/portal**: Enterprise portal service (builds to ~7.9MB binary)
 - **shared**: Common libraries used across components
 
 ### Frontend (Svelte)
-- **mobius-web**: Admin web interface built with SvelteKit
+- **ui/web**: Admin web interface built with SvelteKit
 - Built using Vite with TypeScript support
 - Static files served by the API server at runtime
 
@@ -441,10 +441,10 @@ make clean && make build        # Complete build process
 ### Container Builds
 ```bash
 # Build individual component containers
-docker build -f mobius-server/Dockerfile .
-docker build -f mobius-cli/Dockerfile .
-docker build -f mobius-client/Dockerfile . 
-docker build -f mobius-cocoon/Dockerfile .
+docker build -f server/api/Dockerfile .
+docker build -f server/cli/Dockerfile .
+docker build -f server/client/Dockerfile . 
+docker build -f cocoon/portal/Dockerfile .
 ```
 
 ### Production Deployment
@@ -465,7 +465,7 @@ docker build -f mobius-cocoon/Dockerfile .
 
 ### Configuration
 - `go.work` - Go workspace configuration
-- `package.json` - Frontend dependencies in `mobius-web/`
+- `package.json` - Frontend dependencies in `ui/web/`
 - `Makefile` - Build automation
 - `.github/workflows/build-and-deploy.yml` - Main CI/CD pipeline
 

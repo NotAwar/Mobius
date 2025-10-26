@@ -12,15 +12,15 @@ import (
 	"time"
 
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/logging"
-	"github.com/notawar/mobius/mobius-server/server/contexts/publicip"
-	"github.com/notawar/mobius/mobius-server/server/contexts/viewer"
-	"github.com/notawar/mobius/mobius-server/server/mail"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service/contract"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
-	"github.com/notawar/mobius/mobius-server/server/sso"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	"github.com/notawar/mobius/server/api/server/contexts/publicip"
+	"github.com/notawar/mobius/server/api/server/contexts/viewer"
+	"github.com/notawar/mobius/server/api/server/mail"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service/contract"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server/sso"
 )
 
 ////////////////////////////////////////////////////////////////////////////////

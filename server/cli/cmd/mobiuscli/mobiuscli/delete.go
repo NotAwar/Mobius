@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/service"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/service"
 	"github.com/notawar/mobius/shared/pkg/spec"
 	"github.com/urfave/cli/v2"
 )

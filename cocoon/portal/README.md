@@ -21,7 +21,7 @@ This is a placeholder for the future Mobius storefront application. This will be
 To get started with development:
 
 ```bash
-cd mobius-cocoon
+cd cocoon/portal
 go mod tidy
 ```
 

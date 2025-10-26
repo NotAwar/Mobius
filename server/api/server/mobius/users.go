@@ -8,7 +8,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/notawar/mobius/mobius-server/server"
+	"github.com/notawar/mobius/server/api/server"
 	"golang.org/x/crypto/bcrypt"
 )
 

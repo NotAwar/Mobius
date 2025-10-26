@@ -6,7 +6,7 @@ To use this package, a program would set the package variables at build time, us
 
 Example:
 
-	go build -ldflags "-X github.com/notawar/mobius/mobius-server/server/version.version=1.0.0"
+	go build -ldflags "-X github.com/notawar/mobius/server/api/server/version.version=1.0.0"
 
 Available values and defaults to use with ldflags:
 

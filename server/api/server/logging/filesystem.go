@@ -13,8 +13,8 @@ import (
 	"syscall"
 
 	"github.com/go-kit/log"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/pkg/secure"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/pkg/secure"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 

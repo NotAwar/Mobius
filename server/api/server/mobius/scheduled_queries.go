@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server/ptr"
 	"gopkg.in/guregu/null.v3"
 )
 

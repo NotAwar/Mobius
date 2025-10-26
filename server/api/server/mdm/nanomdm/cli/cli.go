@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/storage"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/storage/allmulti"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/storage/file"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/storage/mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage/allmulti"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage/file"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage/mysql"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"

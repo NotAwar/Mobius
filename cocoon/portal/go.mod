@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/mobius-cocoon
+module github.com/notawar/mobius/cocoon/portal
 
 go 1.25.3
 

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"github.com/notawar/mobius/shared/pkg/spec"
 	"github.com/urfave/cli/v2"
 )

@@ -5,7 +5,7 @@ import (
 	"crypto/x509"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/cryptoutil"
+	"github.com/notawar/mobius/server/api/server/mdm/cryptoutil"
 	"github.com/smallstep/scep"
 )
 

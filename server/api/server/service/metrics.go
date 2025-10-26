@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/go-kit/kit/metrics"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 type metricsMiddleware struct {

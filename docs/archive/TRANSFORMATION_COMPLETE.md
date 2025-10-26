@@ -95,7 +95,7 @@ Device API (for clients):
 
 ### Clean Architecture Implementation
 ```
-mobius-server/
+server/api/
 ├── api/                    # HTTP layer
 │   ├── router.go          # Route definitions and middleware
 │   ├── handlers.go        # HTTP request handlers
@@ -109,10 +109,10 @@ mobius-server/
 
 ### Go Workspace Structure
 ```
-/mobius-server/     # Core API server
-/mobius-cli/        # Management CLI tool
-/mobius-client/     # Device client agents
-/mobius-cocoon/     # Enterprise portal
+/server/api/     # Core API server
+/server/cli/        # Management CLI tool
+/server/client/     # Device client agents
+/cocoon/portal/     # Enterprise portal
 /shared/            # Common libraries
 ```
 
@@ -184,13 +184,13 @@ All endpoints tested successfully:
 ## Files Created/Modified
 
 ### New Core Files
-- `mobius-server/api/openapi.yaml` - Complete API specification
-- `mobius-server/api/router.go` - HTTP routing and middleware
-- `mobius-server/api/handlers.go` - Request handlers
-- `mobius-server/api/middleware.go` - Security and logging middleware
-- `mobius-server/pkg/service/services.go` - Business logic layer
-- `mobius-server/cmd/api-server/main.go` - Standalone API server
-- `mobius-server/API_README.md` - Complete API documentation
+- `server/api/api/openapi.yaml` - Complete API specification
+- `server/api/api/router.go` - HTTP routing and middleware
+- `server/api/api/handlers.go` - Request handlers
+- `server/api/api/middleware.go` - Security and logging middleware
+- `server/api/pkg/service/services.go` - Business logic layer
+- `server/api/cmd/api-server/main.go` - Standalone API server
+- `server/api/API_README.md` - Complete API documentation
 - `docker-compose.new.yml` - Simplified container orchestration
 
 ### Planning Documents

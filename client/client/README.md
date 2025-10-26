@@ -26,7 +26,7 @@ In a production Mobius deployment, device management happens through:
 go build ./cmd/client
 
 # Run load test with 100 simulated devices
-./client -server_url https://your-mobius-server.com -enroll_secret your_secret -host_count 100
+./client -server_url https://your-server/api.com -enroll_secret your_secret -host_count 100
 
 # Run with custom intervals
 ./client -server_url https://localhost:8080 -enroll_secret test123 -host_count 50 -interval 30s

@@ -18,16 +18,16 @@ import (
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	nvdsync "github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/sync"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cvefeed"
-	feednvd "github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cvefeed/nvd"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/providers/nvd"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/wfn"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	nvdsync "github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/sync"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed"
+	feednvd "github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/providers/nvd"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 const (
@@ -412,7 +412,7 @@ func checkCVEs(
 	}
 
 	// Group dictionary by vendor using a map.
-	// This is done to speed up the matching process (PR https://github.com/notawar/mobius/pull/17298).
+	// This is done to speed up the matching process (PR https://github.com/MobiusDM/Mobius/pull/17298).
 	// A map uses a hash table to store the key-value pairs. By putting multiple vulnerabilities with the same vendor into a map,
 	// we reduce the number of comparisons needed to find the vulnerabilities that match the CPEs. Specifically, we no longer need to
 	// compare each CPE with each vulnerability, but only with the vulnerabilities that have the same vendor.
@@ -606,7 +606,7 @@ func expandCPEAliases(cpeItem *wfn.Attributes) []*wfn.Attributes {
 	// 1. cpe:2.3:a:python:python:3.14.0:alpha2:*:*:*:windows:*:*
 	// 2. cpe:2.3:a:python:python:3.14.0a2:*:*:*:*:windows:*:*
 	// We generate CPEs like 1, but in the feed (e.g. Vulncheck) it can also appear as 2.
-	// See https://github.com/notawar/mobius/issues/25882.
+	// See https://github.com/MobiusDM/Mobius/issues/25882.
 	for _, cpeItem := range cpeItems {
 		if cpeItem.Vendor == "python" &&
 			cpeItem.Product == "python" &&
@@ -679,7 +679,7 @@ func getMatchingVersionEndExcluding(ctx context.Context, cve string, hostSoftwar
 	// - versionEndIncluding - not used in this function as we don't want to assume the resolved version
 
 	// Back slashes are added to the version string during parsing; remove them to ensure that the version
-	// comparison works correctly. See https://github.com/notawar/mobius/issues/25991.
+	// comparison works correctly. See https://github.com/MobiusDM/Mobius/issues/25991.
 	hostSoftwareVersion := wfn.StripSlashes(hostSoftwareMeta.Version)
 
 	for _, rule := range cpeMatch {

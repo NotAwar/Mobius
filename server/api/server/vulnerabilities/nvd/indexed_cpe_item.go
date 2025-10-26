@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 type IndexedCPEItem struct {
@@ -26,7 +26,7 @@ func (i *IndexedCPEItem) FmtStr(s *mobius.Software) string {
 
 	// Some version strings (e.g. Python pre-releases) contain a part that should be placed in the
 	// CPE's update field. Parse that out (if it exists).
-	// See https://github.com/notawar/mobius/issues/25882.
+	// See https://github.com/MobiusDM/Mobius/issues/25882.
 	version, update := parseUpdateFromVersion(sanitizeVersion(s.Version))
 	cpe.Version = version
 	cpe.Update = update

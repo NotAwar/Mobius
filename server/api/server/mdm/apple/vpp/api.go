@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
-	"github.com/notawar/mobius/mobius-server/pkg/retry"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/pkg/retry"
 )
 
 // Asset is a product in the store.

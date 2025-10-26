@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // GetLicenseStatus fetches current license info from the server API.

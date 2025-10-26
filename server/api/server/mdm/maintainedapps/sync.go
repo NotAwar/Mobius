@@ -12,9 +12,9 @@ import (
 
 	// ma "github.com/notawar/mobius/maintained-apps" // Removed enterprise dependency
 	kitlog "github.com/go-kit/log"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 )
 
 // Local replacement for enterprise types

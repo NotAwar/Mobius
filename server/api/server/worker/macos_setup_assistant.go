@@ -7,10 +7,10 @@ import (
 
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	apple_mdm "github.com/notawar/mobius/mobius-server/server/mdm/apple"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // Name of the macos setup assistant job as registered in the worker. Note that

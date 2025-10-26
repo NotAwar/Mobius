@@ -6,10 +6,10 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxdb"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius/mobius-server/server/mdm/android"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxdb"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/android"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // Datastore is an implementation of android.Datastore interface backed by MySQL

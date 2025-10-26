@@ -5,14 +5,14 @@ import (
 	"html/template"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server"
-	authz_ctx "github.com/notawar/mobius/mobius-server/server/contexts/authz"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
-	"github.com/notawar/mobius/mobius-server/server/contexts/viewer"
-	"github.com/notawar/mobius/mobius-server/server/mail"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server"
+	authz_ctx "github.com/notawar/mobius/server/api/server/contexts/authz"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/contexts/viewer"
+	"github.com/notawar/mobius/server/api/server/mail"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 func (svc *Service) NewAppConfig(ctx context.Context, p mobius.AppConfig) (*mobius.AppConfig, error) {

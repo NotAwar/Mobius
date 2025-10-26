@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	jira "github.com/andygrunwald/go-jira"
-	"github.com/notawar/mobius/mobius-server/server/service/externalsvc"
+	"github.com/notawar/mobius/server/api/server/service/externalsvc"
 	zendesk "github.com/nukosuke/go-zendesk/zendesk"
 )
 

@@ -14,10 +14,10 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	constants "github.com/notawar/mobius/mobius-server/pkg/scripts"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	constants "github.com/notawar/mobius/server/api/pkg/scripts"
 )
 
 func (ds *Datastore) NewHostScriptExecutionRequest(ctx context.Context, request *mobius.HostScriptRequestPayload) (*mobius.HostScriptResult, error) {

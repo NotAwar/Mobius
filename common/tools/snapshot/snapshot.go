@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-
 	"github.com/manifoldco/promptui"
 	// Force promptui to use our newer x/sys package,
 	// which doesn't have security vulnerabilities.

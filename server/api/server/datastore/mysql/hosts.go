@@ -16,14 +16,14 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql/common_mysql"
-	microsoft_mdm "github.com/notawar/mobius/mobius-server/server/mdm/microsoft"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
+	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 // Since many hosts may have issues, we need to batch the inserts of host issues.
@@ -755,7 +755,7 @@ LIMIT
 	if host.DiskEncryptionEnabled != nil && !(*host.DiskEncryptionEnabled) && mobius.IsLinux(host.Platform) {
 		// omit disk encryption information for linux if it is not enabled, as we
 		// cannot know for sure that it is not encrypted (See
-		// https://github.com/notawar/mobius/issues/3906).
+		// https://github.com/MobiusDM/Mobius/issues/3906).
 		host.DiskEncryptionEnabled = nil
 	}
 
@@ -1117,7 +1117,7 @@ func (ds *Datastore) applyHostFilters(
 				return "", nil, ctxerr.Wrap(ctx, err, "get software installer metadata by team and title id")
 			default:
 				// TODO(sarah): prior code was joining on installer id but based on how list options are parsed [1] it seems like this should be the title id
-				// [1] https://github.com/notawar/mobius/blob/8aecae4d853829cb6e7f828099a4f0953643cf18/server/datastore/mysql/hosts.go#L1088-L1089
+				// [1] https://github.com/MobiusDM/Mobius/blob/8aecae4d853829cb6e7f828099a4f0953643cf18/server/datastore/mysql/hosts.go#L1088-L1089
 				installerJoin, installerParams, err := ds.softwareInstallerJoin(*opt.SoftwareTitleIDFilter, *opt.SoftwareStatusFilter)
 				if err != nil {
 					return "", nil, ctxerr.Wrap(ctx, err, "software installer join")
@@ -2193,7 +2193,7 @@ func (ds *Datastore) EnrollHost(ctx context.Context, isMDMEnabled bool, osqueryH
 // IMPORTANT: Adding prepare statements consumes MySQL server resources, and is limited by MySQL max_prepared_stmt_count
 // system variable. This method may create 1 prepare statement for EACH database connection. Customers must be notified
 // to update their MySQL configurations when additional prepare statements are added.
-// For more detail, see: https://github.com/notawar/mobius/issues/15476
+// For more detail, see: https://github.com/MobiusDM/Mobius/issues/15476
 func (ds *Datastore) getContextTryStmt(ctx context.Context, dest interface{}, query string, args ...interface{}) error {
 	// nolint the statements are closed in Datastore.Close.
 	if stmt := ds.loadOrPrepareStmt(ctx, query); stmt != nil {
@@ -2207,7 +2207,7 @@ func (ds *Datastore) getContextTryStmt(ctx context.Context, dest interface{}, qu
 		// bellow. This function will get called again eventually and
 		// we will store a new prepared statement in the cache.
 		//
-		// - see https://github.com/notawar/mobius/issues/20781 for an
+		// - see https://github.com/MobiusDM/Mobius/issues/20781 for an
 		// example of when this can happen.
 		//
 		// - see https://github.com/go-sql-driver/mysql/issues/1555 for
@@ -3863,8 +3863,6 @@ func maybeAssociateHostMDMIdPWithScimUser(ctx context.Context, tx sqlx.ExtContex
 	return nil
 }
 
-
-
 func associateHostWithScimUser(ctx context.Context, tx sqlx.ExtContext, hostID uint, scimUserID uint) error {
 	_, err := tx.ExecContext(
 		ctx,
@@ -5028,7 +5026,7 @@ func (ds *Datastore) HostIDsByOSVersion(
 //
 // Note: Because of a known osquery issue with M1 Macs, we are ignoring the stored `health` value
 // in the db and replacing it at the service layer with custom a value determined by the cycle
-// count. See https://github.com/notawar/mobius/pull/6782#discussion_r926103758.
+// count. See https://github.com/MobiusDM/Mobius/pull/6782#discussion_r926103758.
 // TODO: Update once the underlying osquery issue has been resolved.
 func (ds *Datastore) ListHostBatteries(ctx context.Context, hid uint) ([]*mobius.HostBattery, error) {
 	const stmt = `
@@ -5466,7 +5464,7 @@ func updateHostIssuesFailingPolicies(ctx context.Context, tx sqlx.ExecerContext,
 	return nil
 }
 
-// Specified in story https://github.com/notawar/mobius/issues/18115
+// Specified in story https://github.com/MobiusDM/Mobius/issues/18115
 const criticalCVSSScoreCutoff = 8.9
 
 func (ds *Datastore) UpdateHostIssuesVulnerabilities(ctx context.Context) error {

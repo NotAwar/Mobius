@@ -5,7 +5,7 @@
 // even if the host itself is now deleted from Mobius).
 //
 // Was implemented to force deleted iDevices to check-in sooner for
-// https://github.com/notawar/mobius/issues/22941
+// https://github.com/MobiusDM/Mobius/issues/22941
 // and can still be useful for debugging purposes.
 //
 // Usage:
@@ -23,11 +23,11 @@ import (
 
 	"github.com/WatchBeam/clock"
 	kitlog "github.com/go-kit/log"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/datastore/mysql"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/push/buford"
-	nanomdm_pushsvc "github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/push/service"
-	"github.com/notawar/mobius/mobius-server/server/service"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/datastore/mysql"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/push/buford"
+	nanomdm_pushsvc "github.com/notawar/mobius/server/api/server/mdm/nanomdm/push/service"
+	"github.com/notawar/mobius/server/api/server/service"
 	"github.com/notawar/mobius/shared/pkg/mobiushttp"
 )
 

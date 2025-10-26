@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/pkg/optjson"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/pkg/optjson"
 	"golang.org/x/text/unicode/norm"
 )
 

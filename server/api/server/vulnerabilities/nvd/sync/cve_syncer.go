@@ -24,10 +24,10 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
 	"github.com/pandatix/nvdapi/common"
 	"github.com/pandatix/nvdapi/v2"
 )
@@ -36,7 +36,7 @@ import (
 // to the directory specified in the dbDir field in the form of JSON files.
 // It stores the CVE information using the legacy feed format.
 // The reason we decided to store in the legacy format is because
-// the github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools doesn't yet support parsing
+// the github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools doesn't yet support parsing
 // the new API 2.0 JSON format.
 type CVE struct {
 	client           *http.Client
@@ -183,7 +183,7 @@ func (s *CVE) update(ctx context.Context) error {
 
 func (s *CVE) updateYearFile(year int, cves []nvdapi.CVEItem) error {
 	// The NVD legacy feed files start at year 2002.
-	// This is assumed by the github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools package.
+	// This is assumed by the github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools package.
 	if year < 2002 {
 		year = 2002
 	}
@@ -822,7 +822,7 @@ func convertAPI20CVEToLegacy(cve nvdapi.CVE, logger log.Logger) *schema.NVDCVEFe
 	}
 
 	if len(descriptions) == 0 {
-		// Populate a blank description to prevent Mobius cron job from crashing: https://github.com/notawar/mobius/issues/21239
+		// Populate a blank description to prevent Mobius cron job from crashing: https://github.com/MobiusDM/Mobius/issues/21239
 		descriptions = append(descriptions, &schema.CVEJSON40LangString{
 			Lang:  "en",
 			Value: "",

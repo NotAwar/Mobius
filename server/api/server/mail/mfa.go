@@ -2,11 +2,11 @@ package mail
 
 import (
 	"bytes"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"html/template"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server"
+	"github.com/notawar/mobius/server/api/server"
 )
 
 // MFAMailer is used to build an email template for the MFA email.

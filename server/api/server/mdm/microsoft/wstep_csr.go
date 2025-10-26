@@ -45,7 +45,7 @@ import (
 // You can find the implementation of isPrintable here:
 // https://github.com/golang/go/blob/e126572f8a91d42b86242012012d0cad4507dca8/src/encoding/asn1/asn1.go#L433
 // The modification to the standard library requires applying the following patch to the x509 package:
-// https://github.com/notawar/mobius/blob/main/tools/mdm/windows/poc-mdm-server/patch/patch.go
+// https://github.com/MobiusDM/Mobius/blob/main/tools/mdm/windows/poc-mdm-server/patch/patch.go
 // Since this solution is not ideal and does not scale, we have wrapped a custom version of
 // ParseCertificateRequest with the necessary changes in ParseCertificateRequestFromWindowsDevice().
 // The invalid characters are: '!' and 0x00.

@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/notawar/mobius/mobius-server/api"
+	"github.com/notawar/mobius/server/api/api"
 )
 
 func TestLicenseService(t *testing.T) {

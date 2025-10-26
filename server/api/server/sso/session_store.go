@@ -9,8 +9,8 @@ import (
 	"time"
 
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/notawar/mobius/mobius-server/server/datastore/redis"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/datastore/redis"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // Session stores state for the lifetime of a single sign on session

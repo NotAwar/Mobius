@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/io"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/msrc/parsed"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/msrc/parsed"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 )
 
 // bulletinsDelta returns what bulletins should be downloaded from GH and what bulletins should be removed

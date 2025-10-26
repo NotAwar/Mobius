@@ -15,11 +15,11 @@ import (
 	"syscall"
 
 	"github.com/gorilla/mux"
-	"github.com/notawar/mobius/mobius-server/server/mdm/scep/csrverifier"
-	executablecsrverifier "github.com/notawar/mobius/mobius-server/server/mdm/scep/csrverifier/executable"
-	scepdepot "github.com/notawar/mobius/mobius-server/server/mdm/scep/depot"
-	"github.com/notawar/mobius/mobius-server/server/mdm/scep/depot/file"
-	scepserver "github.com/notawar/mobius/mobius-server/server/mdm/scep/server"
+	"github.com/notawar/mobius/server/api/server/mdm/scep/csrverifier"
+	executablecsrverifier "github.com/notawar/mobius/server/api/server/mdm/scep/csrverifier/executable"
+	scepdepot "github.com/notawar/mobius/server/api/server/mdm/scep/depot"
+	"github.com/notawar/mobius/server/api/server/mdm/scep/depot/file"
+	scepserver "github.com/notawar/mobius/server/api/server/mdm/scep/server"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"

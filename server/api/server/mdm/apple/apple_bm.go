@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	kitlog "github.com/go-kit/log"
-	abmctx "github.com/notawar/mobius/mobius-server/server/contexts/apple_bm"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mdm/assets"
-	depclient "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/client"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	abmctx "github.com/notawar/mobius/server/api/server/contexts/apple_bm"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mdm/assets"
+	depclient "github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // SetABMTokenMetadata uses the provided ABM token to fetch the associated
@@ -85,7 +85,7 @@ func SetDecryptedABMTokenMetadata(
 	if res.AdminID == "" {
 		// fallback to facilitator ID, as this is the same information but for
 		// older versions of the Apple API.
-		// https://github.com/notawar/mobius/issues/7515#issuecomment-1346579398
+		// https://github.com/MobiusDM/Mobius/issues/7515#issuecomment-1346579398
 		res.AdminID = res.FacilitatorID
 	}
 

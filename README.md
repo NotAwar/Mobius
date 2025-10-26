@@ -2,8 +2,8 @@
 
 ![Mobius logo](common/assets/Mobius-Logo-Text_1.png)
 
-[![Build & Deploy](https://github.com/NotAwar/Mobius/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/NotAwar/Mobius/actions/workflows/build-and-deploy.yml)
-[![Unit Tests](https://github.com/NotAwar/Mobius/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/NotAwar/Mobius/actions/workflows/unit-tests.yml)
+[![Build & Deploy](https://github.com/MobiusDM/Mobius/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/MobiusDM/Mobius/actions/workflows/build-and-deploy.yml)
+[![Unit Tests](https://github.com/MobiusDM/Mobius/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/MobiusDM/Mobius/actions/workflows/unit-tests.yml)
 
 Mobius is a modern, API-first Mobile Device Management (MDM) platform designed for self-hosted environments. It provides comprehensive device management, policy enforcement, and application distribution across Windows, macOS, Linux, iOS, and Android devices.
 
@@ -105,7 +105,7 @@ common/
 
 ## Products
 
-### Mobius Server (`mobius-server/`)
+### Mobius Server (`server/api/`)
 
 The core backend server that provides:
 
@@ -117,7 +117,7 @@ The core backend server that provides:
 
 **Target Environment**: Deployed on servers/cloud infrastructure
 
-### Mobius CLI (`mobius-cli/`)
+### Mobius CLI (`server/cli/`)
 
 Command-line interface for:
 
@@ -143,10 +143,10 @@ Each product can be built and deployed independently:
 
 ```bash
 # Build server
-cd mobius-server && go build -o ../build/mobius ./cmd/mobius
+cd server/api && go build -o ../build/mobius ./cmd/mobius
 
 # Build CLI  
-cd mobius-cli && go build -o ../build/mobiuscli ./cmd/mobiuscli
+cd server/cli && go build -o ../build/mobiuscli ./cmd/mobiuscli
 ```
 
 ## Development

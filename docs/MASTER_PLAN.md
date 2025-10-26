@@ -240,16 +240,16 @@ API Layer (handlers) → Service Layer (business logic) → Data Layer (reposito
 │   └── MASTER_PLAN.md             # This file - single source of truth
 ├── tests/                         # All test files
 │   └── test_mdm_functionality.sh  # Comprehensive test suite
-├── mobius-server/                 # Main server implementation
+├── server/api/                 # Main server implementation
 │   ├── api/                       # HTTP handlers
 │   │   ├── device_group_handlers.go
 │   │   └── [other handlers]
 │   ├── pkg/service/               # Business logic
 │   │   └── services.go
 │   └── cmd/mobius/               # Server entry point
-├── mobius-cli/                   # CLI client
-├── mobius-client/                # Client library
-├── mobius-cocoon/                # Cocoon component
+├── server/cli/                   # CLI client
+├── server/client/                # Client library
+├── cocoon/portal/                # Cocoon component
 ├── shared/                       # Shared packages
 └── tools/                        # Development tools
 ```

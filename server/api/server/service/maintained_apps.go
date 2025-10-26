@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/maintainedapps"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mdm/maintainedapps"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 type addMobiusMaintainedAppRequest struct {

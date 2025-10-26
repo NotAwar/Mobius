@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/micromdm/micromdm/pkg/crypto/profileutil"
-	"github.com/notawar/mobius/mobius-server/server/mdm/assets"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mdm/assets"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // Sign signs an enrollment profile using a certificate from the datastore

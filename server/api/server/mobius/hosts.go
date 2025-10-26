@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/notawar/mobius/mobius-server/server/mdm/android"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server/mdm/android"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 type HostStatus string

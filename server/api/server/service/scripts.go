@@ -16,14 +16,14 @@ import (
 
 	"github.com/docker/go-units"
 	"github.com/gorilla/mux"
-	"github.com/notawar/mobius/mobius-server/server/authz"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
-	"github.com/notawar/mobius/mobius-server/server/contexts/logging"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/pkg/file"
-	"github.com/notawar/mobius/mobius-server/pkg/scripts"
+	"github.com/notawar/mobius/server/api/pkg/file"
+	"github.com/notawar/mobius/server/api/pkg/scripts"
+	"github.com/notawar/mobius/server/api/server/authz"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,9 +86,9 @@ func (r runScriptSyncResponse) Error() error { return r.Err }
 func (r runScriptSyncResponse) Status() int {
 	if r.HostTimeout {
 		// The more proper response for a timeout on the server would be: StatusGatewayTimeout = 504
-		// However, as described in https://github.com/notawar/mobius/issues/15430 we will send:
+		// However, as described in https://github.com/MobiusDM/Mobius/issues/15430 we will send:
 		// StatusRequestTimeout = 408 // RFC 9110, 15.5.9
-		// See: https://github.com/notawar/mobius/issues/15430#issuecomment-1847345617
+		// See: https://github.com/MobiusDM/Mobius/issues/15430#issuecomment-1847345617
 		return http.StatusRequestTimeout
 	}
 	return http.StatusOK

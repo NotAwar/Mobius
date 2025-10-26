@@ -8,8 +8,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cpedict"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cpedict"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 func sqliteDB(dbPath string) (*sqlx.DB, error) {

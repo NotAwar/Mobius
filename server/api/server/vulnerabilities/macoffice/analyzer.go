@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/io"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/utils"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/io"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/utils"
 )
 
 // getLatestReleaseNotes returns the most recent Mac Office release notes asset (based on the date in the

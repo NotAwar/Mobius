@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/android"
+	"github.com/notawar/mobius/server/api/server/mdm/android"
 )
 
 func (s *Datastore) InitCommonMocks() {

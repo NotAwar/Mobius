@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/ghodss/yaml"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 	"github.com/urfave/cli/v2"
 )
 

@@ -1,60 +1,60 @@
 name: Security Vulnerability
 description: Report a security vulnerability (use privately)
 title: "[Security]: "
-labels: ["security", "triage"]
+labels: [ "security", "triage" ]
 assignees: []
 body:
-  - type: markdown
-    attributes:
-      value: |
-        ⚠️ **IMPORTANT**: Please do not use this public template for actual security vulnerabilities.
-        
-        For real security vulnerabilities, please use:
-        - GitHub Security Advisories (private): https://github.com/NotAwar/Mobius/security
-        - Or email: [PLACEHOLDER - ADD SECURITY EMAIL]
-        
-        This template is for security-related feature requests or discussions about security practices.
+- type: markdown
+  attributes:
+    value: |
+      ⚠️ **IMPORTANT**: Please do not use this public template for actual security vulnerabilities.
 
-  - type: checkboxes
-    id: prerequisites
-    attributes:
-      label: Prerequisites
-      description: Please confirm you have read the above warning
-      options:
-        - label: I understand this is for security discussions, not vulnerability reports
-          required: true
+      For real security vulnerabilities, please use:
+      - GitHub Security Advisories (private): https://github.com/MobiusDM/Mobius/security
+      - Or email: [PLACEHOLDER - ADD SECURITY EMAIL]
 
-  - type: dropdown
-    id: type
-    attributes:
-      label: Type
-      description: What type of security issue is this?
-      options:
-        - Security Feature Request
-        - Security Best Practice Discussion
-        - Security Documentation
-        - Other Security Topic
-    validations:
+      This template is for security-related feature requests or discussions about security practices.
+
+- type: checkboxes
+  id: prerequisites
+  attributes:
+    label: Prerequisites
+    description: Please confirm you have read the above warning
+    options:
+    - label: I understand this is for security discussions, not vulnerability reports
       required: true
 
-  - type: textarea
-    id: description
-    attributes:
-      label: Description
-      description: Describe the security topic or feature request
-      placeholder: Describe the security-related topic...
-    validations:
-      required: true
+- type: dropdown
+  id: type
+  attributes:
+    label: Type
+    description: What type of security issue is this?
+    options:
+    - Security Feature Request
+    - Security Best Practice Discussion
+    - Security Documentation
+    - Other Security Topic
+  validations:
+    required: true
 
-  - type: textarea
-    id: impact
-    attributes:
-      label: Security Impact
-      description: What is the potential security impact or benefit?
-      placeholder: Describe the security implications...
+- type: textarea
+  id: description
+  attributes:
+    label: Description
+    description: Describe the security topic or feature request
+    placeholder: Describe the security-related topic...
+  validations:
+    required: true
 
-  - type: textarea
-    id: additional
-    attributes:
-      label: Additional Context
-      description: Add any other context about the security topic here
+- type: textarea
+  id: impact
+  attributes:
+    label: Security Impact
+    description: What is the potential security impact or benefit?
+    placeholder: Describe the security implications...
+
+- type: textarea
+  id: additional
+  attributes:
+    label: Additional Context
+    description: Add any other context about the security topic here

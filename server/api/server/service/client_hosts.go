@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 // GetHosts retrieves the list of all Hosts

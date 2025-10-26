@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	mobiuss "github.com/notawar/mobius/mobius-server/server/mobius"
+	mobiuss "github.com/notawar/mobius/server/api/server/mobius"
 )
 
 const pollWaitTime = 5 * time.Second

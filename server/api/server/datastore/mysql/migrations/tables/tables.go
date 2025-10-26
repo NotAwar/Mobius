@@ -2,7 +2,7 @@
 package tables
 
 import (
-	"github.com/notawar/mobius/mobius-server/server/goose"
+	"github.com/notawar/mobius/server/api/server/goose"
 )
 
 // MigrationClient for table migrations

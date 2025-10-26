@@ -10,7 +10,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/notawar/mobius/mobius-server/pkg/scripts"
+	"github.com/notawar/mobius/server/api/pkg/scripts"
 )
 
 // Script represents a saved script that can be executed on a host.

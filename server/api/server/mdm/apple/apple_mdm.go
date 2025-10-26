@@ -15,20 +15,20 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-multierror"
-	ctxabm "github.com/notawar/mobius/mobius-server/server/contexts/apple_bm"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/logging"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/mobius-server/server/mdm/internal/commonmdm"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	ctxabm "github.com/notawar/mobius/server/api/server/contexts/apple_bm"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/logging"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/api/server/mdm/internal/commonmdm"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/godep"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
 
 	kitlog "github.com/go-kit/log"
-	depclient "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/client"
-	nanodep_storage "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage"
-	depsync "github.com/notawar/mobius/mobius-server/server/mdm/nanodep/sync"
+	depclient "github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
+	nanodep_storage "github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
+	depsync "github.com/notawar/mobius/server/api/server/mdm/nanodep/sync"
 )
 
 const (
@@ -676,7 +676,7 @@ func (d *DEPService) processDeviceResponse(
 	// `deleted_at ` col is NOT NULL. Down below we skip assigning the profile to devices that we
 	// think are still enrolled; doing this check here allows us to avoid skipping devices that
 	// _seem_ like they're still enrolled but were actually removed and should get the profile.
-	// See https://github.com/notawar/mobius/issues/23200 for more context.
+	// See https://github.com/MobiusDM/Mobius/issues/23200 for more context.
 	existingDeletedSerials, err := d.ds.GetMatchingHostSerialsMarkedDeleted(ctx, addedSerials)
 	if err != nil {
 		return ctxerr.Wrap(ctx, err, "get matching deleted host serials")

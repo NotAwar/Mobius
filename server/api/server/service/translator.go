@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 type translatorRequest struct {

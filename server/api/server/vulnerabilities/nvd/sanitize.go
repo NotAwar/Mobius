@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 var nonAlphaNumeric = regexp.MustCompile(`[^a-zA-Z0-9]+`)

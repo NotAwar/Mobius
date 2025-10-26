@@ -5,10 +5,10 @@ import (
 	"crypto/rsa"
 	"errors"
 
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mdm/assets"
-	scepserver "github.com/notawar/mobius/mobius-server/server/mdm/scep/server"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mdm/assets"
+	scepserver "github.com/notawar/mobius/server/api/server/mdm/scep/server"
+	"github.com/notawar/mobius/server/api/server/mobius"
 
 	"github.com/go-kit/log"
 	"github.com/smallstep/scep"

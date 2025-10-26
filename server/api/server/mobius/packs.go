@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/server/ptr"
+	"github.com/notawar/mobius/server/api/server/ptr"
 )
 
 // MaxScheduledQueryInterval is the maximum interval value (in seconds) allowed by osquery

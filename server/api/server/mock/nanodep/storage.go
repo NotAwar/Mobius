@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/client"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanodep/storage"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
+	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
 )
 
 var _ storage.AllDEPStorage = (*Storage)(nil)

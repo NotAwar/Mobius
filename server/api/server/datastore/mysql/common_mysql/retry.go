@@ -11,7 +11,7 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
 )
 
 var DoRetryErr = errors.New("mobius datastore retry")

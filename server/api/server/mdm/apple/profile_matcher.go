@@ -7,9 +7,9 @@ import (
 	"time"
 
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/datastore/redis"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/datastore/redis"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 const (
@@ -21,7 +21,7 @@ const (
 	// in distributed scenarios, the external host identifier might come up
 	// with a suffix that varies from server to server. To account for that
 	// we only take into account the first 36 runes from the identifier.
-	// See https://github.com/notawar/mobius/issues/12483 for more info.
+	// See https://github.com/MobiusDM/Mobius/issues/12483 for more info.
 	preassignKeySuffixMaxLen = 36
 )
 

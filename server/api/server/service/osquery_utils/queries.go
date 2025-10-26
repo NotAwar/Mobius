@@ -13,25 +13,25 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/config"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/contexts/logging"
-	"github.com/notawar/mobius/mobius-server/server/contexts/publicip"
-	apple_mdm "github.com/notawar/mobius/mobius-server/server/mdm/apple"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	microsoft_mdm "github.com/notawar/mobius/mobius-server/server/mdm/microsoft"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/service/async"
+	"github.com/notawar/mobius/server/api/server/config"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	"github.com/notawar/mobius/server/api/server/contexts/publicip"
+	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/service/async"
 	"github.com/spf13/cast"
 )
 
 // Some machines don't have a correctly set serial number, create a default ignore list
-// https://github.com/notawar/mobius/issues/25993
+// https://github.com/MobiusDM/Mobius/issues/25993
 var invalidHardwareSerialRegexp = regexp.MustCompile("(?i)(?:default|serial|string)")
 
 type DetailQuery struct {
@@ -349,7 +349,7 @@ var hostDetailQueries = map[string]DetailQuery{
 				// If the serial number is a default (uninitialize) value, set to empty
 				host.HardwareSerial = ""
 			} else if rows[0]["hardware_serial"] != "-1" {
-				// ignoring the default -1 serial. See: https://github.com/notawar/mobius/issues/19789
+				// ignoring the default -1 serial. See: https://github.com/MobiusDM/Mobius/issues/19789
 				host.HardwareSerial = rows[0]["hardware_serial"]
 			}
 			host.ComputerName = rows[0]["computer_name"]
@@ -581,7 +581,7 @@ var extraDetailQueries = map[string]DetailQuery{
 		// This query is used to determine battery health of macOS and Windows hosts
 		// based on the cycle count, designed capacity, and max capacity of the battery.
 		// The `health` column is ommitted due to a known osquery issue with M1 Macs
-		// (https://github.com/notawar/mobius/issues/6763) and its absence on Windows.
+		// (https://github.com/MobiusDM/Mobius/issues/6763) and its absence on Windows.
 		Query:            `SELECT serial_number, cycle_count, designed_capacity, max_capacity FROM battery`,
 		Platforms:        []string{"windows", "darwin"},
 		DirectIngestFunc: directIngestBattery,
@@ -1401,7 +1401,7 @@ func directIngestChromeProfiles(ctx context.Context, logger log.Logger, host *mo
 
 // directIngestBattery ingests battery data from a host on a Windows or macOS platform
 // and calculates the battery health based on cycle count and capacity.
-// Due to a known osquery issue with M1 Macs (https://github.com/notawar/mobius/issues/6763)
+// Due to a known osquery issue with M1 Macs (https://github.com/MobiusDM/Mobius/issues/6763)
 // and the ommission of the `health` column on Windows, we are not leveraging the `health`
 // column in the query and instead aligning the definition of battery health between
 // macOS and Windows.

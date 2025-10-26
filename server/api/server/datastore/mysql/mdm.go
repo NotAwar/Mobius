@@ -11,11 +11,11 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/google/go-cmp/cmp"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	"github.com/notawar/mobius/mobius-server/server/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	microsoft_mdm "github.com/notawar/mobius/mobius-server/server/mdm/microsoft"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	"github.com/notawar/mobius/server/api/server/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
+	"github.com/notawar/mobius/server/api/server/mobius"
 )
 
 func (ds *Datastore) GetMDMCommandPlatform(ctx context.Context, commandUUID string) (string, error) {

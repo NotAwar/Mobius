@@ -14,12 +14,12 @@ typically in a service layer method (and related datastore methods).
 
 ## How to add a new cron job
 
-See [this PR](https://github.com/notawar/mobius/pull/21959/files) for a nice example of how to add a
+See [this PR](https://github.com/MobiusDM/Mobius/pull/21959/files) for a nice example of how to add a
 simple cron job.
 
 1. **Do you need a new cron job?** You can add sub-jobs to an existing cron job; for example, if
    you're adding some functionality for cleaning up unused data, you might want to implement it as a
-   sub-job in the [`cleanups_then_aggregation` cron](https://github.com/notawar/mobius/blob/65e374c85c32a7dd582aa1d438161663a4abc43c/cmd/mobius/cron.go#L793).
+   sub-job in the [`cleanups_then_aggregation` cron](https://github.com/MobiusDM/Mobius/blob/65e374c85c32a7dd582aa1d438161663a4abc43c/cmd/mobius/cron.go#L793).
 2. **Add a cron job name.** If you determine that you do need a new cron job, create a descriptive
    name in cron_schedules.go. Make sure you leave a comment explaining what the job does.
 3. **Implement your functionality.** Do this wherever it makes sense. In the example PR, the

@@ -10,8 +10,8 @@ import (
 	"time"
 
 	bufordpush "github.com/RobotsAndPencils/buford/push"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mdm/nanomdm/push"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/push"
 )
 
 // NewClient describes a callback for setting up an HTTP client for Push notifications.

@@ -13,16 +13,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cvefeed"
-	feednvd "github.com/notawar/mobius/mobius-server/server/vulnerabilities/nvd/tools/cvefeed/nvd"
-	"github.com/notawar/mobius/mobius-server/pkg/download"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed"
+	feednvd "github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/notawar/mobius/server/api/pkg/download"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 )
 
 type SyncOptions struct {

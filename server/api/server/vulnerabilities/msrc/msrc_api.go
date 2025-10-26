@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/notawar/mobius/mobius-server/pkg/download"
+	"github.com/notawar/mobius/server/api/pkg/download"
 )
 
 const (

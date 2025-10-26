@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/notawar/mobius/mobius-server/server/version"
+	"github.com/notawar/mobius/server/api/server/version"
 	"github.com/urfave/cli/v2"
 )
 

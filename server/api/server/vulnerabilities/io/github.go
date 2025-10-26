@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/mobius-server/pkg/download"
+	"github.com/notawar/mobius/server/api/pkg/download"
 )
 
 // ReleaseLister interface around github.NewClient(...).Repositories.

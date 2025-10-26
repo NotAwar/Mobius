@@ -6,8 +6,8 @@ import (
 	"net/url"
 
 	"github.com/go-kit/log"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 func ServeFrontend(urlPrefix string, sandbox bool, logger log.Logger) http.Handler {
@@ -16,7 +16,7 @@ func ServeFrontend(urlPrefix string, sandbox bool, logger log.Logger) http.Handl
 
 		// The following check is to prevent a misconfigured osquery from submitting
 		// data to the root endpoint (the osquery remote API uses POST for all its endpoints).
-		// See https://github.com/notawar/mobius/issues/16182.
+		// See https://github.com/MobiusDM/Mobius/issues/16182.
 		if r.Method == "POST" {
 			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 			return

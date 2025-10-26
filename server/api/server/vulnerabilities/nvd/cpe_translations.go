@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/pkg/download"
-	"github.com/notawar/mobius/mobius-server/pkg/mobiushttp"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/pkg/download"
+	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
 )
 
 const cpeTranslationsFilename = "cpe_translations.json"

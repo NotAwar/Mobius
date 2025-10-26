@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/notawar/mobius/mobius-server/pkg/websocket"
+	"github.com/notawar/mobius/server/api/pkg/websocket"
 )
 
 // WebSocketHandler handles WebSocket connections for real-time updates

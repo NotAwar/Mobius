@@ -17,22 +17,22 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/gocarina/gocsv"
 	"github.com/google/uuid"
-	"github.com/notawar/mobius/mobius-server/server"
-	"github.com/notawar/mobius/mobius-server/server/authz"
-	authzctx "github.com/notawar/mobius/mobius-server/server/contexts/authz"
-	"github.com/notawar/mobius/mobius-server/server/contexts/ctxerr"
-	hostctx "github.com/notawar/mobius/mobius-server/server/contexts/host"
-	"github.com/notawar/mobius/mobius-server/server/contexts/license"
-	"github.com/notawar/mobius/mobius-server/server/contexts/logging"
-	"github.com/notawar/mobius/mobius-server/server/contexts/viewer"
-	"github.com/notawar/mobius/mobius-server/server/mdm"
-	"github.com/notawar/mobius/mobius-server/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/mobius-server/server/mdm/assets"
-	mdmlifecycle "github.com/notawar/mobius/mobius-server/server/mdm/lifecycle"
-	"github.com/notawar/mobius/mobius-server/server/mobius"
-	"github.com/notawar/mobius/mobius-server/server/ptr"
-	"github.com/notawar/mobius/mobius-server/server/service/middleware/endpoint_utils"
-	"github.com/notawar/mobius/mobius-server/server/worker"
+	"github.com/notawar/mobius/server/api/server"
+	"github.com/notawar/mobius/server/api/server/authz"
+	authzctx "github.com/notawar/mobius/server/api/server/contexts/authz"
+	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	hostctx "github.com/notawar/mobius/server/api/server/contexts/host"
+	"github.com/notawar/mobius/server/api/server/contexts/license"
+	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	"github.com/notawar/mobius/server/api/server/contexts/viewer"
+	"github.com/notawar/mobius/server/api/server/mdm"
+	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
+	"github.com/notawar/mobius/server/api/server/mdm/assets"
+	mdmlifecycle "github.com/notawar/mobius/server/api/server/mdm/lifecycle"
+	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/notawar/mobius/server/api/server/worker"
 )
 
 // HostDetailResponse is the response struct that contains the full host information
@@ -1402,7 +1402,7 @@ func getEndUsers(ctx context.Context, ds mobius.Datastore, hostID uint) ([]mobiu
 			switch {
 			case email.Source == mobius.DeviceMappingMDMIdpAccounts && len(endUsers) == 0:
 				// If SCIM data is missing, we still populate IdpUserName if present.
-				// Note: Username and email is the same thing here until we split them with https://github.com/notawar/mobius/issues/27952
+				// Note: Username and email is the same thing here until we split them with https://github.com/MobiusDM/Mobius/issues/27952
 				endUser.IdpUserName = email.Email
 			case email.Source != mobius.DeviceMappingMDMIdpAccounts:
 				endUser.OtherEmails = append(endUser.OtherEmails, *email)

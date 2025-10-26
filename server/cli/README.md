@@ -32,5 +32,5 @@ Key mobiuscli commands include:
 
 ## Dependencies
 
-- `../shared` - Shared libraries with mobius-server
+- `../shared` - Shared libraries with server/api
 - External dependencies as defined in go.mod

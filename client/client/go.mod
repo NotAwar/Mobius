@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/mobius-client
+module github.com/notawar/mobius/client/client
 
 go 1.25.3
 

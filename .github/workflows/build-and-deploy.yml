@@ -314,7 +314,7 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -o mobiuscli-windows-amd64.exe ./cmd/mobiuscli
 
       - name: Download SBOM artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: sbom-*
           merge-multiple: true

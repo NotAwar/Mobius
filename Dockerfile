@@ -21,7 +21,7 @@ COPY mobius-web/static ./static
 RUN npm run build
 
 # Go builder stage
-FROM golang:1.25.0-alpine AS builder
+FROM golang:1.25.3-alpine AS builder
 
 # Install git and ca-certificates
 RUN apk add --no-cache git ca-certificates

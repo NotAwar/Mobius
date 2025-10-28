@@ -4,302 +4,178 @@
 # Ecosystems covered:
 # - GitHub Actions (workflows in .github/workflows/)
 # - Docker (all Dockerfiles in the repository)
-# - Go modules (6 modules: mobius-server, mobius-cli, mobius-client, mobius-cocoon, shared, tools/terraform, tools/snapshot)
-# - npm (2 packages: mobius-web frontend, tools/mobiuscli-npm)
-# - Terraform (infrastructure in tools/terraform/tf/)
+# - Go modules (6 modules: server/api, server/cli, client/client, cocoon/portal, common/shared)
+# - npm (ui/web frontend)
 #
-# Best practices implemented:
-# - Proper scheduling (weekly on different days to spread load)
-# - Security updates grouped and prioritized
-# - Commit message prefixes for easy identification
-# - Labels and assignees for proper tracking
-# - Reasonable PR limits to avoid spam
-# - Branch naming compatible with docker tag requirements
+# Auto-merge enabled via dependabot-auto-merge.yml workflow:
+# - Patch updates: auto-merged
+# - Minor dev dependencies: auto-merged
+# - Major updates: require manual review
 
 version: 2
 updates:
-  # === GitHub Actions Dependencies ===
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "github-actions"
-    commit-message:
-      prefix: "ci"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === GitHub Actions Dependencies ===
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+    day: "monday"
+    time: "09:00"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"
+  - "github-actions"
+  commit-message:
+    prefix: "ci"
+  pull-request-branch-name:
+    separator: "-"
 
-  # === Docker Dependencies ===
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "tuesday"
-      time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "docker"
-    commit-message:
-      prefix: "docker"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === Docker Dependencies ===
+- package-ecosystem: "docker"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+    day: "tuesday"
+    time: "09:00"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 5
+  labels:
+  - "dependencies"
+  - "docker"
+  commit-message:
+    prefix: "docker"
+  pull-request-branch-name:
+    separator: "-"
 
-  # === Go Dependencies - Mobius Server ===
-  - package-ecosystem: "gomod"
-    directory: "/mobius-server"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "09:30"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "mobius-server"
-    commit-message:
-      prefix: "deps(server)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === Go Dependencies - API Server ===
+- package-ecosystem: "gomod"
+  directory: "/server/api"
+  schedule:
+    interval: "weekly"
+    day: "wednesday"
+    time: "09:00"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"
+  - "go"
+  - "server"
+  commit-message:
+    prefix: "deps(api)"
+  pull-request-branch-name:
+    separator: "-"
+  groups:
+    go-security:
+      patterns:
+      - "golang.org/x/crypto"
+      - "golang.org/x/net"
+      - "golang.org/x/oauth2"
+    go-minor:
+      update-types:
+      - "minor"
+      - "patch"
 
-  # === Go Dependencies - Mobius CLI ===
-  - package-ecosystem: "gomod"
-    directory: "/mobius-cli"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "10:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "mobius-cli"
-    commit-message:
-      prefix: "deps(cli)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === Go Dependencies - CLI Tool ===
+- package-ecosystem: "gomod"
+  directory: "/server/cli"
+  schedule:
+    interval: "weekly"
+    day: "wednesday"
+    time: "09:30"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"
+  - "go"
+  - "cli"
+  commit-message:
+    prefix: "deps(cli)"
+  pull-request-branch-name:
+    separator: "-"
 
-  # === Go Dependencies - Mobius Client ===
-  - package-ecosystem: "gomod"
-    directory: "/mobius-client"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "10:30"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "mobius-client"
-    commit-message:
-      prefix: "deps(client)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === Go Dependencies - Device Client ===
+- package-ecosystem: "gomod"
+  directory: "/client/client"
+  schedule:
+    interval: "weekly"
+    day: "wednesday"
+    time: "10:00"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"
+  - "go"
+  - "client"
+  commit-message:
+    prefix: "deps(client)"
+  pull-request-branch-name:
+    separator: "-"
 
-  # === Go Dependencies - Mobius Cocoon ===
-  - package-ecosystem: "gomod"
-    directory: "/mobius-cocoon"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "11:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "mobius-cocoon"
-    commit-message:
-      prefix: "deps(cocoon)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === Go Dependencies - Cocoon Portal ===
+- package-ecosystem: "gomod"
+  directory: "/cocoon/portal"
+  schedule:
+    interval: "weekly"
+    day: "wednesday"
+    time: "10:30"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"
+  - "go"
+  - "cocoon"
+  commit-message:
+    prefix: "deps(cocoon)"
+  pull-request-branch-name:
+    separator: "-"
 
-  # === Go Dependencies - Shared Libraries ===
-  - package-ecosystem: "gomod"
-    directory: "/shared"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "11:30"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "shared"
-    commit-message:
-      prefix: "deps(shared)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
+# === Go Dependencies - Shared Libraries ===
+- package-ecosystem: "gomod"
+  directory: "/common/shared"
+  schedule:
+    interval: "weekly"
+    day: "wednesday"
+    time: "11:00"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"
+  - "go"
+  - "shared"
+  commit-message:
+    prefix: "deps(shared)"
+  pull-request-branch-name:
+    separator: "-"
 
-  # === Node.js Dependencies - Mobius Web (Svelte Frontend) ===
-  - package-ecosystem: "npm"
-    directory: "/mobius-web"
-    schedule:
-      interval: "weekly"
-      day: "thursday"
-      time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "npm"
-      - "frontend"
-    commit-message:
-      prefix: "deps(web)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
-    groups:
-      svelte-ecosystem:
-        patterns:
-          - "@sveltejs/*"
-          - "svelte*"
-      dev-dependencies:
-        dependency-type: "development"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # === Node.js Dependencies - Mobius CLI NPM ===
-  - package-ecosystem: "npm"
-    directory: "/tools/mobiuscli-npm"
-    schedule:
-      interval: "weekly"
-      day: "thursday"
-      time: "09:30"
-      timezone: "UTC"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "npm"
-      - "tools"
-    commit-message:
-      prefix: "deps(cli-npm)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
-
-  # === Terraform Dependencies ===
-  - package-ecosystem: "terraform"
-    directory: "/tools/terraform/tf"
-    schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "terraform"
-      - "infrastructure"
-    commit-message:
-      prefix: "terraform"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
-
-  # === Go Dependencies - Tools/Terraform ===
-  - package-ecosystem: "gomod"
-    directory: "/tools/terraform"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "12:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "tools"
-      - "terraform"
-    commit-message:
-      prefix: "deps(terraform-tools)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
-
-  # === Go Dependencies - Tools/Snapshot ===
-  - package-ecosystem: "gomod"
-    directory: "/tools/snapshot"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "12:30"
-      timezone: "UTC"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "notawar"
-    assignees:
-      - "notawar"
-    labels:
-      - "dependencies"
-      - "go"
-      - "tools"
-    commit-message:
-      prefix: "deps(snapshot-tools)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
-
+# === Node.js Dependencies - Web UI (Svelte Frontend) ===
+- package-ecosystem: "npm"
+  directory: "/ui/web"
+  schedule:
+    interval: "weekly"
+    day: "thursday"
+    time: "09:00"
+    timezone: "Etc/UTC"
+  open-pull-requests-limit: 15
+  labels:
+  - "dependencies"
+  - "npm"
+  - "frontend"
+  commit-message:
+    prefix: "deps(web)"
+  pull-request-branch-name:
+    separator: "-"
+  groups:
+    svelte-ecosystem:
+      patterns:
+      - "@sveltejs/*"
+      - "svelte*"
+    vite-ecosystem:
+      patterns:
+      - "vite*"
+      - "@vitejs/*"
+    dev-dependencies:
+      dependency-type: "development"
+      update-types:
+      - "minor"
+      - "patch"

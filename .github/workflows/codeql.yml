@@ -88,11 +88,11 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          config-file: ./.github/codeql/codeql-config.yml
           #  For more details on CodeQL's query suites, refer to:
           #  https://docs.github.com/en/code-security/code-scanning/
           #  automatically-scanning-your-code-for-vulnerabilities-and-errors/
           #  customizing-code-scanning  # using-queries-in-ql-packs
-          queries: +security-and-quality
 
       #  Set up Go for the Go analysis
       - name: Set up Go

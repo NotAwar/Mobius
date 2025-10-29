@@ -63,20 +63,21 @@ jobs:
 
       - name: Run unit tests (matrix module)
         run: |
-          cd ${{ matrix.module }}
           # Create coverage filename by replacing / with -
-          COVERAGE_FILE="../coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out"
+          COVERAGE_FILE="coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out"
           
           # Check if any test files exist first
+          cd ${{ matrix.module }}
           TEST_FILES=$(find . -name '*_test.go' -type f 2>/dev/null || true)
           if [ -z "$TEST_FILES" ]; then
             echo "No test files found in ${{ matrix.module }} - creating empty coverage file"
+            cd ..
             touch "$COVERAGE_FILE"
             exit 0
           fi
           # Run tests with race detector
           echo "Running tests in ${{ matrix.module }}"
-          go test -race -count=1 -coverprofile="$COVERAGE_FILE" ./...
+          go test -race -count=1 -coverprofile="../$COVERAGE_FILE" ./...
 
       - name: Set coverage filename
         id: coverage

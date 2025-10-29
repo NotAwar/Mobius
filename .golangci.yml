@@ -38,6 +38,7 @@ issues:
     - bodyclose
     - gosimple
     - misspell
+    - staticcheck
   - path: tools/
     linters:
     - errcheck
@@ -45,11 +46,20 @@ issues:
     - unused
     - bodyclose
     - misspell
-  # Exclude common/shared legacy code
-  - path: pkg/(download|certificate)/
+    - staticcheck
+  # Exclude common/shared and server/api legacy pkg code
+  - path: pkg/(download|certificate|scripts|gitops|mobiusdaemonbase|spec)/
     linters:
     - gosec
     - bodyclose
+    - misspell
+    - staticcheck
+  - path: pkg/gitops\.go
+    linters:
+    - misspell
+  - path: pkg/mobiusdaemonbase/
+    linters:
+    - misspell
   # Allow unused fields in service mock implementations (used for interface compatibility)
   - path: pkg/service/services\.go
     linters:

@@ -50,14 +50,29 @@ jobs:
             echo "----------------------------------------"
             echo "Validating: $score_file"
             
-            # Validate the Score spec structure (no --build needed for validation)
+            # Extract container name and provide placeholder image for validation
             CLEAN_PATH="${score_file#./}"
+            DIR_PATH=$(dirname "$score_file")
             
-            if score-compose generate "$score_file" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
-              echo "✅ Valid Score specification: $score_file"
+            # Extract the first container name from the Score spec
+            CONTAINER_NAME=$(grep -A 1 "^containers:" "$score_file" | grep -v "^containers:" | grep -E "^  [a-z]" | head -1 | sed 's/://g' | tr -d ' ')
+            
+            if [ -n "$CONTAINER_NAME" ]; then
+              # Validate with placeholder image (for containers with image: .)
+              if score-compose generate "$score_file" --image "${CONTAINER_NAME}=placeholder:latest" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+                echo "✅ Valid Score specification: $score_file"
+              else
+                echo "❌ Invalid Score specification: $score_file"
+                EXIT_CODE=1
+              fi
             else
-              echo "❌ Invalid Score specification: $score_file"
-              EXIT_CODE=1
+              # Generate without image (no containers defined)
+              if score-compose generate "$score_file" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+                echo "✅ Valid Score specification: $score_file"
+              else
+                echo "❌ Invalid Score specification: $score_file"
+                EXIT_CODE=1
+              fi
             fi
           done
           

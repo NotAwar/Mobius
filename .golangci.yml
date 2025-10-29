@@ -26,15 +26,13 @@ issues:
   exclude-dirs:
   - "test"
   - "tests"
-  - "server/api/server"
-  - "server/api/tools"
   exclude-files:
   - ".*_test\\.go"
   exclude-rules:
-  - path: server/api/server/
+  - path: server/
     linters:
     - errcheck
-  - path: server/api/tools/
+  - path: tools/
     linters:
     - errcheck
 

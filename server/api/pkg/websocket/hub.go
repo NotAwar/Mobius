@@ -268,8 +268,8 @@ func (c *Client) writePump() {
 func generateClientID() string {
 	// Simple timestamp-based ID for now
 	// In production, use UUID or similar
-	return "client_" + time.Now().Format("20060102150405") + "_" + 
-		   time.Now().Format("000000")[3:] // microseconds
+	return "client_" + time.Now().Format("20060102150405") + "_" +
+		time.Now().Format("000000")[3:] // microseconds
 }
 
 // EventPublisher interface for publishing real-time events

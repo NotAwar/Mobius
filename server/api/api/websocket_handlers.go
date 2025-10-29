@@ -43,7 +43,7 @@ func (h *WebSocketHandler) HandleStatus(w http.ResponseWriter, r *http.Request) 
 
 	status := map[string]interface{}{
 		"connected_clients": h.hub.GetClientCount(),
-		"status":           "running",
+		"status":            "running",
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -113,7 +113,7 @@ func (s *WebSocketService) NotifyGroupMembership(groupID, deviceID, action strin
 func SetupWebSocketRoutes(mux *http.ServeMux, handler *WebSocketHandler) {
 	// WebSocket connection endpoint
 	mux.HandleFunc("/ws", handler.HandleConnection)
-	
+
 	// WebSocket status endpoint
 	mux.HandleFunc("/api/v1/websocket/status", handler.HandleStatus)
 }
@@ -123,41 +123,41 @@ func SetupWebSocketRoutes(mux *http.ServeMux, handler *WebSocketHandler) {
 // DeviceStatusChangeWrapper wraps device status updates with WebSocket notifications
 type DeviceStatusChangeWrapper struct {
 	originalService interface{} // The original device service
-	wsService      *WebSocketService
+	wsService       *WebSocketService
 }
 
 // WrapDeviceService wraps an existing device service with WebSocket notifications
 func WrapDeviceService(originalService interface{}, wsService *WebSocketService) *DeviceStatusChangeWrapper {
 	return &DeviceStatusChangeWrapper{
 		originalService: originalService,
-		wsService:      wsService,
+		wsService:       wsService,
 	}
 }
 
 // PolicyAssignmentWrapper wraps policy assignments with WebSocket notifications
 type PolicyAssignmentWrapper struct {
 	originalService interface{} // The original policy service
-	wsService      *WebSocketService
+	wsService       *WebSocketService
 }
 
 // WrapPolicyService wraps an existing policy service with WebSocket notifications
 func WrapPolicyService(originalService interface{}, wsService *WebSocketService) *PolicyAssignmentWrapper {
 	return &PolicyAssignmentWrapper{
 		originalService: originalService,
-		wsService:      wsService,
+		wsService:       wsService,
 	}
 }
 
 // CommandExecutionWrapper wraps command execution with WebSocket notifications
 type CommandExecutionWrapper struct {
 	originalService interface{} // The original command service
-	wsService      *WebSocketService
+	wsService       *WebSocketService
 }
 
 // WrapCommandService wraps an existing command service with WebSocket notifications
 func WrapCommandService(originalService interface{}, wsService *WebSocketService) *CommandExecutionWrapper {
 	return &CommandExecutionWrapper{
 		originalService: originalService,
-		wsService:      wsService,
+		wsService:       wsService,
 	}
 }

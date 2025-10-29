@@ -190,6 +190,6 @@ func (wsm *WebSocketManager) BroadcastGroupMembership(groupID, deviceID, action 
 func (wsm *WebSocketManager) GetStatus() map[string]interface{} {
 	return map[string]interface{}{
 		"connected_clients": len(wsm.clients),
-		"status":           "running",
+		"status":            "running",
 	}
 }

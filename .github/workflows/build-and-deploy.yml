@@ -51,15 +51,29 @@ jobs:
             echo "Validating: $score_file"
             
             # Validate the Score spec by generating docker-compose.yaml
-            # Use --build flag to indicate images will be built from Dockerfiles
+            # Extract container names from score.yaml for --build flag
             CLEAN_PATH="${score_file#./}"
             DIR_PATH=$(dirname "$score_file")
             
-            if score-compose generate "$score_file" --build "$DIR_PATH" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
-              echo "✅ Valid Score specification: $score_file"
+            # Extract the first container name from the Score spec
+            CONTAINER_NAME=$(grep -A 1 "^containers:" "$score_file" | grep -v "^containers:" | grep -E "^  [a-z]" | head -1 | sed 's/://g' | tr -d ' ')
+            
+            if [ -n "$CONTAINER_NAME" ]; then
+              # Generate with build context
+              if score-compose generate "$score_file" --build "${CONTAINER_NAME}=${DIR_PATH}" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+                echo "✅ Valid Score specification: $score_file"
+              else
+                echo "❌ Invalid Score specification: $score_file"
+                EXIT_CODE=1
+              fi
             else
-              echo "❌ Invalid Score specification: $score_file"
-              EXIT_CODE=1
+              # Generate without build context (no containers defined)
+              if score-compose generate "$score_file" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+                echo "✅ Valid Score specification: $score_file"
+              else
+                echo "❌ Invalid Score specification: $score_file"
+                EXIT_CODE=1
+              fi
             fi
           done
           

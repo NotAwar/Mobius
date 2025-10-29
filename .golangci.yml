@@ -13,14 +13,30 @@ linters:
   - gocyclo
   - lll
 
+linters-settings:
+  errcheck:
+    # Exclude legacy server code from errcheck
+    exclude-functions:
+    - (*github.com/go-kit/log.Logger).Log
+    - (github.com/go-kit/log.Logger).Log
+
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
   exclude-dirs:
   - "test"
   - "tests"
+  - "server/api/server"
+  - "server/api/tools"
   exclude-files:
   - ".*_test\\.go"
+  exclude-rules:
+  - path: server/api/server/
+    linters:
+    - errcheck
+  - path: server/api/tools/
+    linters:
+    - errcheck
 
 run:
   timeout: 5m

@@ -58,23 +58,23 @@ func main() {
 			return
 		}
 
-		log.Printf("unenrolling %s", deviceInfo.Host.HardwareSerial)
+		log.Printf("unenrolling %q", deviceInfo.Host.HardwareSerial)
 
 		jamfID, err := client.getJamfID(deviceInfo.Host.HardwareSerial)
 		if err != nil {
-			log.Printf("ERROR: getting Jamf ID from serial number: %s\n", err)
+			log.Printf("ERROR: getting Jamf ID from serial number: %v\n", err)
 			writer.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		log.Println("attempting to remove device from Jamf management...")
 		if err := client.unmanageDevice(jamfID); err != nil {
-			log.Printf("ERROR: unmanaging device: %s\n", err)
+			log.Printf("ERROR: unmanaging device: %v\n", err)
 			writer.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		log.Printf("%s unenrolled", deviceInfo.Host.HardwareSerial)
+		log.Printf("%q unenrolled", deviceInfo.Host.HardwareSerial)
 	})
 
 	log.Printf("server running at http://localhost:%s\n", *port)

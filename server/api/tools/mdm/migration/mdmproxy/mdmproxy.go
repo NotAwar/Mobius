@@ -51,14 +51,14 @@ func skipRequest(r *http.Request) bool {
 
 func (m *mdmProxy) handleProxy(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Host != "" {
-		log.Printf("%s %s Forbidden", r.Method, r.URL.String())
+		log.Printf("%q %q Forbidden", r.Method, r.URL.String())
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
 
 	if skipRequest(r) {
 		if m.logSkipped {
-			log.Printf("Forbidden skipped request: %s %s", r.Method, r.URL.String())
+			log.Printf("Forbidden skipped request: %q %q", r.Method, r.URL.String())
 		}
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -66,27 +66,27 @@ func (m *mdmProxy) handleProxy(w http.ResponseWriter, r *http.Request) {
 
 	// Send all SCEP requests to the existing server
 	if strings.Contains(r.URL.Path, "scep") {
-		log.Printf("%s %s -> Existing (SCEP)", r.Method, r.URL.String())
+		log.Printf("%q %q -> Existing (SCEP)", r.Method, r.URL.String())
 		m.existingProxy.ServeHTTP(w, r)
 		return
 	}
 
 	// Send all micromdm API requests to the existing server
 	if strings.HasPrefix(r.URL.Path, "/v1") || strings.HasPrefix(r.URL.Path, "/push") {
-		log.Printf("%s %s -> Existing (API)", r.Method, r.URL.String())
+		log.Printf("%q %q -> Existing (API)", r.Method, r.URL.String())
 		m.existingProxy.ServeHTTP(w, r)
 		return
 	}
 
 	if r.URL.Path == "/" && r.Method == http.MethodGet {
-		log.Printf("%s %s -> Existing (Home)", r.Method, r.URL.String())
+		log.Printf("%q %q -> Existing (Home)", r.Method, r.URL.String())
 		m.existingProxy.ServeHTTP(w, r)
 		return
 	}
 
 	// Send all micromdm repo requests to the existing server
 	if strings.HasPrefix(r.URL.Path, "/repo") {
-		log.Printf("%s %s -> Existing (Repo)", r.Method, r.URL.String())
+		log.Printf("%q %q -> Existing (Repo)", r.Method, r.URL.String())
 		m.existingProxy.ServeHTTP(w, r)
 		return
 
@@ -94,7 +94,7 @@ func (m *mdmProxy) handleProxy(w http.ResponseWriter, r *http.Request) {
 
 	if !strings.HasPrefix(r.URL.Path, "/mdm") {
 		if m.logSkipped {
-			log.Printf("Forbidden non-mdm request: %s %s", r.Method, r.URL.String())
+			log.Printf("Forbidden non-mdm request: %q %q", r.Method, r.URL.String())
 		}
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -114,20 +114,20 @@ func (m *mdmProxy) handleProxy(w http.ResponseWriter, r *http.Request) {
 	// Get the UDID from request
 	udid, err := udidFromRequestBody(body)
 	if err != nil {
-		log.Printf("%s %s Failed to get UDID: %v", r.Method, r.URL.String(), err)
+		log.Printf("%q %q Failed to get UDID: %v", r.Method, r.URL.String(), err)
 		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 
 	// Migrated UDIDs go to the Mobius server, otherwise requests go to the existing server.
 	if udid != "" && m.isUDIDMigrated(udid) {
-		log.Printf("%s %s (udid=%q) -> Mobius", r.Method, r.URL.String(), udid)
+		log.Printf("%q %q (udid=%q) -> Mobius", r.Method, r.URL.String(), udid)
 		if m.debug {
 			log.Printf("Mobius request: %q", string(body))
 		}
 		m.mobiusProxy.ServeHTTP(w, r)
 	} else {
-		log.Printf("%s %s (udid=%q) -> Existing", r.Method, r.URL.String(), udid)
+		log.Printf("%q %q (udid=%q) -> Existing", r.Method, r.URL.String(), udid)
 		m.existingProxy.ServeHTTP(w, r)
 	}
 }

@@ -51,14 +51,14 @@ func main() {
 			return
 		}
 
-		fmt.Printf("unenrolling %s", deviceInfo.Host.HardwareSerial)
+		fmt.Printf("unenrolling %q", deviceInfo.Host.HardwareSerial)
 		if err := unenroll(deviceInfo.Host.HardwareSerial); err != nil {
-			fmt.Printf("ERROR: unenrolling: %s\n", err)
+			fmt.Printf("ERROR: unenrolling: %v\n", err)
 			writer.WriteHeader(http.StatusBadGateway)
 			return
 		}
 
-		fmt.Printf("successfully unenrolled device %s\n", deviceInfo.Host.HardwareSerial)
+		fmt.Printf("successfully unenrolled device %q\n", deviceInfo.Host.HardwareSerial)
 		writer.WriteHeader(http.StatusNoContent)
 	})
 

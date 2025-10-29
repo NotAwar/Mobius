@@ -18,15 +18,15 @@ func main() {
 		var detail string
 		body, err := io.ReadAll(request.Body)
 		if err != nil {
-			detail = fmt.Sprintf("| ERROR: reading request body: %s", err)
+			detail = fmt.Sprintf("| ERROR: reading request body: %v", err)
 		} else if len(body) != 0 {
-			detail = fmt.Sprintf("| BODY: %s", string(body))
+			detail = fmt.Sprintf("| BODY: %q", string(body))
 		}
-		log.Printf("%s %s %s\n", request.Method, request.URL.Path, detail)
+		log.Printf("%q %q %s\n", request.Method, request.URL.Path, detail)
 
 		time.Sleep(DELAY)
 		if _, err := writer.Write(nil); err != nil {
-			log.Printf("error writing response %s", err.Error())
+			log.Printf("error writing response: %v", err)
 		}
 	})
 

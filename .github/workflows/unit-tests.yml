@@ -65,39 +65,51 @@ jobs:
         run: |
           # Create coverage filename by replacing / with -
           COVERAGE_FILE="coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out"
+          WORKSPACE_ROOT="${GITHUB_WORKSPACE}"
+          COVERAGE_PATH="${WORKSPACE_ROOT}/${COVERAGE_FILE}"
+          
+          echo "Workspace root: $WORKSPACE_ROOT"
+          echo "Coverage file will be: $COVERAGE_PATH"
           
           # Check if any test files exist first
           cd ${{ matrix.module }}
           TEST_FILES=$(find . -name '*_test.go' -type f 2>/dev/null || true)
           if [ -z "$TEST_FILES" ]; then
             echo "No test files found in ${{ matrix.module }} - creating empty coverage file"
-            cd ..
-            touch "$COVERAGE_FILE"
-            echo "Created empty coverage file: $COVERAGE_FILE"
-            ls -la | grep coverage || true
+            touch "$COVERAGE_PATH"
+            echo "Created empty coverage file at: $COVERAGE_PATH"
+            ls -la "$COVERAGE_PATH"
             exit 0
           fi
           # Run tests with race detector
           echo "Running tests in ${{ matrix.module }}"
-          go test -race -count=1 -coverprofile="../$COVERAGE_FILE" ./...
+          go test -race -count=1 -coverprofile="$COVERAGE_PATH" ./...
           
-          # Return to workspace root
-          cd ..
-          echo "Coverage file created: $COVERAGE_FILE"
-          ls -la "$COVERAGE_FILE" || echo "Coverage file not found!"
+          echo "Test complete. Coverage file:"
+          ls -la "$COVERAGE_PATH" || echo "ERROR: Coverage file not found at $COVERAGE_PATH"
 
       - name: Set coverage filename
         id: coverage
         run: |
           SANITIZED_MODULE=$(echo '${{ matrix.module }}' | tr '/' '-')
           COVERAGE_FILE="coverage-${SANITIZED_MODULE}.out"
+          WORKSPACE_ROOT="${GITHUB_WORKSPACE}"
+          COVERAGE_PATH="${WORKSPACE_ROOT}/${COVERAGE_FILE}"
+          
           echo "filename=$COVERAGE_FILE" >> $GITHUB_OUTPUT
           echo "artifact_name=coverage-${SANITIZED_MODULE}" >> $GITHUB_OUTPUT
+          
           # Debug: Verify file exists before upload
-          echo "Checking for coverage file: $COVERAGE_FILE"
-          ls -la "$COVERAGE_FILE" || echo "WARNING: Coverage file not found!"
-          echo "Current directory: $(pwd)"
-          ls -la | grep coverage || echo "No coverage files in current directory"
+          echo "Workspace root: $WORKSPACE_ROOT"
+          echo "Looking for coverage file: $COVERAGE_PATH"
+          if [ -f "$COVERAGE_PATH" ]; then
+            echo "✓ Coverage file found:"
+            ls -lh "$COVERAGE_PATH"
+          else
+            echo "✗ Coverage file NOT found at: $COVERAGE_PATH"
+            echo "Contents of workspace root:"
+            ls -la "$WORKSPACE_ROOT" | grep coverage || echo "No coverage files found"
+          fi
 
       - name: Upload coverage
         if: always()

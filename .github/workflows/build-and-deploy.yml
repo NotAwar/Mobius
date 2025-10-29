@@ -28,7 +28,7 @@ jobs:
       - name: Install score-compose
         run: |
           # Install score-compose from GitHub releases
-          SCORE_VERSION="0.19.2"
+          SCORE_VERSION="0.29.6"
           wget "https://github.com/score-spec/score-compose/releases/download/${SCORE_VERSION}/score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
           tar -xzf "score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
           sudo mv score-compose /usr/local/bin/

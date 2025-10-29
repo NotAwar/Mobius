@@ -64,23 +64,30 @@ jobs:
       - name: Run unit tests (matrix module)
         run: |
           cd ${{ matrix.module }}
+          # Create coverage filename by replacing / with -
+          COVERAGE_FILE="../coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out"
+          
           # Check if any test files exist first
           TEST_FILES=$(find . -name '*_test.go' -type f 2>/dev/null || true)
           if [ -z "$TEST_FILES" ]; then
             echo "No test files found in ${{ matrix.module }} - creating empty coverage file"
-            touch ../coverage-${{ matrix.module }}.out
+            touch "$COVERAGE_FILE"
             exit 0
           fi
           # Run tests with race detector
           echo "Running tests in ${{ matrix.module }}"
-          go test -race -count=1 -coverprofile=../coverage-${{ matrix.module }}.out ./...
+          go test -race -count=1 -coverprofile="$COVERAGE_FILE" ./...
+
+      - name: Set coverage filename
+        id: coverage
+        run: echo "filename=coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out" >> $GITHUB_OUTPUT
 
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.module }}
-          path: coverage-${{ matrix.module }}.out
+          path: ${{ steps.coverage.outputs.filename }}
 
   coverage:
     name: Aggregate coverage

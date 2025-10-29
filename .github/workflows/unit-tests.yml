@@ -64,19 +64,16 @@ jobs:
       - name: Run unit tests (matrix module)
         run: |
           cd ${{ matrix.module }}
-          # Run tests with race detector, skip if no test files exist
-          go test -race -count=1 -coverprofile=../coverage-${{ matrix.module }}.out ./... || {
-            # If tests fail or no tests exist, create empty coverage file
-            echo "Tests failed or no test files found in ${{ matrix.module }}"
+          # Check if any test files exist first
+          TEST_FILES=$(find . -name '*_test.go' -type f 2>/dev/null || true)
+          if [ -z "$TEST_FILES" ]; then
+            echo "No test files found in ${{ matrix.module }} - creating empty coverage file"
             touch ../coverage-${{ matrix.module }}.out
-            # Check if failure was due to no test files
-            if ! find . -name '*_test.go' | grep -q .; then
-              echo "No test files found - this is expected, skipping"
-              exit 0
-            fi
-            # Real test failure - exit with error
-            exit 1
-          }
+            exit 0
+          fi
+          # Run tests with race detector
+          echo "Running tests in ${{ matrix.module }}"
+          go test -race -count=1 -coverprofile=../coverage-${{ matrix.module }}.out ./...
 
       - name: Upload coverage
         if: always()

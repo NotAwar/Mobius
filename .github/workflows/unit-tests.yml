@@ -73,11 +73,18 @@ jobs:
             echo "No test files found in ${{ matrix.module }} - creating empty coverage file"
             cd ..
             touch "$COVERAGE_FILE"
+            echo "Created empty coverage file: $COVERAGE_FILE"
+            ls -la | grep coverage || true
             exit 0
           fi
           # Run tests with race detector
           echo "Running tests in ${{ matrix.module }}"
           go test -race -count=1 -coverprofile="../$COVERAGE_FILE" ./...
+          
+          # Return to workspace root
+          cd ..
+          echo "Coverage file created: $COVERAGE_FILE"
+          ls -la "$COVERAGE_FILE" || echo "Coverage file not found!"
 
       - name: Set coverage filename
         id: coverage

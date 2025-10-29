@@ -33,6 +33,7 @@ jobs:
             ci
             chore
             revert
+            deps
           # Configure which scopes are allowed.
           scopes: |
             server

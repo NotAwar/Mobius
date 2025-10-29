@@ -80,13 +80,16 @@ jobs:
 
       - name: Set coverage filename
         id: coverage
-        run: echo "filename=coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out" >> $GITHUB_OUTPUT
+        run: |
+          SANITIZED_MODULE=$(echo '${{ matrix.module }}' | tr '/' '-')
+          echo "filename=coverage-${SANITIZED_MODULE}.out" >> $GITHUB_OUTPUT
+          echo "artifact_name=coverage-${SANITIZED_MODULE}" >> $GITHUB_OUTPUT
 
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.module }}
+          name: ${{ steps.coverage.outputs.artifact_name }}
           path: ${{ steps.coverage.outputs.filename }}
 
   coverage:

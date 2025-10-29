@@ -39,6 +39,16 @@ issues:
     - gosimple
     - misspell
     - staticcheck
+  # Exclude CLI module from linters (legacy code)
+  - path: server/cli/
+    linters:
+    - errcheck
+    - gosec
+    - unused
+    - bodyclose
+    - gosimple
+    - misspell
+    - staticcheck
   - path: tools/
     linters:
     - errcheck

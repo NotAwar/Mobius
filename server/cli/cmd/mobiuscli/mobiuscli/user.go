@@ -300,7 +300,7 @@ func createBulkUsersCommand() *cli.Command {
 				if *user.SSOEnabled {
 					fmt.Printf("Email: %v SSO: %v\n", *user.Email, *user.SSOEnabled)
 				} else {
-					fmt.Printf("Email: %v Generated password: %v\n", *user.Email, *user.Password)
+					fmt.Printf("Email: %v Generated password: [REDACTED]\n", *user.Email)
 				}
 
 			}

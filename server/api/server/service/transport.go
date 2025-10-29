@@ -195,6 +195,9 @@ func hostListOptionsFromRequest(r *http.Request) (mobius.HostListOptions, error)
 		if err != nil {
 			return hopt, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("Invalid software_id: %s", softwareID)))
 		}
+		if id > uint64(^uint(0)) {
+			return hopt, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("software_id out of range: %s", softwareID)))
+		}
 		sid := uint(id)
 		hopt.SoftwareIDFilter = &sid
 	}
@@ -204,6 +207,9 @@ func hostListOptionsFromRequest(r *http.Request) (mobius.HostListOptions, error)
 		id, err := strconv.ParseUint(softwareVersionID, 10, 64)
 		if err != nil {
 			return hopt, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("Invalid software_version_id: %s", softwareVersionID)))
+		}
+		if id > uint64(^uint(0)) {
+			return hopt, ctxerr.Wrap(r.Context(), badRequest(fmt.Sprintf("software_version_id out of range: %s", softwareVersionID)))
 		}
 		sid := uint(id)
 		hopt.SoftwareVersionIDFilter = &sid

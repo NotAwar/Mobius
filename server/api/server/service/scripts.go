@@ -473,6 +473,9 @@ func (createScriptRequest) DecodeRequest(ctx context.Context, r *http.Request) (
 		if err != nil {
 			return nil, &mobius.BadRequestError{Message: fmt.Sprintf("failed to decode team_id in multipart form: %s", err.Error())}
 		}
+		if teamID > uint64(^uint(0)) {
+			return nil, &mobius.BadRequestError{Message: fmt.Sprintf("team_id out of range: %d", teamID)}
+		}
 		decoded.TeamID = ptr.Uint(uint(teamID))
 	}
 

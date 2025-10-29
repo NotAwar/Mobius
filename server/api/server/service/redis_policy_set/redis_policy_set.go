@@ -222,6 +222,9 @@ func parseHostEntry(v string) (*mobius.PolicySetHost, error) {
 	if err != nil {
 		return nil, fmt.Errorf("invalid id: %s", v)
 	}
+	if id > uint64(^uint(0)) {
+		return nil, fmt.Errorf("id out of range: %d", id)
+	}
 	return &mobius.PolicySetHost{
 		ID:       uint(id),
 		Hostname: parts[1],

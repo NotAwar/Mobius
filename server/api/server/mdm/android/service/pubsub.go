@@ -359,5 +359,9 @@ func (svc *Service) getPolicyID(ctx context.Context, device *androidmanagement.D
 	if err != nil {
 		return nil, ctxerr.Wrapf(ctx, err, "parsing Android policy ID from %s", device.AppliedPolicyName)
 	}
+	// Check bounds to prevent overflow on 32-bit systems
+	if result > uint64(^uint(0)) {
+		return nil, ctxerr.Errorf(ctx, "Android policy ID %d exceeds maximum uint value", result)
+	}
 	return ptr.Uint(uint(result)), nil
 }

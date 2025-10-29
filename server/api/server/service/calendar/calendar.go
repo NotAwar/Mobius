@@ -99,6 +99,10 @@ func getCalendarEventDescriptionAndResolution(ctx context.Context, ds mobius.Dat
 				level.Error(logger).Log("msg", "parse policy id", "err", err)
 				return getDefaultDescription(), mobius.CalendarDefaultResolution, DefaultEventBodyTag
 			}
+			if id > uint64(^uint(0)) {
+				level.Error(logger).Log("msg", "policy id out of range")
+				return getDefaultDescription(), mobius.CalendarDefaultResolution, DefaultEventBodyTag
+			}
 			policyLite, err := ds.PolicyLite(ctx, uint(id))
 			if err != nil {
 				level.Error(logger).Log("msg", "get policy", "err", err)

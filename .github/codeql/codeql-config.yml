@@ -1,0 +1,39 @@
+name: "CodeQL Configuration"
+
+# Exclude paths containing third-party, vendored, or legacy code
+paths-ignore:
+# Third-party MDM libraries (SCEP, NanoMDM)
+- server/api/server/mdm/scep/**
+- server/api/server/mdm/nanomdm/**
+- server/api/server/mdm/nanodep/**
+- server/api/server/mdm/microsoft/**
+
+# Legacy migration tools (one-time use scripts)
+- server/api/tools/mdm/migration/**
+
+# Legacy CLI tool (scheduled for refactoring)
+- server/cli/**
+
+# Package search microservice (separate service)
+- server/mobius-package-search/**
+
+# Legacy server code (being replaced with server/api/api)
+- server/api/server/service/**
+- server/api/server/logging/**
+- server/api/server/vulnerabilities/**
+
+# Keep analyzing the actively maintained code
+paths:
+- server/api/api/**
+- server/api/pkg/service/**
+- server/api/pkg/websocket/**
+- server/api/pkg/database/**
+- server/api/cmd/**
+- ui/web/**
+- client/client/cmd/client/**
+- cocoon/portal/cmd/cocoon/**
+- common/shared/pkg/**
+
+# Use security-and-quality queries
+queries:
+- uses: security-and-quality

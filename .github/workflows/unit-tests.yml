@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        module: [mobius-server, mobius-cli, mobius-client, mobius-cocoon, shared]
+        module: [server/api, server/cli, client/client, cocoon/portal, common/shared]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -44,35 +44,80 @@ jobs:
         with:
           go-version-file: 'go.work'
           cache-dependency-path: |
-            mobius-server/go.sum
-            mobius-cli/go.sum
-            mobius-client/go.sum
-            mobius-cocoon/go.sum
-            shared/go.sum
+            server/api/go.sum
+            server/cli/go.sum
+            client/client/go.sum
+            cocoon/portal/go.sum
+            common/shared/go.sum
 
       - name: Sync workspace and download deps
         run: |
           go work sync
           go env
           # Download deps for all modules to warm the cache
-          (cd mobius-server && go mod download)
-          (cd mobius-cli && go mod download)
-          (cd mobius-client && go mod download)
-          (cd mobius-cocoon && go mod download)
-          (cd shared && go mod download)
+          (cd server/api && go mod download)
+          (cd server/cli && go mod download)
+          (cd client/client && go mod download)
+          (cd cocoon/portal && go mod download)
+          (cd common/shared && go mod download)
 
       - name: Run unit tests (matrix module)
         run: |
-          set -euo pipefail
+          # Create coverage filename by replacing / with -
+          COVERAGE_FILE="coverage-$(echo '${{ matrix.module }}' | tr '/' '-').out"
+          WORKSPACE_ROOT="${GITHUB_WORKSPACE}"
+          COVERAGE_PATH="${WORKSPACE_ROOT}/${COVERAGE_FILE}"
+          
+          echo "Workspace root: $WORKSPACE_ROOT"
+          echo "Coverage file will be: $COVERAGE_PATH"
+          
+          # Check if any test files exist first
           cd ${{ matrix.module }}
-          go test -race -count=1 -coverprofile=../coverage-${{ matrix.module }}.out ./...
+          TEST_FILES=$(find . -name '*_test.go' -type f 2>/dev/null || true)
+          if [ -z "$TEST_FILES" ]; then
+            echo "No test files found in ${{ matrix.module }} - creating empty coverage file"
+            touch "$COVERAGE_PATH"
+            echo "Created empty coverage file at: $COVERAGE_PATH"
+            ls -la "$COVERAGE_PATH"
+            exit 0
+          fi
+          # Run tests with race detector
+          echo "Running tests in ${{ matrix.module }}"
+          go test -race -count=1 -coverprofile="$COVERAGE_PATH" ./...
+          
+          echo "Test complete. Coverage file:"
+          ls -la "$COVERAGE_PATH" || echo "ERROR: Coverage file not found at $COVERAGE_PATH"
+
+      - name: Set coverage filename
+        id: coverage
+        run: |
+          SANITIZED_MODULE=$(echo '${{ matrix.module }}' | tr '/' '-')
+          COVERAGE_FILE="coverage-${SANITIZED_MODULE}.out"
+          WORKSPACE_ROOT="${GITHUB_WORKSPACE}"
+          COVERAGE_PATH="${WORKSPACE_ROOT}/${COVERAGE_FILE}"
+          
+          echo "filename=$COVERAGE_FILE" >> $GITHUB_OUTPUT
+          echo "artifact_name=coverage-${SANITIZED_MODULE}" >> $GITHUB_OUTPUT
+          
+          # Debug: Verify file exists before upload
+          echo "Workspace root: $WORKSPACE_ROOT"
+          echo "Looking for coverage file: $COVERAGE_PATH"
+          if [ -f "$COVERAGE_PATH" ]; then
+            echo "✓ Coverage file found:"
+            ls -lh "$COVERAGE_PATH"
+          else
+            echo "✗ Coverage file NOT found at: $COVERAGE_PATH"
+            echo "Contents of workspace root:"
+            ls -la "$WORKSPACE_ROOT" | grep coverage || echo "No coverage files found"
+          fi
 
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.module }}
-          path: coverage-${{ matrix.module }}.out
+          name: ${{ steps.coverage.outputs.artifact_name }}
+          path: ${{ steps.coverage.outputs.filename }}
+          if-no-files-found: error
 
   coverage:
     name: Aggregate coverage
@@ -81,6 +126,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up Go (for coverage tooling)
         uses: actions/setup-go@v5
         with:
@@ -97,7 +145,7 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
           files=(coverage/**/coverage-*.out)
-          if [ ${  # files[@]} -eq 0 ]; then
+          if [ ${#files[@]} -eq 0 ]; then
             echo "No coverage files found" >&2
             exit 1
           fi
@@ -111,7 +159,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "${GITHUB_WORKSPACE}"
-          export GO111MODULE=on
+          # Use workspace mode to resolve package paths in coverage files
           go tool cover -func=coverage/coverage-merged.out | tee coverage/coverage.txt
           total=$(go tool cover -func=coverage/coverage-merged.out | awk '/total:/ {print $3}')
           {

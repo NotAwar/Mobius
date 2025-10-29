@@ -19,6 +19,84 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  # Validate Score specifications
+  validate-score:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install score-compose
+        run: |
+          # Install score-compose from GitHub releases
+          SCORE_VERSION="0.29.6"
+          wget "https://github.com/score-spec/score-compose/releases/download/${SCORE_VERSION}/score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
+          tar -xzf "score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
+          sudo mv score-compose /usr/local/bin/
+          sudo chmod +x /usr/local/bin/score-compose
+          score-compose --version
+
+      - name: Validate all Score specifications
+        run: |
+          echo "Validating Score specifications..."
+          
+          # Find all score.yaml files
+          SCORE_FILES=$(find . -name "score.yaml" -not -path "*/node_modules/*" -not -path "*/.git/*")
+          
+          EXIT_CODE=0
+          for score_file in $SCORE_FILES; do
+            echo "----------------------------------------"
+            echo "Validating: $score_file"
+            
+            # Validate Score YAML syntax and schema
+            # Check that file has required Score fields: apiVersion and metadata
+            if ! grep -q "^apiVersion: score\.dev" "$score_file"; then
+              echo "❌ Missing or invalid apiVersion in $score_file"
+              EXIT_CODE=1
+              continue
+            fi
+            
+            if ! grep -q "^metadata:" "$score_file"; then
+              echo "❌ Missing metadata section in $score_file"
+              EXIT_CODE=1
+              continue
+            fi
+            
+            # Validate YAML syntax using Python (available in GitHub Actions)
+            if python3 -c "import yaml; yaml.safe_load(open('$score_file'))" 2>/dev/null; then
+              echo "✅ Valid Score specification: $score_file"
+            else
+              echo "❌ Invalid YAML syntax in $score_file"
+              EXIT_CODE=1
+            fi
+          done
+          
+          # Show generated compose files
+          if [ -f docker-compose.yaml ]; then
+            echo "----------------------------------------"
+            echo "Generated Docker Compose preview:"
+            head -n 30 docker-compose.yaml
+          fi
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "----------------------------------------"
+            echo "✅ All Score specifications are valid"
+          else
+            echo "----------------------------------------"
+            echo "❌ Some Score specifications failed validation"
+            exit 1
+          fi
+
+      - name: Upload Score validation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: score-validation-results
+          path: |
+            docker-compose.yaml
+            generated-*.yaml
+            .score-compose/
+          retention-days: 7
+
   # Test and Build
   test:
     runs-on: ${{ matrix.os }}
@@ -37,18 +115,18 @@ jobs:
           cache: true
           cache-dependency-path: |
             go.work.sum
-            mobius-server/go.sum
-            mobius-cli/go.sum
-            mobius-client/go.sum
-            mobius-cocoon/go.sum
-            shared/go.sum
+            server/api/go.sum
+            server/cli/go.sum
+            client/client/go.sum
+            cocoon/portal/go.sum
+            common/shared/go.sum
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: mobius-web/package-lock.json
+          cache-dependency-path: ui/web/package-lock.json
 
       - name: Sync workspace and download dependencies
         shell: bash
@@ -61,28 +139,28 @@ jobs:
             export GOSUMDB="sum.golang.org"
             export GOMAXPROCS=4
           fi
-          (cd mobius-server && go mod download)
-          (cd mobius-cli && go mod download)
-          (cd mobius-client && go mod download)
-          (cd mobius-cocoon && go mod download)
-          (cd shared && go mod download)
+          (cd server/api && go mod download)
+          (cd server/cli && go mod download)
+          (cd client/client && go mod download)
+          (cd cocoon/portal && go mod download)
+          (cd common/shared && go mod download)
 
       - name: Install frontend dependencies
         shell: bash
         run: |
-          cd mobius-web
+          cd ui/web
           npm ci
 
       - name: Build frontend
         shell: bash
         run: |
-          cd mobius-web
+          cd ui/web
           npm run build
 
       - name: Run frontend tests
         shell: bash
         run: |
-          cd mobius-web
+          cd ui/web
           npm test
 
       - name: Run Go tests (all modules)
@@ -96,8 +174,8 @@ jobs:
             export GOCACHE="$(go env GOCACHE)"
           fi
           # Test with minimal output, only show results for packages with actual tests
-          go test -short -count=1 ./mobius-server/... ./mobius-cli/... \
-            ./mobius-client/... ./mobius-cocoon/... ./shared/... | \
+          go test -short -count=1 ./server/api/... ./server/cli/... \
+            ./client/client/... ./cocoon/portal/... ./common/shared/... | \
             grep -v "\[no test files\]" || echo "Tests completed (no test failures)"
 
       - name: Build binaries sanity (server and CLI)
@@ -105,20 +183,20 @@ jobs:
         run: |
           set -euo pipefail
           # Copy frontend build to server
-          mkdir -p mobius-server/static
-          cp -r mobius-web/build/* mobius-server/static/ || \
+          mkdir -p server/api/static
+          cp -r ui/web/build/* server/api/static/ || \
             echo "No frontend build to copy"
           # Windows-specific build optimizations
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             export GOMAXPROCS=4
             export CGO_ENABLED=0
           fi
-          (cd mobius-server && go build ./cmd/api-server)
-          (cd mobius-cli && go build ./cmd/mobiuscli)
+          (cd server/api && go build ./cmd/api-server)
+          (cd server/cli && go build ./cmd/mobiuscli)
 
   # Build Docker Images
   build:
-    needs: test
+    needs: [test, validate-score]
     permissions:
       contents: write      # For release asset uploads and SBOM attachment
       packages: write
@@ -156,13 +234,36 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Determine component path
+        id: componentpath
+        shell: bash
+        run: |
+          case "${{ matrix.component }}" in
+            server)
+              echo "path=server/api" >> "$GITHUB_OUTPUT"
+              ;;
+            cli)
+              echo "path=server/cli" >> "$GITHUB_OUTPUT"
+              ;;
+            client)
+              echo "path=client/client" >> "$GITHUB_OUTPUT"
+              ;;
+            cocoon)
+              echo "path=cocoon/portal" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unknown component: ${{ matrix.component }}"
+              exit 1
+              ;;
+          esac
+
       - name: Show Go build context (CLI only)
         if: matrix.component == 'cli'
-        working-directory: ./mobius-${{ matrix.component }}
+        working-directory: ./${{ steps.componentpath.outputs.path }}
         shell: bash
         run: |
           set +e  # Don't exit on non-zero exit codes for this step
-          echo "=== Go build context for mobius-${{ matrix.component }} ==="
+          echo "=== Go build context for ${{ matrix.component }} ==="
           go version
           echo "Go cache directory: $(go env GOCACHE)"
           echo "Go module cache: $(go env GOMODCACHE)"
@@ -175,7 +276,7 @@ jobs:
 
       - name: Pre-build Go modules cache (CLI only)
         if: matrix.component == 'cli'
-        working-directory: ./mobius-${{ matrix.component }}
+        working-directory: ./${{ steps.componentpath.outputs.path }}
         shell: bash
         run: |
           set +e  # Don't exit on non-zero exit codes for this step
@@ -213,7 +314,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./mobius-${{ matrix.component }}/Dockerfile
+          file: ./${{ steps.componentpath.outputs.path }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -282,22 +383,22 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: mobius-web/package-lock.json
+          cache-dependency-path: ui/web/package-lock.json
 
       - name: Build frontend
         run: |
-          cd mobius-web
+          cd ui/web
           npm ci
           npm run build
 
       - name: Copy frontend to server
         run: |
-          mkdir -p mobius-server/static
-          cp -r mobius-web/build/* mobius-server/static/
+          mkdir -p server/api/static
+          cp -r ui/web/build/* server/api/static/
 
       - name: Build server release binaries
         run: |
-          cd mobius-server
+          cd server/api
           GOOS=linux GOARCH=amd64 go build -o mobius-api-linux-amd64 ./cmd/api-server
           GOOS=linux GOARCH=arm64 go build -o mobius-api-linux-arm64 ./cmd/api-server
           GOOS=darwin GOARCH=amd64 go build -o mobius-api-darwin-amd64 ./cmd/api-server
@@ -306,7 +407,7 @@ jobs:
 
       - name: Build CLI release binaries
         run: |
-          cd mobius-cli
+          cd server/cli
           GOOS=linux GOARCH=amd64 go build -o mobiuscli-linux-amd64 ./cmd/mobiuscli
           GOOS=linux GOARCH=arm64 go build -o mobiuscli-linux-arm64 ./cmd/mobiuscli
           GOOS=darwin GOARCH=amd64 go build -o mobiuscli-darwin-amd64 ./cmd/mobiuscli
@@ -323,8 +424,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            mobius-server/mobius-api-*
-            mobius-cli/mobiuscli-*
+            server/api/mobius-api-*
+            server/cli/mobiuscli-*
             sbom-*.spdx.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

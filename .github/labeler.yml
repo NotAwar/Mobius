@@ -4,32 +4,32 @@
 
 # Server component
 server:
-  - mobius-server/**/*
-  - '!mobius-server/**/*.md'
+  - server/api/**/*
+  - '!server/api/**/*.md'
 
 # CLI component  
 cli:
-  - mobius-cli/**/*
-  - '!mobius-cli/**/*.md'
+  - server/cli/**/*
+  - '!server/cli/**/*.md'
 
 # Client component
 client:
-  - mobius-client/**/*
-  - '!mobius-client/**/*.md'
+  - client/client/**/*
+  - '!client/client/**/*.md'
 
 # Cocoon component
 cocoon:
-  - mobius-cocoon/**/*
-  - '!mobius-cocoon/**/*.md'
+  - cocoon/portal/**/*
+  - '!cocoon/portal/**/*.md'
 
 # Web UI component
 web:
-  - mobius-web/**/*
-  - '!mobius-web/**/*.md'
+  - ui/web/**/*
+  - '!ui/web/**/*.md'
 
 # Shared libraries
 shared:
-  - shared/**/*
+  - common/shared/**/*
 
 # Docker related
 docker:

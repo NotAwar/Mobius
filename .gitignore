@@ -7,13 +7,34 @@
 *.out
 mobius
 /mobiuscli
-client
-cocoon
+/api-server
+/test-output.log
+
+# Module-specific binaries
+server/api/mobius-api
+server/api/mobius
+server/api/api-server*
+server/cli/mobiuscli
+client/client/client
+cocoon/portal/cocoon
+server/mobius-package-search/packageSearch
 
 # output directories
 /build
 vendor
 tmp/
+
+# Frontend artifacts
+server/api/static/_app/
+server/api/static/index.html
+server/api/static/robots.txt
+ui/web/.svelte-kit/
+ui/web/build/
+node_modules/
+package-lock.json
+
+# Score compose state
+.score-compose/
 
 # operating system artifacts
 .DS_Store
@@ -83,9 +104,21 @@ mobius_tables_*.ext
 *.zip
 legacy-backend-archive.tar.gz
 
-mobius-server/mobius-api
-mobius-server/static/
+# Build artifacts
+build/
+server/api/mobius-api
+server/api/static/
+server/api/*.log
+server/api/api-server*
+server/api/mobius
+server/api/test-server*
 
+# Temporary documentation and validation scripts
+BUILD_AND_DEPLOY.md
+MERGE_READINESS_REPORT.md
+validate.ps1
+*-output.log
+*-error.log
 
 # Node.js dependencies for commitlint
 node_modules/

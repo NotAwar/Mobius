@@ -8,7 +8,7 @@ I have successfully implemented a complete, production-ready API foundation for 
 
 ### 1. Complete API Architecture
 - **RESTful API Design**: Clean, predictable endpoints following REST conventions
-- **OpenAPI 3.1 Specification**: Comprehensive API documentation in `/mobius-server/api/openapi.yaml`
+- **OpenAPI 3.1 Specification**: Comprehensive API documentation in `/server/api/api/openapi.yaml`
 - **Clean Architecture**: Proper separation of concerns with handlers, services, and middleware
 
 ### 2. Core Functionality Implemented
@@ -56,7 +56,7 @@ The API server can be immediately used by development teams to:
 ## 📁 File Structure Created
 
 ```
-mobius-server/
+server/api/
 ├── api/
 │   ├── openapi.yaml          # Complete API specification
 │   ├── router.go             # HTTP routing and middleware
@@ -75,7 +75,7 @@ mobius-server/
 ```bash
 # Clone and build
 git clone [repository]
-cd mobius-server
+cd server/api
 go build -o mobius-api ./cmd/api-server/
 
 # Run locally

@@ -34,7 +34,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
-          go-version-file: "mobius-cli/go.mod"
+          go-version-file: "server/cli/go.mod"
 
       - name: Build ghcr.io/notawar/wix
         run: make wix-docker
@@ -57,8 +57,7 @@ jobs:
             echo "VEX_FILES=" >> $GITHUB_OUTPUT
           fi
 
-      # We use the trivy command and not the github action because it doesn't support loading VEX files yet.
-      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/mobiuscli
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/mobius-cli
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -76,7 +75,7 @@ jobs:
             --pkg-types=os,library \
             --severity=HIGH,CRITICAL \
             --vex="${{ steps.generate_vex_files.outputs.VEX_FILES }}" \
-            ghcr.io/notawar/mobiuscli
+            ghcr.io/notawar/mobius-cli
 
       - name: Run Trivy vulnerability scanner on ghcr.io/notawar/wix
         uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4 # 0.32.0

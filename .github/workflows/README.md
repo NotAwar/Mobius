@@ -52,12 +52,60 @@ Manually triggered workflows, workflows that run on a schedule, and workflows tr
 
 ## Notable workflows
 
-- golangci-lint.yml: Lints Go code across modules on push/PR.
-- unit-tests.yml: Runs unit tests per Go module (server, client, cli,
-  cocoon, shared) on push/PR.
-- build-and-deploy.yml: Main CI to test, build, and push Docker images and
-  attach release binaries.
-- trivy-scan.yml: Scans container images for vulnerabilities.
-- dependency-review.yml: PR advisory checks.
-- pr-helm.yaml / release-helm.yaml: Helm charts CI and releases.
-- tfvalidate.yml: Terraform validation.
+### Core CI/CD
+
+- **build-and-deploy.yml**: Main CI/CD pipeline - tests, builds, and pushes
+  Docker images for all components (server, cli, client, cocoon). Handles
+  multi-arch builds and SBOM generation.
+- **unit-tests.yml**: Runs unit tests per Go module (server/api, server/cli,
+  client/client, cocoon/portal, common/shared) with coverage aggregation.
+- **golangci-lint.yml**: Lints Go code across all modules on push/PR.
+
+### Security & Compliance
+
+- **codeql.yml**: CodeQL security analysis for Go and JavaScript/TypeScript
+  code.
+- **dependency-review.yml**: Reviews dependencies for known vulnerabilities on
+  PRs.
+- **check-vulnerabilities-in-released-docker-images.yml**: Scans released
+  container images using Trivy with VEX support.
+- **code-sign-windows.yml**: Signs Windows binaries for release.
+- **update-security.yml**: Monthly security documentation updates and
+  vulnerability checks.
+
+### Deployment & Infrastructure
+
+- **release-helm.yaml**: Publishes Helm charts to GitHub Pages on releases.
+- **update-tuf-timestamp-signature.yaml**: Updates TUF (The Update Framework)
+  timestamps.
+
+### Automation & Maintenance
+
+- **conventional-commits.yml**: Validates PR titles follow conventional commits
+  spec.
+- **auto-label.yml**: Automatically labels PRs based on file changes and
+  content.
+- **auto-label-issues.yml**: Automatically labels issues based on templates.
+- **auto-triage-issues.yml**: Auto-triages new issues.
+- **close-stale-eng-initiated-issues.yml**: Closes stale engineering-initiated
+  issues.
+- **setup-labels.yml**: Sets up repository labels.
+- **update-certs.yml**: Updates certificates.
+- **update-osquery-versions.yml**: Updates osquery version references.
+- **check-updates-timestamps.yml**: Checks update timestamps.
+
+### Deployment with Score
+
+The platform uses [Score](https://score.dev) for platform-agnostic deployment
+specifications. Score files are located at:
+
+- `score.yaml` - Main platform specification
+- `deployments/score.yaml` - Deployment-specific configuration
+- Component-specific score files in module directories
+
+Use `score-compose` to generate Docker Compose configurations from Score specs:
+
+```bash
+score-compose init
+score-compose generate score.yaml
+```

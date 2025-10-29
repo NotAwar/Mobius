@@ -1,483 +1,312 @@
 # Copilot Instructions for Mobius MDM Platform
 
-## Repository Overview
+**CRITICAL: Follow these instructions first. Fall back to additional context gathering only if information here is incomplete.**
 
-Mobius is a modern, API-first Mobile Device Management (MDM) platform designed for self-hosted environments. It provides comprehensive device management, policy enforcement, and application distribution across Windows, macOS, Linux, iOS, and Android devices.
+## Platform Overview
 
-**Key Characteristics:**
-- Enterprise MDM solution (not open source)
-- Go-based backend with Svelte frontend
-- Multi-module monorepo architecture
-- Containerized deployment with Docker
-- RESTful API with JWT authentication
-- Production-ready with comprehensive CI/CD
+Mobius is an API-first, enterprise Mobile Device Management (MDM) platform with a Go backend and Svelte 5 frontend. It manages devices, policies, and applications across Windows, macOS, Linux, iOS, and Android made for being self-hosted in diverse environments.
 
-## Architecture & Structure
+**Architecture Pattern**: Multi-module Go workspace (6 modules) + SvelteKit SPA served as static files by the API server.
 
-### Core Modules (Go Workspace)
+## Repository Structure & Module Organization
+
 ```
-mobius-server/          # Core API server and business logic
-├── api/                # HTTP routing, handlers, middleware
-├── pkg/service/        # Business logic implementations  
-├── cmd/api-server/     # Standalone API server (current)
-└── cmd/mobius/         # Legacy server (deprecated)
+go.work defines 6 Go modules:
+├── server/api/          # Core MDM API server (builds: mobius-api ~10MB)
+│   ├── cmd/api-server/  # Main entry point - starts on :8081
+│   ├── api/             # HTTP: router.go, *_handlers.go, middleware
+│   ├── pkg/service/     # Business logic: services.go (in-memory mock - CURRENT)
+│   └── pkg/websocket/   # Real-time events: hub.go, client.go
+├── server/cli/          # Admin CLI tool (builds: mobiuscli ~49MB, slow build)
+├── client/client/       # Device agent (builds: mobius-client ~8.5MB)
+├── cocoon/portal/       # Enterprise portal (builds: mobius-cocoon ~7.9MB)
+├── server/mobius-package-search/  # Package search microservice
+└── common/shared/       # Shared libraries (crypto, http, file utilities)
 
-mobius-cli/             # Command-line management tool
-├── cmd/mobiuscli/      # CLI application
-└── pkg/               # CLI business logic
-
-mobius-client/          # Device client agents
-├── cmd/client/         # Cross-platform device client
-└── pkg/               # Client libraries
-
-mobius-cocoon/          # Enterprise web portal (future)
-├── cmd/cocoon/         # Web application server
-└── pkg/               # Portal business logic
-
-shared/                 # Common libraries and utilities
-└── pkg/               # Shared Go packages (crypto, http, file ops)
-
-mobius-web/             # Svelte frontend application
-├── src/               # Svelte source code
-├── static/            # Static assets
-└── build/             # Build output (copied to mobius-server/static/)
+ui/web/                  # Svelte 5 + TypeScript frontend
+├── src/                 # SvelteKit source
+├── build/               # Built static files (generated)
+└── svelte.config.js     # @sveltejs/adapter-static, fallback: index.html
 ```
 
-### Technology Stack
-- **Backend**: Go 1.24.4, RESTful API, JWT auth, CORS, rate limiting
-- **Frontend**: Svelte 5, TypeScript, Vite, Vitest for testing
-- **Database**: Embedded storage solutions
-- **Containerization**: Docker with security hardening
-- **CI/CD**: GitHub Actions with 20+ workflows
-- **Monitoring**: Health checks, Prometheus metrics, structured logging
+**Key Build Flow**: `ui/web/build/` → copied to → `server/api/static/` → served by API server at `/`
+
+**IMPORTANT - Module Paths**: Use exact paths from `go.work`:
+- Device client: `./client/client` (NOT `./server/client`)
+- Shared libs: `./common/shared` (NOT `./shared`)
+
+## Critical Build Timing (Windows PowerShell)
+
+**NEVER CANCEL THESE COMMANDS - SET LONG TIMEOUTS:**
+
+```powershell
+# 1. Go workspace sync (5s)
+go work sync
+
+# 2. Dependency downloads (60-70s TOTAL - BE PATIENT)
+cd server/api; go mod download
+cd ../cli; go mod download
+cd ../../client/client; go mod download  
+cd ../../cocoon/portal; go mod download
+cd ../../common/shared; go mod download
+cd ../..
+
+# 3. Frontend deps (8-10s)
+cd ui/web; npm ci; cd ../..
+
+# 4. Build frontend (15-20s)
+cd ui/web; npm run build; cd ../..
+
+# 5. Build all Go modules (60-90s for CLI, 10-20s for others)
+New-Item -ItemType Directory -Force -Path build
+cd server/api; go build -o ../../build/mobius-api ./cmd/api-server
+cd ../cli; go build -o ../../build/mobiuscli ./cmd/mobiuscli  # SLOW 60-75s
+cd ../../client/client; go build -o ../../build/mobius-client ./cmd/client
+cd ../../cocoon/portal; go build -o ../../build/mobius-cocoon ./cmd/cocoon
+cd ../..
+
+# Alternative: Use Makefile (15-20s)
+make clean; make build
+```
+
+**Test Execution (30-35s for Go tests):**
+```powershell
+go test -count=1 ./server/api/... ./server/cli/... ./client/client/... ./cocoon/portal/... ./common/shared/...
+cd ui/web; npm test; cd ../..
+```
+
+## API Architecture Patterns
+
+### Service Layer Pattern (Dependency Injection)
+
+**Handler → Service Interface → Implementation (Mock or DB)**
+
+Example from `server/api/cmd/api-server/main.go`:
+```go
+// Initialize services (currently using mock implementations)
+licenseService := service.NewLicenseService()      // Mock for dev
+deviceService := service.NewDeviceService()
+// ... other services
+
+// Inject into Dependencies struct
+deps := &api.Dependencies{
+    LicenseService: licenseService,
+    DeviceService:  deviceService,
+    WSHub:          wsHub,  // WebSocket hub for real-time events
+    StaticDir:      "./static",
+}
+
+router := api.NewRouter(deps)  // Create Gorilla mux router
+```
+
+**Service Implementation Location**:
+- **Current (Development)**: `server/api/pkg/service/services.go` - In-memory mock services with mutex-protected maps
+- **Note**: `*_service_db.go` files exist but are NOT USED - mock implementation is the current working version
+
+### Router Pattern (Gorilla Mux)
+
+From `server/api/api/router.go`:
+```go
+r := mux.NewRouter()
+r.Use(LoggingMiddleware, CORSMiddleware, SecurityHeadersMiddleware)
+
+api := r.PathPrefix("/api/v1").Subrouter()
+
+// Public routes
+api.HandleFunc("/health", HealthHandler).Methods("GET")
+api.HandleFunc("/auth/login", deps.handleLogin).Methods("POST")
+
+// Protected routes (JWT middleware)
+protected := api.PathPrefix("").Subrouter()
+protected.Use(deps.authMiddleware)
+protected.HandleFunc("/devices", deps.handleListDevices).Methods("GET")
+
+// SPA fallback for frontend routes
+r.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    if !strings.HasPrefix(r.URL.Path, "/api/") {
+        http.ServeFile(w, r, filepath.Join(staticDir, "index.html"))
+    }
+})
+```
+
+**Handler Convention**: `func (d *Dependencies) handle<Action>(w http.ResponseWriter, r *http.Request)`
+
+## Real-Time Features (WebSocket)
+
+**Event Broadcasting Architecture** (`server/api/pkg/websocket/hub.go`):
+
+```go
+type EventType string  // device_status_change, policy_assignment, etc.
+type Event struct {
+    Type      EventType
+    Timestamp time.Time
+    Data      interface{}  // Strongly-typed: DeviceStatusChangeData, etc.
+}
+
+// Hub maintains clients and broadcasts events
+type Hub struct {
+    clients   map[*Client]bool
+    broadcast chan Event
+    register  chan *Client
+    // ...
+}
+```
+
+**Integration Pattern**: Services call `hub.BroadcastEvent()` after state changes:
+```go
+// In DeviceServiceImpl.EnrollDevice():
+if d.wsNotifier != nil {
+    d.wsNotifier.NotifyDeviceStatusChange(device.ID, "", "enrolled")
+}
+```
+
+**WebSocket Endpoint**: `/api/v1/ws` (protected route)
+
+## Frontend Build Integration
+
+**Why Static Adapter**: API server serves both API and UI from single binary.
+
+`ui/web/svelte.config.js`:
+```javascript
+adapter: adapter({
+    pages: 'build',
+    assets: 'build',
+    fallback: 'index.html',  // SPA routing
+    strict: false
+})
+```
+
+**Build Output**: `ui/web/build/` contains `index.html`, `_app/`, `assets/`  
+**Deployment**: Makefile copies `ui/web/build/*` → `server/api/static/`
+
+## Testing Infrastructure
+
+**Bash Test Suites** (in `common/tests/`):
+- `test_mdm_functionality.sh`: 29 API endpoint scenarios
+- `test_websocket_functionality.sh`: 6 real-time event scenarios  
+- `run_all_tests.sh`: Orchestrates all test suites with color output
+
+**Validation Pattern** (from test scripts):
+```bash
+TOKEN=$(curl -s POST /api/v1/auth/login -d '{"email":"admin@mobius.local","password":"admin123"}' | jq -r .token)
+curl -H "Authorization: Bearer $TOKEN" /api/v1/devices
+```
 
 ## Development Workflow
 
-### Build System
-Use the Makefile for common operations:
-```bash
-make help              # Show available targets
-make build            # Build both frontend and backend
-make build-frontend   # Build Svelte frontend only
-make build-backend    # Build Go backend only
-make test             # Run all tests across modules
-make dev              # Start development servers
-make clean            # Clean build artifacts
+### Quick Start
+```powershell
+# Build and run (PowerShell)
+cd server/api
+go build -o mobius-api ./cmd/api-server
+./mobius-api
+
+# Access
+# UI: http://localhost:8081
+# API: http://localhost:8081/api/v1/health
+# Credentials: admin@mobius.local / admin123
 ```
-
-### Frontend Development (mobius-web/)
-```bash
-cd mobius-web
-npm install           # Install dependencies
-npm run dev          # Development server
-npm run build        # Production build
-npm test             # Run Vitest tests
-npm run check        # TypeScript and Svelte checks
-```
-
-### Backend Development
-```bash
-# Each Go module can be built independently
-cd mobius-server && go build -o mobius-api cmd/api-server/main.go
-cd mobius-cli && go build -o mobiuscli cmd/mobiuscli/main.go
-
-# Run tests
-go test ./...         # In any module directory
-```
-
-### API Server Quick Start
-```bash
-cd mobius-server
-go run cmd/api-server/main.go
-# Server starts on http://localhost:8081
-# Default credentials: admin@mobius.local / admin123
-```
-
-## Code Standards & Practices
-
-### Go Code Guidelines
-- Follow standard Go conventions and formatting
-- Use clear package structure with separation of concerns
-- Implement proper error handling and logging
-- Use dependency injection for testability
-- Maintain clean API boundaries between modules
-
-### Frontend Guidelines
-- Use TypeScript for type safety
-- Follow Svelte 5 best practices
-- Implement comprehensive testing with Vitest
-- Use semantic commit messages
-- Maintain responsive design principles
-
-### Security Requirements
-- All dependencies must be kept up-to-date
-- Security vulnerabilities must be addressed immediately
-- Use secure coding practices (input validation, CORS, etc.)
-- Implement proper authentication and authorization
-- Follow Docker security best practices (non-root users)
-
-## Testing Strategy
-
-### Go Testing
-- Unit tests for all business logic
-- Integration tests for API endpoints
-- Mock external dependencies
-- Use table-driven tests where appropriate
-
-### Frontend Testing
-- Component testing with Testing Library
-- Unit tests for utility functions
-- Integration tests for user workflows
-- Visual regression testing where needed
-
-## Deployment & Infrastructure
-
-### Docker Configuration
-- `Dockerfile`: Main application container
-- `Dockerfile.combined`: Combined services
-- `Dockerfile-desktop-linux`: Desktop client
-- Security hardening with non-root user (UID 1001)
-
-### Environment Configuration
-- Development: Local builds with hot reload
-- Production: Containerized deployment
-- CI/CD: Automated testing and deployment pipelines
-
-## API Design Principles
-
-### RESTful API Standards
-- Use standard HTTP methods and status codes
-- Implement consistent error response format
-- Use semantic versioning for API versions
-- Provide comprehensive OpenAPI 3.1 documentation
-
-### Authentication & Authorization
-- JWT-based authentication
-- Role-based access control (admin/operator/viewer)
-- Secure token handling and refresh mechanisms
-
-## Licensing & Business Context
-
-### Product Tiers
-- **Community**: Free tier with basic features
-- **Professional**: Advanced features for small/medium teams
-- **Enterprise**: Full feature set for large organizations
-
-### Key Features
-- Multi-platform device support
-- Policy engine and enforcement
-- Application distribution
-- License management
-- Self-hosted deployment
-
-## Common Tasks & Patterns
 
 ### Adding New API Endpoints
-1. Define handler in `mobius-server/api/handlers/`
-2. Add route in `mobius-server/api/router/`
-3. Implement business logic in `mobius-server/pkg/service/`
-4. Add tests for all layers
-5. Update API documentation
 
-### Adding Frontend Features
-1. Create Svelte components in `mobius-web/src/`
-2. Add TypeScript types
-3. Implement API client calls
-4. Add comprehensive tests
-5. Update navigation and routing
+1. **Define handler** in `server/api/api/<feature>_handlers.go`:
+   ```go
+   func (d *Dependencies) handleNewFeature(w http.ResponseWriter, r *http.Request) {
+       // Parse request → Call service → JSON response
+   }
+   ```
 
-### Security Updates
-1. Monitor for dependency vulnerabilities
-2. Update packages using npm overrides or go.mod
-3. Test thoroughly across all modules
-4. Update security documentation
-5. Validate with security scanning tools
+2. **Register route** in `server/api/api/router.go`:
+   ```go
+   protected.HandleFunc("/new-feature", deps.handleNewFeature).Methods("GET")
+   ```
+
+3. **Implement service** in `server/api/pkg/service/services.go`:
+   ```go
+   func (s *ServiceImpl) NewFeature() (*Result, error) {
+       s.mu.Lock()  // Always lock for mock services
+       defer s.mu.Unlock()
+       // ... business logic
+   }
+   ```
+
+4. **Add tests**: Unit tests + bash integration test in `common/tests/`
+
+### Docker Build Pattern
+
+**Multi-stage Dockerfile** (`server/api/Dockerfile`):
+```dockerfile
+# Stage 1: Go builder with workspace context
+FROM golang:1.25.3-alpine AS builder
+COPY go.work go.work.sum ./
+COPY server/api/go.mod ./server/api/
+# ... copy all module go.mod files
+RUN go work sync && (cd server/api && go mod download)
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -o mobius-api ./cmd/api-server
+
+# Stage 2: Minimal runtime
+FROM alpine:3.20
+RUN addgroup -S app && adduser -S -G app app  # Non-root user
+COPY --from=builder /app/server/api/mobius-api .
+COPY --from=builder /app/server/api/static ./static
+USER app
+CMD ["./mobius-api"]
+```
+
+**Deployment Options** (Platform-Agnostic):
+- **Container-native**: Docker, Podman, containerd
+- **Orchestration**: Kubernetes (Helm charts in `deployments/charts/mobius/`)
+- **Score Specification**: `server/api/score.yaml` - Platform-agnostic deployment config
+- **Future**: Terraform modules, PowerShell deployment scripts, web UI deployment wizard
+- **CI/CD**: Multi-arch builds (linux/amd64, linux/arm64) with Cosign signing
+
+## Common Gotchas
+
+1. **Module Path Confusion**: Always use paths from `go.work`:
+   - Device client: `./client/client` (NOT `./server/client`)
+   - Shared libs: `./common/shared` (NOT `./shared`)
+
+2. **Frontend Not Showing**: Verify `server/api/static/` contains built files from `ui/web/build/`
+
+3. **WebSocket Not Connected**: Ensure `wsHub.Run(ctx)` goroutine started in `main.go`
+
+4. **Slow Builds**: CLI build is inherently slow (49MB binary). Use build cache, don't cancel.
+
+5. **Test Scripts (Bash)**: Integration tests in `common/tests/*.sh` require bash environment:
+   - **Windows**: Use WSL, Git Bash, or similar (OS-agnostic test strategy TBD)
+   - **Linux/macOS**: Run directly with `bash test_mdm_functionality.sh`
+   - Server must be running on `:8081` before executing tests
+
+## Security & Production Patterns
+
+- **Auth**: JWT tokens with role-based access (admin/operator/viewer)
+- **Middleware Chain**: Logging → CORS → Security Headers → Auth (for protected routes)
+- **Input Validation**: Always decode JSON, validate required fields, sanitize inputs
+- **Secret Management**: Environment variables for DB credentials (see `score.yaml`)
+- **Docker Hardening**: Non-root user (UID app), minimal Alpine base, no CGO
 
 ## CI/CD Workflows
 
-The repository includes comprehensive GitHub Actions workflows:
-- Build and deployment pipelines
-- Security vulnerability scanning
-- Dependency checks and updates
-- Multi-platform Docker builds
-- Automated testing and quality checks
+20+ GitHub Actions in `.github/workflows/`:
+- `build-and-deploy.yml`: Main pipeline  
+- `unit-tests.yml`: Go test runner
+- `golangci-lint.yml`: Go linting
+- `codeql.yml`: Security analysis
+- Multi-arch Docker builds (amd64/arm64) with Cosign signing
 
-When contributing, ensure all CI checks pass and follow the established patterns for robust, secure, and maintainable code.
-
-## Troubleshooting Common Issues
-
-### Build Issues
-- Ensure Go 1.24.4+ is installed
-- Run `go mod tidy` in each module
-- Check frontend dependencies with `npm install`
-- Use `make clean` to reset build state
-
-### Development Setup
-- Use `make dev` for full development environment
-- Check API server logs for authentication issues
-- Verify frontend builds complete successfully
-- Ensure Docker daemon is running for container operations
-
-Remember: This is an enterprise MDM platform focused on security, reliability, and scalability. All changes should maintain these core principles while following established architectural patterns.
-=======
-# Mobius Mobile Device Management Platform
-
-**CRITICAL: Always follow these instructions first. Only fall back to additional search and context gathering if the information here is incomplete or found to be in error.**
-
-Mobius is a comprehensive Mobile Device Management (MDM) platform written in Go with a Svelte frontend. It provides device management, policy enforcement, and application distribution across Windows, macOS, Linux, iOS, and Android devices.
-
-## Working Effectively
-
-### Bootstrap and Build Process
-
-**CRITICAL BUILD TIMING - NEVER CANCEL COMMANDS:**
-- Go dependency download: **NEVER CANCEL** - takes 60-70 seconds. Set timeout to 120+ seconds.
-- CLI build: **NEVER CANCEL** - takes 60-75 seconds. Set timeout to 120+ seconds.
-- Server build: **NEVER CANCEL** - takes 10-20 seconds. Set timeout to 60+ seconds.
-- Frontend build: **NEVER CANCEL** - takes 15-20 seconds. Set timeout to 60+ seconds.
-- Complete Makefile build: **NEVER CANCEL** - takes 15-20 seconds total. Set timeout to 60+ seconds.
-- Go tests: **NEVER CANCEL** - takes 30-35 seconds. Set timeout to 90+ seconds.
-
-### Required Environment
-```bash
-# Check versions
-go version  # Must be Go 1.24.4+
-node --version  # Node.js 20+ required
-npm --version   # npm 10+ required
+**Validation Before Commit**:
+```powershell
+cd ui/web; npm run check; npm test  # Frontend
+go test -count=1 ./...              # All Go modules
+make clean; make build              # Full build
 ```
 
-### Build Commands (Execute in Order)
-```bash
-# 1. Sync Go workspace and download dependencies
-go work sync  # ~5 seconds
+## Reference Files
 
-# 2. Download Go dependencies for all modules - NEVER CANCEL: 60-70 seconds
-cd mobius-server && go mod download
-cd ../mobius-cli && go mod download  
-cd ../mobius-client && go mod download
-cd ../mobius-cocoon && go mod download
-cd ../shared && go mod download
-cd ..
-
-# 3. Install frontend dependencies - NEVER CANCEL: 8-10 seconds
-cd mobius-web && npm ci && cd ..
-
-# 4. Build frontend - NEVER CANCEL: 15-20 seconds
-cd mobius-web && npm run build && cd ..
-
-# 5. Build all Go components - NEVER CANCEL: Total 60-90 seconds
-mkdir -p build
-cd mobius-server && go build -o ../build/mobius-api ./cmd/api-server  # 10-20 seconds
-cd ../mobius-cli && go build -o ../build/mobiuscli ./cmd/mobiuscli    # 60-75 seconds
-cd ../mobius-client && go build -o ../build/mobius-client ./cmd/client  # <1 second
-cd ../mobius-cocoon && go build -o ../build/mobius-cocoon ./cmd/cocoon  # <1 second
-cd ..
-
-# Alternative: Use Makefile for complete build - NEVER CANCEL: 15-20 seconds
-make clean && make build
-```
-
-### Testing
-```bash
-# Run Go tests for all modules - NEVER CANCEL: 30-35 seconds
-go test -count=1 ./mobius-server/... ./mobius-cli/... ./mobius-client/... ./mobius-cocoon/... ./shared/...
-
-# Run frontend tests - NEVER CANCEL: 2-3 seconds
-cd mobius-web && npm test && cd ..
-
-# Run frontend type checking
-cd mobius-web && npm run check && cd ..
-```
-
-### Running the Application
-```bash
-# Start the API server (includes frontend)
-./build/mobius-api serve --port 8081
-# OR from mobius-server directory:
-cd mobius-server && ./mobius-api serve --port 8081
-
-# Default credentials:
-# Email: admin@mobius.local
-# Password: admin123
-
-# Server starts at: http://localhost:8081
-```
-
-### CLI Usage
-```bash
-# Test CLI functionality
-./build/mobiuscli --help
-
-# Key CLI commands:
-./build/mobiuscli login          # Authenticate with server
-./build/mobiuscli get devices    # List devices
-./build/mobiuscli get policies   # List policies
-./build/mobiuscli apply          # Apply configurations
-./build/mobiuscli query          # Run live queries
-```
-
-## Validation
-
-### Manual Testing Scenarios
-Always test these core workflows after making changes:
-
-1. **API Server Health Check**
-```bash
-# Start server: ./build/mobius-api serve --port 8081
-curl http://localhost:8081/api/v1/health
-# Should return: {"status":"healthy",...}
-```
-
-2. **Authentication Flow**
-```bash
-# Login and get token
-curl -X POST http://localhost:8081/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@mobius.local","password":"admin123"}'
-# Should return: {"token":"token_admin-1_...","user":{...}}
-```
-
-3. **Core API Endpoints**
-```bash
-TOKEN="your_token_here"
-curl -H "Authorization: Bearer $TOKEN" http://localhost:8081/api/v1/license/status
-curl -H "Authorization: Bearer $TOKEN" http://localhost:8081/api/v1/devices
-curl -H "Authorization: Bearer $TOKEN" http://localhost:8081/api/v1/policies
-curl -H "Authorization: Bearer $TOKEN" http://localhost:8081/api/v1/applications
-```
-
-4. **Frontend Integration**
-```bash
-# Verify frontend is served
-curl http://localhost:8081/
-# Should return HTML starting with: <!doctype html>
-```
-
-5. **CLI Functionality**
-```bash
-./build/mobiuscli --help  # Should show full command list
-./build/mobiuscli login   # Test login flow
-```
-
-### CI/CD Validation
-Always run these before committing:
-```bash
-# Frontend validation
-cd mobius-web && npm run check  # Type checking
-cd mobius-web && npm test       # Unit tests
-
-# Go validation  
-go test -count=1 ./...          # All Go tests
-
-# Build validation
-make clean && make build        # Complete build process
-```
-
-## Repository Structure
-
-```
-/
-├── mobius-server/          # Core API server
-│   ├── cmd/api-server/     # Main server entry point
-│   ├── api/                # HTTP handlers and routing
-│   ├── pkg/service/        # Business logic
-│   └── static/             # Built frontend files (generated)
-├── mobius-cli/             # Command-line interface
-│   └── cmd/mobiuscli/      # CLI entry point
-├── mobius-client/          # Device client agents
-├── mobius-cocoon/          # Enterprise web portal
-├── mobius-web/             # Svelte frontend application
-│   ├── src/                # Frontend source code
-│   └── build/              # Built frontend (generated)
-├── shared/                 # Common Go libraries
-├── tests/                  # Comprehensive test suite
-│   ├── test_mdm_functionality.sh    # 29 test scenarios
-│   ├── test_websocket_functionality.sh  # 6 scenarios
-│   └── run_all_tests.sh    # Test runner
-└── .github/workflows/      # CI/CD pipelines
-```
-
-## Key Architecture Components
-
-### Backend (Go)
-- **mobius-server**: Core MDM server with REST API (builds to ~10MB binary)
-- **mobius-cli**: Administrative CLI tool (builds to ~49MB binary) 
-- **mobius-client**: Device client agent (builds to ~8.5MB binary)
-- **mobius-cocoon**: Enterprise portal service (builds to ~7.9MB binary)
-- **shared**: Common libraries used across components
-
-### Frontend (Svelte)
-- **mobius-web**: Admin web interface built with SvelteKit
-- Built using Vite with TypeScript support
-- Static files served by the API server at runtime
-
-### Database & Storage
-- Currently uses mock/in-memory services for development
-- Designed for PostgreSQL/MySQL in production
-- File storage abstraction for various backends
-
-## Troubleshooting
-
-### Common Build Issues
-- **Go workspace sync failures**: Run `go work sync` first
-- **Frontend build failures**: Ensure Node.js 20+ and run `npm ci` first
-- **Binary not found**: Check that build completed in `build/` directory
-- **Server won't start**: Verify port 8081 is available
-
-### Performance Issues
-- **Slow builds**: Normal - CLI build takes 60-75 seconds, be patient
-- **Test timeouts**: Tests can take 30+ seconds, never cancel early
-- **Large binaries**: Expected - CLI is 49MB due to embedded dependencies
-
-### Development Tips
-- Use `make dev` for development with auto-reload
-- Frontend served at `/` when server running
-- API endpoints at `/api/v1/*`
-- Default admin credentials: `admin@mobius.local` / `admin123`
-- WebSocket endpoint available at `/ws` for real-time features
-
-## Docker & Deployment
-
-### Container Builds
-```bash
-# Build individual component containers
-docker build -f mobius-server/Dockerfile .
-docker build -f mobius-cli/Dockerfile .
-docker build -f mobius-client/Dockerfile . 
-docker build -f mobius-cocoon/Dockerfile .
-```
-
-### Production Deployment
-- Use GitHub Actions workflows in `.github/workflows/`
-- Multi-arch builds for linux/amd64 and linux/arm64
-- Signed container images with Cosign
-- SBOM generation with Syft
-
-## Security Considerations
-
-- JWT-based authentication with role-based access control
-- HTTPS/TLS required for production
-- Rate limiting and CORS protection built-in
-- Security scanning via Trivy in CI/CD
-- Secrets management via environment variables
-
-## Important Files and Locations
-
-### Configuration
-- `go.work` - Go workspace configuration
-- `package.json` - Frontend dependencies in `mobius-web/`
-- `Makefile` - Build automation
-- `.github/workflows/build-and-deploy.yml` - Main CI/CD pipeline
-
-### Documentation
-- `README.md` - Project overview
-- `docs/MASTER_PLAN.md` - Comprehensive development plan
-- `SECURITY.md` - Security policies and procedures
-
-### Testing
-- `tests/run_all_tests.sh` - Comprehensive test runner
-- `tests/test_mdm_functionality.sh` - 29 MDM test scenarios
-- `tests/test_websocket_functionality.sh` - 6 WebSocket test scenarios
-
-Remember: **ALWAYS** validate changes by running the complete build and test process. The platform is mission-critical infrastructure - never skip validation steps.
+- **Architecture**: `docs/MASTER_PLAN.md` (development phases, 80% complete)
+- **API Docs**: `server/api/API_README.md` (endpoint reference)
+- **Main Entry**: `server/api/cmd/api-server/main.go` (service wiring)
+- **Router**: `server/api/api/router.go` (all routes defined here)
+- **Build**: `Makefile` (cross-platform build orchestration)
 

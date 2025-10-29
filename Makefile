@@ -19,52 +19,57 @@ help:
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
-	rm -rf mobius-server/static/_app
-	rm -f mobius-server/static/index.html
-	rm -f mobius-server/static/robots.txt
-	rm -f mobius-server/mobius-api
-	rm -rf mobius-web/.svelte-kit
-	rm -rf mobius-web/build
+	rm -rf server/api/static/_app
+	rm -f server/api/static/index.html
+	rm -f server/api/static/robots.txt
+	rm -f server/api/mobius-api
+	rm -rf ui/web/.svelte-kit
+	rm -rf ui/web/build
+	rm -rf build
 
 # Build Svelte frontend
 build-frontend:
 	@echo "Building Svelte frontend..."
-	cd mobius-web && npm run build
+	cd ui/web && npm run build
 	@echo "Copying frontend files to API server..."
-	mkdir -p mobius-server/static
-	cp -r mobius-web/build/* mobius-server/static/
+	mkdir -p server/api/static
+	cp -r ui/web/build/* server/api/static/
 	@echo "Frontend build complete"
 
 # Build Go backend
 build-backend:
 	@echo "Building Go backend..."
-	cd mobius-server && go build -o mobius-api cmd/api-server/main.go
+	mkdir -p build
+	cd server/api && go build -o ../../build/mobius-api ./cmd/api-server
+	cd server/cli && go build -o ../../build/mobiuscli ./cmd/mobiuscli
+	cd client/client && go build -o ../../build/mobius-client ./cmd/client
+	cd cocoon/portal && go build -o ../../build/mobius-cocoon ./cmd/cocoon
 	@echo "Backend build complete"
 
 # Build everything
 build: build-frontend build-backend
-	@echo "Build complete! Run ./mobius-server/mobius-api to start the server"
+	@echo "Build complete! Run ./build/mobius-api to start the server"
 
 # Run tests
 test:
 	@echo "Running Go tests..."
-	cd mobius-server && go test ./...
-	cd mobius-client && go test ./...
-	cd mobius-cli && go test ./...
-	cd mobius-cocoon && go test ./...
-	cd shared && go test ./...
+	cd server/api && go test ./...
+	cd server/cli && go test ./...
+	cd client/client && go test ./...
+	cd cocoon/portal && go test ./...
+	cd common/shared && go test ./...
 	@echo "Running frontend tests..."
-	cd mobius-web && npm test 2>/dev/null || echo "No frontend tests configured"
+	cd ui/web && npm test 2>/dev/null || echo "No frontend tests configured"
 
 # Development mode
 dev:
 	@echo "Starting development servers..."
 	@echo "Starting backend server..."
-	cd mobius-server && go run cmd/api-server/main.go &
+	cd server/api && go run ./cmd/api-server &
 	@echo "Starting frontend development server..."
-	cd mobius-web && npm run dev
+	cd ui/web && npm run dev
 
 # Install frontend dependencies
 install-deps:
 	@echo "Installing frontend dependencies..."
-	cd mobius-web && npm install
+	cd ui/web && npm install

@@ -53,4 +53,4 @@ jobs:
             Update Orbit CA certs [automated]
   
             Generated automatically with curl mk-ca-bundle.pl script.
-          body: Automated change from [GitHub action](https://github.com/notawar/mobius/actions/workflows/update-certs.yml).
+          body: Automated change from [GitHub action](https://github.com/MobiusDM/Mobius/actions/workflows/update-certs.yml).

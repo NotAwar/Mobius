@@ -88,11 +88,11 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          config-file: ./.github/codeql/codeql-config.yml
           #  For more details on CodeQL's query suites, refer to:
           #  https://docs.github.com/en/code-security/code-scanning/
           #  automatically-scanning-your-code-for-vulnerabilities-and-errors/
           #  customizing-code-scanning  # using-queries-in-ql-packs
-          queries: +security-and-quality
 
       #  Set up Go for the Go analysis
       - name: Set up Go
@@ -111,7 +111,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: 'mobius-web/package-lock.json'
+          cache-dependency-path: 'ui/web/package-lock.json'
 
       #  Custom build step for Go to handle workspace
       - name: Build Go workspace
@@ -122,8 +122,8 @@ jobs:
           go work sync
 
           #  Build each module in the workspace
-          for module in mobius-server mobius-cli mobius-client \
-                        mobius-cocoon shared; do
+          for module in server/api server/cli client/client \
+                        cocoon/portal common/shared; do
             if [ -d "$module" ]; then
               echo "Building module: $module"
               (cd "$module" && go build ./...)

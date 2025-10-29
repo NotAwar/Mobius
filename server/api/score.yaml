@@ -1,0 +1,39 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: mobius-api
+  description: Mobius MDM API Server with Web UI
+
+containers:
+  api:
+    image: .
+    variables:
+      MOBIUS_MYSQL_ADDRESS: "${resources.mysql.host}:${resources.mysql.port}"
+      MOBIUS_MYSQL_DATABASE: "${resources.mysql.database}"
+      MOBIUS_MYSQL_USERNAME: "${resources.mysql.username}"
+      MOBIUS_MYSQL_PASSWORD: "${resources.mysql.password}"
+      MOBIUS_REDIS_ADDRESS: "${resources.redis.host}:${resources.redis.port}"
+      MOBIUS_REDIS_PASSWORD: "${resources.redis.password}"
+      MOBIUS_SERVER_ADDRESS: "0.0.0.0:8081"
+      MOBIUS_STATIC_DIR: "./static"
+      MOBIUS_LOGGING_JSON: "true"
+
+service:
+  ports:
+    api:
+      port: 8081
+      targetPort: 8081
+      protocol: TCP
+
+resources:
+  mysql:
+    type: mysql
+  redis:
+    type: redis
+  dns:
+    type: dns
+  route:
+    type: route
+    params:
+      host: ${resources.dns.host}
+      path: /
+      port: 8081

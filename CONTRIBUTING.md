@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Mobius! We welcome contributions 
 
 ### Prerequisites
 
-- Go 1.24+ 
+- Go 1.25+ 
 - Node.js 18+ (for web UI development)
 - Docker (for containerized development)
 - Git
@@ -119,8 +119,8 @@ Examples:
 make test
 
 # Run specific module tests
-cd mobius-server && go test ./...
-cd mobius-web && npm test
+cd server/api && go test ./...
+cd ui/web && npm test
 ```
 
 ### Writing Tests

@@ -65,7 +65,14 @@ jobs:
         run: |
           set -euo pipefail
           cd ${{ matrix.module }}
-          go test -race -count=1 -coverprofile=../coverage-${{ matrix.module }}.out ./...
+          # Check if there are any Go test files before running tests
+          if find . -name '*_test.go' -print -quit | grep -q .; then
+            go test -race -count=1 -coverprofile=../coverage-${{ matrix.module }}.out ./...
+          else
+            echo "No test files found in ${{ matrix.module }}, skipping tests"
+            # Create empty coverage file to avoid artifact upload failures
+            touch ../coverage-${{ matrix.module }}.out
+          fi
 
       - name: Upload coverage
         if: always()

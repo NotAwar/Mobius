@@ -247,7 +247,7 @@ func (db *DB) Restore(backupPath string) error {
 		return fmt.Errorf("failed to read backup file: %w", err)
 	}
 
-	if err := os.WriteFile(db.config.Path, input, 0644); err != nil {
+	if err := os.WriteFile(db.config.Path, input, 0600); err != nil {
 		return fmt.Errorf("failed to write database file: %w", err)
 	}
 

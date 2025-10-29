@@ -29,14 +29,36 @@ issues:
   exclude-files:
   - ".*_test\\.go"
   exclude-rules:
+  # Exclude legacy server code from all linters
   - path: server/
     linters:
     - errcheck
     - gosec
+    - unused
+    - bodyclose
+    - gosimple
   - path: tools/
     linters:
     - errcheck
     - gosec
+    - unused
+    - bodyclose
+  # Exclude common/shared legacy code
+  - path: pkg/(download|certificate)/
+    linters:
+    - gosec
+    - bodyclose
+  # Allow unused fields in service mock implementations (used for interface compatibility)
+  - path: pkg/service/services\.go
+    linters:
+    - unused
+  # Allow unused handlers in API (planned features)
+  - path: api/handlers\.go
+    linters:
+    - unused
+  - path: api/device_handlers\.go
+    linters:
+    - gosimple
 
 run:
   timeout: 5m

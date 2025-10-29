@@ -59,8 +59,13 @@ jobs:
             
             if [ -n "$CONTAINER_NAME" ]; then
               # Validate with placeholder image (for containers with image: .)
-              # Skip validation of resource provisioning (allows service references)
-              if score-compose generate "$score_file" --image "${CONTAINER_NAME}=placeholder:latest" --skip-validation --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+              # Provide default values for common resources to avoid provisioning errors
+              if score-compose generate "$score_file" \
+                --image "${CONTAINER_NAME}=placeholder:latest" \
+                --property "resources.mysql.type=mysql" \
+                --property "resources.redis.type=redis" \
+                --property "resources.api.type=service" \
+                --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
                 echo "✅ Valid Score specification: $score_file"
               else
                 echo "❌ Invalid Score specification: $score_file"
@@ -68,7 +73,11 @@ jobs:
               fi
             else
               # Generate without image (no containers defined)
-              if score-compose generate "$score_file" --skip-validation --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+              if score-compose generate "$score_file" \
+                --property "resources.mysql.type=mysql" \
+                --property "resources.redis.type=redis" \
+                --property "resources.api.type=service" \
+                --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
                 echo "✅ Valid Score specification: $score_file"
               else
                 echo "❌ Invalid Score specification: $score_file"

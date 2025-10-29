@@ -39,6 +39,9 @@ jobs:
         run: |
           echo "Validating Score specifications..."
           
+          # Initialize score-compose in the repository root
+          score-compose init
+          
           # Find all score.yaml files
           SCORE_FILES=$(find . -name "score.yaml" -not -path "*/node_modules/*" -not -path "*/.git/*")
           
@@ -46,22 +49,25 @@ jobs:
           for score_file in $SCORE_FILES; do
             echo "----------------------------------------"
             echo "Validating: $score_file"
-            DIR=$(dirname "$score_file")
             
-            # Generate docker-compose.yaml to validate the spec
-            cd "$DIR"
-            if score-compose generate score.yaml --output generated-compose.yaml; then
+            # Validate the Score spec by generating docker-compose.yaml
+            # Remove leading ./ from path for cleaner output
+            CLEAN_PATH="${score_file#./}"
+            
+            if score-compose generate "$score_file" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
               echo "✅ Valid Score specification: $score_file"
-              # Show generated output for verification
-              echo "Generated Docker Compose preview:"
-              head -n 20 generated-compose.yaml
-              rm generated-compose.yaml
             else
               echo "❌ Invalid Score specification: $score_file"
               EXIT_CODE=1
             fi
-            cd - > /dev/null
           done
+          
+          # Show generated compose files
+          if [ -f docker-compose.yaml ]; then
+            echo "----------------------------------------"
+            echo "Generated Docker Compose preview:"
+            head -n 30 docker-compose.yaml
+          fi
           
           if [ $EXIT_CODE -eq 0 ]; then
             echo "----------------------------------------"
@@ -78,7 +84,9 @@ jobs:
         with:
           name: score-validation-results
           path: |
-            **/generated-compose.yaml
+            docker-compose.yaml
+            generated-*.yaml
+            .score-compose/
           retention-days: 7
 
   # Test and Build

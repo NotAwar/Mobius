@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/notawar/mobius/server/api/pkg/database"
@@ -28,6 +29,32 @@ type AppConfig struct {
 
 	// Cleanup configuration
 	Cleanup CleanupConfig
+
+	// Static file serving directory (for frontend)
+	StaticDir string
+
+	// MySQL configuration (Score-compatible)
+	MySQL MySQLConfig
+
+	// Redis configuration (Score-compatible)
+	Redis RedisConfig
+
+	// JSON logging (Score-compatible)
+	LoggingJSON bool
+}
+
+// MySQLConfig holds MySQL database settings (Score-compatible)
+type MySQLConfig struct {
+	Address  string // Format: "host:port"
+	Database string
+	Username string
+	Password string
+}
+
+// RedisConfig holds Redis cache settings (Score-compatible)
+type RedisConfig struct {
+	Address  string // Format: "host:port"
+	Password string
 }
 
 // ServerConfig holds server-specific settings
@@ -69,11 +96,38 @@ type CleanupConfig struct {
 }
 
 // LoadConfig loads configuration from environment variables and defaults
+// Supports both legacy MOBIUS_* variables and Score specification variables
 func LoadConfig() (*AppConfig, error) {
+	// Determine server address - Score uses MOBIUS_SERVER_ADDRESS
+	serverAddress := getEnv("MOBIUS_SERVER_ADDRESS", "")
+	var host string
+	var port int
+
+	if serverAddress != "" {
+		// Parse MOBIUS_SERVER_ADDRESS (format: "host:port")
+		parts := strings.Split(serverAddress, ":")
+		if len(parts) == 2 {
+			host = parts[0]
+			if parsedPort, err := strconv.Atoi(parts[1]); err == nil {
+				port = parsedPort
+			} else {
+				port = 8081 // fallback on parse error
+			}
+		} else {
+			// Invalid format, use defaults
+			host = "0.0.0.0"
+			port = 8081
+		}
+	} else {
+		// Fallback to legacy MOBIUS_HOST:MOBIUS_PORT format
+		host = getEnv("MOBIUS_HOST", "0.0.0.0")
+		port = getEnvAsInt("MOBIUS_PORT", 8081)
+	}
+
 	config := &AppConfig{
 		Server: ServerConfig{
-			Port:         getEnvAsInt("MOBIUS_PORT", 8081),
-			Host:         getEnv("MOBIUS_HOST", "0.0.0.0"),
+			Port:         port,
+			Host:         host,
 			ReadTimeout:  30 * time.Second,
 			WriteTimeout: 30 * time.Second,
 		},
@@ -108,6 +162,25 @@ func LoadConfig() (*AppConfig, error) {
 			TokenRetentionHours:  getEnvAsInt("MOBIUS_CLEANUP_TOKENS_HOURS", 24),
 			DeletedDevicesDays:   getEnvAsInt("MOBIUS_CLEANUP_DELETED_DEVICES_DAYS", 7),
 		},
+		// Score-compatible static file directory
+		StaticDir: getEnv("MOBIUS_STATIC_DIR", "./static"),
+
+		// Score-compatible MySQL configuration
+		MySQL: MySQLConfig{
+			Address:  getEnv("MOBIUS_MYSQL_ADDRESS", ""),
+			Database: getEnv("MOBIUS_MYSQL_DATABASE", "mobius"),
+			Username: getEnv("MOBIUS_MYSQL_USERNAME", ""),
+			Password: getEnv("MOBIUS_MYSQL_PASSWORD", ""),
+		},
+
+		// Score-compatible Redis configuration
+		Redis: RedisConfig{
+			Address:  getEnv("MOBIUS_REDIS_ADDRESS", ""),
+			Password: getEnv("MOBIUS_REDIS_PASSWORD", ""),
+		},
+
+		// Score-compatible JSON logging
+		LoggingJSON: getEnvAsBool("MOBIUS_LOGGING_JSON", false),
 	}
 
 	// Validate configuration

@@ -19,6 +19,68 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  # Validate Score specifications
+  validate-score:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install score-compose
+        run: |
+          # Install score-compose from GitHub releases
+          SCORE_VERSION="0.19.2"
+          wget "https://github.com/score-spec/score-compose/releases/download/${SCORE_VERSION}/score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
+          tar -xzf "score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
+          sudo mv score-compose /usr/local/bin/
+          sudo chmod +x /usr/local/bin/score-compose
+          score-compose --version
+
+      - name: Validate all Score specifications
+        run: |
+          echo "Validating Score specifications..."
+          
+          # Find all score.yaml files
+          SCORE_FILES=$(find . -name "score.yaml" -not -path "*/node_modules/*" -not -path "*/.git/*")
+          
+          EXIT_CODE=0
+          for score_file in $SCORE_FILES; do
+            echo "----------------------------------------"
+            echo "Validating: $score_file"
+            DIR=$(dirname "$score_file")
+            
+            # Generate docker-compose.yaml to validate the spec
+            cd "$DIR"
+            if score-compose generate score.yaml --output generated-compose.yaml; then
+              echo "✅ Valid Score specification: $score_file"
+              # Show generated output for verification
+              echo "Generated Docker Compose preview:"
+              head -n 20 generated-compose.yaml
+              rm generated-compose.yaml
+            else
+              echo "❌ Invalid Score specification: $score_file"
+              EXIT_CODE=1
+            fi
+            cd - > /dev/null
+          done
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "----------------------------------------"
+            echo "✅ All Score specifications are valid"
+          else
+            echo "----------------------------------------"
+            echo "❌ Some Score specifications failed validation"
+            exit 1
+          fi
+
+      - name: Upload Score validation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: score-validation-results
+          path: |
+            **/generated-compose.yaml
+          retention-days: 7
+
   # Test and Build
   test:
     runs-on: ${{ matrix.os }}
@@ -118,7 +180,7 @@ jobs:
 
   # Build Docker Images
   build:
-    needs: test
+    needs: [test, validate-score]
     permissions:
       contents: write      # For release asset uploads and SBOM attachment
       packages: write

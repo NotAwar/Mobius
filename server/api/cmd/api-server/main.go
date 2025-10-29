@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,19 +13,36 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/notawar/mobius/server/api/api"
+	"github.com/notawar/mobius/server/api/pkg/config"
 	"github.com/notawar/mobius/server/api/pkg/service"
 	"github.com/notawar/mobius/server/api/pkg/websocket"
 )
 
 func main() {
-	// Configure logging for development
-	zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	// Load configuration from environment
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to load configuration")
+	}
 
-	addr := ":8081"
+	// Configure logging (use JSON format if MOBIUS_LOGGING_JSON=true)
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	if cfg.LoggingJSON {
+		log.Logger = log.Output(os.Stderr)
+	} else {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
+
+	// Build server address from config (Port and Host)
+	addr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
+	if cfg.Server.Host == "" {
+		addr = fmt.Sprintf(":%d", cfg.Server.Port)
+	}
 
 	log.Info().
 		Str("addr", addr).
+		Str("static_dir", cfg.StaticDir).
+		Bool("json_logging", cfg.LoggingJSON).
 		Msg("Starting Mobius MDM API server")
 
 	// Initialize services
@@ -51,7 +69,7 @@ func main() {
 		ApplicationService: applicationService,
 		AuthService:        authService,
 		WSHub:              wsHub,
-		StaticDir:          "./static", // Serve Svelte frontend from static directory
+		StaticDir:          cfg.StaticDir, // Use Score-compatible static directory
 	}
 
 	// Create router

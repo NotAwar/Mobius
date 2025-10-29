@@ -139,15 +139,170 @@ Common utilities used by both products:
 
 ## Installation & Usage
 
-Each product can be built and deployed independently:
+### Option 1: Direct Execution (Development)
+
+Each product can be built and run independently:
 
 ```bash
-# Build server
-cd server/api && go build -o ../build/mobius ./cmd/mobius
+# Build and run API server
+cd server/api
+go build -o mobius-api ./cmd/api-server
+./mobius-api
 
 # Build CLI  
-cd server/cli && go build -o ../build/mobiuscli ./cmd/mobiuscli
+cd server/cli
+go build -o mobiuscli ./cmd/mobiuscli
 ```
+
+### Option 2: Docker Deployment
+
+Run with Docker Compose:
+
+```bash
+# Using docker-compose.yml (hardcoded MySQL/Redis)
+docker-compose up -d
+
+# Or using docker-compose.score.yaml (pre-configured for production)
+docker-compose -f docker-compose.score.yaml up -d
+```
+
+### Option 3: Score-Based Deployment (Recommended for Production)
+
+Mobius supports the [Score specification](https://score.dev) for platform-agnostic deployments. Score allows you to define your workload once and deploy it anywhere - Docker Compose, Kubernetes, or other platforms.
+
+#### What is Score?
+
+Score is a specification for describing cloud workloads in a vendor-neutral way. Instead of writing multiple deployment configurations (docker-compose.yml for local, Kubernetes manifests for production), you write one `score.yaml` file that can be translated to any platform.
+
+#### Installing Score CLI
+
+```bash
+# macOS (Homebrew)
+brew install score-spec/tap/score-compose
+
+# Linux/WSL (direct download)
+SCORE_VERSION="0.19.2"
+wget "https://github.com/score-spec/score-compose/releases/download/${SCORE_VERSION}/score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
+tar -xzf "score-compose_${SCORE_VERSION}_linux_amd64.tar.gz"
+sudo mv score-compose /usr/local/bin/
+sudo chmod +x /usr/local/bin/score-compose
+
+# Verify installation
+score-compose --version
+```
+
+#### Deploying with Score
+
+1. **Generate Docker Compose from Score specification:**
+
+```bash
+# For API server
+cd server/api
+score-compose generate score.yaml --output docker-compose.generated.yaml
+
+# For full platform deployment
+cd deployments
+score-compose generate score.yaml --output docker-compose.generated.yaml
+```
+
+2. **Customize environment variables (optional):**
+
+```bash
+# Override defaults with .env file
+cat > .env << EOF
+MOBIUS_MYSQL_ADDRESS=mysql:3306
+MOBIUS_MYSQL_DATABASE=mobius
+MOBIUS_MYSQL_USERNAME=mobius
+MOBIUS_MYSQL_PASSWORD=secure-password-here
+MOBIUS_REDIS_ADDRESS=redis:6379
+MOBIUS_SERVER_ADDRESS=0.0.0.0:8081
+MOBIUS_STATIC_DIR=./static
+MOBIUS_LOGGING_JSON=true
+EOF
+```
+
+3. **Deploy with generated Docker Compose:**
+
+```bash
+docker-compose -f docker-compose.generated.yaml up -d
+```
+
+#### Score Environment Variables
+
+Mobius reads the following Score-compatible environment variables:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MOBIUS_SERVER_ADDRESS` | Server bind address | `:8081` |
+| `MOBIUS_STATIC_DIR` | Static files directory (frontend) | `./static` |
+| `MOBIUS_MYSQL_ADDRESS` | MySQL server address | `localhost:3306` |
+| `MOBIUS_MYSQL_DATABASE` | MySQL database name | `mobius` |
+| `MOBIUS_MYSQL_USERNAME` | MySQL username | (empty) |
+| `MOBIUS_MYSQL_PASSWORD` | MySQL password | (empty) |
+| `MOBIUS_REDIS_ADDRESS` | Redis server address | `localhost:6379` |
+| `MOBIUS_REDIS_PASSWORD` | Redis password | (empty) |
+| `MOBIUS_LOGGING_JSON` | Enable JSON logging | `false` |
+
+#### Kubernetes Deployment
+
+Use `score-k8s` to generate Kubernetes manifests:
+
+```bash
+# Install score-k8s
+brew install score-spec/tap/score-k8s
+
+# Generate Kubernetes manifests
+score-k8s generate score.yaml --output k8s-manifests/
+
+# Deploy to Kubernetes
+kubectl apply -f k8s-manifests/
+```
+
+#### Benefits of Score
+
+- **Write Once, Deploy Anywhere**: Single `score.yaml` works for Docker, Kubernetes, Helm, etc.
+- **Environment Consistency**: Same configuration across dev, staging, production
+- **Vendor Independence**: No lock-in to specific orchestration platforms
+- **CI/CD Integration**: Automated validation ensures specs stay valid (see `.github/workflows/build-and-deploy.yml`)
+- **Type Safety**: Strongly-typed resource dependencies (MySQL, Redis) prevent configuration errors
+
+#### Example Score Specification
+
+```yaml
+apiVersion: score.dev/v1b1
+metadata:
+  name: mobius-api
+  description: Mobius MDM API Server
+
+containers:
+  api:
+    image: ghcr.io/mobiusdm/mobius/api:latest
+    variables:
+      MOBIUS_MYSQL_ADDRESS: "${resources.mysql.host}:${resources.mysql.port}"
+      MOBIUS_MYSQL_DATABASE: "${resources.mysql.database}"
+      MOBIUS_SERVER_ADDRESS: "0.0.0.0:8081"
+      MOBIUS_STATIC_DIR: "./static"
+
+service:
+  ports:
+    api:
+      port: 8081
+      targetPort: 8081
+
+resources:
+  mysql:
+    type: mysql
+  redis:
+    type: redis
+```
+
+For complete Score specifications, see:
+
+- `server/api/score.yaml` - API server deployment
+- `server/cli/score.yaml` - CLI tools deployment
+- `client/client/score.yaml` - Device client deployment
+- `cocoon/portal/score.yaml` - Enterprise portal deployment
+- `deployments/score.yaml` - Full platform deployment
 
 ## Development
 

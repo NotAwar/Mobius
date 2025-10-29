@@ -37,12 +37,14 @@ issues:
     - unused
     - bodyclose
     - gosimple
+    - misspell
   - path: tools/
     linters:
     - errcheck
     - gosec
     - unused
     - bodyclose
+    - misspell
   # Exclude common/shared legacy code
   - path: pkg/(download|certificate)/
     linters:

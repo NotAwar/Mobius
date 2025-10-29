@@ -12,10 +12,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Migration SQL will be loaded from external files
-// This avoids the embed issue and allows for runtime flexibility
-const initialSchemaMigration = "../migrations/001_initial_schema.up.sql"
-
 // Config represents database configuration
 type Config struct {
 	// Database path (e.g., "./mobius.db" or ":memory:")

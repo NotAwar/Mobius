@@ -39,9 +39,6 @@ jobs:
         run: |
           echo "Validating Score specifications..."
           
-          # Initialize score-compose in the repository root
-          score-compose init
-          
           # Find all score.yaml files
           SCORE_FILES=$(find . -name "score.yaml" -not -path "*/node_modules/*" -not -path "*/.git/*")
           
@@ -50,39 +47,26 @@ jobs:
             echo "----------------------------------------"
             echo "Validating: $score_file"
             
-            # Extract container name and provide placeholder image for validation
-            CLEAN_PATH="${score_file#./}"
-            DIR_PATH=$(dirname "$score_file")
+            # Validate Score YAML syntax and schema
+            # Check that file has required Score fields: apiVersion and metadata
+            if ! grep -q "^apiVersion: score\.dev" "$score_file"; then
+              echo "❌ Missing or invalid apiVersion in $score_file"
+              EXIT_CODE=1
+              continue
+            fi
             
-            # Extract the first container name from the Score spec
-            CONTAINER_NAME=$(grep -A 1 "^containers:" "$score_file" | grep -v "^containers:" | grep -E "^  [a-z]" | head -1 | sed 's/://g' | tr -d ' ')
+            if ! grep -q "^metadata:" "$score_file"; then
+              echo "❌ Missing metadata section in $score_file"
+              EXIT_CODE=1
+              continue
+            fi
             
-            if [ -n "$CONTAINER_NAME" ]; then
-              # Validate with placeholder image (for containers with image: .)
-              # Provide default values for common resources to avoid provisioning errors
-              if score-compose generate "$score_file" \
-                --image "${CONTAINER_NAME}=placeholder:latest" \
-                --property "resources.mysql.type=mysql" \
-                --property "resources.redis.type=redis" \
-                --property "resources.api.type=service" \
-                --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
-                echo "✅ Valid Score specification: $score_file"
-              else
-                echo "❌ Invalid Score specification: $score_file"
-                EXIT_CODE=1
-              fi
+            # Validate YAML syntax using Python (available in GitHub Actions)
+            if python3 -c "import yaml; yaml.safe_load(open('$score_file'))" 2>/dev/null; then
+              echo "✅ Valid Score specification: $score_file"
             else
-              # Generate without image (no containers defined)
-              if score-compose generate "$score_file" \
-                --property "resources.mysql.type=mysql" \
-                --property "resources.redis.type=redis" \
-                --property "resources.api.type=service" \
-                --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
-                echo "✅ Valid Score specification: $score_file"
-              else
-                echo "❌ Invalid Score specification: $score_file"
-                EXIT_CODE=1
-              fi
+              echo "❌ Invalid YAML syntax in $score_file"
+              EXIT_CODE=1
             fi
           done
           

@@ -30,6 +30,7 @@
   let showFilters = false;
   let selectedDevices: Set<string> = new Set();
   let actionLoading: { [key: string]: boolean } = {};
+  let showEnrollModal = false;
 
   // Pagination
   $: totalPages = Math.ceil(totalDevices / itemsPerPage);
@@ -38,6 +39,14 @@
   onMount(async () => {
     await loadDevices();
   });
+
+  function openEnrollModal() {
+    showEnrollModal = true;
+  }
+
+  function closeEnrollModal() {
+    showEnrollModal = false;
+  }
 
   async function loadDevices() {
     loading = true;
@@ -202,7 +211,7 @@
           <RefreshCw size={16} class={loading ? 'spinning' : ''} />
           Refresh
         </button>
-        <button class="btn btn-primary">
+        <button on:click={openEnrollModal} class="btn btn-primary">
           <Plus size={16} />
           Enroll Device
         </button>
@@ -447,6 +456,63 @@
     {/if}
   </div>
 </Layout>
+
+<!-- Enrollment Modal -->
+{#if showEnrollModal}
+  <div class="modal-overlay" on:click={closeEnrollModal} on:keydown={(e) => e.key === 'Escape' && closeEnrollModal()} role="button" tabindex="0">
+    <div class="modal-content" on:click|stopPropagation on:keydown={(e) => {}} role="dialog" tabindex="-1">
+      <div class="modal-header">
+        <h2>Enroll New Device</h2>
+        <button on:click={closeEnrollModal} class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-box">
+          <h3>Device Enrollment Instructions</h3>
+          <p>To enroll a device, follow these platform-specific instructions:</p>
+          
+          <div class="enrollment-section">
+            <h4>macOS / iOS</h4>
+            <ol>
+              <li>Download the Mobius MDM enrollment profile</li>
+              <li>Open System Settings → Profiles</li>
+              <li>Install the Mobius MDM profile</li>
+              <li>Enter your credentials when prompted</li>
+            </ol>
+          </div>
+
+          <div class="enrollment-section">
+            <h4>Windows</h4>
+            <ol>
+              <li>Download and run the Mobius enrollment installer</li>
+              <li>Follow the installation wizard</li>
+              <li>Enter your organization code: <code>MOBIUS-MDM-2025</code></li>
+              <li>Complete authentication</li>
+            </ol>
+          </div>
+
+          <div class="enrollment-section">
+            <h4>Android / Linux</h4>
+            <ol>
+              <li>Install the Mobius agent from your platform's store</li>
+              <li>Open the agent and tap "Enroll Device"</li>
+              <li>Enter server URL: <code>http://localhost:8081</code></li>
+              <li>Complete authentication</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="alert-info">
+          <strong>Note:</strong> Device enrollment features are currently under development. 
+          Full enrollment workflows will be available in a future release.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button on:click={closeEnrollModal} class="btn btn-secondary">Close</button>
+        <button class="btn btn-primary" disabled>Download Enrollment Package</button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
   .devices-page {
@@ -830,6 +896,139 @@
 
   :global(.spinning) {
     animation: spin 1s linear infinite;
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 0.75rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #1c2f38;
+    margin: 0;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+  }
+
+  .close-btn:hover {
+    background-color: #f1f5f9;
+    color: #1c2f38;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .info-box {
+    background-color: #f8fafc;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .info-box h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1c2f38;
+    margin-bottom: 0.75rem;
+  }
+
+  .info-box p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .enrollment-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .enrollment-section h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1c2f38;
+    margin-bottom: 0.5rem;
+  }
+
+  .enrollment-section ol {
+    margin-left: 1.5rem;
+    color: #475569;
+  }
+
+  .enrollment-section li {
+    margin-bottom: 0.5rem;
+  }
+
+  .enrollment-section code {
+    background-color: #1c2f38;
+    color: #d4af37;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  .alert-info {
+    background-color: #dbeafe;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    color: #1e40af;
+  }
+
+  .alert-info strong {
+    font-weight: 600;
   }
 
   @media (max-width: 768px) {

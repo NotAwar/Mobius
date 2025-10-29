@@ -52,6 +52,7 @@
   <div class="login-card">
     <!-- Logo/Header -->
     <div class="login-header">
+      <img src="/logo.png" alt="Mobius Logo" class="login-logo" />
       <h1>Mobius MDM</h1>
       <p>Mobile Device Management</p>
     </div>
@@ -138,46 +139,60 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--brand-blue) 0%, #0f1f27 100%);
     padding: 1rem;
   }
 
   .login-card {
     background: white;
     border-radius: 1rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px;
+    max-width: 480px;
     overflow: hidden;
   }
 
   .login-header {
-    background: var(--primary-color);
+    background: var(--brand-blue);
     color: white;
-    padding: 2rem;
+    padding: 2.5rem 2rem;
     text-align: center;
+    border-bottom: 3px solid var(--brand-gold);
+  }
+
+  .login-logo {
+    height: 80px;
+    width: auto;
+    margin: 0 auto 1.25rem auto;
+    display: block;
+    filter: brightness(0) invert(1);
   }
 
   .login-header h1 {
+    font-family: 'Montserrat', sans-serif;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 300;
     margin: 0 0 0.5rem 0;
+    color: var(--brand-gold);
+    letter-spacing: 0.05em;
   }
 
   .login-header p {
     margin: 0;
     opacity: 0.9;
     font-size: 0.875rem;
+    font-family: 'Ubuntu', sans-serif;
   }
 
   .login-form {
-    padding: 2rem;
+    padding: 2.5rem;
   }
 
   .login-form h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 300;
+    color: var(--brand-blue);
     margin: 0 0 0.5rem 0;
     text-align: center;
   }
@@ -185,8 +200,9 @@
   .login-subtitle {
     text-align: center;
     color: var(--text-secondary);
-    margin: 0 0 2rem 0;
-    font-size: 0.875rem;
+    margin: 0 0 2.5rem 0;
+    font-size: 0.9375rem;
+    font-family: 'Ubuntu', sans-serif;
   }
 
   .error-message {
@@ -208,9 +224,10 @@
   .form-group label {
     display: block;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--brand-blue);
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
+    font-family: 'Ubuntu', sans-serif;
   }
 
   .form-group input {
@@ -221,12 +238,13 @@
     font-size: 1rem;
     transition: all 0.2s;
     background: white;
+    font-family: 'Ubuntu', sans-serif;
   }
 
   .form-group input:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--brand-gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
   }
 
   .form-group input:disabled {
@@ -258,7 +276,7 @@
   }
 
   .password-toggle:hover {
-    color: var(--text-primary);
+    color: var(--brand-gold);
   }
 
   .password-toggle:disabled {
@@ -268,7 +286,7 @@
 
   .login-button {
     width: 100%;
-    background: var(--primary-color);
+    background: var(--brand-blue);
     color: white;
     border: none;
     padding: 0.875rem;
@@ -281,10 +299,12 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    font-family: 'Ubuntu', sans-serif;
   }
 
   .login-button:hover:not(:disabled) {
-    background: var(--primary-hover);
+    background: var(--brand-gold);
+    color: var(--brand-blue);
   }
 
   .login-button:disabled {
@@ -308,20 +328,22 @@
   .demo-info {
     margin-top: 2rem;
     padding: 1rem;
-    background: #f8fafc;
+    background: rgba(212, 175, 55, 0.05);
     border-radius: 0.5rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(212, 175, 55, 0.2);
   }
 
   .demo-info p {
     margin: 0.25rem 0;
     font-size: 0.875rem;
     color: var(--text-secondary);
+    font-family: 'Ubuntu', sans-serif;
   }
 
   .demo-info p:first-child {
-    color: var(--text-primary);
+    color: var(--brand-blue);
     margin-bottom: 0.5rem;
+    font-weight: 500;
   }
 
   .login-footer {

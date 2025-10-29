@@ -40,10 +40,10 @@ build-frontend:
 build-backend:
 	@echo "Building Go backend..."
 	mkdir -p build
-	cd server/api && go build -o ../../build/mobius-api cmd/api-server/main.go
-	cd server/cli && go build -o ../../build/mobiuscli cmd/mobiuscli/main.go
-	cd client/client && go build -o ../../build/mobius-client cmd/client/main.go
-	cd cocoon/portal && go build -o ../../build/mobius-cocoon cmd/cocoon/main.go
+	cd server/api && go build -o ../../build/mobius-api ./cmd/api-server
+	cd server/cli && go build -o ../../build/mobiuscli ./cmd/mobiuscli
+	cd client/client && go build -o ../../build/mobius-client ./cmd/client
+	cd cocoon/portal && go build -o ../../build/mobius-cocoon ./cmd/cocoon
 	@echo "Backend build complete"
 
 # Build everything
@@ -65,7 +65,7 @@ test:
 dev:
 	@echo "Starting development servers..."
 	@echo "Starting backend server..."
-	cd server/api && go run cmd/api-server/main.go &
+	cd server/api && go run ./cmd/api-server &
 	@echo "Starting frontend development server..."
 	cd ui/web && npm run dev
 

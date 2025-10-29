@@ -37,7 +37,7 @@ COPY . .
 WORKDIR /app/server/api
 RUN --mount=type=cache,target=/go/pkg/mod \
 	--mount=type=cache,target=/root/.cache/go-build \
-	CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags "-s -w" -o mobius-api ./cmd/api-server/main.go
+	CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags "-s -w" -o mobius-api ./cmd/api-server
 
 # Final stage
 FROM alpine:3.20

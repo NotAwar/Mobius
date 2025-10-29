@@ -113,6 +113,12 @@ server/api/api-server*
 server/api/mobius
 server/api/test-server*
 
+# Temporary documentation and validation scripts
+BUILD_AND_DEPLOY.md
+MERGE_READINESS_REPORT.md
+validate.ps1
+*-output.log
+*-error.log
 
 # Node.js dependencies for commitlint
 node_modules/

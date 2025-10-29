@@ -72,8 +72,6 @@ github.com/blakesmith/ar v0.0.0-20190502131153-809d4375e1fb h1:m935MPodAbYS46DG4
 github.com/blakesmith/ar v0.0.0-20190502131153-809d4375e1fb/go.mod h1:PkYb9DJNAwrSvRx5DYA+gUcOIgTGVMNkfSCbZM8cWpI=
 github.com/boltdb/bolt v1.3.1 h1:JQmyP4ZBrce+ZQu0dY660FMfatumYDLun9hBCUVIkF4=
 github.com/boltdb/bolt v1.3.1/go.mod h1:clJnj/oiGkjum5o1McbSZDSLxVThjynRyGBgiAx27Ps=
-github.com/briandowns/spinner v1.23.2 h1:Zc6ecUnI+YzLmJniCfDNaMbW0Wid1d5+qcTq4L2FW8w=
-github.com/briandowns/spinner v1.23.2/go.mod h1:LaZeM4wm2Ywy6vO571mvhQNRcWfRUnXOs0RcKV0wYKM=
 github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 h1:3uZCA/BLTIu+DqCfguByNMJa2HVHpXvjfy0Dy7g6fuA=
 github.com/bytecodealliance/wasmtime-go/v3 v3.0.2/go.mod h1:RnUjnIXxEJcL6BgCvNyzCCRzZcxCgsZCi+RNlvYor5Q=
 github.com/cavaliergopher/rpm v1.3.0 h1:UHX46sasX8MesUXXQ+UbkFLUX4eUWTlEcX8jcnRBIgI=
@@ -114,8 +112,6 @@ github.com/doug-martin/goqu/v9 v9.18.0 h1:/6bcuEtAe6nsSMVK/M+fOiXUNfyFF3yYtE07DB
 github.com/doug-martin/goqu/v9 v9.18.0/go.mod h1:nf0Wc2/hV3gYK9LiyqIrzBEVGlI8qW3GuDCEobC4wBQ=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
-github.com/e-dard/netbug v0.0.0-20151029172837-e64d308a0b20 h1:eDPsdileewX4H5a2Jph4gS8mFf749gzIrzpbnPy1oRs=
-github.com/e-dard/netbug v0.0.0-20151029172837-e64d308a0b20/go.mod h1:WXFUXJ0Y/SzNqXmhUU7VkE7a2Pag0zZnE2b6I87YWIs=
 github.com/edsrzf/mmap-go v1.1.0 h1:6EUwBLQ/Mcr1EYLE4Tn1VdW1A4ckqCQWZBw8Hr0kjpQ=
 github.com/edsrzf/mmap-go v1.1.0/go.mod h1:19H/e8pUPLicwkyNgOykDXkJ9F0MHE+Z52B8EIth78Q=
 github.com/elastic/go-sysinfo v1.11.2 h1:mcm4OSYVMyws6+n2HIVMGkln5HOpo5Ie1ZmbbNn0jg4=
@@ -507,8 +503,6 @@ go.elastic.co/apm/module/apmgorilla/v2 v2.6.2 h1:/myBx0D/JiwTUjFkVFG3zXmDfGPfQjP
 go.elastic.co/apm/module/apmgorilla/v2 v2.6.2/go.mod h1:uONZzSIh/cKjQ2rZmINR1VXVOJDq5eWOzKrCY+bu00w=
 go.elastic.co/apm/module/apmhttp/v2 v2.7.1-0.20250407084155-22ab1be21948 h1:FS1GGVsZoIxezIGL2N3ExjQJzBA3Ne9hxp6HKvUhcRo=
 go.elastic.co/apm/module/apmhttp/v2 v2.7.1-0.20250407084155-22ab1be21948/go.mod h1:cdBNYMOe0uXcyS/IqhXfKt8isl1DX1nM3nFJm+beY4w=
-go.elastic.co/apm/module/apmsql/v2 v2.6.2 h1:wKCfsGhU9L1w0xM5hVMnukzTb35eIFU3L68gg0v55wU=
-go.elastic.co/apm/module/apmsql/v2 v2.6.2/go.mod h1:W2tSac0SXRQwtj4DS+IJTb2oLWffW6fDHQmiw3GKAvk=
 go.elastic.co/apm/v2 v2.7.0 h1:fbsy3BmTTedIbj7+1Ay9Zpdfuztd8RUk7Dm0JvxRW/M=
 go.elastic.co/apm/v2 v2.7.0/go.mod h1:f1Sr3rVJju5winTjsJtKzofdU32L7+Mw/c23cVcn3Io=
 go.elastic.co/fastjson v1.1.0 h1:3MrGBWWVIxe/xvsbpghtkFoPciPhOCmjsR/HfwEeQR4=
@@ -635,8 +629,6 @@ golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9sn
 golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
 golang.org/x/term v0.1.0/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
-golang.org/x/term v0.34.0 h1:O/2T7POpk0ZZ7MAzMeWFSg6S5IpWd/RXDlM9hgM3DR4=
-golang.org/x/term v0.34.0/go.mod h1:5jC53AEywhIVebHgPVeg0mj8OD3VO9OzclacVrqpaAw=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
 golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=

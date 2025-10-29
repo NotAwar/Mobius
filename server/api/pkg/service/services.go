@@ -22,8 +22,10 @@ type WebSocketNotifier interface {
 type NoOpWebSocketNotifier struct{}
 
 func (n *NoOpWebSocketNotifier) BroadcastDeviceStatusChange(deviceID, oldStatus, newStatus string) {}
-func (n *NoOpWebSocketNotifier) BroadcastPolicyAssignment(policyID, deviceID, groupID, action string) {}
-func (n *NoOpWebSocketNotifier) BroadcastCommandExecution(commandID, deviceID, command, status, result string) {}
+func (n *NoOpWebSocketNotifier) BroadcastPolicyAssignment(policyID, deviceID, groupID, action string) {
+}
+func (n *NoOpWebSocketNotifier) BroadcastCommandExecution(commandID, deviceID, command, status, result string) {
+}
 func (n *NoOpWebSocketNotifier) BroadcastGroupMembership(groupID, deviceID, action string) {}
 
 // LicenseServiceImpl implements the LicenseService interface
@@ -138,8 +140,9 @@ func (s *LicenseServiceImpl) ValidateLicense() error {
 // DeviceServiceImpl implements the DeviceService interface
 type DeviceServiceImpl struct {
 	// In a real implementation, this would use a database
-	devices     map[string]*api.Device
-	wsNotifier  WebSocketNotifier
+	mu         sync.RWMutex
+	devices    map[string]*api.Device
+	wsNotifier WebSocketNotifier
 }
 
 // NewDeviceService creates a new device service instance
@@ -157,6 +160,9 @@ func (s *DeviceServiceImpl) SetWebSocketNotifier(notifier WebSocketNotifier) {
 
 // ListDevices returns a filtered list of devices with pagination
 func (s *DeviceServiceImpl) ListDevices(filters api.DeviceFilters) ([]*api.Device, int, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
 	var result []*api.Device
 
 	// Filter devices
@@ -202,6 +208,9 @@ func (s *DeviceServiceImpl) ListDevices(filters api.DeviceFilters) ([]*api.Devic
 	return result, total, nil
 } // GetDevice returns a device by ID
 func (s *DeviceServiceImpl) GetDevice(id string) (*api.Device, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
 	device, exists := s.devices[id]
 	if !exists {
 		return nil, fmt.Errorf("device not found")
@@ -211,6 +220,9 @@ func (s *DeviceServiceImpl) GetDevice(id string) (*api.Device, error) {
 
 // EnrollDevice enrolls a new device
 func (s *DeviceServiceImpl) EnrollDevice(enrollment api.DeviceEnrollment) (*api.Device, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	// Generate a new device ID using the UUID
 	deviceID := enrollment.UUID
 
@@ -227,15 +239,18 @@ func (s *DeviceServiceImpl) EnrollDevice(enrollment api.DeviceEnrollment) (*api.
 	}
 
 	s.devices[deviceID] = device
-	
+
 	// Notify WebSocket clients of device enrollment
 	s.wsNotifier.BroadcastDeviceStatusChange(deviceID, "", "online")
-	
+
 	return device, nil
 }
 
 // UnenrollDevice removes a device from management
 func (s *DeviceServiceImpl) UnenrollDevice(id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	_, exists := s.devices[id]
 	if !exists {
 		return fmt.Errorf("device not found")
@@ -247,6 +262,9 @@ func (s *DeviceServiceImpl) UnenrollDevice(id string) error {
 
 // UpdateDevice updates device information
 func (s *DeviceServiceImpl) UpdateDevice(id string, updates api.DeviceUpdates) (*api.Device, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	device, exists := s.devices[id]
 	if !exists {
 		return nil, fmt.Errorf("device not found")
@@ -270,6 +288,9 @@ func (s *DeviceServiceImpl) UpdateDevice(id string, updates api.DeviceUpdates) (
 
 // ExecuteCommand executes a command on a device
 func (s *DeviceServiceImpl) ExecuteCommand(deviceID, command string, parameters map[string]interface{}) (*api.DeviceCommandResult, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	device, exists := s.devices[deviceID]
 	if !exists {
 		return nil, fmt.Errorf("device not found")
@@ -297,7 +318,7 @@ func (s *DeviceServiceImpl) ExecuteCommand(deviceID, command string, parameters 
 	}
 
 	// Notify WebSocket clients of command execution
-	s.wsNotifier.BroadcastCommandExecution(commandID, deviceID, command, "completed", 
+	s.wsNotifier.BroadcastCommandExecution(commandID, deviceID, command, "completed",
 		fmt.Sprintf("Command '%s' executed successfully", command))
 
 	// Update device last seen
@@ -309,6 +330,9 @@ func (s *DeviceServiceImpl) ExecuteCommand(deviceID, command string, parameters 
 
 // ExecuteOSQuery executes an OSQuery on a device
 func (s *DeviceServiceImpl) ExecuteOSQuery(deviceID, query string) (*api.OSQueryResult, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	device, exists := s.devices[deviceID]
 	if !exists {
 		return nil, fmt.Errorf("device not found")
@@ -354,6 +378,7 @@ func (s *DeviceServiceImpl) ExecuteOSQuery(deviceID, query string) (*api.OSQuery
 
 // DeviceGroupServiceImpl implements the DeviceGroupService interface
 type DeviceGroupServiceImpl struct {
+	mu           sync.RWMutex
 	groups       map[string]*api.DeviceGroup
 	groupDevices map[string][]string // group ID -> device IDs
 	wsNotifier   WebSocketNotifier
@@ -474,8 +499,8 @@ func (s *DeviceGroupServiceImpl) GetGroupDevices(groupID string) ([]*api.Device,
 	// In a real implementation, this would fetch devices from DeviceService
 	// For now, return mock data
 	devices := make([]*api.Device, 0, len(deviceIDs))
-	
-	// This is a simplified implementation - in reality we'd need to 
+
+	// This is a simplified implementation - in reality we'd need to
 	// coordinate with DeviceService to get actual device objects
 	for _, deviceID := range deviceIDs {
 		// Mock device data
@@ -510,10 +535,10 @@ func (s *DeviceGroupServiceImpl) AddDeviceToGroup(groupID, deviceID string) erro
 
 	// Add device to group
 	s.groupDevices[groupID] = append(s.groupDevices[groupID], deviceID)
-	
+
 	// Notify WebSocket clients of group membership change
 	s.wsNotifier.BroadcastGroupMembership(groupID, deviceID, "added")
-	
+
 	return nil
 }
 
@@ -530,10 +555,10 @@ func (s *DeviceGroupServiceImpl) RemoveDeviceFromGroup(groupID, deviceID string)
 		if id == deviceID {
 			// Remove device from slice
 			s.groupDevices[groupID] = append(deviceIDs[:i], deviceIDs[i+1:]...)
-			
+
 			// Notify WebSocket clients of group membership change
 			s.wsNotifier.BroadcastGroupMembership(groupID, deviceID, "removed")
-			
+
 			return nil
 		}
 	}
@@ -544,7 +569,7 @@ func (s *DeviceGroupServiceImpl) RemoveDeviceFromGroup(groupID, deviceID string)
 // GetDeviceGroups returns all groups that contain a specific device
 func (s *DeviceGroupServiceImpl) GetDeviceGroups(deviceID string) ([]*api.DeviceGroup, error) {
 	groups := make([]*api.DeviceGroup, 0)
-	
+
 	for groupID, deviceIDs := range s.groupDevices {
 		for _, id := range deviceIDs {
 			if id == deviceID {
@@ -556,12 +581,13 @@ func (s *DeviceGroupServiceImpl) GetDeviceGroups(deviceID string) ([]*api.Device
 			}
 		}
 	}
-	
+
 	return groups, nil
 }
 
 // PolicyServiceImpl implements the PolicyService interface
 type PolicyServiceImpl struct {
+	mu             sync.RWMutex
 	policies       map[string]*api.Policy
 	devicePolicies map[string][]string // device ID -> policy IDs
 	groupPolicies  map[string][]string // group ID -> policy IDs
@@ -704,7 +730,7 @@ func (s *PolicyServiceImpl) GetPolicyDevices(policyID string) ([]*api.Device, er
 	}
 
 	devices := make([]*api.Device, 0)
-	
+
 	// Find all devices with this policy assigned
 	for deviceID, policyIDs := range s.devicePolicies {
 		for _, assignedPolicyID := range policyIDs {
@@ -723,7 +749,7 @@ func (s *PolicyServiceImpl) GetPolicyDevices(policyID string) ([]*api.Device, er
 			}
 		}
 	}
-	
+
 	return devices, nil
 }
 
@@ -736,27 +762,27 @@ func (s *PolicyServiceImpl) AssignPolicyToDevice(policyID, deviceID string) erro
 
 	// Get current policies for device
 	currentPolicies := s.devicePolicies[deviceID]
-	
+
 	// Check if policy is already assigned
 	for _, existingPolicyID := range currentPolicies {
 		if existingPolicyID == policyID {
 			return fmt.Errorf("policy already assigned to device")
 		}
 	}
-	
+
 	// Add policy to device
 	s.devicePolicies[deviceID] = append(currentPolicies, policyID)
-	
+
 	// Notify WebSocket clients of policy assignment
 	s.wsNotifier.BroadcastPolicyAssignment(policyID, deviceID, "", "assigned")
-	
+
 	return nil
 }
 
 // UnassignPolicyFromDevice removes a policy from a device
 func (s *PolicyServiceImpl) UnassignPolicyFromDevice(policyID, deviceID string) error {
 	currentPolicies := s.devicePolicies[deviceID]
-	
+
 	// Find and remove the policy
 	for i, existingPolicyID := range currentPolicies {
 		if existingPolicyID == policyID {
@@ -765,7 +791,7 @@ func (s *PolicyServiceImpl) UnassignPolicyFromDevice(policyID, deviceID string) 
 			return nil
 		}
 	}
-	
+
 	return fmt.Errorf("policy not assigned to device")
 }
 
@@ -777,7 +803,7 @@ func (s *PolicyServiceImpl) GetPolicyGroups(policyID string) ([]*api.DeviceGroup
 	}
 
 	groups := make([]*api.DeviceGroup, 0)
-	
+
 	// Find all groups with this policy assigned
 	for groupID, policyIDs := range s.groupPolicies {
 		for _, assignedPolicyID := range policyIDs {
@@ -796,7 +822,7 @@ func (s *PolicyServiceImpl) GetPolicyGroups(policyID string) ([]*api.DeviceGroup
 			}
 		}
 	}
-	
+
 	return groups, nil
 }
 
@@ -809,27 +835,27 @@ func (s *PolicyServiceImpl) AssignPolicyToGroup(policyID, groupID string) error 
 
 	// Get current policies for group
 	currentPolicies := s.groupPolicies[groupID]
-	
+
 	// Check if policy is already assigned
 	for _, existingPolicyID := range currentPolicies {
 		if existingPolicyID == policyID {
 			return fmt.Errorf("policy already assigned to group")
 		}
 	}
-	
+
 	// Add policy to group
 	s.groupPolicies[groupID] = append(currentPolicies, policyID)
-	
+
 	// Notify WebSocket clients of policy assignment
 	s.wsNotifier.BroadcastPolicyAssignment(policyID, "", groupID, "assigned")
-	
+
 	return nil
 }
 
 // UnassignPolicyFromGroup removes a policy from a device group
 func (s *PolicyServiceImpl) UnassignPolicyFromGroup(policyID, groupID string) error {
 	currentPolicies := s.groupPolicies[groupID]
-	
+
 	// Find and remove the policy
 	for i, existingPolicyID := range currentPolicies {
 		if existingPolicyID == policyID {
@@ -838,7 +864,7 @@ func (s *PolicyServiceImpl) UnassignPolicyFromGroup(policyID, groupID string) er
 			return nil
 		}
 	}
-	
+
 	return fmt.Errorf("policy not assigned to group")
 }
 
@@ -849,6 +875,7 @@ func generateID() string {
 
 // ApplicationServiceImpl implements the ApplicationService interface
 type ApplicationServiceImpl struct {
+	mu           sync.RWMutex
 	applications map[string]*api.Application
 }
 

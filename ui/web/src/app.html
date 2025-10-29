@@ -2,8 +2,15 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Mobius MDM Admin</title>
+		<title>Mobius MDM</title>
+		
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+		
 		<style>
 			/* Basic CSS Reset */
 			* {
@@ -13,27 +20,56 @@
 			}
 			
 			body {
-				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 				background-color: #f8fafc;
-				color: #334155;
+				color: #1c2f38;
 				line-height: 1.6;
 			}
 			
-			/* CSS Variables for consistent theming */
+			/* Headings use Montserrat Light */
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Montserrat', sans-serif;
+				font-weight: 300;
+				color: #1c2f38;
+			}
+			
+			/* CSS Variables for Mobius Branding */
 			:root {
-				--primary-color: #3b82f6;
-				--primary-hover: #2563eb;
+				/* Brand Colors */
+				--brand-blue: #1c2f38;
+				--brand-gold: #d4af37;
+				
+				/* Primary Colors */
+				--primary-color: #1c2f38;
+				--primary-hover: #152530;
+				--accent-color: #d4af37;
+				--accent-hover: #c29d2f;
+				
+				/* Semantic Colors */
 				--success-color: #10b981;
 				--warning-color: #f59e0b;
 				--danger-color: #ef4444;
+				--info-color: #3b82f6;
+				
+				/* Neutral Colors */
 				--secondary-color: #6b7280;
 				--background-color: #f8fafc;
 				--surface-color: #ffffff;
 				--border-color: #e2e8f0;
-				--text-primary: #1e293b;
+				
+				/* Text Colors */
+				--text-primary: #1c2f38;
 				--text-secondary: #64748b;
-				--shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-				--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+				--text-muted: #94a3b8;
+				
+				/* Shadows */
+				--shadow: 0 1px 3px 0 rgba(28, 47, 56, 0.1);
+				--shadow-lg: 0 10px 15px -3px rgba(28, 47, 56, 0.1);
+				--shadow-gold: 0 4px 12px rgba(212, 175, 55, 0.3);
+				
+				/* Fonts */
+				--font-heading: 'Montserrat', sans-serif;
+				--font-body: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 			}
 		</style>
 		%sveltekit.head%

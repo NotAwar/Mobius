@@ -1,6 +1,7 @@
 <script lang="ts">
   import Layout from '$lib/Layout.svelte';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { apiClient, type Device, type LicenseStatus, type HealthStatus } from '$lib/api';
   import { Monitor, Shield, Package, Users, AlertCircle, CheckCircle, XCircle } from 'lucide-svelte';
 
@@ -13,11 +14,21 @@
     offline: 0,
     pending: 0
   };
+  let policyCount = 0;
+  let applicationCount = 0;
+  let groupCount = 0;
   let licenseStatus: LicenseStatus | null = null;
   let healthStatus: HealthStatus | null = null;
   let recentActivity: any[] = [];
 
   onMount(async () => {
+    // Check if user is authenticated before loading data
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      goto('/login');
+      return;
+    }
+    
     await loadDashboardData();
   });
 
@@ -27,13 +38,18 @@
 
     try {
       // Load all dashboard data in parallel
-      const [devicesResponse, licenseResponse, healthResponse] = await Promise.all([
+      const [devicesResponse, policiesResponse, applicationsResponse, licenseResponse, healthResponse] = await Promise.all([
         apiClient.getDevices({ limit: 10 }),
+        apiClient.getPolicies().catch(() => ({ policies: [], total: 0 })),
+        apiClient.getApplications().catch(() => ({ applications: [], total: 0 })),
         apiClient.getLicenseStatus(),
         apiClient.getHealth()
       ]);
 
       devices = devicesResponse.devices;
+      policyCount = policiesResponse.total;
+      applicationCount = applicationsResponse.total;
+      groupCount = 0; // Groups API not implemented yet
       licenseStatus = licenseResponse;
       healthStatus = healthResponse;
 
@@ -146,7 +162,7 @@
             </div>
             <div class="stat-details">
               <h3>Active Policies</h3>
-              <div class="stat-number">12</div>
+              <div class="stat-number">{policyCount}</div>
             </div>
           </div>
         </div>
@@ -158,7 +174,7 @@
             </div>
             <div class="stat-details">
               <h3>Applications</h3>
-              <div class="stat-number">8</div>
+              <div class="stat-number">{applicationCount}</div>
             </div>
           </div>
         </div>
@@ -170,7 +186,7 @@
             </div>
             <div class="stat-details">
               <h3>Device Groups</h3>
-              <div class="stat-number">5</div>
+              <div class="stat-number">{groupCount}</div>
             </div>
           </div>
         </div>

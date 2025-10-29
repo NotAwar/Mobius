@@ -90,8 +90,14 @@ jobs:
         id: coverage
         run: |
           SANITIZED_MODULE=$(echo '${{ matrix.module }}' | tr '/' '-')
-          echo "filename=coverage-${SANITIZED_MODULE}.out" >> $GITHUB_OUTPUT
+          COVERAGE_FILE="coverage-${SANITIZED_MODULE}.out"
+          echo "filename=$COVERAGE_FILE" >> $GITHUB_OUTPUT
           echo "artifact_name=coverage-${SANITIZED_MODULE}" >> $GITHUB_OUTPUT
+          # Debug: Verify file exists before upload
+          echo "Checking for coverage file: $COVERAGE_FILE"
+          ls -la "$COVERAGE_FILE" || echo "WARNING: Coverage file not found!"
+          echo "Current directory: $(pwd)"
+          ls -la | grep coverage || echo "No coverage files in current directory"
 
       - name: Upload coverage
         if: always()
@@ -99,6 +105,7 @@ jobs:
         with:
           name: ${{ steps.coverage.outputs.artifact_name }}
           path: ${{ steps.coverage.outputs.filename }}
+          if-no-files-found: error
 
   coverage:
     name: Aggregate coverage

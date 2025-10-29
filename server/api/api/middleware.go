@@ -11,6 +11,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// Context key types to avoid collisions
+type contextKey string
+
+const (
+	contextKeyUser   contextKey = "user"
+	contextKeyDevice contextKey = "device"
+)
+
 // LoggingMiddleware logs HTTP requests
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +93,7 @@ func (d *Dependencies) authMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Add user to request context
-		ctx := context.WithValue(r.Context(), "user", user)
+		ctx := context.WithValue(r.Context(), contextKeyUser, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -112,7 +120,7 @@ func (d *Dependencies) deviceAuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Add device to request context
-		ctx := context.WithValue(r.Context(), "device", device)
+		ctx := context.WithValue(r.Context(), contextKeyDevice, device)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -132,7 +140,7 @@ func (rw *responseWriter) WriteHeader(code int) {
 func RequireRole(role string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			user, ok := r.Context().Value("user").(*User)
+			user, ok := r.Context().Value(contextKeyUser).(*User)
 			if !ok {
 				WriteError(w, http.StatusUnauthorized, "User context required")
 				return
@@ -171,7 +179,7 @@ func hasRole(userRole, requiredRole string) bool {
 
 // GetUserFromContext extracts user from request context
 func GetUserFromContext(r *http.Request) (*User, error) {
-	user, ok := r.Context().Value("user").(*User)
+	user, ok := r.Context().Value(contextKeyUser).(*User)
 	if !ok {
 		return nil, fmt.Errorf("user not found in context")
 	}
@@ -180,7 +188,7 @@ func GetUserFromContext(r *http.Request) (*User, error) {
 
 // GetDeviceFromContext extracts device from request context
 func GetDeviceFromContext(r *http.Request) (*Device, error) {
-	device, ok := r.Context().Value("device").(*Device)
+	device, ok := r.Context().Value(contextKeyDevice).(*Device)
 	if !ok {
 		return nil, fmt.Errorf("device not found in context")
 	}

@@ -525,6 +525,10 @@ func getBodyTag(ctx context.Context, ds mobius.Datastore, host mobius.HostPolicy
 				// Do nothing
 				return ""
 			}
+			if id > uint64(^uint(0)) {
+				level.Error(logger).Log("msg", "policy id out of range")
+				return ""
+			}
 			policyLite, err := ds.PolicyLite(ctx, uint(id))
 			if err != nil {
 				level.Error(logger).Log("msg", "get policy", "err", err)

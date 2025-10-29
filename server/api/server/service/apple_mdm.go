@@ -6337,10 +6337,13 @@ func (renewABMTokenRequest) DecodeRequest(ctx context.Context, r *http.Request) 
 	if err != nil {
 		return nil, ctxerr.Wrap(ctx, err, "failed to parse abm token id")
 	}
+	if id < 0 || uint64(id) > uint64(^uint(0)) {
+		return nil, &mobius.BadRequestError{Message: "token id out of range"}
+	}
 
 	return &renewABMTokenRequest{
 		Token:   token[0],
-		TokenID: uint(id), //nolint:gosec // dismiss G115
+		TokenID: uint(id),
 	}, nil
 }
 

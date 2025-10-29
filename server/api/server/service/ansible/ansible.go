@@ -188,10 +188,10 @@ func (s *AnsibleService) executePlaybook(ctx context.Context, job *Job, playbook
 	if err != nil {
 		job.Status = "failed"
 		job.Error = err.Error()
-		s.logger.Log("level", "error", "msg", "ansible playbook execution failed", "job_id", job.ID, "error", err)
+		_ = s.logger.Log("level", "error", "msg", "ansible playbook execution failed", "job_id", job.ID, "error", err)
 	} else {
 		job.Status = "completed"
-		s.logger.Log("level", "info", "msg", "ansible playbook execution completed", "job_id", job.ID)
+		_ = s.logger.Log("level", "info", "msg", "ansible playbook execution completed", "job_id", job.ID)
 	}
 }
 

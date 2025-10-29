@@ -215,7 +215,7 @@ func (s *DeviceServiceDB) UpdateDevice(id string, updates api.DeviceUpdates) (*a
 	if err != nil {
 		return nil, fmt.Errorf("failed to start transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Check if device exists
 	var exists bool

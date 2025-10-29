@@ -185,7 +185,7 @@ func (s *PolicyServiceDB) UpdatePolicy(id string, updates api.PolicyUpdate) (*ap
 	if err != nil {
 		return nil, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Build dynamic update query
 	query := "UPDATE policies SET updated_at = ?"
@@ -243,7 +243,7 @@ func (s *PolicyServiceDB) DeletePolicy(id string) error {
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Soft delete the policy
 	query := `
@@ -311,7 +311,7 @@ func (s *PolicyServiceDB) AssignDevicePolicies(deviceID string, policyIDs []stri
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Validate that all policies exist
 	for _, policyID := range policyIDs {

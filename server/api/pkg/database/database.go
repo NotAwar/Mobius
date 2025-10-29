@@ -163,7 +163,7 @@ func (db *DB) runMigrations() error {
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Execute migration SQL
 	if _, err := tx.Exec(string(migrationSQL)); err != nil {

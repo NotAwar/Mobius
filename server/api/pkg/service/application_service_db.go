@@ -139,7 +139,7 @@ func (s *ApplicationServiceDB) UpdateApplication(id string, updates api.Applicat
 	if err != nil {
 		return nil, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Build dynamic update query
 	query := "UPDATE applications SET updated_at = ?"

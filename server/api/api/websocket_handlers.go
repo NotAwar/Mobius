@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 
@@ -46,7 +47,9 @@ func (h *WebSocketHandler) HandleStatus(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(status)
+	if err := json.NewEncoder(w).Encode(status); err != nil {
+		log.Printf("Failed to encode WebSocket status: %v", err)
+	}
 }
 
 // extractUserFromRequest extracts user information from JWT token

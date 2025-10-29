@@ -113,7 +113,7 @@ func (s *LicenseServiceDB) ActivateLicense(key string) error {
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Deactivate existing licenses
 	_, err = tx.Exec("UPDATE licenses SET is_active = 0 WHERE is_active = 1")

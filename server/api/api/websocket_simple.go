@@ -76,7 +76,9 @@ func (wsm *WebSocketManager) HandleWebSocket(w http.ResponseWriter, r *http.Requ
 		"message":   "Connected to Mobius MDM WebSocket",
 	}
 	if msgBytes, err := json.Marshal(welcomeMsg); err == nil {
-		conn.WriteMessage(websocket.TextMessage, msgBytes)
+		if err := conn.WriteMessage(websocket.TextMessage, msgBytes); err != nil {
+			log.Printf("Failed to write welcome message: %v", err)
+		}
 	}
 
 	// Keep connection alive and handle disconnection

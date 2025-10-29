@@ -82,7 +82,9 @@ mobius_uptime_seconds %d
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(metrics))
+	if _, err := w.Write([]byte(metrics)); err != nil {
+		log.Printf("Failed to write metrics response: %v", err)
+	}
 }
 
 // handleLogin handles user authentication

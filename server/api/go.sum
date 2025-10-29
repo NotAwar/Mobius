@@ -30,8 +30,8 @@ github.com/RobotsAndPencils/buford v0.14.0 h1:+d18IMEisYlRZZYfe6uFlmQGbT07kWro25
 github.com/RobotsAndPencils/buford v0.14.0/go.mod h1:F5FvdB/nkMby8Pge6HFpPHgLOeUZne/iE5wKzvx64Y0=
 github.com/VividCortex/gohistogram v1.0.0 h1:6+hBz+qvs0JOrrNhhmR7lFxo5sINxBCGXrdtl/UvroE=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
-github.com/VividCortex/mysqlerr v0.0.0-20170204212430-6c6b55f8796f h1:HR5nRmUQgXrwqZOwZ2DAc/aCi3Bu3xENpspW935vxu0=
-github.com/VividCortex/mysqlerr v0.0.0-20170204212430-6c6b55f8796f/go.mod h1:f3HiCrHjHBdcm6E83vGaXh1KomZMA2P6aeo3hKx/wg0=
+github.com/VividCortex/mysqlerr v1.0.0 h1:5pZ2TZA+YnzPgzBfiUWGqWmKDVNBdrkf9g+DNe1Tiq8=
+github.com/VividCortex/mysqlerr v1.0.0/go.mod h1:xERx8E4tBhLvpjzdUyQiSfUxeMcATEQrflDAfXsqcAE=
 github.com/WatchBeam/clock v0.0.0-20170901150240-b08e6b4da7ea h1:C9Xwp9fZf9BFJMsTqs8P+4PETXwJPUOuJZwBfVci+4A=
 github.com/WatchBeam/clock v0.0.0-20170901150240-b08e6b4da7ea/go.mod h1:N5eJIl14rhNCrE5I3O10HIyhZ1HpjaRHT9WDg1eXxtI=
 github.com/XSAM/otelsql v0.35.0 h1:nMdbU/XLmBIB6qZF61uDqy46E0LVA4ZgF/FCNw8Had4=

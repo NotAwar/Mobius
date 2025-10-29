@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/pubsub v1.45.1
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/RobotsAndPencils/buford v0.14.0
-	github.com/VividCortex/mysqlerr v0.0.0-20170204212430-6c6b55f8796f
+	github.com/VividCortex/mysqlerr v1.0.0
 	github.com/WatchBeam/clock v0.0.0-20170901150240-b08e6b4da7ea
 	github.com/XSAM/otelsql v0.35.0
 	github.com/andygrunwald/go-jira v1.16.0

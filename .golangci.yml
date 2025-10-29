@@ -32,9 +32,11 @@ issues:
   - path: server/
     linters:
     - errcheck
+    - gosec
   - path: tools/
     linters:
     - errcheck
+    - gosec
 
 run:
   timeout: 5m

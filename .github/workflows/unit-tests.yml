@@ -126,6 +126,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up Go (for coverage tooling)
         uses: actions/setup-go@v5
         with:

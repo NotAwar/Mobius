@@ -11,6 +11,7 @@ WORKDIR /app
 COPY go.work go.work.sum ./
 COPY server/cli/go.mod ./server/cli/
 COPY server/cli/go.sum ./server/cli/
+COPY server/mobius-package-search/go.mod ./server/mobius-package-search/
 COPY client/client/go.mod ./client/client/
 COPY client/client/go.sum ./client/client/
 COPY server/api/go.mod ./server/api/

@@ -15,6 +15,7 @@ COPY server/api/go.mod ./server/api/
 COPY server/api/go.sum ./server/api/
 COPY server/cli/go.mod ./server/cli/
 COPY server/cli/go.sum ./server/cli/
+COPY server/mobius-package-search/go.mod ./server/mobius-package-search/
 COPY cocoon/portal/go.mod ./cocoon/portal/
 COPY common/shared/go.mod ./common/shared/
 COPY common/shared/go.sum ./common/shared/

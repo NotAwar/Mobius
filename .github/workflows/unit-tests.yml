@@ -156,7 +156,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "${GITHUB_WORKSPACE}"
-          export GO111MODULE=on
+          # Use workspace mode to resolve package paths in coverage files
           go tool cover -func=coverage/coverage-merged.out | tee coverage/coverage.txt
           total=$(go tool cover -func=coverage/coverage-merged.out | awk '/total:/ {print $3}')
           {

@@ -28,7 +28,7 @@ func pemCert(derBytes []byte) []byte {
 	return out
 }
 
-func loadOrSign(path string, priv *rsa.PrivateKey, csr *x509.CertificateRequest) (*x509.Certificate, error) {
+func loadOrSign(path string, priv *rsa.PrivateKey, csr *x509.CertificateRequest) (cert *x509.Certificate, returnErr error) {
 	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0666)
 	if err != nil {
 		if os.IsExist(err) {
@@ -36,7 +36,11 @@ func loadOrSign(path string, priv *rsa.PrivateKey, csr *x509.CertificateRequest)
 		}
 		return nil, err
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); returnErr == nil && err != nil {
+			returnErr = err
+		}
+	}()
 	self, err := selfSign(priv, csr)
 	if err != nil {
 		return nil, err

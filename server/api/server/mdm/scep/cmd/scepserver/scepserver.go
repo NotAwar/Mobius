@@ -230,7 +230,11 @@ func createKey(bits int, password []byte, depot string) (*rsa.PrivateKey, error)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	// create RSA key and save as PEM file
 	key, err := rsa.GenerateKey(rand.Reader, bits)
@@ -273,10 +277,13 @@ func createCertificateAuthority(key *rsa.PrivateKey, years int, commonName strin
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	if _, err := file.Write(pemCert(crtBytes)); err != nil {
-		file.Close()
 		os.Remove(name)
 		return err
 	}

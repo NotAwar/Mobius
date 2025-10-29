@@ -41,7 +41,11 @@ func xRename(oldpath, newpath string) error {
 		if newfile, err = os.OpenFile(newpath, os.O_WRONLY|os.O_CREATE, finfo.Mode().Perm()); err != nil {
 			return err
 		}
-		defer newfile.Close()
+		defer func() {
+			if closeErr := newfile.Close(); closeErr != nil && err == nil {
+				err = closeErr
+			}
+		}()
 		if _, err = io.Copy(newfile, oldfile); err != nil {
 			return err
 		}

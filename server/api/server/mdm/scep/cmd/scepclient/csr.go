@@ -22,7 +22,7 @@ type csrOptions struct {
 	key                                                          *rsa.PrivateKey
 }
 
-func loadOrMakeCSR(path string, opts *csrOptions) (*x509.CertificateRequest, error) {
+func loadOrMakeCSR(path string, opts *csrOptions) (csr *x509.CertificateRequest, returnErr error) {
 	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o666)
 	if err != nil {
 		if os.IsExist(err) {
@@ -30,7 +30,11 @@ func loadOrMakeCSR(path string, opts *csrOptions) (*x509.CertificateRequest, err
 		}
 		return nil, err
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); returnErr == nil && err != nil {
+			returnErr = err
+		}
+	}()
 
 	subject := pkix.Name{
 		CommonName:         opts.cn,

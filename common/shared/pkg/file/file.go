@@ -243,12 +243,16 @@ func ExtractTarGz(path string, destDir string, maxFileSize int64) error {
 				return fmt.Errorf("mkdir %q: %w", header.Name, err)
 			}
 		case tar.TypeReg:
-			err := func() error {
+			err := func() (returnErr error) {
 				outFile, err := os.OpenFile(targetPath, os.O_CREATE|os.O_WRONLY, header.FileInfo().Mode())
 				if err != nil {
 					return fmt.Errorf("failed to create %q: %w", header.Name, err)
 				}
-				defer outFile.Close()
+				defer func() {
+					if err := outFile.Close(); returnErr == nil && err != nil {
+						returnErr = fmt.Errorf("failed to close %q: %w", header.Name, err)
+					}
+				}()
 
 				// CopyN call to avoid zip bomb DoS since we have less control over arbitrary .tar.gz archives
 				// than in e.g. a TUF case.

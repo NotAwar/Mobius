@@ -1421,7 +1421,7 @@ func parseBMPString(bmpString []byte) (string, error) {
 	}
 
 	// Strip terminator if present.
-	if l := len(bmpString); l >= 2 && bmpString[l-1] == 0 && bmpString[l-2] == 0 {
+	if l := len(bmpString); l > 2 && bmpString[l-1] == 0 && bmpString[l-2] == 0 {
 		bmpString = bmpString[:l-2]
 	}
 

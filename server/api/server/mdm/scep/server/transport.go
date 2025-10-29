@@ -88,10 +88,13 @@ func EncodeSCEPRequest(ctx context.Context, r *http.Request, request interface{}
 		u := r.URL
 		u.RawQuery = params.Encode()
 		rr, err := http.NewRequest("POST", u.String(), body)
-		rr.Header.Set("Content-Type", "application/octet-stream")
 		if err != nil {
 			return errors.Join(err, fmt.Errorf("creating new POST request for %s", req.Operation))
 		}
+		if rr == nil {
+			return fmt.Errorf("http.NewRequest returned nil for operation %s", req.Operation)
+		}
+		rr.Header.Set("Content-Type", "application/octet-stream")
 		*r = *rr
 		return nil
 	default:

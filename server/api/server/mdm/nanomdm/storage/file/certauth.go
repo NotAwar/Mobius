@@ -54,7 +54,7 @@ func (s *FileStorage) IsCertHashAssociated(r *mdm.Request, hash string) (bool, e
 	return strings.EqualFold(string(b), hash), nil
 }
 
-func (s *FileStorage) AssociateCertHash(r *mdm.Request, hash string, _ time.Time) error {
+func (s *FileStorage) AssociateCertHash(r *mdm.Request, hash string, _ time.Time) (returnErr error) {
 	f, err := os.OpenFile(
 		path.Join(s.path, CertAuthAssociationsFilename),
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
@@ -63,7 +63,11 @@ func (s *FileStorage) AssociateCertHash(r *mdm.Request, hash string, _ time.Time
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); returnErr == nil && err != nil {
+			returnErr = err
+		}
+	}()
 	if _, err := f.WriteString(r.ID + "," + hash + "\n"); err != nil {
 		return err
 	}

@@ -121,7 +121,7 @@ func unenroll(serialNumber string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("resp.StatusCode, serialNumber, device", resp.StatusCode, serialNumber, deviceInfo[0].DeviceID)
+	fmt.Printf("resp.StatusCode=%d, serialNumber=%q, device=%s\n", resp.StatusCode, serialNumber, deviceInfo[0].DeviceID)
 
 	if resp.StatusCode != http.StatusNoContent {
 		return fmt.Errorf("received unexpected status code: %d", resp.StatusCode)

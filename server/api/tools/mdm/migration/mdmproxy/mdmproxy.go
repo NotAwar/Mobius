@@ -121,13 +121,13 @@ func (m *mdmProxy) handleProxy(w http.ResponseWriter, r *http.Request) {
 
 	// Migrated UDIDs go to the Mobius server, otherwise requests go to the existing server.
 	if udid != "" && m.isUDIDMigrated(udid) {
-		log.Printf("%s %s (%s) -> Mobius", r.Method, r.URL.String(), udid)
+		log.Printf("%s %s (udid=%q) -> Mobius", r.Method, r.URL.String(), udid)
 		if m.debug {
-			log.Printf("Mobius request: %s", string(body))
+			log.Printf("Mobius request: %q", string(body))
 		}
 		m.mobiusProxy.ServeHTTP(w, r)
 	} else {
-		log.Printf("%s %s (%s) -> Existing", r.Method, r.URL.String(), udid)
+		log.Printf("%s %s (udid=%q) -> Existing", r.Method, r.URL.String(), udid)
 		m.existingProxy.ServeHTTP(w, r)
 	}
 }

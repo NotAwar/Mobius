@@ -42,7 +42,9 @@ func NewFilesystemLogWriter(path string, appLogger log.Logger, enableRotation, e
 		}, nil
 	}
 	// Use lumberjack logger that supports rotation
-	file.Close()
+	if err := file.Close(); err != nil {
+		return nil, fmt.Errorf("failed to close temp file: %w", err)
+	}
 	fsLogger := &lumberjack.Logger{
 		Filename:   path,
 		MaxSize:    maxSize, // megabytes

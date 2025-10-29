@@ -116,7 +116,7 @@ func main() {
 		if err != nil {
 			detail = fmt.Sprintf("| ERROR: reading request body: %s", err)
 		} else if len(body) != 0 {
-			detail = fmt.Sprintf("| BODY: %s", string(body))
+			detail = fmt.Sprintf("| BODY: %q", string(body))
 		}
 		log.Printf("%s %s %s\n", request.Method, request.URL.Path, detail)
 

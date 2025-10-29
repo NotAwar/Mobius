@@ -121,12 +121,16 @@ Note that existing 2017 "Packs" have been left intact. To avoid running duplicat
 	}
 }
 
-func writeQuerySpecsToFile(filename string, specs []*mobius.QuerySpec) error {
+func writeQuerySpecsToFile(filename string, specs []*mobius.QuerySpec) (err error) {
 	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, defaultFileMode)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	for _, spec := range specs {
 		qYaml := mobius.QueryObject{

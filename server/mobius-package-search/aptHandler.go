@@ -13,9 +13,9 @@ func aptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := runScript("./apt-search.sh", req.Search, req.Exclude, req.Section)
+	output, _ := runScript("./apt-search.sh", req.Search, req.Exclude, req.Section)
 	var res interface{}
-	err = json.Unmarshal([]byte(output), &res)
+	err := json.Unmarshal([]byte(output), &res)
 	if err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 	}

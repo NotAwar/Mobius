@@ -1996,6 +1996,16 @@ func getAppleProfiles(
 		}
 
 		mdmProf, err := mobius.NewMDMAppleConfigProfile(prof.Contents, tmID)
+		if err != nil {
+			return nil, nil, ctxerr.Wrap(ctx,
+				mobius.NewInvalidArgumentError(prof.Name, err.Error()),
+				"invalid mobileconfig profile")
+		}
+		if mdmProf == nil {
+			return nil, nil, ctxerr.Wrap(ctx,
+				mobius.NewInvalidArgumentError(prof.Name, "NewMDMAppleConfigProfile returned nil"),
+				"invalid mobileconfig profile")
+		}
 		mdmProf.SecretsUpdatedAt = prof.SecretsUpdatedAt
 		if err != nil {
 			return nil, nil, ctxerr.Wrap(ctx,

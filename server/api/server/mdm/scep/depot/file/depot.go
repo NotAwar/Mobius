@@ -92,7 +92,11 @@ func (d *fileDepot) Put(cn string, crt *x509.Certificate) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	if _, err := file.Write(pemCert(data)); err != nil {
 		os.Remove(filepath)
@@ -274,7 +278,11 @@ func (d *fileDepot) writeDB(cn string, serial *big.Int, filename string, cert *x
 	if err != nil {
 		return fmt.Errorf("could not append to "+name+" : %q\n", err.Error())
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	// Format of the caDB, see http://pki-tutorial.readthedocs.io/en/latest/cadb.html
 	//   STATUSFLAG  EXPIRATIONDATE  REVOCATIONDATE(or emtpy)	SERIAL_IN_HEX   CERTFILENAME_OR_'unknown'   Certificate_DN
@@ -319,7 +327,11 @@ func (d *fileDepot) writeSerial(serial *big.Int) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	if _, err := file.WriteString(fmt.Sprintf("%x\n", serial.Bytes())); err != nil {
 		os.Remove(name)

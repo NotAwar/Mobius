@@ -51,10 +51,11 @@ jobs:
             echo "Validating: $score_file"
             
             # Validate the Score spec by generating docker-compose.yaml
-            # Remove leading ./ from path for cleaner output
+            # Use --build flag to indicate images will be built from Dockerfiles
             CLEAN_PATH="${score_file#./}"
+            DIR_PATH=$(dirname "$score_file")
             
-            if score-compose generate "$score_file" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
+            if score-compose generate "$score_file" --build "$DIR_PATH" --output "generated-${CLEAN_PATH//\//-}.yaml" 2>&1; then
               echo "✅ Valid Score specification: $score_file"
             else
               echo "❌ Invalid Score specification: $score_file"

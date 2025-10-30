@@ -1,5 +1,4 @@
 //go:build ignore
-// +build ignore
 
 package main
 
@@ -10,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server/config"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/osquery_utils"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/osquery_utils"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/v4/tools/snapshot
+module github.com/MobiusDM/mobius/v4/tools/snapshot
 
 go 1.25.3
 

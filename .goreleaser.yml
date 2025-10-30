@@ -23,12 +23,12 @@ builds:
   - -trimpath
   ldflags:
   - -extldflags "-static"
-  - -X github.com/notawar/mobius/mobius-server/server/version.appName={{ .ArtifactName }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.version={{ .Version }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.branch={{ .Branch }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.revision={{ .FullCommit }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.buildDate={{ time "2006-01-02" }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.buildUser={{ .Env.USER }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.appName={{ .ArtifactName }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.version={{ .Version }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.branch={{ .Branch }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.revision={{ .FullCommit }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.buildDate={{ time "2006-01-02" }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.buildUser={{ .Env.USER }}
 
 - id: mobiuscli
   dir: ./mobius-cli/cmd/mobiuscli/
@@ -44,12 +44,12 @@ builds:
   flags:
   - -trimpath
   ldflags:
-  - -X github.com/notawar/mobius/mobius-server/server/version.appName={{ .ArtifactName }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.version={{ .Version }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.branch={{ .Branch }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.revision={{ .FullCommit }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.buildDate={{ time "2006-01-02" }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.buildUser={{ .Env.USER }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.appName={{ .ArtifactName }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.version={{ .Version }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.branch={{ .Branch }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.revision={{ .FullCommit }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.buildDate={{ time "2006-01-02" }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.buildUser={{ .Env.USER }}
 
 - id: mobiuscli-macos
   dir: ./mobius-cli/cmd/mobiuscli/
@@ -64,12 +64,12 @@ builds:
   flags:
   - -trimpath
   ldflags:
-  - -X github.com/notawar/mobius/mobius-server/server/version.appName={{ .ArtifactName }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.version={{ .Version }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.branch={{ .Branch }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.revision={{ .FullCommit }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.buildDate={{ time "2006-01-02" }}
-  - -X github.com/notawar/mobius/mobius-server/server/version.buildUser={{ .Env.USER }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.appName={{ .ArtifactName }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.version={{ .Version }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.branch={{ .Branch }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.revision={{ .FullCommit }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.buildDate={{ time "2006-01-02" }}
+  - -X github.com/MobiusDM/mobius/mobius-server/server/version.buildUser={{ .Env.USER }}
 
 universal_binaries:
 - id: mobiuscli # resulting binary id
@@ -113,8 +113,8 @@ dockers:
   - mobiuscli
   dockerfile: tools/mobius-docker/Dockerfile
   image_templates:
-  - "ghcr.io/notawar/mobius:{{ .Tag }}"
-  - "ghcr.io/notawar/mobius:v{{ .Major }}"
+  - "ghcr.io/MobiusDM/mobius:{{ .Tag }}"
+  - "ghcr.io/MobiusDM/mobius:v{{ .Major }}"
 
 - goos: linux
   goarch: amd64
@@ -124,8 +124,8 @@ dockers:
   build_flag_templates:
   - "--build-arg=binpath=mobiuscli"
   image_templates:
-  - "ghcr.io/notawar/mobiuscli:{{ .Tag }}"
-  - "ghcr.io/notawar/mobiuscli:v{{ .Major }}"
+  - "ghcr.io/MobiusDM/mobiuscli:{{ .Tag }}"
+  - "ghcr.io/MobiusDM/mobiuscli:v{{ .Major }}"
 
 checksum:
   name_template: "checksums.txt"

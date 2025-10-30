@@ -8,7 +8,7 @@ To improve accuracy when [mapping software to CVEs](../../../docs/Using%20Mobius
 ## How CPE translations work
 
 CPE Translations are defined in `cpe_translations.json` and currently released in
-[GitHub](https://github.com/notawar/nvd) once a day.  The rules are specified in JSON format and
+[GitHub](https://github.com/MobiusDM/nvd) once a day.  The rules are specified in JSON format and
 and each rule consists of a `software` and a `filter` object.
 
 `software` defines matching logic on what Mobius Software this rule should apply to.  You can use one

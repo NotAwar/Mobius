@@ -73,7 +73,7 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/throttled/throttled/v2 v2.8.0
-	github.com/ulikunitz/xz v0.5.13
+	github.com/ulikunitz/xz v0.5.14
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8
 	go.elastic.co/apm/module/apmgorilla/v2 v2.6.2
 	go.elastic.co/apm/v2 v2.7.0

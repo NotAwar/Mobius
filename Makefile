@@ -73,3 +73,28 @@ dev:
 install-deps:
 	@echo "Installing frontend dependencies..."
 	cd ui/web && npm install
+
+# Build just the mobiuscli binary
+mobiuscli:
+	@echo "Building mobiuscli..."
+	mkdir -p build
+	cd server/cli && go build -o ../../build/mobiuscli ./cmd/mobiuscli
+	@echo "mobiuscli build complete"
+
+# Docker build targets (disabled - require external tooling)
+# These targets are placeholders for workflows that build specialized packaging tools
+.PHONY: wix-docker bomutils-docker mobiuscli-docker
+wix-docker:
+	@echo "ERROR: wix-docker target not implemented"
+	@echo "This requires a Dockerfile for WiX Toolset (Windows MSI packaging)"
+	@exit 1
+
+bomutils-docker:
+	@echo "ERROR: bomutils-docker target not implemented"
+	@echo "This requires a Dockerfile for bomutils (macOS PKG packaging)"
+	@exit 1
+
+mobiuscli-docker:
+	@echo "ERROR: mobiuscli-docker target not implemented"
+	@echo "This requires a Dockerfile for the mobiuscli CLI tool"
+	@exit 1

@@ -1,4 +1,5 @@
 ---
+# DISABLED: Requires Makefile targets (wix-docker, bomutils-docker) and associated Dockerfiles
 # Builds and releases to production the ghcr.io/notawar/bomutils:latest and
 # ghcr.io/notawar/wix:latest Docker images, which are the docker image
 # dependencies of the mobiuscli command.
@@ -9,9 +10,10 @@
 name: Release mobiuscli docker dependencies
 
 on:
-  push:
-    tags:
-      - "mobiuscli-docker-deps-*"
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - "mobiuscli-docker-deps-*"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

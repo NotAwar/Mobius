@@ -4,6 +4,8 @@ go 1.25.3
 
 require (
 	github.com/AbGuthrie/goquery/v2 v2.0.4
+	github.com/MobiusDM/mobius/server/api v0.0.0-00010101000000-000000000000
+	github.com/MobiusDM/mobius/shared v0.0.0
 	github.com/beevik/etree v1.6.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/cenkalti/backoff/v4 v4.3.0
@@ -13,9 +15,7 @@ require (
 	github.com/go-kit/log v0.2.1
 	github.com/google/go-github/v37 v37.0.0
 	github.com/gosuri/uilive v0.0.4
-	github.com/MobiusDM/mobius/server/api v0.0.0-00010101000000-000000000000
-	github.com/MobiusDM/mobius/shared v0.0.0
-	github.com/olekukonko/tablewriter v0.0.5
+	github.com/olekukonko/tablewriter v1.1.0
 	github.com/sethvargo/go-password v0.3.1
 	github.com/urfave/cli/v2 v2.27.7
 	golang.org/x/crypto v0.43.0
@@ -99,6 +99,8 @@ require (
 	github.com/mna/redisc v1.3.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nukosuke/go-zendesk v0.13.1 // indirect
+	github.com/olekukonko/errors v1.1.0 // indirect
+	github.com/olekukonko/ll v0.0.9 // indirect
 	github.com/open-policy-agent/opa v1.4.2 // indirect
 	github.com/oschwald/geoip2-golang v1.8.0 // indirect
 	github.com/oschwald/maxminddb-golang v1.10.0 // indirect

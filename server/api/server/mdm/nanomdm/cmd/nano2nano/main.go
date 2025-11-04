@@ -10,8 +10,8 @@ import (
 	stdlog "log"
 	"net/http"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cli"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/cli"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
 
 	"github.com/micromdm/nanolib/log/stdlogfmt"
 )

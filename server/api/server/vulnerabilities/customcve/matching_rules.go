@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd"
 )
 
 var (

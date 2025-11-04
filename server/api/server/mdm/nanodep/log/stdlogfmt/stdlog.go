@@ -4,7 +4,7 @@ import (
 	stdlog "log"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanodep/log"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/log"
 )
 
 // Logger wraps a standard library logger and adapts it to pkg/log.

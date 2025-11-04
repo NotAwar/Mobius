@@ -11,8 +11,8 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/gomodule/redigo/redis"
 	"github.com/mna/redisc"
-	"github.com/notawar/mobius/server/api/server/config"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // this is an adapter type to implement the same Stats method as for

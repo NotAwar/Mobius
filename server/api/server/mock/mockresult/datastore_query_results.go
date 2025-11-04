@@ -6,7 +6,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 var _ mobius.QueryResultStore = (*QueryResultStore)(nil)

@@ -1,6 +1,6 @@
 # NanoDEP
 
-> The contents of this directory were copied (on February 2024) from <https://github.com/notawar/nanomdm> (the `apple-mdm` branch) which was forked from <https://github.com/micromdm/nanodep>.
+> The contents of this directory were copied (on February 2024) from <https://github.com/MobiusDM/nanomdm> (the `apple-mdm` branch) which was forked from <https://github.com/micromdm/nanodep>.
 
 [![Go](https://github.com/micromdm/nanodep/workflows/Go/badge.svg)](https://github.com/micromdm/nanodep/actions) [![Go Reference](https://pkg.go.dev/badge/github.com/micromdm/nanodep.svg)](https://pkg.go.dev/github.com/micromdm/nanodep)
 

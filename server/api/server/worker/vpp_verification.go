@@ -8,9 +8,9 @@ import (
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	apple_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/apple"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 const VPPVerificationJobName = "vpp_verification"

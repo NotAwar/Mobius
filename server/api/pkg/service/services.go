@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/server/api/api"
+	"github.com/MobiusDM/mobius/server/api/api"
 )
 
 // WebSocketNotifier interface for WebSocket notifications

@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/notawar/mobius/shared/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/shared/pkg/mobiushttp"
 )
 
 var (

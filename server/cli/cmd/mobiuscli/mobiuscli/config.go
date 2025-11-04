@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/ghodss/yaml"
-	"github.com/notawar/mobius/shared/pkg/secure"
+	"github.com/MobiusDM/mobius/shared/pkg/secure"
 	"github.com/urfave/cli/v2"
 )
 

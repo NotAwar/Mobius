@@ -18,9 +18,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/notawar/mobius/server/api/server"
-	"github.com/notawar/mobius/server/api/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cryptoutil"
+	"github.com/MobiusDM/mobius/server/api/server"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/microsoft/syncml"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/cryptoutil"
 	"github.com/smallstep/pkcs7"
 )
 

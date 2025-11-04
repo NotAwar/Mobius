@@ -1,8 +1,8 @@
 package oval_parsed
 
 import (
-	"github.com/notawar/mobius/server/api/server/mobius"
-	oval_input "github.com/notawar/mobius/server/api/server/vulnerabilities/oval/input"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	oval_input "github.com/MobiusDM/mobius/server/api/server/vulnerabilities/oval/input"
 )
 
 // Minimal stub definitions for RPM parsed types to fix build issues

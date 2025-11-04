@@ -7,12 +7,12 @@ import (
 	"html/template"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/contexts/logging"
-	"github.com/notawar/mobius/server/api/server/contexts/viewer"
-	"github.com/notawar/mobius/server/api/server/mail"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/logging"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/viewer"
+	"github.com/MobiusDM/mobius/server/api/server/mail"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -13,11 +13,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cryptoutil"
-	mdmhttp "github.com/notawar/mobius/server/api/server/mdm/nanomdm/http"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/push"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/cryptoutil"
+	mdmhttp "github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/http"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/push"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/storage"
 
 	"github.com/micromdm/nanolib/log"
 	"github.com/micromdm/nanolib/log/ctxlog"

@@ -3,7 +3,7 @@ package androidmgmt
 import (
 	"context"
 
-	"github.com/notawar/mobius/server/api/server/mdm/android"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/android"
 	"google.golang.org/api/androidmanagement/v1"
 )
 

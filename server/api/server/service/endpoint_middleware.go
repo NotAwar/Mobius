@@ -8,13 +8,13 @@ import (
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/server/api/server/contexts/logging"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	middleware_log "github.com/notawar/mobius/server/api/server/service/middleware/log"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/logging"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	middleware_log "github.com/MobiusDM/mobius/server/api/server/service/middleware/log"
 
 	"github.com/go-kit/kit/endpoint"
-	authz_ctx "github.com/notawar/mobius/server/api/server/contexts/authz"
-	hostctx "github.com/notawar/mobius/server/api/server/contexts/host"
+	authz_ctx "github.com/MobiusDM/mobius/server/api/server/contexts/authz"
+	hostctx "github.com/MobiusDM/mobius/server/api/server/contexts/host"
 )
 
 func logJSON(logger log.Logger, v interface{}, key string) {

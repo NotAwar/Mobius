@@ -13,10 +13,10 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/micromdm/nanolib/log"
 	"github.com/micromdm/nanolib/log/ctxlog"
-	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cryptoutil"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/mysql/common_mysql"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/cryptoutil"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // Schema holds the schema for the NanoMDM MySQL storage.

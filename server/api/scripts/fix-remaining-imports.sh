@@ -3,7 +3,7 @@
 echo "Fixing remaining import paths..."
 
 # Fix goose imports
-find /Users/awar/Documents/Mobius/backend -name "*.go" -type f -exec sed -i '' 's|github.com/notawar/mobius/server/goose|github.com/notawar/mobius/internal/server/goose|g' {} \;
+find /Users/awar/Documents/Mobius/backend -name "*.go" -type f -exec sed -i '' 's|github.com/MobiusDM/mobius/server/goose|github.com/MobiusDM/mobius/internal/server/goose|g' {} \;
 
 echo "Fixed goose imports"
 

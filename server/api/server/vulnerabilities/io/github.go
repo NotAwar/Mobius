@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/server/api/pkg/download"
+	"github.com/MobiusDM/mobius/server/api/pkg/download"
 )
 
 // ReleaseLister interface around github.NewClient(...).Repositories.
@@ -65,13 +65,13 @@ func (gh GitHubClient) Download(urlStr string) (string, error) {
 }
 
 // MSRCBulletins returns a map of 'MetadataFilename' to 'download URL' of the MSRC bulletins assets
-// stored in our Github NVD repo (https://github.com/notawar/nvd/releases)
+// stored in our Github NVD repo (https://github.com/MobiusDM/nvd/releases)
 func (gh GitHubClient) MSRCBulletins(ctx context.Context) (map[MetadataFileName]string, error) {
 	return gh.list(ctx, mSRCFilePrefix, NewMSRCMetadata)
 }
 
 // MacOfficeReleaseNotes returns the 'MetadataFilename' and the 'download URL' of the latest Mac Office Release
-// Note asset stored in our Github NVD repo (https://github.com/notawar/nvd/releases)
+// Note asset stored in our Github NVD repo (https://github.com/MobiusDM/nvd/releases)
 func (gh GitHubClient) MacOfficeReleaseNotes(ctx context.Context) (MetadataFileName, string, error) {
 	resultMap, err := gh.list(ctx, macOfficeReleaseNotesPrefix, NewMacOfficeRelNotesMetadata)
 	if err != nil {
@@ -92,7 +92,7 @@ func (gh GitHubClient) MacOfficeReleaseNotes(ctx context.Context) (MetadataFileN
 }
 
 // list iterates over the latest release in our Github NVD repo
-// (https://github.com/notawar/nvd/releases) and collects all assets that start with 'prefix',
+// (https://github.com/MobiusDM/nvd/releases) and collects all assets that start with 'prefix',
 // matching assets are collected in a map, where the key is a 'MetadataFileName' built using 'ctor'
 // and the value is the 'download URL'.
 func (gh GitHubClient) list(ctx context.Context, prefix string, ctor func(fileName string) (MetadataFileName, error)) (map[MetadataFileName]string, error) {

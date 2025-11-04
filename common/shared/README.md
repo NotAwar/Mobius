@@ -41,7 +41,7 @@ Import packages using the shared module:
 
 ```go
 import (
-    "github.com/notawar/mobius/shared/pkg/certificate"
-    "github.com/notawar/mobius/shared/pkg/mobiushttp"
+    "github.com/MobiusDM/mobius/shared/pkg/certificate"
+    "github.com/MobiusDM/mobius/shared/pkg/mobiushttp"
 )
 ```

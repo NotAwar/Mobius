@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/api"
+	"github.com/MobiusDM/mobius/server/api/api"
 )
 
 // ApplicationServiceDB implements ApplicationService with database persistence

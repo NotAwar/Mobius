@@ -27,8 +27,8 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd"
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
 )
 
 // ParseJSON parses JSON dictionary from NVD vulnerability feed

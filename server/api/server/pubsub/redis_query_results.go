@@ -10,9 +10,9 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/datastore/redis"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/redis"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 type redisQueryResults struct {

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
 )
 
 // RetrievePushInfo retrieves APNs-related data for push notifications

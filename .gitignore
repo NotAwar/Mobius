@@ -9,6 +9,7 @@ mobius
 /mobiuscli
 /api-server
 /test-output.log
+*.log
 
 # Module-specific binaries
 server/api/mobius-api

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
 
 	"github.com/micromdm/plist"
 )

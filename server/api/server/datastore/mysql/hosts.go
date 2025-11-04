@@ -16,14 +16,14 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/server"
-	"github.com/notawar/mobius/server/api/server/config"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/contexts/license"
-	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
-	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/server/api/server"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/license"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/mysql/common_mysql"
+	microsoft_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/microsoft"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
 )
 
 // Since many hosts may have issues, we need to batch the inserts of host issues.

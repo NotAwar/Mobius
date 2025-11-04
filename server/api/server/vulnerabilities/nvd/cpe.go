@@ -16,12 +16,12 @@ import (
 	"unicode"
 
 	"github.com/doug-martin/goqu/v9"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/download"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/download"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
 
-	// "github.com/notawar/mobius/server/api/server/vulnerabilities/oval" // TODO: Fix OVAL types
+	// "github.com/MobiusDM/mobius/server/api/server/vulnerabilities/oval" // TODO: Fix OVAL types
 	"github.com/go-kit/log"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
@@ -70,7 +70,7 @@ func GetGithubNVDAsset(pred func(rel *github.ReleaseAsset) bool) (*github.Reposi
 }
 
 // DownloadCPEDB downloads the CPE database to the given vulnPath. If cpeDBURL is empty, attempts to download it
-// from the latest release of github.com/notawar/nvd. Skips downloading if CPE database is newer than the release.
+// from the latest release of github.com/MobiusDM/nvd. Skips downloading if CPE database is newer than the release.
 func DownloadCPEDBFromGithub(vulnPath string, cpeDBURL string) error {
 	path := filepath.Join(vulnPath, cpeDBFilename)
 

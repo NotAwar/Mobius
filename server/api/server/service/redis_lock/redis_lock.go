@@ -5,9 +5,9 @@ import (
 	"errors"
 
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/datastore/redis"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/redis"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // This package implements a distributed lock using Redis. The lock can be used

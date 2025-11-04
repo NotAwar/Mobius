@@ -14,16 +14,16 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
-	"github.com/notawar/mobius/shared/pkg/spec"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/shared/pkg/spec"
 )
 
 const (
-	starterLibraryURL = "https://raw.githubusercontent.com/notawar/mobius/main/docs/01-Using-Mobius/starter-library/starter-library.yml"
-	scriptsBaseURL    = "https://raw.githubusercontent.com/notawar/mobius/main/"
+	starterLibraryURL = "https://raw.githubusercontent.com/MobiusDM/mobius/main/docs/01-Using-Mobius/starter-library/starter-library.yml"
+	scriptsBaseURL    = "https://raw.githubusercontent.com/MobiusDM/mobius/main/"
 )
 
 type setupRequest struct {

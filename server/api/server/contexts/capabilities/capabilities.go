@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 type key int

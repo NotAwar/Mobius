@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
 	dsigtypes "github.com/russellhaering/goxmldsig/types"
 )
 

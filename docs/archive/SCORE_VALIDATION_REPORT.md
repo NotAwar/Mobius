@@ -28,7 +28,6 @@ Score specifications are **correctly structured** but **not integrated** with th
 **Problem**: Score specs define environment variables that the application doesn't read.
 
 **Evidence**:
-
 ```yaml
 # server/api/score.yaml defines:
 MOBIUS_MYSQL_ADDRESS: "${resources.mysql.host}:${resources.mysql.port}"
@@ -45,7 +44,6 @@ StaticDir: "./static"  // Should read from MOBIUS_STATIC_DIR
 **Impact**: Score deployments would fail or run with wrong configuration
 
 **Fix Required**: Update `main.go` to read environment variables:
-
 ```go
 import "os"
 
@@ -67,14 +65,12 @@ if staticDir == "" {
 **Problem**: GitHub workflows don't validate or use Score specifications.
 
 **Evidence**:
-
 - `.github/workflows/build-and-deploy.yml` builds Docker images directly
 - No step runs `score-compose validate`
 - No integration with Score CLI tools
 - Documentation mentions Score but workflows don't use it
 
-**Impact**:
-
+**Impact**: 
 - Score specs can become outdated without detection
 - Can't test Score-based deployments in CI
 - Manual Docker Compose file could drift from Score specs
@@ -88,7 +84,6 @@ if staticDir == "" {
 **Problem**: `docker-compose.score.yaml` is manually written, not generated from Score specs.
 
 **Evidence**:
-
 - No `score-compose generate` in build process
 - Manual compose file could become inconsistent with Score specs
 - No automated sync mechanism
@@ -104,14 +99,12 @@ if staticDir == "" {
 ### Priority 1: Update Application to Use Environment Variables
 
 **Files to Modify**:
-
 - `server/api/cmd/api-server/main.go`
 - `server/cli/cmd/mobiuscli/main.go`
 - `client/client/cmd/client/main.go`
 - `cocoon/portal/cmd/cocoon/main.go`
 
 **Pattern to Follow**:
-
 ```go
 package config
 
@@ -199,12 +192,10 @@ func getEnvBool(key string, defaultVal bool) bool {
 
 1. Install `score-compose` as development dependency
 2. Generate `docker-compose.score.yaml` from Score specs:
-
    ```bash
    score-compose init
    score-compose generate deployments/score.yaml -o docker-compose.score.yaml
    ```
-
 3. Add to `.gitignore`: `docker-compose.score.yaml` (if generated)
 4. OR: Keep as committed file but add CI check to verify it's up to date
 
@@ -225,7 +216,6 @@ Mobius uses [Score](https://score.dev) for platform-agnostic deployments.
    ```
 
 2. **Generate Docker Compose**:
-
    ```bash
    score-compose init
    score-compose generate deployments/score.yaml
@@ -233,7 +223,6 @@ Mobius uses [Score](https://score.dev) for platform-agnostic deployments.
    ```
 
 3. **Deploy to Kubernetes**:
-
    ```bash
    score-k8s generate deployments/score.yaml
    kubectl apply -f score-k8s.yaml
@@ -246,7 +235,6 @@ Mobius uses [Score](https://score.dev) for platform-agnostic deployments.
 - `server/cli/score.yaml` - CLI tool component
 - `client/client/score.yaml` - Device client component
 - `cocoon/portal/score.yaml` - Enterprise portal component
-
 ```
 
 ---

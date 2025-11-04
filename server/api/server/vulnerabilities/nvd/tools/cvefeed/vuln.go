@@ -15,7 +15,7 @@
 package cvefeed
 
 import (
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 // Vuln is a vulnerability interface

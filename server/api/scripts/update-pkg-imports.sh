@@ -5,6 +5,6 @@
 echo "Updating pkg import paths..."
 
 # Update backend/pkg to just pkg
-find /Users/awar/Documents/Mobius/backend -name "*.go" -type f -exec sed -i '' 's|github.com/notawar/mobius/backend/pkg|github.com/notawar/mobius/pkg|g' {} \;
+find /Users/awar/Documents/Mobius/backend -name "*.go" -type f -exec sed -i '' 's|github.com/MobiusDM/mobius/backend/pkg|github.com/MobiusDM/mobius/pkg|g' {} \;
 
 echo "Pkg import paths updated successfully"

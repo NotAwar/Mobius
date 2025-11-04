@@ -1,6 +1,6 @@
 package service
 
-import "github.com/notawar/mobius/server/api/server/mobius"
+import "github.com/MobiusDM/mobius/server/api/server/mobius"
 
 type alreadyExistsError struct {
 	mobius.ErrorWithUUID

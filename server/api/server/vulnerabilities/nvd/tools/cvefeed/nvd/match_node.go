@@ -19,8 +19,8 @@ import (
 	"strings"
 
 	"github.com/facebookincubator/flog"
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/cvefeed/nvd/schema"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 // Matcher returns an object which knows how to match attributes

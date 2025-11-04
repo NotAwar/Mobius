@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	mdmhttp "github.com/notawar/mobius/server/api/server/mdm/nanomdm/http"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/service"
+	mdmhttp "github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/http"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/service"
 
 	"github.com/micromdm/nanolib/log"
 	"github.com/micromdm/nanolib/log/ctxlog"

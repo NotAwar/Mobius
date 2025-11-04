@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/server/config"
-	"github.com/notawar/mobius/server/api/server/mdm/android"
-	"github.com/notawar/mobius/server/api/server/mdm/apple/mobileconfig"
-	"github.com/notawar/mobius/server/api/server/mdm/nanodep/godep"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/android"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/apple/mobileconfig"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/godep"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 var _ mobius.Datastore = (*DataStore)(nil)

@@ -8,7 +8,7 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/notawar/mobius/server/cli/cmd/mobiuscli/mobiuscli"
+	"github.com/MobiusDM/mobius/server/cli/cmd/mobiuscli/mobiuscli"
 	"github.com/urfave/cli/v2"
 )
 

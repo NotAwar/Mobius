@@ -12,10 +12,10 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/notawar/mobius/server/api/api"
-	"github.com/notawar/mobius/server/api/pkg/config"
-	"github.com/notawar/mobius/server/api/pkg/service"
-	"github.com/notawar/mobius/server/api/pkg/websocket"
+	"github.com/MobiusDM/mobius/server/api/api"
+	"github.com/MobiusDM/mobius/server/api/pkg/config"
+	"github.com/MobiusDM/mobius/server/api/pkg/service"
+	"github.com/MobiusDM/mobius/server/api/pkg/websocket"
 )
 
 func main() {

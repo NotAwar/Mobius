@@ -1,10 +1,11 @@
 ---
 # This workflow update the timestamp of the TUF repository at https://updates.mobiusmdm.com
+# DISABLED: Requires TUF infrastructure at updates.mobiusmdm.com and mobiuscli to be published to npm
 name: Update TUF timestamp signature
 
 on:
-  schedule:
-    - cron: "0 13 * * TUE" # Every Tuesday at 1 PM UTC
+  # schedule:
+  #   - cron: "0 13 * * TUE" # Every Tuesday at 1 PM UTC
   workflow_dispatch: # Manual
 
 defaults:

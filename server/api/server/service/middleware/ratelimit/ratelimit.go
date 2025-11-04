@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
-	authz_ctx "github.com/notawar/mobius/server/api/server/contexts/authz"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
+	authz_ctx "github.com/MobiusDM/mobius/server/api/server/contexts/authz"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
 	"github.com/throttled/throttled/v2"
 )
 

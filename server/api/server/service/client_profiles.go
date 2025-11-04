@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // TODO(mna): those methods are unused except for an internal tool, remove or

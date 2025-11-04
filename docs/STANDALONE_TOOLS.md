@@ -18,7 +18,7 @@ These tools are maintained separately to:
 **Purpose:** Interactive tool for creating and managing database snapshots for
 testing and development.
 
-**Module:** `github.com/notawar/mobius/v4/tools/snapshot`
+**Module:** `github.com/MobiusDM/mobius/v4/tools/snapshot`
 
 **Key Dependencies:**
 
@@ -177,7 +177,7 @@ To add a new standalone tool:
 
    ```bash
    cd server/api/tools/your-tool
-   go mod init github.com/notawar/mobius/tools/your-tool
+   go mod init github.com/MobiusDM/mobius/tools/your-tool
    ```
 
 3. Add a README.md explaining the tool's purpose

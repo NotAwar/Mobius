@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/api"
+	"github.com/MobiusDM/mobius/server/api/api"
 )
 
 // LicenseServiceDB implements LicenseService with database persistence

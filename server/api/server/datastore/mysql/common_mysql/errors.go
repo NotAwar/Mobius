@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 type NotFoundError struct {

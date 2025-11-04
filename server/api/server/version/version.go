@@ -6,7 +6,7 @@ To use this package, a program would set the package variables at build time, us
 
 Example:
 
-	go build -ldflags "-X github.com/notawar/mobius/server/api/server/version.version=1.0.0"
+	go build -ldflags "-X github.com/MobiusDM/mobius/server/api/server/version.version=1.0.0"
 
 Available values and defaults to use with ldflags:
 
@@ -18,7 +18,7 @@ Available values and defaults to use with ldflags:
 	buildUser = "unknown"
 	appName   = "unknown"
 
-This file was copied (on December 2023) from https://github.com/notawar/kolide-kit, which is a fork of https://github.com/kolide/kit.
+This file was copied (on December 2023) from https://github.com/MobiusDM/kolide-kit, which is a fork of https://github.com/kolide/kit.
 */
 package version
 

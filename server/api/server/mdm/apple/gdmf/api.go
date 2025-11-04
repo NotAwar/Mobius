@@ -15,9 +15,9 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
-	"github.com/notawar/mobius/server/api/server/mdm/apple/rootcert"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/apple/rootcert"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
 )
 
 const baseURL = "https://gdmf.apple.com/v2/pmv"

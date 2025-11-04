@@ -13,14 +13,14 @@ import (
 	"time"
 
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/server/api/server/contexts/authz"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	hostctx "github.com/notawar/mobius/server/api/server/contexts/host"
-	"github.com/notawar/mobius/server/api/server/contexts/logging"
-	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
-	mdmcrypto "github.com/notawar/mobius/server/api/server/mdm/crypto"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/authz"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	hostctx "github.com/MobiusDM/mobius/server/api/server/contexts/host"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/logging"
+	apple_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/apple"
+	mdmcrypto "github.com/MobiusDM/mobius/server/api/server/mdm/crypto"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
 )
 
 /////////////////////////////////////////////////////////////////////////////////

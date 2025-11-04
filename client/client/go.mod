@@ -1,7 +1,7 @@
-module github.com/notawar/mobius/client/client
+module github.com/MobiusDM/mobius/client/client
 
 go 1.25.3
 
 require github.com/google/uuid v1.6.0
 
-replace github.com/notawar/mobius/shared => ../../common/shared
+replace github.com/MobiusDM/mobius/shared => ../../common/shared

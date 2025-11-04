@@ -19,8 +19,8 @@ import (
 
 	"github.com/beevik/etree"
 	"github.com/google/uuid"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/file"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/file"
 	"howett.net/plist"
 )
 

@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // ListSoftwareVersions retrieves the software versions installed on hosts.

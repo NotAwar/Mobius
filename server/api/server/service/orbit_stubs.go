@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // AuthenticateOrbitHost is a stub implementation that returns an error

@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/notawar/mobius/server/api/server/mdm/apple/appmanifest"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/apple/appmanifest"
 )
 
 func main() {

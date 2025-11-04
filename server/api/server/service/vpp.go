@@ -9,9 +9,9 @@ import (
 	"math"
 
 	"github.com/docker/go-units"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 //////////////////////////////////////////////////////////////////////////////

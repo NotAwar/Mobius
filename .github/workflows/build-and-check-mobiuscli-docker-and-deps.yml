@@ -1,10 +1,11 @@
 ---
+# DISABLED: Requires Makefile targets (wix-docker, bomutils-docker, mobiuscli-docker) that don't exist yet
 name: Build mobiuscli container dependencies and check vulnerabilities
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"
+  # schedule:
+  #   - cron: "0 6 * * *"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

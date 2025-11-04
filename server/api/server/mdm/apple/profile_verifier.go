@@ -3,9 +3,9 @@ package apple_mdm
 import (
 	"context"
 
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mdm"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // Profile verification is a set of related processes that run on the Mobius server to ensure that

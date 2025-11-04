@@ -6,8 +6,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/notawar/mobius/server/api/server/mdm/android"
-	"github.com/notawar/mobius/server/api/server/mdm/android/service/androidmgmt"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/android"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/android/service/androidmgmt"
 	"google.golang.org/api/androidmanagement/v1"
 )
 

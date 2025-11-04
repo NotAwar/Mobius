@@ -1,11 +1,12 @@
 ---
+# DISABLED: Requires published container images at ghcr.io/NotAwar/mobius-*
 name: Check critical vulnerabilities in released GitHub Package images
 
 on:
   workflow_dispatch:
   pull_request:
-  schedule:
-    - cron: "0 6 * * *"
+  # schedule:
+  #   - cron: "0 6 * * *"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

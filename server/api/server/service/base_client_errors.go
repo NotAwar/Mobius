@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 var (

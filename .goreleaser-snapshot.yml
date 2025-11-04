@@ -29,12 +29,12 @@ builds:
   - -trimpath
   ldflags:
   - -extldflags "-static"
-  - -X github.com/notawar/mobius/server/version.appName={{ .ArtifactName }}
-  - -X github.com/notawar/mobius/server/version.version={{ .Version }}
-  - -X github.com/notawar/mobius/server/version.branch={{ .Branch }}
-  - -X github.com/notawar/mobius/server/version.revision={{ .FullCommit }}
-  - -X github.com/notawar/mobius/server/version.buildDate={{ time "2006-01-02" }}
-  - -X github.com/notawar/mobius/server/version.buildUser={{ .Env.USER }}
+  - -X github.com/MobiusDM/mobius/server/version.appName={{ .ArtifactName }}
+  - -X github.com/MobiusDM/mobius/server/version.version={{ .Version }}
+  - -X github.com/MobiusDM/mobius/server/version.branch={{ .Branch }}
+  - -X github.com/MobiusDM/mobius/server/version.revision={{ .FullCommit }}
+  - -X github.com/MobiusDM/mobius/server/version.buildDate={{ time "2006-01-02" }}
+  - -X github.com/MobiusDM/mobius/server/version.buildUser={{ .Env.USER }}
 
 - id: mobiuscli
   dir: ./cmd/mobiuscli/
@@ -48,12 +48,12 @@ builds:
   flags:
   - -trimpath
   ldflags:
-  - -X github.com/notawar/mobius/server/version.appName={{ .ArtifactName }}
-  - -X github.com/notawar/mobius/server/version.version={{ .Version }}
-  - -X github.com/notawar/mobius/server/version.branch={{ .Branch }}
-  - -X github.com/notawar/mobius/server/version.revision={{ .FullCommit }}
-  - -X github.com/notawar/mobius/server/version.buildDate={{ time "2006-01-02" }}
-  - -X github.com/notawar/mobius/server/version.buildUser={{ .Env.USER }}
+  - -X github.com/MobiusDM/mobius/server/version.appName={{ .ArtifactName }}
+  - -X github.com/MobiusDM/mobius/server/version.version={{ .Version }}
+  - -X github.com/MobiusDM/mobius/server/version.branch={{ .Branch }}
+  - -X github.com/MobiusDM/mobius/server/version.revision={{ .FullCommit }}
+  - -X github.com/MobiusDM/mobius/server/version.buildDate={{ time "2006-01-02" }}
+  - -X github.com/MobiusDM/mobius/server/version.buildUser={{ .Env.USER }}
 
 dockers:
 - goos: linux

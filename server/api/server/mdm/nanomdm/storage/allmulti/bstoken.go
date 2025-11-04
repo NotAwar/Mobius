@@ -1,8 +1,8 @@
 package allmulti
 
 import (
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/storage"
 )
 
 func (ms *MultiAllStorage) StoreBootstrapToken(r *mdm.Request, msg *mdm.SetBootstrapToken) error {

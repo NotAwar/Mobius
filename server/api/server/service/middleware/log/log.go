@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	kitlog "github.com/go-kit/log"
-	"github.com/notawar/mobius/server/api/server/contexts/logging"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/logging"
 )
 
 // Logged wraps an endpoint and adds the error if the context supports it

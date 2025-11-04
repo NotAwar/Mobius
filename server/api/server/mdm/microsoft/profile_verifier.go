@@ -13,11 +13,11 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/microsoft/admx"
-	"github.com/notawar/mobius/server/api/server/mdm/microsoft/wlanxml"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/microsoft/admx"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/microsoft/wlanxml"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // LoopOverExpectedHostProfiles loops all the <LocURI> values on all the profiles for a

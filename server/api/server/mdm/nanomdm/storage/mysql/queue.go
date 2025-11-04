@@ -10,9 +10,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/micromdm/nanolib/log"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/mysql/common_mysql"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
 )
 
 func enqueue(ctx context.Context, tx sqlx.ExtContext, ids []string, cmd *mdm.CommandWithSubtype) error {

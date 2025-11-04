@@ -9,7 +9,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 	"github.com/sassoftware/relic/v8/lib/comdoc"
 	"golang.org/x/text/encoding/charmap"
 )

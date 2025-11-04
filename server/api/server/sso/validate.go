@@ -13,7 +13,7 @@ import (
 
 	"github.com/beevik/etree"
 	rtvalidator "github.com/mattermost/xml-roundtrip-validator"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 	dsig "github.com/russellhaering/goxmldsig"
 )
 

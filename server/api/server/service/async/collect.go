@@ -10,8 +10,8 @@ import (
 	"time"
 
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/notawar/mobius/server/api/server/datastore/redis"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/redis"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 type collectorHandlerFunc func(context.Context, mobius.Datastore, mobius.RedisPool, *collectorExecStats) error

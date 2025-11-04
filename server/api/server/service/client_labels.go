@@ -3,7 +3,7 @@ package service
 import (
 	"net/url"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // ApplyLabels sends the list of Labels to be applied (upserted) to the

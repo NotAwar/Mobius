@@ -6,7 +6,7 @@ import (
 	"crypto/tls"
 	"sync"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/push"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/push"
 )
 
 var _ push.PushProviderFactory = (*APNSPushProviderFactory)(nil)

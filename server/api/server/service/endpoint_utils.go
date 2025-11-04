@@ -13,10 +13,10 @@ import (
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/go-kit/log"
 	"github.com/gorilla/mux"
-	"github.com/notawar/mobius/server/api/server/contexts/capabilities"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/middleware/auth"
-	eu "github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/capabilities"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/auth"
+	eu "github.com/MobiusDM/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 func makeDecoder(iface interface{}) kithttp.DecodeRequestFunc {

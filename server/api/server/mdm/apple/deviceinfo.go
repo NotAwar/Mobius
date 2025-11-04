@@ -40,8 +40,8 @@ import (
 	"strings"
 
 	"github.com/micromdm/plist"
-	"github.com/notawar/mobius/server/api/server/mdm/apple/rootcert"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/apple/rootcert"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 	"github.com/smallstep/pkcs7"
 )
 

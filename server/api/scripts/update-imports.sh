@@ -5,6 +5,6 @@
 echo "Updating import paths..."
 
 # Find all Go files and update the import paths
-find /Users/awar/Documents/Mobius/backend -name "*.go" -type f -exec sed -i '' 's|github.com/notawar/mobius/backend/server|github.com/notawar/mobius/internal/server|g' {} \;
+find /Users/awar/Documents/Mobius/backend -name "*.go" -type f -exec sed -i '' 's|github.com/MobiusDM/mobius/backend/server|github.com/MobiusDM/mobius/internal/server|g' {} \;
 
 echo "Import paths updated successfully"

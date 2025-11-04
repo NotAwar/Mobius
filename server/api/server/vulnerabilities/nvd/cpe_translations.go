@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/google/go-github/v37/github"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/download"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/download"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
 )
 
 const cpeTranslationsFilename = "cpe_translations.json"
@@ -39,7 +39,7 @@ func loadCPETranslations(path string) (CPETranslations, error) {
 }
 
 // DownloadCPETranslationsFromGithub downloads the CPE translations to the given vulnPath. If cpeTranslationsURL is empty, attempts to download it
-// from the latest release of github.com/notawar/nvd. Skips downloading if CPE translations is newer than the release.
+// from the latest release of github.com/MobiusDM/nvd. Skips downloading if CPE translations is newer than the release.
 func DownloadCPETranslationsFromGithub(vulnPath string, cpeTranslationsURL string) error {
 	path := filepath.Join(vulnPath, cpeTranslationsFilename)
 

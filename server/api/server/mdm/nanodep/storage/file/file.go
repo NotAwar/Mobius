@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
-	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/client"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/storage"
 )
 
 const defaultFileMode = 0644

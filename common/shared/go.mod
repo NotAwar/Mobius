@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/shared
+module github.com/MobiusDM/mobius/shared
 
 go 1.25.3
 
@@ -9,7 +9,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/klauspost/compress v1.18.0
-	github.com/notawar/mobius/server/api v0.0.0-00010101000000-000000000000
+	github.com/MobiusDM/mobius/server/api v0.0.0-00010101000000-000000000000
 	github.com/rs/zerolog v1.34.0
 	github.com/saferwall/pe v1.5.7
 	github.com/sassoftware/relic/v8 v8.2.0
@@ -94,4 +94,4 @@ require (
 	howett.net/plist v1.0.1 // indirect
 )
 
-replace github.com/notawar/mobius/server/api => ../../server/api
+replace github.com/MobiusDM/mobius/server/api => ../../server/api

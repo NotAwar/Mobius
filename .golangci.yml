@@ -1,3 +1,9 @@
+# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint.json
+version: "2"
+
+run:
+  timeout: 5m
+
 linters:
   enable:
   - errcheck
@@ -12,75 +18,66 @@ linters:
   - funlen
   - gocyclo
   - lll
-
-linters-settings:
-  errcheck:
-    # Exclude legacy server code from errcheck
-    exclude-functions:
-    - (*github.com/go-kit/log.Logger).Log
-    - (github.com/go-kit/log.Logger).Log
+  settings:
+    errcheck:
+      exclude-functions:
+      - (*github.com/go-kit/log.Logger).Log
+      - (github.com/go-kit/log.Logger).Log
+  exclusions:
+    rules:
+    # Exclude legacy server code from all linters
+    - path: server/
+      linters:
+      - errcheck
+      - gosec
+      - unused
+      - bodyclose
+      - gosimple
+      - misspell
+      - staticcheck
+    # Exclude CLI module from linters (legacy code)
+    - path: server/cli/
+      linters:
+      - errcheck
+      - gosec
+      - unused
+      - bodyclose
+      - gosimple
+      - misspell
+      - staticcheck
+    - path: tools/
+      linters:
+      - errcheck
+      - gosec
+      - unused
+      - bodyclose
+      - misspell
+      - staticcheck
+    # Exclude common/shared and server/api legacy pkg code
+    - path: pkg/(download|certificate|scripts|gitops|mobiusdaemonbase|spec)/
+      linters:
+      - gosec
+      - bodyclose
+      - misspell
+      - staticcheck
+    - path: pkg/gitops\.go
+      linters:
+      - misspell
+    - path: pkg/mobiusdaemonbase/
+      linters:
+      - misspell
+    # Allow unused fields in service mock implementations (used for interface compatibility)
+    - path: pkg/service/services\.go
+      linters:
+      - unused
+    # Allow unused handlers in API (planned features)
+    - path: api/handlers\.go
+      linters:
+      - unused
+    - path: api/device_handlers\.go
+      linters:
+      - gosimple
 
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
-  exclude-dirs:
-  - "test"
-  - "tests"
-  exclude-files:
-  - ".*_test\\.go"
-  exclude-rules:
-  # Exclude legacy server code from all linters
-  - path: server/
-    linters:
-    - errcheck
-    - gosec
-    - unused
-    - bodyclose
-    - gosimple
-    - misspell
-    - staticcheck
-  # Exclude CLI module from linters (legacy code)
-  - path: server/cli/
-    linters:
-    - errcheck
-    - gosec
-    - unused
-    - bodyclose
-    - gosimple
-    - misspell
-    - staticcheck
-  - path: tools/
-    linters:
-    - errcheck
-    - gosec
-    - unused
-    - bodyclose
-    - misspell
-    - staticcheck
-  # Exclude common/shared and server/api legacy pkg code
-  - path: pkg/(download|certificate|scripts|gitops|mobiusdaemonbase|spec)/
-    linters:
-    - gosec
-    - bodyclose
-    - misspell
-    - staticcheck
-  - path: pkg/gitops\.go
-    linters:
-    - misspell
-  - path: pkg/mobiusdaemonbase/
-    linters:
-    - misspell
-  # Allow unused fields in service mock implementations (used for interface compatibility)
-  - path: pkg/service/services\.go
-    linters:
-    - unused
-  # Allow unused handlers in API (planned features)
-  - path: api/handlers\.go
-    linters:
-    - unused
-  - path: api/device_handlers\.go
-    linters:
-    - gosimple
-
-run:
-  timeout: 5m

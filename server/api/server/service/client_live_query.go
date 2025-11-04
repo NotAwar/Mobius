@@ -10,11 +10,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 
 	"github.com/gorilla/websocket"
-	ws "github.com/notawar/mobius/server/api/server/websocket"
+	ws "github.com/MobiusDM/mobius/server/api/server/websocket"
 )
 
 // LiveQueryResultsHandler provides access to all of the information about an

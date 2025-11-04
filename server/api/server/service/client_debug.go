@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 func (c *Client) getRawBody(endpoint string) ([]byte, error) {

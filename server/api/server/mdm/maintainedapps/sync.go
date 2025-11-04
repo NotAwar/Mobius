@@ -10,11 +10,11 @@ import (
 	"os"
 	"time"
 
-	// ma "github.com/notawar/mobius/maintained-apps" // Removed enterprise dependency
+	// ma "github.com/MobiusDM/mobius/maintained-apps" // Removed enterprise dependency
 	kitlog "github.com/go-kit/log"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
 )
 
 // Local replacement for enterprise types
@@ -55,7 +55,7 @@ type AppsList struct {
 	Apps    []appListing `json:"apps"`
 }
 
-const fmaOutputsBase = "https://raw.githubusercontent.com/notawar/mobius/refs/heads/main/maintained-apps/outputs"
+const fmaOutputsBase = "https://raw.githubusercontent.com/MobiusDM/mobius/refs/heads/main/maintained-apps/outputs"
 
 // Refresh fetches the latest information about maintained apps from FMA's
 // apps list on GitHub and updates the Mobius database with the new information.

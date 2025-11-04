@@ -2,7 +2,7 @@
 package data
 
 import (
-	"github.com/notawar/mobius/server/api/server/goose"
+	"github.com/MobiusDM/mobius/server/api/server/goose"
 )
 
 // MigrationClient for data migrations

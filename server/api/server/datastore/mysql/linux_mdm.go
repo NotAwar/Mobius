@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 func (ds *Datastore) GetLinuxDiskEncryptionSummary(ctx context.Context, teamID *uint) (mobius.MDMLinuxDiskEncryptionSummary, error) {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/api"
-	"github.com/notawar/mobius/server/api/pkg/auth"
+	"github.com/MobiusDM/mobius/server/api/api"
+	"github.com/MobiusDM/mobius/server/api/pkg/auth"
 )
 
 // AuthServiceDB implements AuthService with database persistence

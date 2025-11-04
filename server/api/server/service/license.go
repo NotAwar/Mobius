@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/notawar/mobius/server/api/server/authz"
-	"github.com/notawar/mobius/server/api/server/contexts/viewer"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/authz"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/viewer"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // /////////////////////////////////////////////////////////////////////////////

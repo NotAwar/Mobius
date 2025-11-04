@@ -3,7 +3,7 @@ package webhooks
 import (
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 type VulnArgs struct {

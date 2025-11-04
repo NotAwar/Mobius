@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 type IndexedCPEItem struct {

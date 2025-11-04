@@ -9,10 +9,10 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
-	"github.com/notawar/mobius/server/api/server/mdm/android"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/middleware/auth"
-	eu "github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/android"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/auth"
+	eu "github.com/MobiusDM/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {

@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 func UserByEmailWithUser(u *mobius.User) UserByEmailFunc {

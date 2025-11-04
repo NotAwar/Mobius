@@ -15,8 +15,8 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/pkg/mobiushttp"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiushttp"
 )
 
 var errInvalidScheme = errors.New("address must start with https:// for remote connections")

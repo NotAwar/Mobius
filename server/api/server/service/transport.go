@@ -9,10 +9,10 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
-	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {

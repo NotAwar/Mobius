@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/service"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/service"
 )
 
 // StaticToken holds static token bytes.

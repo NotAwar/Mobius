@@ -7,8 +7,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
-	"github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/client"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/storage"
 )
 
 // Schema contains the MySQL schema for the DEP storage.

@@ -11,17 +11,17 @@ import (
 
 	"github.com/WatchBeam/clock"
 	kitlog "github.com/go-kit/log"
-	"github.com/notawar/mobius/server/api/server/authz"
-	"github.com/notawar/mobius/server/api/server/config"
-	apple_mdm "github.com/notawar/mobius/server/api/server/mdm/apple"
-	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
-	nanodep_storage "github.com/notawar/mobius/server/api/server/mdm/nanodep/storage"
-	nanomdm_push "github.com/notawar/mobius/server/api/server/mdm/nanomdm/push"
-	nanomdm_storage "github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/async"
-	"github.com/notawar/mobius/server/api/server/service/conditional_access_microsoft_proxy"
-	"github.com/notawar/mobius/server/api/server/sso"
+	"github.com/MobiusDM/mobius/server/api/server/authz"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	apple_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/apple"
+	microsoft_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/microsoft"
+	nanodep_storage "github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/storage"
+	nanomdm_push "github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/push"
+	nanomdm_storage "github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/storage"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/async"
+	"github.com/MobiusDM/mobius/server/api/server/service/conditional_access_microsoft_proxy"
+	"github.com/MobiusDM/mobius/server/api/server/sso"
 )
 
 var _ mobius.Service = (*Service)(nil)

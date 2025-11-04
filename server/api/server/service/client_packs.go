@@ -3,7 +3,7 @@ package service
 import (
 	"net/url"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // ApplyPacks sends the list of Packs to be applied (upserted) to the

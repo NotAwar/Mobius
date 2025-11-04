@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/cryptoutil"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/cryptoutil"
 )
 
 // CACert represents a new self-signed CA certificate

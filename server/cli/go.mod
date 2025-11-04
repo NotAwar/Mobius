@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/server/cli
+module github.com/MobiusDM/mobius/server/cli
 
 go 1.25.3
 
@@ -13,8 +13,8 @@ require (
 	github.com/go-kit/log v0.2.1
 	github.com/google/go-github/v37 v37.0.0
 	github.com/gosuri/uilive v0.0.4
-	github.com/notawar/mobius/server/api v0.0.0-00010101000000-000000000000
-	github.com/notawar/mobius/shared v0.0.0
+	github.com/MobiusDM/mobius/server/api v0.0.0-00010101000000-000000000000
+	github.com/MobiusDM/mobius/shared v0.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/sethvargo/go-password v0.3.1
 	github.com/urfave/cli/v2 v2.27.7
@@ -180,6 +180,6 @@ require (
 )
 
 replace (
-	github.com/notawar/mobius/server/api => ../api
-	github.com/notawar/mobius/shared => ../../common/shared
+	github.com/MobiusDM/mobius/server/api => ../api
+	github.com/MobiusDM/mobius/shared => ../../common/shared
 )

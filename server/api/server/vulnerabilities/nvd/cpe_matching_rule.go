@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/vulnerabilities/nvd/tools/wfn"
 )
 
 // CPEMatchingRuleSpec allows you to match against a CPE. Version ranges are supported via SemVer constraints.

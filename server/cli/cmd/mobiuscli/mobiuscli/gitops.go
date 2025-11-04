@@ -7,10 +7,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
-	"github.com/notawar/mobius/server/api/server/service"
-	"github.com/notawar/mobius/shared/pkg/spec"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/server/api/server/service"
+	"github.com/MobiusDM/mobius/shared/pkg/spec"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/text/unicode/norm"
 )

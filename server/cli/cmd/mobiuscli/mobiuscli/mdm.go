@@ -8,8 +8,8 @@ import (
 	"slices"
 
 	kithttp "github.com/go-kit/kit/transport/http"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service"
 	"github.com/urfave/cli/v2"
 )
 

@@ -12,10 +12,10 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mdm"
-	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mdm"
+	microsoft_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/microsoft"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 func isWindowsHostConnectedToMobiusMDM(ctx context.Context, q sqlx.QueryerContext, h *mobius.Host) (bool, error) {

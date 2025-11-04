@@ -8,9 +8,9 @@ import (
 
 	"github.com/VividCortex/mysqlerr"
 	"github.com/go-sql-driver/mysql"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/datastore/mysql/common_mysql"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/mysql/common_mysql"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 func notFound(kind string) *common_mysql.NotFoundError {

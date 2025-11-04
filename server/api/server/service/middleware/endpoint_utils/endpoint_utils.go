@@ -20,13 +20,13 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/gorilla/mux"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/contexts/license"
-	"github.com/notawar/mobius/server/api/server/contexts/logging"
-	"github.com/notawar/mobius/server/api/server/mdm/android"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/middleware/authzcheck"
-	"github.com/notawar/mobius/server/api/server/service/middleware/ratelimit"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/license"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/logging"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/android"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/authzcheck"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/ratelimit"
 )
 
 type HandlerRoutesFunc func(r *mux.Router, opts []kithttp.ServerOption)

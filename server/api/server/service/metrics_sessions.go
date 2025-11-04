@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 func (mw metricsMiddleware) SSOSettings(ctx context.Context) (settings *mobius.SessionSSOSettings, err error) {

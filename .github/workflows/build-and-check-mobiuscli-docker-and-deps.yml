@@ -1,10 +1,11 @@
 ---
+# DISABLED: Requires Makefile targets (wix-docker, bomutils-docker, mobiuscli-docker) that don't exist yet
 name: Build mobiuscli container dependencies and check vulnerabilities
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"
+  # schedule:
+  #   - cron: "0 6 * * *"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -36,13 +37,13 @@ jobs:
         with:
           go-version-file: "server/cli/go.mod"
 
-      - name: Build ghcr.io/MobiusDM/wix
+      - name: Build ghcr.io/notawar/wix
         run: make wix-docker
 
-      - name: Build ghcr.io/MobiusDM/bomutils
+      - name: Build ghcr.io/notawar/bomutils
         run: make bomutils-docker
 
-      - name: Build ghcr.io/MobiusDM/mobiuscli
+      - name: Build ghcr.io/notawar/mobiuscli
         run: make mobiuscli-docker
 
       - name: List VEX files
@@ -57,7 +58,7 @@ jobs:
             echo "VEX_FILES=" >> $GITHUB_OUTPUT
           fi
 
-      - name: Run Trivy vulnerability scanner on ghcr.io/MobiusDM/mobius-cli
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/mobius-cli
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -75,28 +76,28 @@ jobs:
             --pkg-types=os,library \
             --severity=HIGH,CRITICAL \
             --vex="${{ steps.generate_vex_files.outputs.VEX_FILES }}" \
-            ghcr.io/MobiusDM/mobius-cli
+            ghcr.io/notawar/mobius-cli
 
-      - name: Run Trivy vulnerability scanner on ghcr.io/MobiusDM/wix
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/wix
         uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4 # 0.32.0
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: "ghcr.io/MobiusDM/wix"
+          image-ref: "ghcr.io/notawar/wix"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL"
 
-      - name: Run Trivy vulnerability scanner on ghcr.io/MobiusDM/bomutils
+      - name: Run Trivy vulnerability scanner on ghcr.io/notawar/bomutils
         uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4 # 0.32.0
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
         with:
-          image-ref: "ghcr.io/MobiusDM/bomutils"
+          image-ref: "ghcr.io/notawar/bomutils"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true

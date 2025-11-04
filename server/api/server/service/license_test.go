@@ -4,12 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/notawar/mobius/server/api/server/authz"
-	"github.com/notawar/mobius/server/api/server/config"
-	authz_ctx "github.com/notawar/mobius/server/api/server/contexts/authz"
-	"github.com/notawar/mobius/server/api/server/contexts/license"
-	"github.com/notawar/mobius/server/api/server/contexts/viewer"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/authz"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	authz_ctx "github.com/MobiusDM/mobius/server/api/server/contexts/authz"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/license"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/viewer"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // TestApplyLicenseEndpointRBAC verifies that only global admins can apply/update licenses.

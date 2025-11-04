@@ -5,8 +5,8 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // InviteMailer is used to build an email template for the invite email.

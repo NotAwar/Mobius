@@ -1,10 +1,11 @@
 ---
+# DISABLED: References orbit/pkg/packaging directory that doesn't exist (copied from Fleet)
 name: Update certs
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 6 * * *'  # Nightly 6AM UTC
+  # schedule:
+  #   - cron: '0 6 * * *'  # Nightly 6AM UTC
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

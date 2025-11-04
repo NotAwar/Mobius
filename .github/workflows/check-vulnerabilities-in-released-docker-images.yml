@@ -1,11 +1,12 @@
 ---
+# DISABLED: Requires published container images at ghcr.io/NotAwar/mobius-*
 name: Check critical vulnerabilities in released GitHub Package images
 
 on:
   workflow_dispatch:
   pull_request:
-  schedule:
-    - cron: "0 6 * * *"
+  # schedule:
+  #   - cron: "0 6 * * *"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -45,7 +46,7 @@ jobs:
         run: |
           RELEASES="${{ steps.get_latest_releases.outputs.MOBIUS_LATEST_RELEASES }}"
           for version in $RELEASES; do
-            docker pull ghcr.io/MobiusDM/mobius-server:$version
+            docker pull ghcr.io/notawar/mobius-server:$version
           done
 
       - name: List mobius VEX files
@@ -62,7 +63,7 @@ jobs:
 
       # We use the trivy command and not the github action because it doesn't support loading
       # VEX files yet and looks like we can't run the action on multiple images.
-      - name: Run trivy vulnerability scanner on ghcr.io/MobiusDM/mobius-server images
+      - name: Run trivy vulnerability scanner on ghcr.io/notawar/mobius-server images
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -81,7 +82,7 @@ jobs:
               --pkg-types=os,library \
               --severity=CRITICAL \
               --vex="${{ steps.generate_mobius_vex_files.outputs.MOBIUS_VEX_FILES }}" \
-              ghcr.io/MobiusDM/mobius-server:$version
+              ghcr.io/notawar/mobius-server:$version
           done
 
       - name: List mobiuscli VEX files
@@ -97,7 +98,7 @@ jobs:
           fi
 
       # We use the trivy command and not the github action because it doesn't support loading VEX files yet.
-      - name: Run trivy vulnerability scanner on latest released ghcr.io/MobiusDM/mobius-cli image
+      - name: Run trivy vulnerability scanner on latest released ghcr.io/notawar/mobius-cli image
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
@@ -107,4 +108,4 @@ jobs:
             --pkg-types=os,library \
             --severity=CRITICAL \
             --vex="${{ steps.generate_mobiuscli_vex_files.outputs.MOBIUSCTL_VEX_FILES }}" \
-            ghcr.io/MobiusDM/mobius-cli:latest
+            ghcr.io/notawar/mobius-cli:latest

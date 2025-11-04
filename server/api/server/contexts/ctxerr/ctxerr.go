@@ -21,9 +21,9 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
-	"github.com/notawar/mobius/server/api/server/contexts/host"
-	"github.com/notawar/mobius/server/api/server/contexts/viewer"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/host"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/viewer"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 	"go.elastic.co/apm/v2"
 )
 

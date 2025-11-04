@@ -5,7 +5,7 @@ import (
 	"crypto/x509"
 	"errors"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/cryptoutil"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/cryptoutil"
 )
 
 // SignatureVerifier is a simple certificate verifier

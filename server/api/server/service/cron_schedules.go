@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // TriggerCronSchedule attempts to trigger an ad-hoc run of the named cron schedule.

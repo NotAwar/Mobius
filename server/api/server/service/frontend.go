@@ -6,8 +6,8 @@ import (
 	"net/url"
 
 	"github.com/go-kit/log"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/middleware/endpoint_utils"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/middleware/endpoint_utils"
 )
 
 func ServeFrontend(urlPrefix string, sandbox bool, logger log.Logger) http.Handler {

@@ -1,4 +1,4 @@
-module github.com/notawar/mobius/server/api
+module github.com/MobiusDM/mobius/server/api
 
 go 1.25.3
 
@@ -53,7 +53,7 @@ require (
 	github.com/micromdm/plist v0.2.1
 	github.com/mna/redisc v1.3.2
 	github.com/ngrok/sqlmw v0.0.0-20211220175533-9d16fdc47b31
-	github.com/notawar/mobius/shared v0.0.0-00010101000000-000000000000
+	github.com/MobiusDM/mobius/shared v0.0.0-00010101000000-000000000000
 	github.com/nukosuke/go-zendesk v0.13.1
 	github.com/open-policy-agent/opa v1.4.2
 	github.com/oschwald/geoip2-golang v1.8.0
@@ -195,4 +195,4 @@ tool (
 	github.com/quasilyte/go-ruleguard/dsl
 )
 
-replace github.com/notawar/mobius/shared => ../../common/shared
+replace github.com/MobiusDM/mobius/shared => ../../common/shared

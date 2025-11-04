@@ -10,8 +10,8 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 const calendarEventCols = `ce.id, ce.uuid, ce.email, ce.start_time, ce.end_time, ce.event, ce.timezone, ce.created_at, ce.updated_at`

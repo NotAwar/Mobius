@@ -3,7 +3,7 @@ package cached_mysql
 import (
 	"encoding/json"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 type packsList []*mobius.Pack

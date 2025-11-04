@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/service/contract"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/service/contract"
 )
 
 func getScimDetailsEndpoint(ctx context.Context, _ interface{}, svc mobius.Service) (mobius.Errorer, error) {

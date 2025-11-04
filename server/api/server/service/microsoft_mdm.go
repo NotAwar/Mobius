@@ -22,18 +22,18 @@ import (
 
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/notawar/mobius/server/api/server"
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/contexts/logging"
-	mdmlifecycle "github.com/notawar/mobius/server/api/server/mdm/lifecycle"
-	microsoft_mdm "github.com/notawar/mobius/server/api/server/mdm/microsoft"
-	"github.com/notawar/mobius/server/api/server/mdm/microsoft/syncml"
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
-	"github.com/notawar/mobius/server/api/pkg/mobiusdbase"
+	"github.com/MobiusDM/mobius/server/api/server"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/logging"
+	mdmlifecycle "github.com/MobiusDM/mobius/server/api/server/mdm/lifecycle"
+	microsoft_mdm "github.com/MobiusDM/mobius/server/api/server/mdm/microsoft"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/microsoft/syncml"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/server/api/pkg/mobiusdbase"
 
 	"github.com/google/uuid"
-	mdm_types "github.com/notawar/mobius/server/api/server/mobius"
+	mdm_types "github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 const maxRequestLogSize = 10240

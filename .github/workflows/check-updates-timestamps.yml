@@ -1,5 +1,6 @@
 ---
 # Checks signatures that are about to expire on https://updates.mobiusmdm.com.
+# DISABLED: Requires TUF infrastructure at updates.mobiusmdm.com
 name: "TUF expiration check: updates.mobiusmdm.com"
 
 on:
@@ -7,8 +8,8 @@ on:
     paths:
       - ".github/workflows/check-updates-timestamps.yml"
   workflow_dispatch: # Manual
-  schedule:
-    - cron: "0 10,22 * * *" # every day at 10 AM and 10 PM
+  # schedule:
+  #   - cron: "0 10,22 * * *" # every day at 10 AM and 10 PM
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/contexts/ctxerr"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/contexts/ctxerr"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 // InstallerTimeout is the timeout duration for downloading and adding a maintained app.

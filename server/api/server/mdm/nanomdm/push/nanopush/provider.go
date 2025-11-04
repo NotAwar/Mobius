@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/push"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/push"
 	"golang.org/x/net/http2"
 )
 

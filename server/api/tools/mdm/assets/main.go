@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/WatchBeam/clock"
-	"github.com/notawar/mobius/server/api/server/config"
-	"github.com/notawar/mobius/server/api/server/datastore/mysql"
-	"github.com/notawar/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/config"
+	"github.com/MobiusDM/mobius/server/api/server/datastore/mysql"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
 )
 
 const (

@@ -16,8 +16,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/shared/pkg/secure"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/shared/pkg/secure"
 )
 
 var ErrUnsupportedType = errors.New("unsupported file type")

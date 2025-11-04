@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/storage"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/storage"
 )
 
 type MicroWebhook struct {

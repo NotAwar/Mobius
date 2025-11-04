@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mobius"
-	"github.com/notawar/mobius/server/api/server/ptr"
-	"github.com/notawar/mobius/server/api/pkg/retry"
+	"github.com/MobiusDM/mobius/server/api/server/mobius"
+	"github.com/MobiusDM/mobius/server/api/server/ptr"
+	"github.com/MobiusDM/mobius/server/api/pkg/retry"
 	"github.com/rs/zerolog/log"
 )
 

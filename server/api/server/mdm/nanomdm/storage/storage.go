@@ -7,7 +7,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	"github.com/notawar/mobius/server/api/server/mdm/nanomdm/mdm"
+	"github.com/MobiusDM/mobius/server/api/server/mdm/nanomdm/mdm"
 )
 
 type UserAuthenticateStore interface {

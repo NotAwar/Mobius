@@ -10,7 +10,7 @@ import (
 	"io"
 	"net/http"
 
-	depclient "github.com/notawar/mobius/server/api/server/mdm/nanodep/client"
+	depclient "github.com/MobiusDM/mobius/server/api/server/mdm/nanodep/client"
 )
 
 const (

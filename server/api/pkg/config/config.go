@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/notawar/mobius/server/api/pkg/database"
+	"github.com/MobiusDM/mobius/server/api/pkg/database"
 )
 
 // AppConfig holds all application configuration

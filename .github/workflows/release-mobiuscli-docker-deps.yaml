@@ -1,10 +1,10 @@
 ---
-# Builds and releases to production the ghcr.io/MobiusDM/bomutils:latest and
-# ghcr.io/MobiusDM/wix:latest Docker images, which are the docker image
+# Builds and releases to production the ghcr.io/notawar/bomutils:latest and
+# ghcr.io/notawar/wix:latest Docker images, which are the docker image
 # dependencies of the mobiuscli command.
 #
 # This is separate from Mobius releases because we only release
-# ghcr.io/MobiusDM/bomutils and ghcr.io/MobiusDM/wix only if we add new
+# ghcr.io/notawar/bomutils and ghcr.io/notawar/wix only if we add new
 # dependencies or for security updates.
 name: Release mobiuscli docker dependencies
 
@@ -49,14 +49,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ghcr.io/MobiusDM/wix
+      - name: Build ghcr.io/notawar/wix
         run: make wix-docker
 
-      - name: Build ghcr.io/MobiusDM/bomutils
+      - name: Build ghcr.io/notawar/bomutils
         run: make bomutils-docker
 
       #
-      # After ghcr.io/MobiusDM/wix and ghcr.io/MobiusDM/bomutils are built,
+      # After ghcr.io/notawar/wix and ghcr.io/notawar/bomutils are built,
       # let's smoke test pkg/msi generation before pushing.
       #
 
@@ -73,8 +73,8 @@ jobs:
       # Now push to production
       #
 
-      - name: Push ghcr.io/MobiusDM/bomutils
-        run: docker push ghcr.io/MobiusDM/bomutils:latest
+      - name: Push ghcr.io/notawar/bomutils
+        run: docker push ghcr.io/notawar/bomutils:latest
 
-      - name: Push ghcr.io/MobiusDM/wix
-        run: docker push ghcr.io/MobiusDM/wix:latest
+      - name: Push ghcr.io/notawar/wix
+        run: docker push ghcr.io/notawar/wix:latest

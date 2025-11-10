@@ -290,7 +290,7 @@ jobs:
           set -e  # Re-enable strict error handling
 
       - name: Log in to Container Registry
-        uses: docker/login-action@v3.5.0
+        uses: docker/login-action@v3.6.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}

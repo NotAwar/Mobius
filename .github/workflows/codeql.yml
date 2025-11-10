@@ -106,7 +106,7 @@ jobs:
       #  Set up Node.js for JavaScript/TypeScript analysis
       - name: Set up Node.js
         if: matrix.language == 'javascript-typescript'
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        uses: actions/setup-node@dda4788290998366da86b6a4f497909644397bb2
         #  v4.0.3
         with:
           node-version: '18'

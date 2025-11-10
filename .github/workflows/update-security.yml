@@ -193,7 +193,7 @@ jobs:
 
       - name: Create issue for security attention (if needed)
         if: steps.security_check.outputs.npm_vulnerabilities != '0' || steps.security_check.outputs.go_vulnerabilities != '0'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const npmVulns = ${{ steps.security_check.outputs.npm_vulnerabilities }};

@@ -127,7 +127,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go (for coverage tooling)
         uses: actions/setup-go@v5

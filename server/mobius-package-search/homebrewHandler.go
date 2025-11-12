@@ -37,8 +37,11 @@ func homebrewHandler(w http.ResponseWriter, r *http.Request) {
 	var req SearchRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
+		printLog("Invalid request", LogLevelError, req)
 		return
 	}
+
+	printLog("Homebrew request received", LogLevelInfo, req)
 
 	// Compile regexps for search/exclude (case-insensitive)
 	searchRe, err := regexp.Compile("(?i)" + regexp.QuoteMeta(req.Search))
@@ -74,7 +77,7 @@ func homebrewHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(result)
 	}
 
-	var results []Result
+	var results []Application
 	for _, f := range formulas {
 		if !searchRe.MatchString(f.Name) {
 			continue
@@ -99,11 +102,13 @@ func homebrewHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		results = append(results, Result{
+		results = append(results, Application{
 			Name:        f.Name,
 			Description: f.Desc,
 			Version:     f.Versions.Stable,
-			Homepage:    f.Homepage,
+			Attributes: map[string]string{
+				"homepage": f.Homepage,
+			},
 		})
 	}
 

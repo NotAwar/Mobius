@@ -1,5 +1,5 @@
 # Stage 1: Build the Go binary
-FROM golang:1.25.3-alpine AS builder
+FROM docker.io/library/golang:1.25.3-alpine AS builder
 
 WORKDIR /app
 
@@ -14,12 +14,12 @@ RUN chmod +x internal/apt-search.sh internal/flatpak-search.sh
 RUN go build -o search-api .
 
 # Stage 2: Lightweight Ubuntu runtime
-FROM ubuntu:24.04
+FROM docker.io/library/ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install only essential packages
-RUN apt update && apt install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     flatpak \
     software-properties-common \
     ca-certificates \

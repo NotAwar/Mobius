@@ -61,7 +61,9 @@ for line in "${lines[@]}"; do
 
   echo "  {"
   echo "    \"name\": \"$name\","
-  echo "    \"applicationId\": \"$appid\","
+  echo "    \"attributes\": { "
+  echo "    \"applicationId\": \"$appid\""
+  echo "    },"
   echo "    \"description\": \"$desc\","
   echo "    \"version\": \"$version\""
   echo -n "  }"

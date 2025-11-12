@@ -48,7 +48,7 @@ BEGIN {
       (exclude == "" || tolower(desc) !~ tolower(exclude)) &&
       (section_filter == "" || tolower(section) == tolower(section_filter))) {
     if (!first) print ","
-    printf "  {\n    \"package\": \"%s\",\n    \"architecture\": \"%s\",\n    \"section\": \"%s\",\n    \"description\": \"%s\",\n    \"version\": \"%s\",\n    \"origin\": \"%s\",\n    \"homepage\": \"%s\"\n  }", pkg, architecture, section, desc, version, origin, homepage
+    printf "  {\n  \"name\": \"%s\",\n  \"description\": \"%s\",\n \"version\": \"%s\", \"attributes\": {\n  \"architecture\": \"%s\",\n    \"section\": \"%s\",\n   \"origin\": \"%s\",\n    \"homepage\": \"%s\"\n }  }", pkg, desc, version, architecture, section, origin, homepage
     first = 0
   }
 }

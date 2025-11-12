@@ -10,8 +10,11 @@ func aptHandler(w http.ResponseWriter, r *http.Request) {
 	var req SearchRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
+		printLog("Invalid request", LogLevelError, req)
 		return
 	}
+
+	printLog("Apt request received", LogLevelInfo, req)
 
 	output, _ := runScript("./apt-search.sh", req.Search, req.Exclude, req.Section)
 	var res interface{}

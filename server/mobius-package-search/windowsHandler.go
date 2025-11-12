@@ -35,7 +35,11 @@ func windowsHandler(w http.ResponseWriter, r *http.Request) {
 	var req SearchRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
+		printLog("Invalid request", LogLevelError, req)
+		return
 	}
+
+	printLog("Windows request received", LogLevelInfo, req)
 
 	type QueryBody struct {
 		Query struct {
@@ -77,14 +81,16 @@ func windowsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Failed to unmarshal JSON: %v", err)
 	}
 
-	var simplified []SimplifiedApp
+	var simplified []Application
 	for _, item := range original.Data {
 		if len(req.Exclude) == 0 ||
 			!strings.Contains(item.PackageName, req.Exclude) {
-			simplified = append(simplified, SimplifiedApp{
-				Name:              item.PackageName,
-				Publisher:         item.Publisher,
-				PackageIdentifier: item.PackageIdentifier,
+			simplified = append(simplified, Application{
+				Name: item.PackageName,
+				Attributes: map[string]string{
+					"publisher":         item.Publisher,
+					"packageIdentifier": item.PackageIdentifier,
+				},
 			})
 		}
 	}

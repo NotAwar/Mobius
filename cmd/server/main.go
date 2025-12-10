@@ -8,9 +8,9 @@ import (
 
 	"mobius/internal/deploy"
 	"mobius/internal/docker"
+	"mobius/internal/headscale"
 	"mobius/internal/kind"
 
-	cmd "github.com/go-cmd/cmd"
 	"github.com/sirupsen/logrus"
 )
 
@@ -59,48 +59,10 @@ func main() {
 
 	// Deploy Headscale
 	deployer := deploy.NewDeployer(kubeconfigPath, logger)
-
-	// Create namespace for Headscale
-	if err := deployer.CreateNamespace("headscale"); err != nil {
-		logger.Warnf("Failed to create namespace: %v", err)
-	}
-
-	// Clone Headscale chart
-	logger.Info("Cloning Headscale Helm chart from GitHub...")
-	chartTmpDir := "/tmp/headscale-helm-chart"
-	cloneCmd := cmd.NewCmd("git", "clone", "https://github.com/IvanLapchenko/headscale-helm-chart.git", chartTmpDir)
-	cloneStatus := <-cloneCmd.Start()
-	if cloneStatus.Exit != 0 {
-		// Clean up old clone if exists
-		cleanCmd := cmd.NewCmd("rm", "-rf", chartTmpDir)
-		<-cleanCmd.Start()
-		// Try cloning again
-		cloneCmd = cmd.NewCmd("git", "clone", "https://github.com/IvanLapchenko/headscale-helm-chart.git", chartTmpDir)
-		cloneStatus = <-cloneCmd.Start()
-		if cloneStatus.Exit != 0 {
-			logger.Errorf("Failed to clone Headscale chart: %v", cloneStatus.Stderr)
-		}
-	}
-
-	// Install Headscale Helm chart from cloned directory
-	// Disable ingresses for local development
-	helmValues := map[string]string{
-		"ingressApi.enabled": "false",
-		"ingressUI.enabled":  "false",
-	}
-	
-	if err := deployer.HelmInstall(
-		"headscale",
-		chartTmpDir,
-		"headscale",
-		helmValues,
-		nil, // No values files for now
-	); err != nil {
-		logger.Errorf("Failed to install Headscale: %v", err)
-	} else {
-		logger.Info("Headscale installed successfully!")
-		logger.Info("Headscale is running in the cluster!")
-		logger.Info("To access Headscale, use: kubectl port-forward -n headscale svc/headscale 8080:8080")
+	headscaleConfig := headscale.DefaultConfig()
+	headscaleDeployer := headscale.NewDeployer(deployer, logger, headscaleConfig)
+	if err := headscaleDeployer.Deploy(); err != nil {
+		logger.Errorf("Failed to deploy Headscale: %v", err)
 	}
 
 	// Setup signal handling
@@ -110,4 +72,5 @@ func main() {
 	// Wait for shutdown signal
 	<-signChn
 	logger.Info("Shutdown signal received, cleaning up...")
+	//
 }

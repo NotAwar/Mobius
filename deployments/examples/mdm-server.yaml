@@ -1,0 +1,132 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mobius-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mdm-config
+  namespace: mobius-system
+data:
+  server.yaml: |
+    server:
+      host: "0.0.0.0"
+      port: 8443
+      tls:
+        enabled: true
+    mdm:
+      apple:
+        enabled: true
+      windows:
+        enabled: true
+    database:
+      host: postgres
+      port: 5432
+      name: mobius
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdm-server
+  namespace: mobius-system
+  labels:
+    app: mdm-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mdm-server
+  template:
+    metadata:
+      labels:
+        app: mdm-server
+    spec:
+      containers:
+      - name: mdm-server
+        image: mobius/mdm-server:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8443
+          name: https
+        - containerPort: 8080
+          name: http
+        env:
+        - name: LOG_LEVEL
+          value: "info"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: mdm-secrets
+              key: database-url
+        volumeMounts:
+        - name: config
+          mountPath: /etc/mobius
+        - name: certs
+          mountPath: /etc/mobius/certs
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: config
+        configMap:
+          name: mdm-config
+      - name: certs
+        secret:
+          secretName: mdm-tls-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mdm-server
+  namespace: mobius-system
+  labels:
+    app: mdm-server
+spec:
+  type: ClusterIP
+  ports:
+  - port: 443
+    targetPort: 8443
+    protocol: TCP
+    name: https
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: mdm-server
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mdm-secrets
+  namespace: mobius-system
+type: Opaque
+stringData:
+  database-url: "postgresql://mobius:changeme@postgres:5432/mobius?sslmode=disable"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mdm-tls-certs
+  namespace: mobius-system
+type: kubernetes.io/tls
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    # Your certificate here
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN PRIVATE KEY-----
+    # Your private key here
+    -----END PRIVATE KEY-----

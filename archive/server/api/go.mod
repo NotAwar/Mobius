@@ -5,6 +5,7 @@ go 1.25.3
 require (
 	cloud.google.com/go/pubsub v1.45.1
 	github.com/Masterminds/semver/v3 v3.3.1
+	github.com/MobiusDM/mobius/shared v0.0.0-00010101000000-000000000000
 	github.com/RobotsAndPencils/buford v0.14.0
 	github.com/VividCortex/mysqlerr v0.0.0-20170204212430-6c6b55f8796f
 	github.com/WatchBeam/clock v0.0.0-20170901150240-b08e6b4da7ea
@@ -22,7 +23,6 @@ require (
 	github.com/docker/go-units v0.5.0
 	github.com/doug-martin/goqu/v9 v9.18.0
 	github.com/facebookincubator/flog v0.0.0-20190930132826-d2511d0ce33c
-	github.com/fatih/color v1.18.0
 	github.com/getsentry/sentry-go v0.18.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/github/smimesign v0.2.0
@@ -53,10 +53,8 @@ require (
 	github.com/micromdm/plist v0.2.1
 	github.com/mna/redisc v1.3.2
 	github.com/ngrok/sqlmw v0.0.0-20211220175533-9d16fdc47b31
-	github.com/MobiusDM/mobius/shared v0.0.0-00010101000000-000000000000
 	github.com/nukosuke/go-zendesk v0.13.1
 	github.com/open-policy-agent/opa v1.4.2
-	github.com/oschwald/geoip2-golang v1.8.0
 	github.com/osquery/osquery-go v0.0.0-20231130195733-61ac79279aaa
 	github.com/pandatix/nvdapi v0.6.4
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -73,21 +71,21 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/throttled/throttled/v2 v2.8.0
-	github.com/ulikunitz/xz v0.5.14
+	github.com/ulikunitz/xz v0.5.15
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8
 	go.elastic.co/apm/module/apmgorilla/v2 v2.6.2
 	go.elastic.co/apm/v2 v2.7.0
 	go.etcd.io/bbolt v1.3.10
 	go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux v0.56.0
 	go.opentelemetry.io/otel v1.37.0
-	golang.org/x/crypto v0.43.0
+	golang.org/x/crypto v0.45.0
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
-	golang.org/x/net v0.45.0
+	golang.org/x/net v0.47.0
 	golang.org/x/oauth2 v0.32.0
-	golang.org/x/sync v0.17.0
-	golang.org/x/sys v0.37.0
-	golang.org/x/text v0.30.0
-	golang.org/x/tools v0.37.0
+	golang.org/x/sync v0.18.0
+	golang.org/x/sys v0.38.0
+	golang.org/x/text v0.31.0
+	golang.org/x/tools v0.38.0
 	google.golang.org/api v0.215.0
 	google.golang.org/grpc v1.75.0
 	gopkg.in/guregu/null.v3 v3.5.0
@@ -142,7 +140,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/oschwald/maxminddb-golang v1.10.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
@@ -180,7 +177,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.37.0 // indirect
 	go.opentelemetry.io/otel/trace v1.37.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/mod v0.28.0 // indirect
+	golang.org/x/mod v0.29.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	google.golang.org/genproto v0.0.0-20241118233622-e639e219e697 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250707201910-8d1bb00bc6a7 // indirect

@@ -87,21 +87,37 @@ func NewCluster(logger *logrus.Logger, cfg Config) *Cluster {
 func (c *Cluster) Create() error {
 	c.logger.Infof("Creating KIND cluster '%s'...", c.name)
 
-	// Set Docker host to use our custom daemon
-	os.Setenv("DOCKER_HOST", "unix:///var/run/mobius-docker.sock")
+	// Use system Docker daemon (OS-independent)
+	// KIND will automatically detect and use the available Docker
+	// No need to set DOCKER_HOST - it works on Linux, macOS, Windows
 
-	err := c.provider.Create(
-		c.name,
-		cluster.CreateWithConfigFile(c.configPath),
-		cluster.CreateWithKubeconfigPath(c.kubeconfig),
-	)
+	var createOpts []cluster.CreateOption
+
+	// Only use config file if provided and exists
+	if c.configPath != "" {
+		if _, err := os.Stat(c.configPath); err == nil {
+			createOpts = append(createOpts, cluster.CreateWithConfigFile(c.configPath))
+			c.logger.Infof("Using cluster config: %s", c.configPath)
+		} else {
+			c.logger.Warnf("Config file not found, creating cluster with defaults: %v", err)
+		}
+	}
+
+	// Set kubeconfig path if provided
+	if c.kubeconfig != "" {
+		createOpts = append(createOpts, cluster.CreateWithKubeconfigPath(c.kubeconfig))
+	}
+
+	err := c.provider.Create(c.name, createOpts...)
 
 	if err != nil {
 		return fmt.Errorf("failed to create cluster: %w", err)
 	}
 
 	c.logger.Infof("KIND cluster '%s' created successfully", c.name)
-	c.logger.Infof("Kubeconfig written to: %s", c.kubeconfig)
+	if c.kubeconfig != "" {
+		c.logger.Infof("Kubeconfig written to: %s", c.kubeconfig)
+	}
 	return nil
 }
 

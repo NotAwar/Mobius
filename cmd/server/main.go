@@ -6,10 +6,11 @@ import (
 	"path/filepath"
 	"syscall"
 
+	"mobius/internal/deploy"
 	"mobius/internal/docker"
 	"mobius/internal/kind"
-	"mobius/internal/privileges"
 
+	cmd "github.com/go-cmd/cmd"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,25 +21,21 @@ func main() {
 	logger.SetOutput(os.Stdout)
 	logger.SetLevel(logrus.TraceLevel)
 
-	// Check and elevate privileges if needed
-	privileges.CheckAndElevate(logger)
-
-	// Start Docker daemon
+	// Verify Docker is available (OS-independent)
 	logger.Info("Initializing Mobius server...")
 	dockerDaemon, err := docker.Start(logger)
 	if err != nil {
-		logger.Fatalf("Failed to start Docker daemon: %s", privileges.FormatErrorMessage(err))
+		logger.Fatalf("Failed to start Docker: %v", err)
 	}
 	defer dockerDaemon.Stop()
 
 	// Get absolute path for config files
-	configPath, _ := filepath.Abs("../../configs/cluster/config.yaml")
-	kubeconfigPath, _ := filepath.Abs("../../configs/cluster/kubeconfig")
+	kubeconfigPath, _ := filepath.Abs("configs/cluster/kubeconfig")
 
-	// Create KIND cluster
+	// Create KIND cluster (without config file for now - using defaults)
 	cluster := kind.NewCluster(logger, kind.Config{
 		Name:           "mobius-cluster",
-		ConfigPath:     configPath,
+		ConfigPath:     "", // Empty to use defaults
 		KubeconfigPath: kubeconfigPath,
 	})
 
@@ -60,15 +57,51 @@ func main() {
 	logger.Info("Press Ctrl+C to stop")
 	logger.Info("=================================================================")
 
-	// TODO: Add your deployment logic here
-	// Example:
-	// deployer := deploy.NewDeployer(kubeconfigPath, logger)
-	// if err := deployer.CreateNamespace("mobius-system"); err != nil {
-	//     logger.Warnf("Failed to create namespace: %v", err)
-	// }
-	// if err := deployer.Apply("deployments/mdm-server.yaml"); err != nil {
-	//     logger.Errorf("Failed to deploy MDM server: %v", err)
-	// }
+	// Deploy Headscale
+	deployer := deploy.NewDeployer(kubeconfigPath, logger)
+
+	// Create namespace for Headscale
+	if err := deployer.CreateNamespace("headscale"); err != nil {
+		logger.Warnf("Failed to create namespace: %v", err)
+	}
+
+	// Clone Headscale chart
+	logger.Info("Cloning Headscale Helm chart from GitHub...")
+	chartTmpDir := "/tmp/headscale-helm-chart"
+	cloneCmd := cmd.NewCmd("git", "clone", "https://github.com/IvanLapchenko/headscale-helm-chart.git", chartTmpDir)
+	cloneStatus := <-cloneCmd.Start()
+	if cloneStatus.Exit != 0 {
+		// Clean up old clone if exists
+		cleanCmd := cmd.NewCmd("rm", "-rf", chartTmpDir)
+		<-cleanCmd.Start()
+		// Try cloning again
+		cloneCmd = cmd.NewCmd("git", "clone", "https://github.com/IvanLapchenko/headscale-helm-chart.git", chartTmpDir)
+		cloneStatus = <-cloneCmd.Start()
+		if cloneStatus.Exit != 0 {
+			logger.Errorf("Failed to clone Headscale chart: %v", cloneStatus.Stderr)
+		}
+	}
+
+	// Install Headscale Helm chart from cloned directory
+	// Disable ingresses for local development
+	helmValues := map[string]string{
+		"ingressApi.enabled": "false",
+		"ingressUI.enabled":  "false",
+	}
+	
+	if err := deployer.HelmInstall(
+		"headscale",
+		chartTmpDir,
+		"headscale",
+		helmValues,
+		nil, // No values files for now
+	); err != nil {
+		logger.Errorf("Failed to install Headscale: %v", err)
+	} else {
+		logger.Info("Headscale installed successfully!")
+		logger.Info("Headscale is running in the cluster!")
+		logger.Info("To access Headscale, use: kubectl port-forward -n headscale svc/headscale 8080:8080")
+	}
 
 	// Setup signal handling
 	signChn := make(chan os.Signal, 1)

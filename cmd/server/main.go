@@ -10,6 +10,7 @@ import (
 	"mobius/internal/docker"
 	"mobius/internal/headscale"
 	"mobius/internal/kind"
+	"mobius/internal/ui"
 
 	"github.com/sirupsen/logrus"
 )
@@ -43,11 +44,13 @@ func main() {
 		logger.Fatalf("Failed to create cluster: %v", err)
 	}
 
-	// Ensure cleanup on exit
+	// Ensure cluster cleanup always happens
 	defer func() {
+		logger.Info("Deleting cluster...")
 		if err := cluster.Delete(); err != nil {
 			logger.Warnf("Failed to delete cluster: %v", err)
 		}
+		dockerDaemon.Stop()
 	}()
 
 	logger.Info("=================================================================")
@@ -57,6 +60,9 @@ func main() {
 	logger.Info("Press Ctrl+C to stop")
 	logger.Info("=================================================================")
 
+	// Get workspace root for UI path
+	workspaceRoot, _ := filepath.Abs(".")
+
 	// Deploy Headscale
 	deployer := deploy.NewDeployer(kubeconfigPath, logger)
 	headscaleConfig := headscale.DefaultConfig()
@@ -65,6 +71,29 @@ func main() {
 		logger.Errorf("Failed to deploy Headscale: %v", err)
 	}
 
+	// Ensure Headscale cleanup
+	defer func() {
+		logger.Info("Uninstalling Headscale...")
+		if err := headscaleDeployer.Uninstall(); err != nil {
+			logger.Warnf("Failed to uninstall Headscale: %v", err)
+		}
+	}()
+
+	// Deploy Svelte UI
+	uiConfig := ui.DefaultConfig(workspaceRoot)
+	uiDeployer := ui.NewDeployer(deployer, logger, uiConfig)
+	if err := uiDeployer.Deploy(); err != nil {
+		logger.Errorf("Failed to deploy UI: %v", err)
+	}
+
+	// Ensure UI cleanup
+	defer func() {
+		logger.Info("Uninstalling UI...")
+		if err := uiDeployer.Uninstall(); err != nil {
+			logger.Warnf("Failed to uninstall UI: %v", err)
+		}
+	}()
+
 	// Setup signal handling
 	signChn := make(chan os.Signal, 1)
 	signal.Notify(signChn, syscall.SIGINT, syscall.SIGTERM)
@@ -72,5 +101,5 @@ func main() {
 	// Wait for shutdown signal
 	<-signChn
 	logger.Info("Shutdown signal received, cleaning up...")
-	//
+	logger.Info("Cleanup completed")
 }

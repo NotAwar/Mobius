@@ -1,5 +1,0 @@
-name: yara_events
-platforms:
-  - darwin
-  - linux
-evented: true

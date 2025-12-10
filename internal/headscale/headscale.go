@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"mobius/internal/deploy"
+
 	cmd "github.com/go-cmd/cmd"
 	"github.com/sirupsen/logrus"
-	"mobius/internal/deploy"
 )
 
 const (
@@ -125,7 +126,7 @@ func (h *Deployer) prepareValues() map[string]string {
 // Uninstall removes Headscale from the cluster
 func (h *Deployer) Uninstall() error {
 	h.logger.Infof("Uninstalling Headscale from namespace %s...", h.config.Namespace)
-	
+
 	if err := h.deployer.HelmUninstall(h.config.ReleaseName, h.config.Namespace); err != nil {
 		return fmt.Errorf("failed to uninstall Headscale: %w", err)
 	}

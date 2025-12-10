@@ -24,6 +24,11 @@ func NewDeployer(kubeconfig string, logger *logrus.Logger) *Deployer {
 	}
 }
 
+// GetKubeconfig returns the kubeconfig path
+func (d *Deployer) GetKubeconfig() string {
+	return d.kubeconfig
+}
+
 // Apply applies a Kubernetes manifest file
 func (d *Deployer) Apply(manifestPath string) error {
 	d.logger.Infof("Applying manifest: %s", manifestPath)

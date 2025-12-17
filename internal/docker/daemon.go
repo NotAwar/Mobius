@@ -116,7 +116,12 @@ func Start(logger Logger) (*Daemon, error) {
 	)
 
 	// Add the binary directory to PATH so dockerd can find docker-proxy, containerd, etc.
-	cmd.Env = append(os.Environ(), "PATH="+dockerdDir+":"+os.Getenv("PATH"))
+	// Also set CONTAINERD env var to help dockerd locate containerd
+	newPath := dockerdDir + ":" + os.Getenv("PATH")
+	cmd.Env = append(os.Environ(), 
+		"PATH="+newPath,
+		"CONTAINERD="+filepath.Join(dockerdDir, "containerd"),
+	)
 
 	// Redirect dockerd logs
 	logFile := filepath.Join(runRoot, "dockerd.log")

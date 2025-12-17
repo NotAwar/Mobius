@@ -2,7 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os/exec"
+
+	"github.com/gorilla/mux"
 )
 
 func aptHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,5 +31,16 @@ func aptHandler(w http.ResponseWriter, r *http.Request) {
 		result.Error = err.Error()
 	}
 
+	json.NewEncoder(w).Encode(result)
+}
+
+func aptAddRepo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	repo := mux.Vars(r)["repo"]
+
+	cmd := exec.Command(fmt.Sprintf("apt update && apt install software-properties-common -y && add-apt-repository %s", repo))
+	output, _ := cmd.CombinedOutput()
+
+	result := SearchResult{Output: string(output)}
 	json.NewEncoder(w).Encode(result)
 }

@@ -9,11 +9,14 @@ SECTION_FILTER=""
 # Parse named parameters
 while [[ "$#" -gt 0 ]]; do
   case $1 in
-    --search=*) SEARCH_TERM="${1#*=}";;
-    --exclude=*) EXCLUDE_TERM="${1#*=}";;
-    --arch=*) ARCHITECTURE="${1#*=}";;
-    --section=*) SECTION_FILTER="${1#*=}";;
-    *) echo "Unknown parameter passed: $1"; exit 1;;
+  --search=*) SEARCH_TERM="${1#*=}" ;;
+  --exclude=*) EXCLUDE_TERM="${1#*=}" ;;
+  --arch=*) ARCHITECTURE="${1#*=}" ;;
+  --section=*) SECTION_FILTER="${1#*=}" ;;
+  *)
+    echo "Unknown parameter passed: $1"
+    exit 1
+    ;;
   esac
   shift
 done

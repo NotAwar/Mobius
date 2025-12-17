@@ -14,18 +14,18 @@ RUN chmod +x internal/apt-search.sh internal/flatpak-search.sh
 RUN go build -o search-api .
 
 # Stage 2: Lightweight Ubuntu runtime
-FROM docker.io/library/ubuntu:24.04
+FROM docker.io/library/ubuntu:rolling
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install only essential packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    flatpak \
-    software-properties-common \
-    ca-certificates \
-    curl \
-    bash \
-    && apt clean && rm -rf /var/lib/apt/lists/*
+  flatpak \
+  software-properties-common \
+  ca-certificates \
+  curl \
+  bash \
+  && apt clean && rm -rf /var/lib/apt/lists/*
 
 # Set up Flathub
 RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

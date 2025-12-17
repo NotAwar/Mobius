@@ -112,6 +112,7 @@ func Start(logger Logger) (*Daemon, error) {
 		"--ip-forward=false",
 		"--userland-proxy=true",
 		"--userland-proxy-path", filepath.Join(dockerdDir, "docker-proxy"),
+		"--group", "root", // Use root group since dockerd runs as root (docker group may not exist)
 	)
 
 	// Add the binary directory to PATH so dockerd can find docker-proxy, containerd, etc.

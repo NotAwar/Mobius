@@ -9,6 +9,7 @@ main
 mobius-server
 /mobius-server
 /tmp/mobius-server
+cmd/mobius-package-search/packageSearch
 
 # Go build artifacts
 *.test
@@ -83,3 +84,5 @@ web/dist/
 # Note: /assets is the single source of truth for all assets (logos, favicons, wallpapers)
 # The symlink at web/static/assets/ should be committed (not ignored)
 # Individual asset files are tracked in Git
+
+

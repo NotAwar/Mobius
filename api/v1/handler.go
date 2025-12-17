@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"mobius/pkg/db"
 	"mobius/pkg/services"
 
 	"github.com/sirupsen/logrus"
@@ -12,6 +13,7 @@ type Handler struct {
 	clusterService   services.ClusterService
 	postgresService  services.PostgresService
 	headscaleService services.HeadscaleService
+	dbPools          *db.DatabasePools
 }
 
 // NewHandler creates a new v1 API handler
@@ -20,11 +22,14 @@ func NewHandler(
 	clusterService services.ClusterService,
 	postgresService services.PostgresService,
 	headscaleService services.HeadscaleService,
+	dbPools *db.DatabasePools,
 ) *Handler {
 	return &Handler{
 		logger:           logger,
 		clusterService:   clusterService,
 		postgresService:  postgresService,
 		headscaleService: headscaleService,
+		dbPools:          dbPools,
 	}
 }
+

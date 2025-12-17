@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"encoding/json"
 	"os/exec"
 	"strings"
 
@@ -73,25 +74,52 @@ func (s *ClusterServiceImpl) GetNodes(ctx context.Context) ([]map[string]interfa
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		s.logger.Errorf("Failed to get nodes: %v, output: %s", err, string(output))
-		// Return mock data if kubectl fails
-		return []map[string]interface{}{
-			{
-				"name":   "mobius-control-plane",
-				"status": "Ready",
-				"role":   "control-plane",
-			},
-		}, nil
+		return []map[string]interface{}{}, nil
 	}
 
-	// TODO: Parse JSON output properly
-	// For now, return basic parsed data
-	return []map[string]interface{}{
-		{
-			"name":   "mobius-control-plane",
-			"status": "Ready",
-			"role":   "control-plane",
-		},
-	}, nil
+	// Parse kubectl JSON output
+	var nodeList struct {
+		Items []struct {
+			Metadata struct {
+				Name string `json:"name"`
+			} `json:"metadata"`
+			Status struct {
+				Conditions []struct {
+					Type   string `json:"type"`
+					Status string `json:"status"`
+				} `json:"conditions"`
+			} `json:"status"`
+		} `json:"items"`
+	}
+
+	if err := json.Unmarshal(output, &nodeList); err != nil {
+		s.logger.Errorf("Failed to parse nodes JSON: %v", err)
+		return []map[string]interface{}{}, nil
+	}
+
+	nodes := make([]map[string]interface{}, 0, len(nodeList.Items))
+	for _, node := range nodeList.Items {
+		status := "NotReady"
+		for _, cond := range node.Status.Conditions {
+			if cond.Type == "Ready" && cond.Status == "True" {
+				status = "Ready"
+				break
+			}
+		}
+
+		role := "worker"
+		if strings.Contains(node.Metadata.Name, "control-plane") || strings.Contains(node.Metadata.Name, "master") {
+			role = "control-plane"
+		}
+
+		nodes = append(nodes, map[string]interface{}{
+			"name":   node.Metadata.Name,
+			"status": status,
+			"role":   role,
+		})
+	}
+
+	return nodes, nil
 }
 
 // GetPods returns all Kubernetes pods
@@ -104,11 +132,46 @@ func (s *ClusterServiceImpl) GetPods(ctx context.Context) ([]map[string]interfac
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		s.logger.Errorf("Failed to get pods: %v, output: %s", err, string(output))
-		// Return empty list if kubectl fails
 		return []map[string]interface{}{}, nil
 	}
 
-	// TODO: Parse JSON output properly
-	// For now, return empty list
-	return []map[string]interface{}{}, nil
+	// Parse kubectl JSON output
+	var podList struct {
+		Items []struct {
+			Metadata struct {
+				Name      string `json:"name"`
+				Namespace string `json:"namespace"`
+			} `json:"metadata"`
+			Status struct {
+				Phase             string `json:"phase"`
+				ContainerStatuses []struct {
+					RestartCount int `json:"restartCount"`
+				} `json:"containerStatuses"`
+			} `json:"status"`
+		} `json:"items"`
+	}
+
+	if err := json.Unmarshal(output, &podList); err != nil {
+		s.logger.Errorf("Failed to parse pods JSON: %v", err)
+		return []map[string]interface{}{}, nil
+	}
+
+	pods := make([]map[string]interface{}, 0, len(podList.Items))
+	for _, pod := range podList.Items {
+		restarts := 0
+		if len(pod.Status.ContainerStatuses) > 0 {
+			for _, cs := range pod.Status.ContainerStatuses {
+				restarts += cs.RestartCount
+			}
+		}
+
+		pods = append(pods, map[string]interface{}{
+			"name":      pod.Metadata.Name,
+			"namespace": pod.Metadata.Namespace,
+			"status":    pod.Status.Phase,
+			"restarts":  restarts,
+		})
+	}
+
+	return pods, nil
 }

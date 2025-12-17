@@ -1,0 +1,38 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: mobius-audit
+  namespace: default
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  bootstrap:
+    initdb:
+      database: mobius_audit
+      owner: mobius_audit
+      secret:
+        name: mobius-audit-credentials
+
+  storage:
+    size: 30Gi
+    storageClass: standard
+
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: "512MB"
+      effective_cache_size: "2GB"
+      log_statement: "none"
+      log_duration: "off"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mobius-audit-credentials
+  namespace: default
+type: kubernetes.io/basic-auth
+stringData:
+  username: mobius_audit
+  password: changeme-audit-password

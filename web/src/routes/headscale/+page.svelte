@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { apiRequest } from '$lib/api';
 
 	interface User {
 		name: string;
@@ -23,17 +24,10 @@
 
 	async function fetchHeadscaleData() {
 		try {
-			const [usersRes, nodesRes] = await Promise.all([
-				fetch('http://localhost:3000/api/v1/headscale/users'),
-				fetch('http://localhost:3000/api/v1/headscale/nodes')
+			const [usersData, nodesData] = await Promise.all([
+				apiRequest('/headscale/users'),
+				apiRequest('/headscale/nodes')
 			]);
-
-			if (!usersRes.ok || !nodesRes.ok) {
-				throw new Error('Failed to fetch Headscale data');
-			}
-
-			const usersData = await usersRes.json();
-			const nodesData = await nodesRes.json();
 
 			users = usersData.users || [];
 			nodes = nodesData.nodes || [];
@@ -49,13 +43,10 @@
 
 		creating = true;
 		try {
-			const res = await fetch('http://localhost:3000/api/v1/headscale/users', {
+			await apiRequest('/headscale/users', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ name: newUserName })
 			});
-
-			if (!res.ok) throw new Error('Failed to create user');
 
 			newUserName = '';
 			showCreateUserForm = false;
@@ -74,7 +65,7 @@
 	});
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+<div class="min-h-screen bg-linear-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
 	<header class="bg-white dark:bg-gray-800 shadow">
 		<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between">

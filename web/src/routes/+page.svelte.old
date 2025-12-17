@@ -1,0 +1,278 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+
+	let clusterStatus = $state({
+		ready: false,
+		nodes: 0,
+		pods: 0,
+		status: '',
+		version: ''
+	});
+
+	let postgresStatus = $state({
+		ready: false,
+		databases: 0,
+		status: '',
+		operator: ''
+	});
+
+	let headscaleStatus = $state({
+		ready: false,
+		users: 0,
+		nodes: 0,
+		status: ''
+	});
+
+	let loading = $state(true);
+	let error = $state<string | null>(null);
+	let lastUpdate = $state<string>('');
+
+	async function fetchStatuses() {
+		try {
+			loading = true;
+			error = null;
+
+			// Fetch cluster status
+			const clusterRes = await fetch('http://localhost:3001/api/v1/cluster/status');
+			if (clusterRes.ok) {
+				clusterStatus = await clusterRes.json();
+			}
+
+			// Fetch postgres databases
+			const postgresRes = await fetch('http://localhost:3001/api/v1/postgres/databases');
+			if (postgresRes.ok) {
+				const databases = await postgresRes.json();
+				postgresStatus = {
+					ready: true,
+					databases: databases.length,
+					status: 'Running',
+					operator: 'CNPG'
+				};
+			}
+
+			// Fetch headscale status
+			const headscaleUsersRes = await fetch('http://localhost:3001/api/v1/headscale/users');
+			const headscaleNodesRes = await fetch('http://localhost:3001/api/v1/headscale/nodes');
+
+			if (headscaleUsersRes.ok && headscaleNodesRes.ok) {
+				const users = await headscaleUsersRes.json();
+				const nodes = await headscaleNodesRes.json();
+				headscaleStatus = {
+					ready: true,
+					users: users.length,
+					nodes: nodes.length,
+					status: 'Running'
+				};
+			}
+
+			lastUpdate = new Date().toLocaleTimeString();
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to fetch statuses';
+			console.error('Error fetching statuses:', err);
+		} finally {
+			loading = false;
+		}
+	}
+
+	onMount(() => {
+		fetchStatuses();
+		const interval = setInterval(fetchStatuses, 5000);
+		return () => clearInterval(interval);
+	});
+
+	const systemHealth = $derived(() => {
+		const total = 3;
+		const healthy = [clusterStatus.ready, postgresStatus.ready, headscaleStatus.ready].filter(
+			Boolean
+		).length;
+		const percentage = Math.round((healthy / total) * 100);
+		return { healthy, total, percentage };
+	});
+</script>
+
+<!-- Hero Section -->
+<div class="mb-8 rounded-2xl bg-linear-to-br from-purple-600 via-blue-600 to-indigo-600 p-8 text-white shadow-2xl">
+	<div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+		<div>
+			<h1 class="mb-2 text-4xl font-bold">Welcome to Mobius</h1>
+			<p class="mb-4 text-lg text-purple-100">
+				Infrastructure management dashboard monitoring {clusterStatus.nodes} nodes, {clusterStatus.pods} pods, {postgresStatus.databases} databases
+			</p>
+			<div class="flex flex-wrap items-center gap-3">
+				<div class="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 backdrop-blur">
+					<div class="h-3 w-3 animate-pulse rounded-full bg-green-400"></div>
+					<span class="font-medium">All Systems Operational</span>
+				</div>
+				{#if lastUpdate}
+					<span class="text-sm text-purple-200">Last updated: {lastUpdate}</span>
+				{/if}
+			</div>
+		</div>
+		<div class="text-center lg:text-right">
+			<div class="mb-2 text-6xl font-bold">{systemHealth().percentage}%</div>
+			<div class="text-sm text-purple-200">System Health</div>
+		</div>
+	</div>
+</div>
+
+{#if loading && !clusterStatus.ready}
+	<div class="flex items-center justify-center py-12">
+		<div class="text-center">
+			<div class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600"></div>
+			<p class="text-gray-600 dark:text-gray-400">Loading infrastructure status...</p>
+		</div>
+	</div>
+{:else if error}
+	<div class="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+		<div class="flex items-start gap-3">
+			<span class="text-2xl">⚠️</span>
+			<div>
+				<p class="font-bold text-red-800 dark:text-red-200">Connection Error</p>
+				<p class="text-red-700 dark:text-red-300">{error}</p>
+			</div>
+		</div>
+	</div>
+{:else}
+	<!-- Status Cards -->
+	<div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+		<!-- Cluster Card -->
+		<div class="group rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-2xl dark:bg-gray-800">
+			<div class="mb-4 flex items-center justify-between">
+				<div class="flex items-center gap-3">
+					<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 text-2xl">
+						⚙️
+					</div>
+					<div>
+						<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Kubernetes Cluster</h2>
+						<p class="text-sm text-gray-500 dark:text-gray-400">KIND Runtime</p>
+					</div>
+				</div>
+			</div>
+			<div class="mb-4 space-y-3">
+				<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
+					<span class="text-sm text-gray-600 dark:text-gray-300">Status</span>
+					<span class="flex items-center gap-2 font-semibold {clusterStatus.ready ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
+						<div class="h-2 w-2 rounded-full {clusterStatus.ready ? 'bg-green-600' : 'bg-red-600'}"></div>
+						{clusterStatus.ready ? 'Ready' : 'Not Ready'}
+					</span>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-gray-600 dark:text-gray-300">Nodes</span>
+					<span class="text-2xl font-bold text-gray-900 dark:text-white">{clusterStatus.nodes}</span>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-gray-600 dark:text-gray-300">Running Pods</span>
+					<span class="text-2xl font-bold text-gray-900 dark:text-white">{clusterStatus.pods}</span>
+				</div>
+				{#if clusterStatus.version}
+					<div class="flex items-center justify-between">
+						<span class="text-xs text-gray-500 dark:text-gray-400">Version</span>
+						<span class="text-xs font-mono text-gray-600 dark:text-gray-400">{clusterStatus.version}</span>
+					</div>
+				{/if}
+			</div>
+			<a
+				href="/cluster"
+				class="block w-full rounded-lg bg-linear-to-r from-blue-600 to-blue-700 py-3 text-center font-medium text-white shadow-lg transition-all hover:from-blue-700 hover:to-blue-800 hover:shadow-xl"
+			>
+				Manage Cluster →
+			</a>
+		</div>
+
+		<!-- PostgreSQL Card -->
+		<div class="group rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-2xl dark:bg-gray-800">
+			<div class="mb-4 flex items-center justify-between">
+				<div class="flex items-center gap-3">
+					<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-indigo-600 text-2xl">
+						🗄️
+					</div>
+					<div>
+						<h2 class="text-lg font-semibold text-gray-900 dark:text-white">PostgreSQL</h2>
+						<p class="text-sm text-gray-500 dark:text-gray-400">CNPG Operator</p>
+					</div>
+				</div>
+			</div>
+			<div class="mb-4 space-y-3">
+				<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
+					<span class="text-sm text-gray-600 dark:text-gray-300">Status</span>
+					<span class="flex items-center gap-2 font-semibold {postgresStatus.ready ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
+						<div class="h-2 w-2 rounded-full {postgresStatus.ready ? 'bg-green-600' : 'bg-red-600'}"></div>
+						{postgresStatus.ready ? 'Ready' : 'Not Ready'}
+					</span>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-gray-600 dark:text-gray-300">Active Clusters</span>
+					<span class="text-2xl font-bold text-gray-900 dark:text-white">{postgresStatus.databases}</span>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-gray-600 dark:text-gray-300">High Availability</span>
+					<span class="text-lg font-semibold text-green-600 dark:text-green-400">✓ Enabled</span>
+				</div>
+			</div>
+			<a
+				href="/postgres"
+				class="block w-full rounded-lg bg-linear-to-r from-indigo-600 to-indigo-700 py-3 text-center font-medium text-white shadow-lg transition-all hover:from-indigo-700 hover:to-indigo-800 hover:shadow-xl"
+			>
+				Manage Databases →
+			</a>
+		</div>
+
+		<!-- Headscale Card -->
+		<div class="group rounded-xl bg-white p-6 shadow-lg transition-all hover:shadow-2xl dark:bg-gray-800">
+			<div class="mb-4 flex items-center justify-between">
+				<div class="flex items-center gap-3">
+					<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-purple-600 text-2xl">
+						🌐
+					</div>
+					<div>
+						<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Headscale VPN</h2>
+						<p class="text-sm text-gray-500 dark:text-gray-400">Mesh Networking</p>
+					</div>
+				</div>
+			</div>
+			<div class="mb-4 space-y-3">
+				<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
+					<span class="text-sm text-gray-600 dark:text-gray-300">Status</span>
+					<span class="flex items-center gap-2 font-semibold {headscaleStatus.ready ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
+						<div class="h-2 w-2 rounded-full {headscaleStatus.ready ? 'bg-green-600' : 'bg-red-600'}"></div>
+						{headscaleStatus.ready ? 'Ready' : 'Not Ready'}
+					</span>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-gray-600 dark:text-gray-300">VPN Users</span>
+					<span class="text-2xl font-bold text-gray-900 dark:text-white">{headscaleStatus.users}</span>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-gray-600 dark:text-gray-300">Connected Nodes</span>
+					<span class="text-2xl font-bold text-gray-900 dark:text-white">{headscaleStatus.nodes}</span>
+				</div>
+			</div>
+			<a
+				href="/headscale"
+				class="block w-full rounded-lg bg-linear-to-r from-purple-600 to-purple-700 py-3 text-center font-medium text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-800 hover:shadow-xl"
+			>
+				Manage VPN →
+			</a>
+		</div>
+	</div>
+
+	<!-- Quick Stats Grid -->
+	<div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
+		<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
+			<div class="text-3xl font-bold text-blue-600 dark:text-blue-400">{clusterStatus.nodes}</div>
+			<div class="mt-1 text-sm text-gray-600 dark:text-gray-400">Cluster Nodes</div>
+		</div>
+		<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
+			<div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{clusterStatus.pods}</div>
+			<div class="mt-1 text-sm text-gray-600 dark:text-gray-400">Running Pods</div>
+		</div>
+		<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
+			<div class="text-3xl font-bold text-purple-600 dark:text-purple-400">{postgresStatus.databases}</div>
+			<div class="mt-1 text-sm text-gray-600 dark:text-gray-400">DB Clusters</div>
+		</div>
+		<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
+			<div class="text-3xl font-bold text-green-600 dark:text-green-400">{headscaleStatus.nodes}</div>
+			<div class="mt-1 text-sm text-gray-600 dark:text-gray-400">VPN Connections</div>
+		</div>
+	</div>
+{/if}

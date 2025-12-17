@@ -1,0 +1,50 @@
+# Mobius Client Configuration
+# This file is generated during enrollment
+
+# Server connection
+server_url: "https://mobius.example.com"
+client_id: ""  # Generated during enrollment
+client_key: "" # Generated during enrollment
+
+# Check-in settings
+check_in_interval: 5m        # How often to check in with server
+heartbeat_timeout: 30s       # Timeout for server requests
+
+# OSQuery settings
+enable_osquery: true
+osquery_socket: "/var/osquery/osquery.sock"
+osquery_interval: 60s        # How often to collect OSQuery results
+osquery_log_path: "/var/log/osquery/osqueryd.results.log"
+osquery_packs_path: "/etc/mobius/osquery/packs"
+osquery_flags_path: "/etc/mobius/osquery/osquery.flags"
+
+# SSH settings (for remote management)
+enable_ssh: true
+ssh_port: 2222
+ssh_authorized_keys:
+  - "ssh-rsa AAAAB3... admin@mobius"
+
+# TLS settings
+tls_verify: true             # Verify server certificate
+tls_server_name: ""          # Override server name for verification
+tls_cert: ""                 # Client certificate (if required)
+tls_key: ""                  # Client key (if required)
+
+# Logging
+log_level: "info"            # debug, info, warn, error
+log_file: "/var/log/mobius/client.log"
+log_format: "json"           # json or text
+
+# System information collection
+collect_hardware_info: true
+collect_software_info: true
+collect_network_info: true
+hardware_info_interval: 1h   # How often to collect detailed hardware info
+
+# Auto-update
+enable_auto_update: false
+update_channel: "stable"     # stable, beta, dev
+
+# Resource limits (keep service lightweight)
+max_memory_mb: 50            # Maximum memory usage in MB
+max_cpu_pct: 5               # Maximum CPU usage percentage

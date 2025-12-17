@@ -1,6 +1,9 @@
 import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 
-const API_BASE = 'http://localhost:3001/api/v1';
+const API_BASE = browser && import.meta.env.VITE_API_URL 
+	? import.meta.env.VITE_API_URL 
+	: 'http://localhost:3001/api/v1';
 
 export interface ClusterStatus {
 	status: string;
@@ -26,6 +29,24 @@ export interface HeadscaleStatus {
 export const clusterStatus = writable<ClusterStatus | null>(null);
 export const postgresStatus = writable<PostgresStatus | null>(null);
 export const headscaleStatus = writable<HeadscaleStatus | null>(null);
+
+export async function apiRequest(endpoint: string, options?: RequestInit) {
+	const url = `${API_BASE}${endpoint}`;
+	const response = await fetch(url, {
+		...options,
+		headers: {
+			'Content-Type': 'application/json',
+			...options?.headers,
+		},
+	});
+
+	if (!response.ok) {
+		const error = await response.text();
+		throw new Error(error || `API request failed: ${response.status}`);
+	}
+
+	return response.json();
+}
 
 export async function fetchClusterStatus() {
 	try {

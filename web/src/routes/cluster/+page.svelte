@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { apiRequest } from '$lib/api';
 
 	interface Node {
 		name: string;
@@ -21,17 +22,10 @@
 
 	async function fetchClusterData() {
 		try {
-			const [nodesRes, podsRes] = await Promise.all([
-				fetch('http://localhost:3000/api/v1/cluster/nodes'),
-				fetch('http://localhost:3000/api/v1/cluster/pods')
+			const [nodesData, podsData] = await Promise.all([
+				apiRequest('/cluster/nodes'),
+				apiRequest('/cluster/pods')
 			]);
-
-			if (!nodesRes.ok || !podsRes.ok) {
-				throw new Error('Failed to fetch cluster data');
-			}
-
-			const nodesData = await nodesRes.json();
-			const podsData = await podsRes.json();
 
 			nodes = nodesData.nodes || [];
 			pods = podsData.pods || [];
@@ -49,7 +43,7 @@
 	});
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+<div class="min-h-screen bg-linear-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
 	<header class="bg-white dark:bg-gray-800 shadow">
 		<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between">

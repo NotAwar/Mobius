@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os/exec"
 
@@ -62,7 +63,7 @@ func (s *PostgresServiceImpl) GetStatus(ctx context.Context) (map[string]interfa
 	}, nil
 }
 
-// GetDatabases returns all PostgreSQL databases
+// GetDatabases returns all PostgreSQL databases (CNPG Clusters)
 func (s *PostgresServiceImpl) GetDatabases(ctx context.Context) ([]map[string]interface{}, error) {
 	cmd := exec.CommandContext(ctx, "kubectl", "get", "clusters.postgresql.cnpg.io", "--all-namespaces", "-o", "json")
 	if s.kubeconfig != "" {
@@ -75,8 +76,51 @@ func (s *PostgresServiceImpl) GetDatabases(ctx context.Context) ([]map[string]in
 		return []map[string]interface{}{}, nil
 	}
 
-	// TODO: Parse JSON output properly
-	return []map[string]interface{}{}, nil
+	// Parse kubectl JSON output for CNPG Clusters
+	var clusterList struct {
+		Items []struct {
+			Metadata struct {
+				Name      string `json:"name"`
+				Namespace string `json:"namespace"`
+			} `json:"metadata"`
+			Status struct {
+				Phase            string `json:"phase"`
+				Instances        int    `json:"instances"`
+				ReadyInstances   int    `json:"readyInstances"`
+			} `json:"status"`
+			Spec struct {
+				Instances int `json:"instances"`
+			} `json:"spec"`
+		} `json:"items"`
+	}
+
+	if err := json.Unmarshal(output, &clusterList); err != nil {
+		s.logger.Errorf("Failed to parse databases JSON: %v", err)
+		return []map[string]interface{}{}, nil
+	}
+
+	databases := make([]map[string]interface{}, 0, len(clusterList.Items))
+	for _, cluster := range clusterList.Items {
+		status := cluster.Status.Phase
+		if status == "" {
+			if cluster.Status.ReadyInstances == cluster.Spec.Instances && cluster.Spec.Instances > 0 {
+				status = "Ready"
+			} else {
+				status = "Pending"
+			}
+		}
+
+		databases = append(databases, map[string]interface{}{
+			"name":      cluster.Metadata.Name,
+			"namespace": cluster.Metadata.Namespace,
+			"status":    status,
+			"instances": cluster.Spec.Instances,
+			"ready":     cluster.Status.ReadyInstances,
+			"size":      "Unknown", // Size would require connecting to the database
+		})
+	}
+
+	return databases, nil
 }
 
 // CreateDatabase creates a new PostgreSQL database

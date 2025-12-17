@@ -7,6 +7,11 @@ type ClusterService interface {
 	GetStatus(ctx context.Context) (map[string]interface{}, error)
 	GetNodes(ctx context.Context) ([]map[string]interface{}, error)
 	GetPods(ctx context.Context) ([]map[string]interface{}, error)
+	GetNamespaces(ctx context.Context) ([]map[string]interface{}, error)
+	GetDeployments(ctx context.Context, namespace string) ([]map[string]interface{}, error)
+	GetServices(ctx context.Context, namespace string) ([]map[string]interface{}, error)
+	GetPodLogs(ctx context.Context, namespace, podName string, tailLines int64) (string, error)
+	DeletePod(ctx context.Context, namespace, podName string) error
 }
 
 // PostgresService defines the interface for PostgreSQL operations

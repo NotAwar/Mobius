@@ -197,6 +197,14 @@ func main() {
 			Kubeconfig: kubeconfigPath,
 		}
 		apiServer = api.NewServer(logger, apiConfig)
+		
+		// Initialize database connections
+		tuiProgram.Info("Initializing database connections...")
+		if err := apiServer.InitializeDatabases(); err != nil {
+			tuiProgram.Warning(fmt.Sprintf("Database initialization failed: %v", err))
+			tuiProgram.Info("API will use sample data until databases are available")
+		}
+		
 		if err := apiServer.Start(); err != nil {
 			tuiProgram.Error(fmt.Sprintf("Failed to start API server: %v", err))
 			tuiProgram.Info("Tip: Kill any process using port 3001 first")

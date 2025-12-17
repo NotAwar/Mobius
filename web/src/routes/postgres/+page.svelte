@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { apiRequest } from '$lib/api';
 
 	interface Database {
 		name: string;
@@ -16,10 +17,7 @@
 
 	async function fetchDatabases() {
 		try {
-			const res = await fetch('http://localhost:3000/api/v1/postgres/databases');
-			if (!res.ok) throw new Error('Failed to fetch databases');
-
-			const data = await res.json();
+			const data = await apiRequest('/postgres/databases');
 			databases = data.databases || [];
 			loading = false;
 		} catch (err) {
@@ -33,13 +31,10 @@
 
 		creating = true;
 		try {
-			const res = await fetch('http://localhost:3000/api/v1/postgres/databases', {
+			await apiRequest('/postgres/databases', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ name: newDbName })
 			});
-
-			if (!res.ok) throw new Error('Failed to create database');
 
 			newDbName = '';
 			showCreateForm = false;
@@ -55,11 +50,9 @@
 		if (!confirm(`Are you sure you want to delete database "${name}"?`)) return;
 
 		try {
-			const res = await fetch(`http://localhost:3000/api/v1/postgres/databases/${name}`, {
+			await apiRequest(`/postgres/databases/${name}`, {
 				method: 'DELETE'
 			});
-
-			if (!res.ok) throw new Error('Failed to delete database');
 
 			await fetchDatabases();
 		} catch (err) {
@@ -74,7 +67,7 @@
 	});
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+<div class="min-h-screen bg-linear-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
 	<header class="bg-white dark:bg-gray-800 shadow">
 		<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between">

@@ -1,3 +1,5 @@
 package init
-download go
-download docker
+
+// TODO: Implement installer functions
+// download go
+// download docker

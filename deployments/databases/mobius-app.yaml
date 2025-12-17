@@ -1,0 +1,38 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: mobius-app
+  namespace: default
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  bootstrap:
+    initdb:
+      database: mobius_app
+      owner: mobius_app
+      secret:
+        name: mobius-app-credentials
+
+  storage:
+    size: 10Gi
+    storageClass: standard
+
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "256MB"
+      effective_cache_size: "1GB"
+      log_statement: "mod"
+      log_duration: "on"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mobius-app-credentials
+  namespace: default
+type: kubernetes.io/basic-auth
+stringData:
+  username: mobius_app
+  password: changeme-app-password

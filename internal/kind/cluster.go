@@ -55,6 +55,7 @@ type Cluster struct {
 	name       string
 	configPath string
 	kubeconfig string
+	dockerHost string
 	provider   *cluster.Provider
 	logger     *logrus.Logger
 }
@@ -64,6 +65,7 @@ type Config struct {
 	Name           string
 	ConfigPath     string
 	KubeconfigPath string
+	DockerHost     string // Docker socket path (e.g., unix:///path/to/docker.sock)
 }
 
 // NewCluster creates a new KIND cluster manager
@@ -78,6 +80,7 @@ func NewCluster(logger *logrus.Logger, cfg Config) *Cluster {
 		name:       cfg.Name,
 		configPath: cfg.ConfigPath,
 		kubeconfig: cfg.KubeconfigPath,
+		dockerHost: cfg.DockerHost,
 		provider:   provider,
 		logger:     logger,
 	}
@@ -87,9 +90,20 @@ func NewCluster(logger *logrus.Logger, cfg Config) *Cluster {
 func (c *Cluster) Create() error {
 	c.logger.Infof("Creating KIND cluster '%s'...", c.name)
 
-	// Use system Docker daemon (OS-independent)
-	// KIND will automatically detect and use the available Docker
-	// No need to set DOCKER_HOST - it works on Linux, macOS, Windows
+	// Set DOCKER_HOST if using custom Docker socket
+	var oldDockerHost string
+	if c.dockerHost != "" {
+		oldDockerHost = os.Getenv("DOCKER_HOST")
+		os.Setenv("DOCKER_HOST", c.dockerHost)
+		defer func() {
+			if oldDockerHost != "" {
+				os.Setenv("DOCKER_HOST", oldDockerHost)
+			} else {
+				os.Unsetenv("DOCKER_HOST")
+			}
+		}()
+		c.logger.Infof("Using Docker socket: %s", c.dockerHost)
+	}
 
 	var createOpts []cluster.CreateOption
 

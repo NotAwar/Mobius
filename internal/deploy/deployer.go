@@ -75,6 +75,33 @@ func (d *Deployer) WaitForDeployment(namespace, name string, timeout time.Durati
 	return nil
 }
 
+// WaitForAPIServer waits for the Kubernetes API server to be ready
+func (d *Deployer) WaitForAPIServer(timeout time.Duration) error {
+	d.logger.Info("Waiting for Kubernetes API server to be ready...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return fmt.Errorf("timeout waiting for API server to be ready")
+		case <-ticker.C:
+			kubectlCmd := cmd.NewCmd("kubectl", "get", "--raw=/healthz")
+			kubectlCmd.Env = append(os.Environ(), fmt.Sprintf("KUBECONFIG=%s", d.kubeconfig))
+			status := <-kubectlCmd.Start()
+
+			if status.Exit == 0 {
+				d.logger.Info("Kubernetes API server is ready")
+				return nil
+			}
+		}
+	}
+}
+
 // CreateNamespace creates a Kubernetes namespace if it doesn't exist
 func (d *Deployer) CreateNamespace(name string) error {
 	d.logger.Infof("Creating namespace: %s", name)
@@ -90,7 +117,11 @@ func (d *Deployer) CreateNamespace(name string) error {
 		checkCmd.Env = append(os.Environ(), fmt.Sprintf("KUBECONFIG=%s", d.kubeconfig))
 		checkStatus := <-checkCmd.Start()
 		if checkStatus.Exit != 0 {
-			return fmt.Errorf("failed to create namespace %s: %s", name, status.Stderr)
+			errMsg := "unknown error"
+			if len(status.Stderr) > 0 {
+				errMsg = status.Stderr[len(status.Stderr)-1]
+			}
+			return fmt.Errorf("failed to create namespace %s: %s (kubeconfig: %s)", name, errMsg, d.kubeconfig)
 		}
 		d.logger.Infof("Namespace %s already exists", name)
 		return nil

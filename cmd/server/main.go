@@ -7,8 +7,9 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-	"strings"
+	"sync"
 	"syscall"
+	"time"
 
 	"mobius/internal/api"
 	"mobius/internal/cnpg"
@@ -48,25 +49,25 @@ func (h *tuiHook) Fire(entry *logrus.Entry) error {
 }
 
 func main() {
-	// Pre-authenticate sudo before starting TUI (dockerd needs root)
+	// Prompt for sudo early (needed for embedded dockerd)
 	boxStyle := branding.NewBoxStyle(50)
 	titleStyle := branding.NewTitleStyle(50)
 	successStyle := branding.StyleSuccess
-	errorStyle := branding.StyleError
 
 	setupBox := boxStyle.Render(
 		titleStyle.Render("🚀 "+branding.AppName+" Server Setup") + "\n\n" +
-			"Docker daemon requires root access.\n" +
+			"Embedded Docker requires sudo access.\n" +
 			"Please enter your password when prompted.",
 	)
 	fmt.Println("\n" + setupBox + "\n")
 
+	// Pre-authenticate sudo
 	authCmd := exec.Command("sudo", "true")
 	authCmd.Stdin = os.Stdin
 	authCmd.Stdout = os.Stdout
 	authCmd.Stderr = os.Stderr
 	if err := authCmd.Run(); err != nil {
-		fmt.Fprintf(os.Stderr, "\n"+errorStyle.Render("✗ Failed to authenticate: %v")+"\n", err)
+		fmt.Fprintf(os.Stderr, "\n✗ Failed to authenticate: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -82,20 +83,12 @@ func main() {
 	logger.AddHook(&tuiHook{tui: tuiProgram})
 	logger.SetLevel(logrus.InfoLevel)
 
-	// Verify Docker is available (OS-independent)
+	// Start Docker daemon (embedded or connect to existing)
 	tuiProgram.Info("Initializing Mobius server...")
 	dockerDaemon, err := docker.Start(tui.NewLogger(tuiProgram))
 	if err != nil {
-		errMsg := err.Error()
-		// Check if this is the "restart needed" message
-		if strings.Contains(errMsg, "Setup complete!") || strings.Contains(errMsg, "restart Mobius") {
-			tuiProgram.Success("Initial setup completed successfully!")
-			tuiProgram.Info("Please run the server again to start Mobius")
-			tuiProgram.Info("Press Ctrl+C to exit")
-		} else {
-			tuiProgram.Error(fmt.Sprintf("Failed to start Docker: %v", err))
-			tuiProgram.Error("Press Ctrl+C to exit")
-		}
+		tuiProgram.Error(fmt.Sprintf("Failed to start Docker: %v", err))
+		tuiProgram.Error("Press Ctrl+C to exit")
 		// Keep TUI alive to show error
 		signChn := make(chan os.Signal, 1)
 		signal.Notify(signChn, syscall.SIGINT, syscall.SIGTERM)
@@ -113,6 +106,7 @@ func main() {
 		Name:           "mobius-cluster",
 		ConfigPath:     "", // Empty to use defaults
 		KubeconfigPath: kubeconfigPath,
+		DockerHost:     dockerDaemon.GetSocketPath(), // Use embedded Docker socket
 	})
 
 	if err := cluster.Create(); err != nil {
@@ -138,78 +132,120 @@ func main() {
 	// Initialize deployer
 	deployer := deploy.NewDeployer(kubeconfigPath, logger)
 
-	// Deploy CloudNativePG operator
-	tuiProgram.Info("Deploying CloudNativePG operator...")
-	cnpgConfig := cnpg.DefaultConfig()
-	cnpgDeployer := cnpg.NewDeployer(deployer, logger, cnpgConfig)
-	if err := cnpgDeployer.Deploy(); err != nil {
-		tuiProgram.Error(fmt.Sprintf("Failed to deploy CNPG: %v", err))
+	// Wait for Kubernetes API server to be ready
+	tuiProgram.Info("Waiting for Kubernetes API server...")
+	if err := deployer.WaitForAPIServer(30 * time.Second); err != nil {
+		tuiProgram.Error(fmt.Sprintf("API server failed to become ready: %v", err))
 	} else {
-		tuiProgram.Success("CloudNativePG operator deployed successfully")
+		tuiProgram.Success("Kubernetes API server is ready!")
 	}
 
-	// Ensure CNPG cleanup
-	defer func() {
-		tuiProgram.Info("Uninstalling CloudNativePG...")
-		if err := cnpgDeployer.Uninstall(); err != nil {
-			tuiProgram.Warning(fmt.Sprintf("Failed to uninstall CNPG: %v", err))
+	// Deploy services concurrently for better performance
+	var wg sync.WaitGroup
+	var cnpgDeployer *cnpg.Deployer
+	var headscaleDeployer *headscale.Deployer
+	var apiServer *api.Server
+	var uiDeployer *ui.Deployer
+	
+	// Use channels to collect errors
+	cnpgErr := make(chan error, 1)
+	headscaleErr := make(chan error, 1)
+	apiErr := make(chan error, 1)
+	uiErr := make(chan error, 1)
+
+	// Deploy CNPG
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		tuiProgram.Info("Deploying CloudNativePG operator...")
+		cnpgConfig := cnpg.DefaultConfig()
+		cnpgDeployer = cnpg.NewDeployer(deployer, logger, cnpgConfig)
+		if err := cnpgDeployer.Deploy(); err != nil {
+			tuiProgram.Error(fmt.Sprintf("Failed to deploy CNPG: %v", err))
+			cnpgErr <- err
+		} else {
+			tuiProgram.Success("CloudNativePG operator deployed successfully")
+			cnpgErr <- nil
 		}
 	}()
 
 	// Deploy Headscale
-	tuiProgram.Info("Deploying Headscale VPN...")
-	headscaleConfig := headscale.DefaultConfig()
-	headscaleDeployer := headscale.NewDeployer(deployer, logger, headscaleConfig)
-	if err := headscaleDeployer.Deploy(); err != nil {
-		tuiProgram.Error(fmt.Sprintf("Failed to deploy Headscale: %v", err))
-	} else {
-		tuiProgram.Success("Headscale deployed successfully")
-	}
-
-	// Ensure Headscale cleanup
-	defer func() {
-		tuiProgram.Info("Uninstalling Headscale...")
-		if err := headscaleDeployer.Uninstall(); err != nil {
-			tuiProgram.Warning(fmt.Sprintf("Failed to uninstall Headscale: %v", err))
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		tuiProgram.Info("Deploying Headscale VPN...")
+		headscaleConfig := headscale.DefaultConfig()
+		headscaleDeployer = headscale.NewDeployer(deployer, logger, headscaleConfig)
+		if err := headscaleDeployer.Deploy(); err != nil {
+			tuiProgram.Error(fmt.Sprintf("Failed to deploy Headscale: %v", err))
+			headscaleErr <- err
+		} else {
+			tuiProgram.Success("Headscale deployed successfully")
+			headscaleErr <- nil
 		}
 	}()
 
 	// Start API server
-	tuiProgram.Info("Starting API server...")
-	apiConfig := api.Config{
-		Port:       "3000",
-		Kubeconfig: kubeconfigPath,
-	}
-	apiServer := api.NewServer(logger, apiConfig)
-	if err := apiServer.Start(); err != nil {
-		tuiProgram.Error(fmt.Sprintf("Failed to start API server: %v", err))
-	} else {
-		tuiProgram.Success(fmt.Sprintf("API server running at http://localhost:%s", apiConfig.Port))
-	}
-
-	// Ensure API server cleanup
-	defer func() {
-		tuiProgram.Info("Stopping API server...")
-		if err := apiServer.Stop(); err != nil {
-			tuiProgram.Warning(fmt.Sprintf("Failed to stop API server: %v", err))
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		tuiProgram.Info("Starting API server...")
+		apiConfig := api.Config{
+			Port:       "3000",
+			Kubeconfig: kubeconfigPath,
+		}
+		apiServer = api.NewServer(logger, apiConfig)
+		if err := apiServer.Start(); err != nil {
+			tuiProgram.Error(fmt.Sprintf("Failed to start API server: %v", err))
+			apiErr <- err
+		} else {
+			tuiProgram.Success(fmt.Sprintf("API server running at http://localhost:%s", apiConfig.Port))
+			apiErr <- nil
 		}
 	}()
 
-	// Deploy Svelte UI
-	tuiProgram.Info("Deploying UI...")
-	uiConfig := ui.DefaultConfig(workspaceRoot)
-	uiDeployer := ui.NewDeployer(deployer, logger, uiConfig)
-	if err := uiDeployer.Deploy(); err != nil {
-		tuiProgram.Error(fmt.Sprintf("Failed to deploy UI: %v", err))
-	} else {
-		tuiProgram.Success("UI deployed successfully")
-	}
+	// Wait for core services
+	wg.Wait()
 
-	// Ensure UI cleanup
+	// Deploy UI after other services are ready
+	go func() {
+		tuiProgram.Info("Deploying UI...")
+		uiConfig := ui.DefaultConfig(workspaceRoot)
+		uiDeployer = ui.NewDeployer(deployer, logger, uiConfig)
+		if err := uiDeployer.Deploy(); err != nil {
+			tuiProgram.Error(fmt.Sprintf("Failed to deploy UI: %v", err))
+			uiErr <- err
+		} else {
+			tuiProgram.Success("UI deployed successfully")
+			uiErr <- nil
+		}
+	}()
+
+	// Ensure cleanup happens in reverse order
 	defer func() {
-		tuiProgram.Info("Uninstalling UI...")
-		if err := uiDeployer.Uninstall(); err != nil {
-			tuiProgram.Warning(fmt.Sprintf("Failed to uninstall UI: %v", err))
+		if uiDeployer != nil {
+			tuiProgram.Info("Uninstalling UI...")
+			if err := uiDeployer.Uninstall(); err != nil {
+				tuiProgram.Warning(fmt.Sprintf("Failed to uninstall UI: %v", err))
+			}
+		}
+		if apiServer != nil {
+			tuiProgram.Info("Stopping API server...")
+			if err := apiServer.Stop(); err != nil {
+				tuiProgram.Warning(fmt.Sprintf("Failed to stop API server: %v", err))
+			}
+		}
+		if headscaleDeployer != nil {
+			tuiProgram.Info("Uninstalling Headscale...")
+			if err := headscaleDeployer.Uninstall(); err != nil {
+				tuiProgram.Warning(fmt.Sprintf("Failed to uninstall Headscale: %v", err))
+			}
+		}
+		if cnpgDeployer != nil {
+			tuiProgram.Info("Uninstalling CloudNativePG...")
+			if err := cnpgDeployer.Uninstall(); err != nil {
+				tuiProgram.Warning(fmt.Sprintf("Failed to uninstall CNPG: %v", err))
+			}
 		}
 	}()
 

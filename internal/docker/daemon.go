@@ -3,13 +3,15 @@ package docker
 import (
 	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
 
-	cmd "github.com/go-cmd/cmd"
+	"github.com/docker/docker/client"
 )
 
 // Logger interface for dependency injection
@@ -24,363 +26,329 @@ type Logger interface {
 	Errorf(format string, args ...interface{})
 }
 
-// Daemon manages a Docker daemon instance
+// Daemon manages Docker connectivity
 type Daemon struct {
 	logger     Logger
+	client     *client.Client
+	dockerdCmd *exec.Cmd
 	socketPath string
-	pidFile    string
+	dataRoot   string
 }
 
-// EnsureInstalled checks if Docker is installed and installs it if not
-// Uses Docker's universal installation script - works on all platforms
-func EnsureInstalled(logger Logger) error {
-	// Check if docker CLI is available
-	checkCmd := cmd.NewCmd("docker", "--version")
-	status := <-checkCmd.Start()
-
-	if status.Exit == 0 {
-		logger.Info("Docker is already installed")
-		return nil
-	}
-
-	logger.Warn("Docker not found, installing using official Docker installation script...")
-
-	// Use Docker's universal installation script (works on Linux, macOS, Windows with WSL)
-	// For Windows without WSL, users should install Docker Desktop manually
-	installScript := `
-		curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
-		sudo sh /tmp/get-docker.sh
-		rm /tmp/get-docker.sh
-	`
-
-	installCmd := cmd.NewCmd("sh", "-c", installScript)
-	installStatus := <-installCmd.Start()
-
-	if installStatus.Exit != 0 {
-		return fmt.Errorf("failed to install Docker: %s", installStatus.Stderr)
-	}
-
-	// Verify installation
-	verifyCmd := cmd.NewCmd("docker", "--version")
-	verifyStatus := <-verifyCmd.Start()
-
-	if verifyStatus.Exit != 0 {
-		return fmt.Errorf("Docker installation completed but docker command is still not available")
-	}
-
-	logger.Info("Docker installed successfully")
-	return nil
-}
-
-// Start verifies Docker is available and starts our own isolated daemon
+// Start verifies Docker is available or starts an embedded dockerd
 func Start(logger Logger) (*Daemon, error) {
 	logger.Info("Checking Docker availability...")
 
-	// Ensure Docker is installed
-	if err := EnsureInstalled(logger); err != nil {
-		return nil, fmt.Errorf("Docker installation failed: %w", err)
+	// First, try to connect to existing Docker daemon
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err == nil {
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+		
+		if _, err := cli.Ping(ctx); err == nil {
+			logger.Info("Connected to existing Docker daemon")
+			info, _ := cli.Info(ctx)
+			logger.Infof("Docker version: %s", info.ServerVersion)
+			return &Daemon{
+				logger: logger,
+				client: cli,
+			}, nil
+		}
+		cli.Close()
+	}
+
+	// No Docker daemon found - start our own embedded dockerd
+	logger.Info("No Docker daemon found, starting embedded instance...")
+	
+	// Check if dockerd binary exists, if not download it
+	dockerdPath, err := ensureDockerd(logger)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ensure dockerd binary: %w", err)
+	}
+
+	// Setup isolated directories in user space
+	homeDir, _ := os.UserHomeDir()
+	dataRoot := filepath.Join(homeDir, ".mobius", "docker", "data")
+	runRoot := filepath.Join(homeDir, ".mobius", "docker", "run")
+	socketPath := filepath.Join(runRoot, "docker.sock")
+	pidFile := filepath.Join(runRoot, "docker.pid")
+	
+	for _, dir := range []string{dataRoot, runRoot} {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return nil, fmt.Errorf("failed to create directory %s: %w", dir, err)
+		}
+	}
+
+	logger.Infof("Data root: %s", dataRoot)
+	logger.Infof("Socket: %s", socketPath)
+
+	// Check if already running
+	if pidData, err := os.ReadFile(pidFile); err == nil {
+		pid := strings.TrimSpace(string(pidData))
+		checkCmd := exec.Command("ps", "-p", pid)
+		if checkCmd.Run() == nil {
+			// Process exists, but check if socket exists too
+			if _, err := os.Stat(socketPath); err == nil {
+				logger.Info("Dockerd already running, connecting...")
+				return connectToSocket(logger, socketPath)
+			} else {
+				// Process running but socket missing - kill it and restart
+				logger.Warn("Dockerd process exists but socket missing, killing stale process...")
+				exec.Command("sudo", "kill", "-9", pid).Run()
+				time.Sleep(time.Second)
+			}
+		}
+	}
+
+	// Start dockerd with sudo (needs root for networking)
+	logger.Info("Starting dockerd with sudo (required for container networking)...")
+	
+	cmd := exec.Command("sudo", dockerdPath,
+		"--host", "unix://"+socketPath,
+		"--data-root", dataRoot,
+		"--exec-root", runRoot,
+		"--pidfile", pidFile,
+		"--storage-driver", "vfs",
+		"--iptables=false",
+		"--ip-forward=false",
+	)
+	
+	// Redirect dockerd logs
+	logFile := filepath.Join(runRoot, "dockerd.log")
+	logWriter, err := os.Create(logFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create log file: %w", err)
 	}
 	
-	// Check if bridge kernel module is available
-	if _, err := os.Stat("/sys/module/bridge"); os.IsNotExist(err) {
-		logger.Warn("Bridge kernel module not loaded, attempting to load...")
-		loadCmd := exec.Command("sudo", "modprobe", "bridge")
-		if err := loadCmd.Run(); err != nil {
-			return nil, fmt.Errorf("Bridge kernel module is required but not available.\n" +
-				"This is needed for Docker networking and KIND clusters.\n" +
-				"Please ensure your kernel modules are installed:\n" +
-				"  - Check: ls /lib/modules/$(uname -r)\n" +
-				"  - Install: sudo pacman -S linux-cachyos linux-cachyos-headers\n" +
-				"  - Reboot if needed\n" +
-				"Error: %w", err)
+	cmd.Stdout = logWriter
+	cmd.Stderr = logWriter
+	
+	if err := cmd.Start(); err != nil {
+		logWriter.Close()
+		return nil, fmt.Errorf("failed to start dockerd: %w\nYou may need to run with sudo or configure passwordless sudo", err)
+	}
+
+	logger.Info("Waiting for Docker socket...")
+	
+	// Wait for socket to be created (with timeout)
+	socketReady := false
+	for i := 0; i < 60; i++ { // 30 seconds
+		if _, err := os.Stat(socketPath); err == nil {
+			socketReady = true
+			// Make socket accessible to user
+			exec.Command("sudo", "chmod", "666", socketPath).Run()
+			break
 		}
-		logger.Info("Bridge module loaded successfully")
+		time.Sleep(500 * time.Millisecond)
 	}
 
-	// Setup directories for our isolated daemon
-	if err := setupDirectories(logger); err != nil {
-		return nil, fmt.Errorf("Failed to setup directories: %w", err)
+	if !socketReady {
+		cmd.Process.Kill()
+		logWriter.Close()
+		// Read log file to show error
+		if logData, err := os.ReadFile(logFile); err == nil {
+			return nil, fmt.Errorf("timeout waiting for socket.\n\nDockerd log:\n%s", string(logData))
+		}
+		return nil, fmt.Errorf("timeout waiting for Docker socket at %s", socketPath)
 	}
 
-	// Start our own dockerd process
-	daemon, err := startIsolatedDaemon(logger)
+	logger.Info("Socket created, connecting...")
+
+	// Connect to our embedded daemon
+	cli, err = client.NewClientWithOpts(
+		client.WithHost("unix://"+socketPath),
+		client.WithAPIVersionNegotiation(),
+	)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to start Docker daemon: %w", err)
+		cmd.Process.Kill()
+		logWriter.Close()
+		return nil, fmt.Errorf("failed to create Docker client: %w", err)
 	}
 
 	// Wait for daemon to be ready
-	if err := waitForDaemonReady(logger, daemon.socketPath); err != nil {
-		daemon.Stop()
-		return nil, fmt.Errorf("Docker daemon not responding: %w", err)
-	}
-
-	logger.Info("Docker daemon is ready")
-	return daemon, nil
-}
-
-// setupDirectories creates the required directories for the isolated daemon
-func setupDirectories(logger Logger) error {
-	dataDir := "/var/lib/mobius-docker"
-	runDir := "/var/run/mobius-docker"
-
-	logger.Infof("Setting up Docker directories...")
-	
-	currentUser := os.Getenv("USER")
-	
-	for _, dir := range []string{dataDir, runDir} {
-		// Check if directory exists and has proper permissions
-		_, err := os.Stat(dir)
-		if err == nil {
-			// Directory exists - check if we can write to it
-			testFile := filepath.Join(dir, ".test")
-			if err := os.WriteFile(testFile, []byte("test"), 0644); err != nil {
-				// Can't write - try to fix permissions with sudo (non-interactive)
-				logger.Warnf("Directory %s exists but is not writable, fixing permissions...", dir)
-				
-				chownCmd := exec.Command("sudo", "-n", "chown", "-R", currentUser+":"+currentUser, dir)
-				chownCmd.Stdout = os.Stderr
-				chownCmd.Stderr = os.Stderr
-				if err := chownCmd.Run(); err != nil {
-					return fmt.Errorf("failed to fix permissions on %s: %w (run with sudo or fix manually)", dir, err)
-				}
-				logger.Infof("Fixed permissions on %s", dir)
-			} else {
-				os.Remove(testFile) // Clean up test file
-			}
-			continue
-		}
-		
-		// Directory doesn't exist - try to create it
-		if err := os.MkdirAll(dir, 0755); err != nil {
-			// Permission denied - try with sudo (non-interactive)
-			logger.Warnf("Cannot create %s (permission denied), using sudo...", dir)
-			
-			mkdirCmd := exec.Command("sudo", "-n", "sh", "-c", 
-				fmt.Sprintf("mkdir -p %s && chown %s:%s %s", dir, currentUser, currentUser, dir))
-			mkdirCmd.Stdout = os.Stderr
-			mkdirCmd.Stderr = os.Stderr
-			if err := mkdirCmd.Run(); err != nil {
-				return fmt.Errorf("failed to create directory %s: %w (run with sudo or create manually)", dir, err)
-			}
-		}
-	}
-
-	logger.Info("Docker directories ready")
-	return nil
-}
-
-// startIsolatedDaemon starts our own dockerd process with root privileges
-func startIsolatedDaemon(logger Logger) (*Daemon, error) {
-	// Find dockerd executable
-	dockerdPath, err := exec.LookPath("dockerd")
-	if err != nil {
-		return nil, fmt.Errorf("dockerd not found in PATH: %w", err)
-	}
-
-	socketPath := "/var/run/mobius-docker/docker.sock"
-	dataRoot := "/var/lib/mobius-docker"
-	execRoot := "/var/run/mobius-docker"
-
-	logger.Info("Starting isolated Docker daemon...")
-	logger.Infof("Socket: %s", socketPath)
-	logger.Infof("Data root: %s", dataRoot)
-
-	// Check if we can run sudo without password
-	testCmd := exec.Command("sudo", "-n", "true")
-	if err := testCmd.Run(); err != nil {
-		logger.Warn("sudo requires password - you may need to configure passwordless sudo for dockerd")
-		logger.Info("Attempting to authenticate with sudo...")
-		
-		// Print message to stderr (visible even with TUI)
-		fmt.Fprintf(os.Stderr, "\n╔════════════════════════════════════════════╗\n")
-		fmt.Fprintf(os.Stderr, "║   SUDO PASSWORD REQUIRED                  ║\n")
-		fmt.Fprintf(os.Stderr, "║                                           ║\n")
-		fmt.Fprintf(os.Stderr, "║   Starting Docker daemon requires root    ║\n")
-		fmt.Fprintf(os.Stderr, "║   Please enter your password:             ║\n")
-		fmt.Fprintf(os.Stderr, "╚════════════════════════════════════════════╝\n\n")
-		
-		// Pre-authenticate with sudo
-		authCmd := exec.Command("sudo", "true")
-		authCmd.Stdin = os.Stdin
-		authCmd.Stdout = os.Stderr
-		authCmd.Stderr = os.Stderr
-		if err := authCmd.Run(); err != nil {
-			return nil, fmt.Errorf("sudo authentication failed: %w", err)
-		}
-		
-		fmt.Fprintf(os.Stderr, "\n✓ Authentication successful\n\n")
-		logger.Info("Authentication successful")
-	}
-
-	pidFile := filepath.Join(execRoot, "docker.pid")
-	
-	// Declare variables before any goto
-	maxWait := 15 * time.Second
-	checkInterval := 200 * time.Millisecond
-	elapsed := time.Duration(0)
-	var startCmd *exec.Cmd
-	var dockerdArgs string
-	
-	// Check if dockerd is already running
-	if pidData, err := os.ReadFile(pidFile); err == nil {
-		pid := strings.TrimSpace(string(pidData))
-		if pid != "" {
-			// Check if process is actually running
-			checkCmd := exec.Command("ps", "-p", pid)
-			if checkCmd.Run() == nil {
-				logger.Info("Docker daemon already running, waiting for socket...")
-				// Wait for socket to be ready
-				goto waitForSocket
-			}
-		}
-	}
-	
-	// dockerd requires root privileges - start with sudo
-	// Use nohup to properly detach the process
-	// Use vfs storage driver - slower but works without overlay support
-	// Now that bridge module is loaded, remove --bridge=none to allow Docker networking
-	dockerdArgs = fmt.Sprintf("nohup %s --host unix://%s --data-root %s --exec-root %s --pidfile %s --group docker --storage-driver vfs --iptables=false --ip-forward=false > /tmp/dockerd.log 2>&1 &",
-		dockerdPath, socketPath, dataRoot, execRoot, pidFile)
-	
-	startCmd = exec.Command("sudo", "sh", "-c", dockerdArgs)
-	startCmd.Stdout = os.Stderr
-	startCmd.Stderr = os.Stderr
-	if err := startCmd.Run(); err != nil {
-		return nil, fmt.Errorf("failed to start dockerd: %w", err)
-	}
-	
-	// Give dockerd a moment to start
-	time.Sleep(2 * time.Second)
-	
-	// Check if dockerd actually started successfully
-	if logData, err := os.ReadFile("/tmp/dockerd.log"); err == nil {
-		logStr := string(logData)
-		if strings.Contains(logStr, "Error initializing network controller") || 
-		   strings.Contains(logStr, "operation not supported") ||
-		   strings.Contains(logStr, "failed to start daemon") {
-			return nil, fmt.Errorf("dockerd failed to start - bridge networking not supported\n\n" +
-				"Your kernel is missing the bridge module. This is required for KIND.\n" +
-				"Solution: Reboot your system to use the updated kernel with bridge support.\n" +
-				"After rebooting, run this server again.\n\n" +
-				"Technical details:\n%s", logStr[max(0, len(logStr)-500):])
-		}
-	}
-
-waitForSocket:
-	// Now wait for socket to be created
-	logger.Info("Waiting for Docker socket...")
-	elapsed = 0
-	
-	for elapsed < maxWait {
-		if _, err := os.Stat(socketPath); err == nil {
-			// Socket exists - make it accessible
-			logger.Info("Socket created, setting permissions...")
-			chmodCmd := exec.Command("sudo", "chmod", "666", socketPath)
-			chmodCmd.Stdout = os.Stderr
-			chmodCmd.Stderr = os.Stderr
-			if err := chmodCmd.Run(); err != nil {
-				logger.Warnf("Failed to set socket permissions: %v", err)
-			} else {
-				logger.Info("Socket permissions updated")
-			}
-			break
-		}
-		time.Sleep(checkInterval)
-		elapsed += checkInterval
-	}
-	
-	if elapsed >= maxWait {
-		return nil, fmt.Errorf("timeout waiting for Docker socket creation at %s", socketPath)
-	}
-
-	// Set DOCKER_HOST for all docker commands to use our socket
-	os.Setenv("DOCKER_HOST", fmt.Sprintf("unix://%s", socketPath))
-
-	// Clean up stale KIND resources if they exist
-	// This prevents network ID mismatch errors when restarting dockerd
-	logger.Info("Cleaning up stale KIND resources...")
-	
-	// Remove any leftover KIND containers
-	removeContainersCmd := exec.Command("sh", "-c", 
-		fmt.Sprintf("DOCKER_HOST=unix://%s docker ps -a --filter name=mobius-cluster --format '{{.ID}}' | xargs -r docker rm -f", socketPath))
-	if err := removeContainersCmd.Run(); err == nil {
-		logger.Info("Removed stale KIND containers")
-	}
-	
-	// Remove KIND network
-	removeNetworkCmd := exec.Command("docker", "network", "rm", "kind")
-	removeNetworkCmd.Env = append(os.Environ(), fmt.Sprintf("DOCKER_HOST=unix://%s", socketPath))
-	if err := removeNetworkCmd.Run(); err == nil {
-		logger.Info("Removed stale KIND network")
-	}
-
-	return &Daemon{
-		logger:     logger,
-		socketPath: socketPath,
-		pidFile:    pidFile,
-	}, nil
-}
-
-// waitForDaemonReady waits for the Docker daemon to become responsive
-func waitForDaemonReady(logger Logger, socketPath string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-
+	
+	logger.Info("Waiting for daemon to be ready...")
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
-
-	logger.Info("Waiting for Docker daemon to be ready...")
-
+	
 	for {
 		select {
 		case <-ctx.Done():
-			return fmt.Errorf("timeout waiting for Docker daemon to start")
+			cmd.Process.Kill()
+			cli.Close()
+			logWriter.Close()
+			return nil, fmt.Errorf("timeout waiting for Docker daemon to respond")
 		case <-ticker.C:
-			// Try to ping the daemon using the custom socket
-			infoCmd := cmd.NewCmd("docker", "info")
-			status := <-infoCmd.Start()
-			if status.Exit == 0 {
-				logger.Info("Docker daemon is responding")
-				return nil
+			if _, err := cli.Ping(ctx); err == nil {
+				logger.Info("Embedded Docker daemon is ready!")
+				return &Daemon{
+					logger:     logger,
+					client:     cli,
+					dockerdCmd: cmd,
+					socketPath: socketPath,
+					dataRoot:   dataRoot,
+				}, nil
 			}
 		}
 	}
 }
 
-// Stop gracefully shuts down the Docker daemon
-func (d *Daemon) Stop() error {
-	d.logger.Info("Stopping Docker daemon...")
-
-	// Read PID from file
-	pidData, err := os.ReadFile(d.pidFile)
+// connectToSocket connects to an existing docker socket
+func connectToSocket(logger Logger, socketPath string) (*Daemon, error) {
+	cli, err := client.NewClientWithOpts(
+		client.WithHost("unix://"+socketPath),
+		client.WithAPIVersionNegotiation(),
+	)
 	if err != nil {
-		d.logger.Warnf("Could not read PID file: %v", err)
-		return nil
+		return nil, fmt.Errorf("failed to connect to socket: %w", err)
 	}
 
-	pid := strings.TrimSpace(string(pidData))
-	if pid == "" {
-		d.logger.Info("No PID found, daemon may not be running")
-		return nil
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if _, err := cli.Ping(ctx); err != nil {
+		cli.Close()
+		return nil, fmt.Errorf("socket exists but daemon not responding: %w", err)
 	}
 
-	// Kill the dockerd process
-	killCmd := exec.Command("sudo", "kill", "-TERM", pid)
-	if err := killCmd.Run(); err != nil {
-		d.logger.Warnf("Error stopping daemon: %v", err)
-		// Try force kill
-		forceKill := exec.Command("sudo", "kill", "-9", pid)
-		if err := forceKill.Run(); err != nil {
-			d.logger.Warnf("Force kill failed: %v", err)
+	logger.Info("Connected to existing dockerd")
+	return &Daemon{
+		logger:     logger,
+		client:     cli,
+		socketPath: socketPath,
+	}, nil
+}
+
+// ensureDockerd checks if dockerd exists, downloads if needed
+func ensureDockerd(logger Logger) (string, error) {
+	// Check if dockerd is in PATH
+	if path, err := exec.LookPath("dockerd"); err == nil {
+		logger.Info("Using system dockerd")
+		return path, nil
+	}
+
+	// Check in ~/.mobius/bin
+	homeDir, _ := os.UserHomeDir()
+	binDir := filepath.Join(homeDir, ".mobius", "bin")
+	dockerdPath := filepath.Join(binDir, "dockerd")
+	
+	if _, err := os.Stat(dockerdPath); err == nil {
+		logger.Info("Using cached dockerd binary")
+		return dockerdPath, nil
+	}
+
+	// Download Docker static binary
+	logger.Info("Downloading Docker static binary...")
+	
+	if err := os.MkdirAll(binDir, 0755); err != nil {
+		return "", fmt.Errorf("failed to create bin directory: %w", err)
+	}
+
+	// Download Docker 28.0.0 static binary
+	version := "28.0.0"
+	arch := "x86_64" // TODO: detect architecture
+	url := fmt.Sprintf("https://download.docker.com/linux/static/stable/%s/docker-%s.tgz", arch, version)
+	
+	logger.Infof("Downloading from %s", url)
+	
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("failed to download Docker: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("failed to download Docker: HTTP %d", resp.StatusCode)
+	}
+
+	// Save to temp file
+	tmpFile := filepath.Join(binDir, "docker.tgz")
+	out, err := os.Create(tmpFile)
+	if err != nil {
+		return "", fmt.Errorf("failed to create temp file: %w", err)
+	}
+	defer os.Remove(tmpFile)
+
+	if _, err := io.Copy(out, resp.Body); err != nil {
+		out.Close()
+		return "", fmt.Errorf("failed to save Docker archive: %w", err)
+	}
+	out.Close()
+
+	// Extract dockerd binary
+	logger.Info("Extracting dockerd...")
+	extractCmd := exec.Command("tar", "xzf", tmpFile, "-C", binDir, "--strip-components=1", "docker/dockerd")
+	if err := extractCmd.Run(); err != nil {
+		return "", fmt.Errorf("failed to extract dockerd: %w", err)
+	}
+
+	// Make executable
+	if err := os.Chmod(dockerdPath, 0755); err != nil {
+		return "", fmt.Errorf("failed to make dockerd executable: %w", err)
+	}
+
+	logger.Info("Docker binary downloaded successfully")
+	return dockerdPath, nil
+}
+
+// Stop closes the Docker client connection and stops embedded daemon if running
+func (d *Daemon) Stop() error {
+	d.logger.Info("Stopping Docker...")
+	
+	if d.client != nil {
+		d.client.Close()
+	}
+	
+	if d.dockerdCmd != nil && d.dockerdCmd.Process != nil {
+		d.logger.Info("Stopping embedded Docker daemon...")
+		
+		// Since dockerd was started with sudo, we need to find and kill it properly
+		// Get the actual dockerd PID (not the sudo PID)
+		findCmd := exec.Command("pgrep", "-f", "dockerd.*"+d.socketPath)
+		if output, err := findCmd.Output(); err == nil && len(output) > 0 {
+			pid := strings.TrimSpace(string(output))
+			d.logger.Infof("Found dockerd process: %s", pid)
+			
+			// Try graceful shutdown with SIGTERM
+			exec.Command("sudo", "kill", "-TERM", pid).Run()
+			
+			// Wait up to 10 seconds
+			for i := 0; i < 20; i++ {
+				checkCmd := exec.Command("ps", "-p", pid)
+				if checkCmd.Run() != nil {
+					d.logger.Info("Docker daemon stopped gracefully")
+					break
+				}
+				time.Sleep(500 * time.Millisecond)
+			}
+			
+			// Force kill if still running
+			if exec.Command("ps", "-p", pid).Run() == nil {
+				d.logger.Warn("Force killing dockerd...")
+				exec.Command("sudo", "kill", "-9", pid).Run()
+			}
+		}
+		
+		// Clean up socket
+		if d.socketPath != "" {
+			exec.Command("sudo", "rm", "-f", d.socketPath).Run()
 		}
 	}
-
-	// Wait a moment for shutdown
-	time.Sleep(1 * time.Second)
-
-	// Clean up PID file
-	os.Remove(d.pidFile)
-
-	d.logger.Info("Docker daemon stopped")
+	
 	return nil
+}
+
+// GetClient returns the Docker client for direct use
+func (d *Daemon) GetClient() *client.Client {
+	return d.client
+}
+
+// GetSocketPath returns the Docker socket path (unix://...) or empty if using default
+func (d *Daemon) GetSocketPath() string {
+	if d.socketPath != "" {
+		return "unix://" + d.socketPath
+	}
+	return ""
 }

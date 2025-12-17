@@ -114,6 +114,8 @@ func Start(logger Logger) (*Daemon, error) {
 		"--storage-driver", "vfs",
 		"--iptables=false",
 		"--ip-forward=false",
+		"--userland-proxy=true",
+		"--userland-proxy-path", filepath.Join(dockerdDir, "docker-proxy"),
 	)
 
 	// Add the binary directory to PATH so dockerd can find docker-proxy, containerd, etc.

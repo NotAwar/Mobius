@@ -43,7 +43,7 @@ func main() {
 	http.HandleFunc("/search/windows", windowsHandler)
 	http.HandleFunc("/search/homebrew", homebrewHandler)
 
-	http.HandleFunc("/apt/addrepo?repo={repo}", aptAddRepo)
+	http.HandleFunc("/apt/addrepo", aptAddRepo)
 
 	port := "8080"
 	printLog("Starting server on port "+port, LogLevelInfo, nil)

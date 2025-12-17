@@ -103,7 +103,18 @@ func Start(logger Logger) (*Daemon, error) {
 	// Get the directory containing dockerd for PATH
 	dockerdDir := filepath.Dir(dockerdPath)
 
-	cmd := exec.Command("sudo", "-E", dockerdPath,
+	// Create a wrapper script that sets PATH so dockerd can find all binaries
+	wrapperPath := filepath.Join(runRoot, "dockerd-wrapper.sh")
+	wrapperScript := fmt.Sprintf(`#!/bin/bash
+export PATH="%s:$PATH"
+exec "%s" "$@"
+`, dockerdDir, dockerdPath)
+
+	if err := os.WriteFile(wrapperPath, []byte(wrapperScript), 0755); err != nil {
+		return nil, fmt.Errorf("failed to create wrapper script: %w", err)
+	}
+
+	cmd := exec.Command("sudo", wrapperPath,
 		"--host", "unix://"+socketPath,
 		"--data-root", dataRoot,
 		"--exec-root", runRoot,
@@ -112,17 +123,10 @@ func Start(logger Logger) (*Daemon, error) {
 		"--ip-forward=false",
 		"--userland-proxy=true",
 		"--userland-proxy-path", filepath.Join(dockerdDir, "docker-proxy"),
-		"--containerd", filepath.Join(runRoot, "containerd", "containerd.sock"), // Explicitly set containerd socket
 		"--group", "root", // Use root group since dockerd runs as root (docker group may not exist)
 	)
 
-	// Add the binary directory to PATH so dockerd can find docker-proxy, containerd, etc.
-	// Also set CONTAINERD env var to help dockerd locate containerd
-	newPath := dockerdDir + ":" + os.Getenv("PATH")
-	cmd.Env = append(os.Environ(),
-		"PATH="+newPath,
-		"CONTAINERD="+filepath.Join(dockerdDir, "containerd"),
-	)
+	// No need to set cmd.Env since the wrapper script handles PATH
 
 	// Redirect dockerd logs
 	logFile := filepath.Join(runRoot, "dockerd.log")

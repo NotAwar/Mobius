@@ -89,7 +89,8 @@ func homebrewHandler(w http.ResponseWriter, r *http.Request) {
 		// Check for a macOS bottle (approx method: look for 'macos' key in files)
 		foundMacBottle := false
 		for k := range f.Bottle.Stable.Files {
-			if strings.Contains(k, "mojave") || strings.Contains(k, "catalina") || strings.Contains(k, "big_sur") || strings.Contains(k, "ventura") || k == "all" {
+			if strings.Contains(k, "tahoe") ||
+				k == "all" {
 				foundMacBottle = true
 				break
 			}

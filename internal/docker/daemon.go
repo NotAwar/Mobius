@@ -71,7 +71,6 @@ func Start(logger Logger) (*Daemon, error) {
 	dataRoot := filepath.Join(homeDir, ".mobius", "docker", "data")
 	runRoot := filepath.Join(homeDir, ".mobius", "docker", "run")
 	socketPath := filepath.Join(runRoot, "docker.sock")
-	pidFile := filepath.Join(runRoot, "docker.pid")
 
 	for _, dir := range []string{dataRoot, runRoot} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
@@ -82,21 +81,19 @@ func Start(logger Logger) (*Daemon, error) {
 	logger.Infof("Data root: %s", dataRoot)
 	logger.Infof("Socket: %s", socketPath)
 
-	// Check if already running
-	if pidData, err := os.ReadFile(pidFile); err == nil {
-		pid := strings.TrimSpace(string(pidData))
-		checkCmd := exec.Command("ps", "-p", pid)
-		if checkCmd.Run() == nil {
-			// Process exists, but check if socket exists too
-			if _, err := os.Stat(socketPath); err == nil {
-				logger.Info("Dockerd already running, connecting...")
-				return connectToSocket(logger, socketPath)
-			} else {
-				// Process running but socket missing - kill it and restart
-				logger.Warn("Dockerd process exists but socket missing, killing stale process...")
-				exec.Command("sudo", "kill", "-9", pid).Run()
-				time.Sleep(time.Second)
-			}
+	// Check if already running by looking for the process
+	findCmd := exec.Command("pgrep", "-f", "dockerd.*"+socketPath)
+	if output, err := findCmd.Output(); err == nil && len(output) > 0 {
+		pid := strings.TrimSpace(string(output))
+		// Process exists, check if socket exists too
+		if _, err := os.Stat(socketPath); err == nil {
+			logger.Info("Dockerd already running, connecting...")
+			return connectToSocket(logger, socketPath)
+		} else {
+			// Process running but socket missing - kill it and restart
+			logger.Warn("Dockerd process exists but socket missing, killing stale process...")
+			exec.Command("sudo", "kill", "-9", pid).Run()
+			time.Sleep(time.Second)
 		}
 	}
 
@@ -110,7 +107,6 @@ func Start(logger Logger) (*Daemon, error) {
 		"--host", "unix://"+socketPath,
 		"--data-root", dataRoot,
 		"--exec-root", runRoot,
-		"--pidfile", pidFile,
 		"--storage-driver", "vfs",
 		"--iptables=false",
 		"--ip-forward=false",
@@ -143,8 +139,13 @@ func Start(logger Logger) (*Daemon, error) {
 	for i := 0; i < 60; i++ { // 30 seconds
 		if _, err := os.Stat(socketPath); err == nil {
 			socketReady = true
-			// Make socket accessible to user
-			exec.Command("sudo", "chmod", "666", socketPath).Run()
+			// Make socket accessible to all users (since we don't have docker group)
+			logger.Info("Setting socket permissions...")
+			chmodCmd := exec.Command("sudo", "chmod", "666", socketPath)
+			if err := chmodCmd.Run(); err != nil {
+				logger.Warnf("Failed to set socket permissions: %v", err)
+				logger.Warn("You may need to run all docker commands with sudo")
+			}
 			break
 		}
 		time.Sleep(500 * time.Millisecond)
@@ -367,4 +368,67 @@ func (d *Daemon) GetSocketPath() string {
 		return "unix://" + d.socketPath
 	}
 	return ""
+}
+
+// EnsureKubectl checks if kubectl exists, downloads if needed
+func EnsureKubectl(logger Logger) (string, error) {
+	// Check if kubectl is in PATH
+	if path, err := exec.LookPath("kubectl"); err == nil {
+		logger.Info("Using system kubectl")
+		return path, nil
+	}
+
+	// Check in ~/.mobius/bin
+	homeDir, _ := os.UserHomeDir()
+	binDir := filepath.Join(homeDir, ".mobius", "bin")
+	kubectlPath := filepath.Join(binDir, "kubectl")
+
+	if _, err := os.Stat(kubectlPath); err == nil {
+		logger.Info("Using cached kubectl binary")
+		return kubectlPath, nil
+	}
+
+	// Download kubectl
+	logger.Info("Downloading kubectl...")
+
+	if err := os.MkdirAll(binDir, 0755); err != nil {
+		return "", fmt.Errorf("failed to create bin directory: %w", err)
+	}
+
+	// Get latest stable version
+	version := "v1.31.0" // Stable version compatible with KIND
+	arch := "amd64"      // TODO: detect architecture
+	goos := "linux"      // TODO: detect OS
+	url := fmt.Sprintf("https://dl.k8s.io/release/%s/bin/%s/%s/kubectl", version, goos, arch)
+
+	logger.Infof("Downloading from %s", url)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("failed to download kubectl: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("failed to download kubectl: HTTP %d", resp.StatusCode)
+	}
+
+	// Save to file
+	out, err := os.Create(kubectlPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to create kubectl file: %w", err)
+	}
+	defer out.Close()
+
+	if _, err := io.Copy(out, resp.Body); err != nil {
+		return "", fmt.Errorf("failed to save kubectl: %w", err)
+	}
+
+	// Make executable
+	if err := os.Chmod(kubectlPath, 0755); err != nil {
+		return "", fmt.Errorf("failed to make kubectl executable: %w", err)
+	}
+
+	logger.Info("kubectl downloaded successfully")
+	return kubectlPath, nil
 }

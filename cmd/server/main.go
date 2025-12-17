@@ -97,6 +97,25 @@ func main() {
 	}
 	defer dockerDaemon.Stop()
 
+	// Ensure kubectl is installed
+	tuiProgram.Info("Checking kubectl availability...")
+	kubectlPath, err := docker.EnsureKubectl(tui.NewLogger(tuiProgram))
+	if err != nil {
+		tuiProgram.Error(fmt.Sprintf("Failed to ensure kubectl: %v", err))
+		tuiProgram.Error("Press Ctrl+C to exit")
+		signChn := make(chan os.Signal, 1)
+		signal.Notify(signChn, syscall.SIGINT, syscall.SIGTERM)
+		<-signChn
+		return
+	}
+
+	// Add kubectl to PATH if it's not in system PATH
+	if filepath.Dir(kubectlPath) != "/usr/bin" && filepath.Dir(kubectlPath) != "/usr/local/bin" {
+		newPath := filepath.Dir(kubectlPath) + ":" + os.Getenv("PATH")
+		os.Setenv("PATH", newPath)
+		tuiProgram.Info(fmt.Sprintf("Added %s to PATH", filepath.Dir(kubectlPath)))
+	}
+
 	// Get absolute path for config files
 	kubeconfigPath, _ := filepath.Abs("configs/cluster/kubeconfig")
 
@@ -120,7 +139,6 @@ func main() {
 		if err := cluster.Delete(); err != nil {
 			tuiProgram.Warning(fmt.Sprintf("Failed to delete cluster: %v", err))
 		}
-		dockerDaemon.Stop()
 	}()
 
 	tuiProgram.Success("Mobius cluster is running!")
@@ -136,6 +154,7 @@ func main() {
 	tuiProgram.Info("Waiting for Kubernetes API server...")
 	if err := deployer.WaitForAPIServer(30 * time.Second); err != nil {
 		tuiProgram.Error(fmt.Sprintf("API server failed to become ready: %v", err))
+		tuiProgram.Warning("Continuing anyway, services may fail to deploy...")
 	} else {
 		tuiProgram.Success("Kubernetes API server is ready!")
 	}

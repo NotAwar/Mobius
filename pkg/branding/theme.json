@@ -1,0 +1,66 @@
+{
+  "name": "Mobius",
+  "description": "Container Orchestration & MDM Platform",
+  "version": "1.0.0",
+  "colors": {
+    "primary": "#1c2f38",
+    "secondary": "#31413e",
+    "accent": "#d4af37",
+    "success": "#4ade80",
+    "error": "#ef4444",
+    "warning": "#fbbf24",
+    "info": "#60a5fa",
+    "healthy": "#4ade80",
+    "unhealthy": "#ef4444",
+    "degraded": "#fbbf24",
+    "textPrimary": "#ffffff",
+    "textSecondary": "#94a3b8",
+    "textTertiary": "#64748b",
+    "textHeading": "#d4af37",
+    "background": "#1c2f38",
+    "backgroundAlt": "#31413e",
+    "border": "#334155",
+    "borderLight": "#475569"
+  },
+  "typography": {
+    "fontFamily": {
+      "heading": "Montserrat, sans-serif",
+      "body": "Ubuntu, sans-serif"
+    },
+    "fontWeight": {
+      "light": "300",
+      "normal": "400",
+      "medium": "500",
+      "bold": "700"
+    },
+    "fontSize": {
+      "small": "0.875rem",
+      "base": "1rem",
+      "large": "1.25rem",
+      "xlarge": "1.5rem",
+      "2xlarge": "2rem"
+    }
+  },
+  "spacing": {
+    "xs": "0.25rem",
+    "sm": "0.5rem",
+    "md": "1rem",
+    "lg": "1.5rem",
+    "xl": "2rem"
+  },
+  "borderRadius": {
+    "small": "0.25rem",
+    "medium": "0.5rem",
+    "large": "0.75rem",
+    "full": "9999px"
+  },
+  "assets": {
+    "logo": "assets/Mobius_Logo.png",
+    "logoWithText": "assets/Mobius-Logo-Text_1.png",
+    "faviconSvg": "assets/favicon.svg",
+    "faviconIco": "assets/favicon.ico",
+    "wallpaper": "assets/mobius_wallpaper.png",
+    "error404": "assets/ERROR-404.png",
+    "errorGeneric": "assets/ERROR-generic.png"
+  }
+}

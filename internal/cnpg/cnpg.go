@@ -1,4 +1,4 @@
-package headscale
+package cnpg
 
 import (
 	"fmt"
@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	chartRepoName = "headscale"
-	chartRepoURL  = "https://goodieshq.github.io/headscale-helm"
-	chartName     = "headscale/headscale"
-	namespace     = "headscale"
-	releaseName   = "headscale"
+	chartRepoName = "cnpg"
+	chartRepoURL  = "https://cloudnative-pg.github.io/charts"
+	chartName     = "cnpg/cloudnative-pg"
+	namespace     = "cnpg-system"
+	releaseName   = "cnpg"
 )
 
-// Config holds Headscale deployment configuration
+// Config holds cnpg deployment configuration
 type Config struct {
 	// Namespace to deploy into
 	Namespace string
@@ -28,7 +28,7 @@ type Config struct {
 	CustomValues map[string]string
 }
 
-// DefaultConfig returns the default Headscale configuration
+// DefaultConfig returns the default cnpg configuration
 func DefaultConfig() Config {
 	return Config{
 		Namespace:      namespace,
@@ -38,14 +38,14 @@ func DefaultConfig() Config {
 	}
 }
 
-// Deployer handles Headscale deployment
+// Deployer handles cnpg deployment
 type Deployer struct {
 	config   Config
 	deployer *deploy.Deployer
 	logger   *logrus.Logger
 }
 
-// NewDeployer creates a new Headscale deployer
+// NewDeployer creates a new cnpg deployer
 func NewDeployer(deployer *deploy.Deployer, logger *logrus.Logger, config Config) *Deployer {
 	return &Deployer{
 		config:   config,
@@ -54,7 +54,7 @@ func NewDeployer(deployer *deploy.Deployer, logger *logrus.Logger, config Config
 	}
 }
 
-// Deploy deploys Headscale to the cluster
+// Deploy deploys CloudNativePG operator to the cluster
 func (h *Deployer) Deploy() error {
 	// Create namespace
 	if err := h.deployer.CreateNamespace(h.config.Namespace); err != nil {
@@ -70,21 +70,20 @@ func (h *Deployer) Deploy() error {
 	helmValues := h.prepareValues()
 
 	// Install the chart
-	h.logger.Infof("Installing Headscale as release %s in namespace %s", h.config.ReleaseName, h.config.Namespace)
+	h.logger.Infof("Installing CloudNativePG operator as release %s in namespace %s", h.config.ReleaseName, h.config.Namespace)
 	if err := h.deployer.HelmInstall(h.config.ReleaseName, chartName, h.config.Namespace, helmValues, nil); err != nil {
 		return fmt.Errorf("failed to install helm chart: %w", err)
 	}
 
-	h.logger.Info("Headscale installed successfully!")
-	h.logger.Info("Headscale is running in the cluster!")
-	h.logger.Infof("To access Headscale, use: kubectl port-forward -n %s svc/%s 8080:8080", h.config.Namespace, h.config.ReleaseName)
+	h.logger.Info("CloudNativePG operator installed successfully!")
+	h.logger.Info("CloudNativePG is running in the cluster!")
 
 	return nil
 }
 
-// addHelmRepo adds the Headscale Helm repository
+// addHelmRepo adds the CloudNativePG Helm repository
 func (h *Deployer) addHelmRepo() error {
-	h.logger.Info("Adding Headscale Helm repository...")
+	h.logger.Info("Adding CloudNativePG Helm repository...")
 
 	if err := h.deployer.HelmRepoAdd(chartRepoName, chartRepoURL); err != nil {
 		return fmt.Errorf("failed to add helm repository: %w", err)
@@ -116,14 +115,14 @@ func (h *Deployer) prepareValues() map[string]string {
 	return helmValues
 }
 
-// Uninstall removes Headscale from the cluster
+// Uninstall removes CloudNativePG operator from the cluster
 func (h *Deployer) Uninstall() error {
-	h.logger.Infof("Uninstalling Headscale from namespace %s...", h.config.Namespace)
+	h.logger.Infof("Uninstalling CloudNativePG from namespace %s...", h.config.Namespace)
 
 	if err := h.deployer.HelmUninstall(h.config.ReleaseName, h.config.Namespace); err != nil {
-		return fmt.Errorf("failed to uninstall Headscale: %w", err)
+		return fmt.Errorf("failed to uninstall CloudNativePG: %w", err)
 	}
 
-	h.logger.Info("Headscale uninstalled successfully")
+	h.logger.Info("CloudNativePG uninstalled successfully")
 	return nil
 }

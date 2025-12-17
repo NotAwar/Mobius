@@ -1,0 +1,45 @@
+/* Mobius Global Styles */
+@import 'tailwindcss';
+
+/* Font Configuration */
+:root {
+	/* Montserrat for headings (light weight 300) */
+	--font-heading: 'Montserrat', sans-serif;
+	/* Ubuntu for body text */
+	--font-body: 'Ubuntu', sans-serif;
+	/* Brand colors */
+	--color-accent: #d4af37; /* Golden */
+	--color-text: #ffffff; /* White */
+}
+
+/* Apply body font and white text globally */
+body {
+	font-family: var(--font-body);
+	font-weight: 400;
+	color: var(--color-text);
+}
+
+/* Heading styles with Montserrat Light (300) and golden accent color */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-heading);
+	font-weight: 300; /* Light */
+	color: var(--color-accent); /* Golden color for headings */
+	letter-spacing: -0.025em; /* Tighter tracking for headings */
+}
+
+/* Stronger emphasis for specific cases */
+strong,
+b {
+	font-weight: 700;
+}
+
+/* Medium weight for buttons and interactive elements */
+button,
+.btn {
+	font-weight: 500;
+}

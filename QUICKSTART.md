@@ -2,7 +2,7 @@
 
 ## Running Mobius Server
 
-The Mobius server is **fully automated** and now **modular** - just run it!
+The Mobius server is **fully automated** - just run it!
 
 ```bash
 go run cmd/server/main.go
@@ -11,39 +11,60 @@ go run cmd/server/main.go
 That's it! The server will:
 
 1. ✅ Detect your Linux distribution
-2. ✅ Install Docker automatically if needed (will prompt for sudo)
-3. ✅ Create necessary directories
-4. ✅ Set proper permissions
-5. ✅ Start an isolated Docker daemon
-6. ✅ Create a KIND Kubernetes cluster
-7. ✅ Be ready for device management!
+2. ✅ Install Docker automatically if needed (one-time sudo for installation)
+3. ✅ Start its own isolated Docker daemon (no system service needed!)
+4. ✅ Create a KIND Kubernetes cluster
+5. ✅ Deploy Headscale VPN and UI components
+6. ✅ Be ready for device management!
+
+## First Time Running
+
+The very first time you run Mobius, you may be prompted for your sudo password **once** to install Docker (if not already installed).
+
+```bash
+go run cmd/server/main.go
+# You might see: [sudo] password for user:
+# Enter your password - this is the ONLY time you'll need to do this!
+```
+
+After Docker is installed, the server manages its own isolated Docker daemon - no more password prompts, no systemd required!
 
 ## What You'll See
 
-```
-INFO[0000] Docker is already installed                  
-INFO[0000] Ensuring directory exists: /var/lib/mobius-docker 
-INFO[0000] Ensuring directory exists: /var/run/mobius-docker 
-INFO[0000] Directories are ready                        
-INFO[0000] Using dockerd at: /usr/bin/dockerd           
-INFO[0000] Starting Docker daemon...                    
-INFO[0000] Waiting for Docker daemon to be ready...    
-INFO[0001] Docker daemon is ready                       
-INFO[0001] Creating KIND cluster...                     
-INFO[0005] Mobius cluster is running. Press Ctrl+C to stop.
+```text
+🚀 Mobius Server
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[17:30:45] ℹ Checking Docker availability...
+[17:30:45] ℹ Docker is already installed
+[17:30:45] ℹ Setting up Docker directories...
+[17:30:45] ℹ Docker directories ready
+[17:30:45] ℹ Starting isolated Docker daemon...
+[17:30:45] ℹ Socket: /var/run/mobius-docker/docker.sock
+[17:30:45] ℹ Data root: /var/lib/mobius-docker
+[17:30:46] ℹ Waiting for Docker daemon to be ready...
+[17:30:47] ℹ Docker daemon is responding
+[17:30:47] ✓ Docker daemon is ready
+[17:30:47] ℹ Creating KIND cluster...
+[17:30:52] ✓ Mobius cluster is running. Press Ctrl+C to stop.
 ```
 
-## First Time Running?
+## What Gets Configured Automatically
 
-If Docker is not installed:
+When you run Mobius for the first time, it automatically:
 
-```bash
-go run cmd/server/server.go
-# If you see "Docker not installed and not running as root"
-# The server will automatically re-execute with sudo
-# You'll be prompted: [sudo] password for user:
-# Enter your password and it will install Docker
-```
+1. **Creates isolated Docker directories**
+   - `/var/lib/mobius-docker` - Docker data (images, containers)
+   - `/var/run/mobius-docker` - Runtime files and socket
+
+2. **Starts its own Docker daemon**
+   - Completely isolated from system Docker
+   - No systemd dependency
+   - No kernel module requirements (iptables-free)
+
+3. **Sets DOCKER_HOST environment variable**
+   - Points all docker commands to the custom socket
+   - Transparent to the rest of the application
 
 ## Platform-Specific Notes
 
@@ -72,7 +93,7 @@ brew install --cask docker
 Press `Ctrl+C` - the server will:
 
 1. Delete the KIND cluster
-2. Stop the Docker daemon gracefully
+2. Stop the isolated Docker daemon gracefully
 3. Clean up resources
 
 ## Accessing the Cluster

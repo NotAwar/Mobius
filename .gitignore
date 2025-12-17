@@ -1,0 +1,85 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+/main
+mobius-server
+/mobius-server
+/tmp/mobius-server
+
+# Go build artifacts
+*.test
+*.out
+/bin/
+/dist/
+
+# Go vendor directory
+/vendor/
+
+# Go modules cache
+go.sum
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+/tmp/
+*.tmp
+
+# Docker volumes and data
+/var/lib/mobius-docker/
+/var/run/mobius-docker/
+
+# Kubernetes configs (may contain secrets)
+configs/cluster/kubeconfig
+*.kubeconfig
+
+# Headscale chart (cloned at runtime)
+/tmp/headscale-helm-chart/
+
+# Build outputs
+cmd/server/server
+cmd/cli/cli
+cmd/client/client
+cmd/cocoon/cocoon
+cmd/mobius-package-search/search-api
+cmd/mobius-package-search/mobius-package-search
+cmd/setup/setup
+cmd/ui/ui
+
+# OS specific
+Thumbs.db
+ehthumbs.db
+
+# Environment files (may contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Node modules (for any JS tooling)
+node_modules/
+
+# Web build output (covered by web/.gitignore but added for safety)
+web/build/
+web/.svelte-kit/
+web/dist/
+
+# Assets (symlinked from /assets to /web/static/assets)
+# Note: /assets is the single source of truth for all assets (logos, favicons, wallpapers)
+# The symlink at web/static/assets/ should be committed (not ignored)
+# Individual asset files are tracked in Git

@@ -44,7 +44,7 @@ func DefaultConfig(workspaceRoot string) Config {
 		ReleaseName:  releaseName,
 		ServiceName:  serviceName,
 		ServicePort:  servicePort,
-		UIPath:       filepath.Join(workspaceRoot, "archive", "ui", "web"),
+		UIPath:       filepath.Join(workspaceRoot, "web"),
 		BuildUI:      true,
 		CustomValues: make(map[string]string),
 	}
@@ -173,7 +173,12 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
-          containerPort: 80
+          containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: ORIGIN
+          value: "http://localhost:%d"
 ---
 apiVersion: v1
 kind: Service

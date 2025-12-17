@@ -159,7 +159,7 @@ func (d *Deployer) GetPods(namespace string) ([]byte, error) {
 func (d *Deployer) HelmInstall(releaseName, chartPath, namespace string, values map[string]string, valuesFiles []string) error {
 	d.logger.Infof("Installing Helm chart: %s as release %s in namespace %s", chartPath, releaseName, namespace)
 
-	args := []string{"install", releaseName, chartPath, "-n", namespace, "--create-namespace"}
+	args := []string{"install", releaseName, chartPath, "-n", namespace, "--create-namespace", "--timeout", "3m"}
 
 	// Add values files
 	for _, vf := range valuesFiles {

@@ -1,0 +1,41 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: headscale-db
+  namespace: headscale
+spec:
+  instances: 1
+
+  bootstrap:
+    initdb:
+      database: headscale
+      owner: headscale
+      secret:
+        name: headscale-db-credentials
+
+  storage:
+    size: 1Gi
+    storageClass: standard
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "128MB"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: headscale-db-credentials
+  namespace: headscale
+type: kubernetes.io/basic-auth
+stringData:
+  username: headscale
+  password: headscale-secure-password

@@ -168,11 +168,10 @@ func main() {
 	
 	// Use channels to collect errors
 	cnpgErr := make(chan error, 1)
-	headscaleErr := make(chan error, 1)
 	apiErr := make(chan error, 1)
 	uiErr := make(chan error, 1)
 
-	// Deploy CNPG
+	// Deploy CNPG first (required for Headscale)
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -188,34 +187,19 @@ func main() {
 		}
 	}()
 
-	// Deploy Headscale
+	// Start API server in parallel
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		tuiProgram.Info("Deploying Headscale VPN...")
-		headscaleConfig := headscale.DefaultConfig()
-		headscaleDeployer = headscale.NewDeployer(deployer, logger, headscaleConfig)
-		if err := headscaleDeployer.Deploy(); err != nil {
-			tuiProgram.Error(fmt.Sprintf("Failed to deploy Headscale: %v", err))
-			headscaleErr <- err
-		} else {
-			tuiProgram.Success("Headscale deployed successfully")
-			headscaleErr <- nil
-		}
-	}()
-
-	// Start API server
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		tuiProgram.Info("Starting API server...")
+		tuiProgram.Info("Starting API server on port 3001...")
 		apiConfig := api.Config{
-			Port:       "3000",
+			Port:       "3001",
 			Kubeconfig: kubeconfigPath,
 		}
 		apiServer = api.NewServer(logger, apiConfig)
 		if err := apiServer.Start(); err != nil {
 			tuiProgram.Error(fmt.Sprintf("Failed to start API server: %v", err))
+			tuiProgram.Info("Tip: Kill any process using port 3001 first")
 			apiErr <- err
 		} else {
 			tuiProgram.Success(fmt.Sprintf("API server running at http://localhost:%s", apiConfig.Port))
@@ -223,8 +207,34 @@ func main() {
 		}
 	}()
 
-	// Wait for core services
+	// Wait for CNPG and API to be ready
 	wg.Wait()
+	
+	// Check for critical errors
+	tuiProgram.Info("Checking CNPG deployment status...")
+	if err := <-cnpgErr; err != nil {
+		tuiProgram.Error(fmt.Sprintf("CNPG deployment failed: %v", err))
+		tuiProgram.Error("Cannot continue without CNPG")
+		return
+	}
+	tuiProgram.Info("Checking API server status...")
+	if err := <-apiErr; err != nil {
+		tuiProgram.Error(fmt.Sprintf("API server failed to start: %v", err))
+		tuiProgram.Error("Cannot continue without API server")
+		return
+	}
+	tuiProgram.Success("Core services (CNPG + API) are running!")
+
+	// Now deploy Headscale (requires CNPG to be running)
+	tuiProgram.Info("Deploying Headscale VPN with PostgreSQL...")
+	headscaleConfig := headscale.DefaultConfig()
+	headscaleDeployer = headscale.NewDeployer(deployer, logger, headscaleConfig)
+	if err := headscaleDeployer.Deploy(); err != nil {
+		tuiProgram.Warning(fmt.Sprintf("Headscale deployment skipped: %v", err))
+		tuiProgram.Info("Server will continue without Headscale VPN")
+	} else {
+		tuiProgram.Success("Headscale deployed successfully with PostgreSQL")
+	}
 
 	// Deploy UI after other services are ready
 	go func() {
@@ -236,9 +246,29 @@ func main() {
 			uiErr <- err
 		} else {
 			tuiProgram.Success("UI deployed successfully")
+			
+			// Show prominent access message
+			successBox := branding.NewBoxStyle(60)
+			titleStyle := branding.StyleTitle
+			accessMsg := successStyle.Render("✓ Mobius is ready!") + "\n\n" +
+				"Access your dashboard at:\n" +
+				titleStyle.Render(fmt.Sprintf("  http://localhost:%d", uiConfig.ServicePort)) + "\n\n" +
+				"Press Ctrl+C to stop the server."
+			fmt.Println("\n" + successBox.Render(accessMsg))
+			
 			uiErr <- nil
 		}
 	}()
+	
+	// Wait for UI to deploy (or fail)
+	select {
+	case err := <-uiErr:
+		if err != nil {
+			tuiProgram.Warning("UI deployment failed, but server will continue")
+		}
+	case <-time.After(10 * time.Minute):
+		tuiProgram.Warning("UI deployment timed out after 10 minutes")
+	}
 
 	// Ensure cleanup happens in reverse order
 	defer func() {

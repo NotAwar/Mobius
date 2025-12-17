@@ -49,7 +49,7 @@ func NewServer(logger *logrus.Logger, config Config) *Server {
 	app.Use(recover.New())
 	app.Use(fiberlogger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173, http://localhost:4173, http://localhost:3001, http://localhost:8081",
+		AllowOrigins: "http://localhost:3000, http://localhost:3001, http://localhost:5173, http://localhost:4173",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 		AllowMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
 	}))
@@ -69,6 +69,17 @@ func NewServer(logger *logrus.Logger, config Config) *Server {
 
 // setupRoutes configures all API routes
 func (s *Server) setupRoutes() {
+	// Root route - helpful message for users who access API directly
+	s.app.Get("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"message": "Mobius API Server",
+			"version": "v1",
+			"ui":      "http://localhost:3000",
+			"api":     "http://localhost:3001/api/v1",
+			"health":  "http://localhost:3001/api/v1/health",
+		})
+	})
+
 	// Create services
 	clusterService := services.NewClusterService(s.logger, s.kubeconfig)
 	postgresService := services.NewPostgresService(s.logger, s.kubeconfig)

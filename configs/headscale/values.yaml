@@ -1,0 +1,47 @@
+# Headscale Helm values for local development with PostgreSQL
+
+# Disable cert-manager for local dev
+headscale:
+  certmanager:
+    enabled: false
+
+  # Use PostgreSQL with CNPG
+  config:
+    database:
+      type: postgres
+      postgres:
+        host: headscale-db-rw.headscale.svc.cluster.local
+        port: 5432
+        name: headscale
+        user: headscale
+        pass: headscale-secure-password
+
+    # Server URL for local development
+    server_url: "http://headscale:8080"
+
+    # DNS settings
+    dns:
+      base_domain: "mobius.local"
+      override_local_dns: false
+
+    # Disable update checks
+    disable_check_updates: true
+
+  # Create keys automatically
+  keys:
+    create: true
+
+# Service configuration
+service:
+  type: ClusterIP
+  port:
+    http: 8080
+    grpc: 50443
+
+# Disable ingress for local dev
+ingress:
+  enabled: false
+
+# No need for persistence with PostgreSQL
+persistence:
+  enabled: false

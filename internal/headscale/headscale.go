@@ -2,6 +2,8 @@ package headscale
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"mobius/internal/deploy"
 
@@ -9,11 +11,10 @@ import (
 )
 
 const (
-	chartRepoName = "headscale"
-	chartRepoURL  = "https://goodieshq.github.io/headscale-helm"
-	chartName     = "headscale/headscale"
-	namespace     = "headscale"
-	releaseName   = "headscale"
+	// Using OCI-based Helm chart from Codeberg
+	chartName   = "oci://codeberg.org/wrenix/helm-charts/headscale"
+	namespace   = "headscale"
+	releaseName = "headscale"
 )
 
 // Config holds Headscale deployment configuration
@@ -61,17 +62,36 @@ func (h *Deployer) Deploy() error {
 		return fmt.Errorf("failed to create namespace: %w", err)
 	}
 
-	// Add Helm repository
-	if err := h.addHelmRepo(); err != nil {
-		return fmt.Errorf("failed to add helm repo: %w", err)
+	// Deploy PostgreSQL cluster for Headscale
+	h.logger.Info("Creating PostgreSQL database for Headscale...")
+	
+	// Wait for CNPG webhook to be ready (needed for cluster creation)
+	h.logger.Info("Waiting for CNPG webhook service...")
+	time.Sleep(30 * time.Second)
+	
+	postgresManifest := "configs/headscale/postgres.yaml"
+	if err := h.deployer.Apply(postgresManifest); err != nil {
+		return fmt.Errorf("failed to create PostgreSQL cluster: %w", err)
 	}
+
+	// Wait for PostgreSQL to be ready
+	h.logger.Info("Waiting for PostgreSQL database...")
+	time.Sleep(20 * time.Second)
 
 	// Prepare Helm values
 	helmValues := h.prepareValues()
+	
+	// Use values file if it exists
+	valuesFile := "configs/headscale/values.yaml"
+	var valuesFiles []string
+	if _, err := os.Stat(valuesFile); err == nil {
+		valuesFiles = append(valuesFiles, valuesFile)
+		h.logger.Info("Using Headscale values file: configs/headscale/values.yaml")
+	}
 
-	// Install the chart
+	// Install the chart (OCI charts don't need repo add)
 	h.logger.Infof("Installing Headscale as release %s in namespace %s", h.config.ReleaseName, h.config.Namespace)
-	if err := h.deployer.HelmInstall(h.config.ReleaseName, chartName, h.config.Namespace, helmValues, nil); err != nil {
+	if err := h.deployer.HelmInstall(h.config.ReleaseName, chartName, h.config.Namespace, helmValues, valuesFiles); err != nil {
 		return fmt.Errorf("failed to install helm chart: %w", err)
 	}
 
@@ -82,21 +102,8 @@ func (h *Deployer) Deploy() error {
 	return nil
 }
 
-// addHelmRepo adds the Headscale Helm repository
-func (h *Deployer) addHelmRepo() error {
-	h.logger.Info("Adding Headscale Helm repository...")
-
-	if err := h.deployer.HelmRepoAdd(chartRepoName, chartRepoURL); err != nil {
-		return fmt.Errorf("failed to add helm repository: %w", err)
-	}
-
-	h.logger.Info("Updating Helm repositories...")
-	if err := h.deployer.HelmRepoUpdate(); err != nil {
-		return fmt.Errorf("failed to update helm repositories: %w", err)
-	}
-
-	return nil
-}
+// Note: OCI charts (oci://) don't require adding repositories
+// The chart is pulled directly from the OCI registry
 
 // prepareValues prepares Helm values for installation
 func (h *Deployer) prepareValues() map[string]string {
@@ -107,6 +114,15 @@ func (h *Deployer) prepareValues() map[string]string {
 		helmValues["ingressApi.enabled"] = "false"
 		helmValues["ingressUI.enabled"] = "false"
 	}
+
+	// Configure key generation - disable cert-manager integration for local dev
+	helmValues["headscale.certmanager.enabled"] = "false"
+	
+	// Use SQLite for simplicity in local development
+	helmValues["headscale.config.database.type"] = "sqlite"
+	
+	// Ensure keys are created automatically
+	helmValues["headscale.keys.create"] = "true"
 
 	// Merge custom values
 	for k, v := range h.config.CustomValues {

@@ -16,7 +16,7 @@ const (
 	namespace   = "mobius-ui"
 	releaseName = "mobius-ui"
 	serviceName = "mobius-ui"
-	servicePort = 8081
+	servicePort = 3000 // Standard port for easy access
 )
 
 // Config holds UI deployment configuration
@@ -98,7 +98,7 @@ func (u *Deployer) Deploy() error {
 
 	// Wait for deployment to be ready
 	u.logger.Info("Waiting for UI deployment to be ready...")
-	if err := u.deployer.WaitForDeployment(u.config.Namespace, u.config.ServiceName, 5*time.Minute); err != nil {
+	if err := u.deployer.WaitForDeployment(u.config.Namespace, u.config.ServiceName, 2*time.Minute); err != nil {
 		return fmt.Errorf("failed to wait for deployment: %w", err)
 	}
 
@@ -118,13 +118,38 @@ func (u *Deployer) buildDockerImage() error {
 
 	imageName := "mobius-ui:latest"
 
-	// Build the Docker image
-	buildCmd := cmd.NewCmd("docker", "build", "-t", imageName, ".")
+	// Build the Docker image with explicit context and progress output
+	buildCmd := cmd.NewCmd("docker", "build", "--progress=plain", "-t", imageName, ".")
 	buildCmd.Dir = u.config.UIPath
-	status := <-buildCmd.Start()
-
+	
+	// Stream output for better visibility
+	statusChan := buildCmd.Start()
+	go func() {
+		for buildCmd.Status().Runtime > 0 {
+			status := buildCmd.Status()
+			for _, line := range status.Stdout {
+				u.logger.Debug(line)
+			}
+			for _, line := range status.Stderr {
+				u.logger.Warn(line)
+			}
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
+	
+	status := <-statusChan
 	if status.Exit != 0 {
-		return fmt.Errorf("docker build failed: %s", status.Stderr)
+		// Collect full error output
+		errMsg := "unknown error"
+		if len(status.Stderr) > 0 {
+			// Get last few lines of stderr for context
+			startIdx := len(status.Stderr) - 5
+			if startIdx < 0 {
+				startIdx = 0
+			}
+			errMsg = fmt.Sprintf("%v", status.Stderr[startIdx:])
+		}
+		return fmt.Errorf("docker build failed: %s", errMsg)
 	}
 
 	u.logger.Info("Loading image into KIND cluster...")
@@ -200,6 +225,7 @@ spec:
 		u.config.ReleaseName, u.config.Namespace, u.config.ServiceName,
 		u.config.ServiceName,
 		u.config.ServiceName,
+		u.config.ServicePort, // ORIGIN env var
 		u.config.ServiceName, u.config.Namespace, u.config.ServiceName,
 		u.config.ServiceName,
 		u.config.ServicePort,

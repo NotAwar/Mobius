@@ -103,7 +103,7 @@ func Start(logger Logger) (*Daemon, error) {
 	// Get the directory containing dockerd for PATH
 	dockerdDir := filepath.Dir(dockerdPath)
 
-	cmd := exec.Command("sudo", dockerdPath,
+	cmd := exec.Command("sudo", "-E", dockerdPath,
 		"--host", "unix://"+socketPath,
 		"--data-root", dataRoot,
 		"--exec-root", runRoot,
@@ -112,13 +112,14 @@ func Start(logger Logger) (*Daemon, error) {
 		"--ip-forward=false",
 		"--userland-proxy=true",
 		"--userland-proxy-path", filepath.Join(dockerdDir, "docker-proxy"),
+		"--containerd", filepath.Join(runRoot, "containerd", "containerd.sock"), // Explicitly set containerd socket
 		"--group", "root", // Use root group since dockerd runs as root (docker group may not exist)
 	)
 
 	// Add the binary directory to PATH so dockerd can find docker-proxy, containerd, etc.
 	// Also set CONTAINERD env var to help dockerd locate containerd
 	newPath := dockerdDir + ":" + os.Getenv("PATH")
-	cmd.Env = append(os.Environ(), 
+	cmd.Env = append(os.Environ(),
 		"PATH="+newPath,
 		"CONTAINERD="+filepath.Join(dockerdDir, "containerd"),
 	)

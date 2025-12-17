@@ -44,7 +44,7 @@ func Start(logger Logger) (*Daemon, error) {
 	if err == nil {
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
-		
+
 		if _, err := cli.Ping(ctx); err == nil {
 			logger.Info("Connected to existing Docker daemon")
 			info, _ := cli.Info(ctx)
@@ -59,7 +59,7 @@ func Start(logger Logger) (*Daemon, error) {
 
 	// No Docker daemon found - start our own embedded dockerd
 	logger.Info("No Docker daemon found, starting embedded instance...")
-	
+
 	// Check if dockerd binary exists, if not download it
 	dockerdPath, err := ensureDockerd(logger)
 	if err != nil {
@@ -72,7 +72,7 @@ func Start(logger Logger) (*Daemon, error) {
 	runRoot := filepath.Join(homeDir, ".mobius", "docker", "run")
 	socketPath := filepath.Join(runRoot, "docker.sock")
 	pidFile := filepath.Join(runRoot, "docker.pid")
-	
+
 	for _, dir := range []string{dataRoot, runRoot} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return nil, fmt.Errorf("failed to create directory %s: %w", dir, err)
@@ -102,7 +102,10 @@ func Start(logger Logger) (*Daemon, error) {
 
 	// Start dockerd with sudo (needs root for networking)
 	logger.Info("Starting dockerd with sudo (required for container networking)...")
-	
+
+	// Get the directory containing dockerd for PATH
+	dockerdDir := filepath.Dir(dockerdPath)
+
 	cmd := exec.Command("sudo", dockerdPath,
 		"--host", "unix://"+socketPath,
 		"--data-root", dataRoot,
@@ -112,24 +115,27 @@ func Start(logger Logger) (*Daemon, error) {
 		"--iptables=false",
 		"--ip-forward=false",
 	)
-	
+
+	// Add the binary directory to PATH so dockerd can find docker-proxy, containerd, etc.
+	cmd.Env = append(os.Environ(), "PATH="+dockerdDir+":"+os.Getenv("PATH"))
+
 	// Redirect dockerd logs
 	logFile := filepath.Join(runRoot, "dockerd.log")
 	logWriter, err := os.Create(logFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create log file: %w", err)
 	}
-	
+
 	cmd.Stdout = logWriter
 	cmd.Stderr = logWriter
-	
+
 	if err := cmd.Start(); err != nil {
 		logWriter.Close()
 		return nil, fmt.Errorf("failed to start dockerd: %w\nYou may need to run with sudo or configure passwordless sudo", err)
 	}
 
 	logger.Info("Waiting for Docker socket...")
-	
+
 	// Wait for socket to be created (with timeout)
 	socketReady := false
 	for i := 0; i < 60; i++ { // 30 seconds
@@ -168,11 +174,11 @@ func Start(logger Logger) (*Daemon, error) {
 	// Wait for daemon to be ready
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	
+
 	logger.Info("Waiting for daemon to be ready...")
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -233,7 +239,7 @@ func ensureDockerd(logger Logger) (string, error) {
 	homeDir, _ := os.UserHomeDir()
 	binDir := filepath.Join(homeDir, ".mobius", "bin")
 	dockerdPath := filepath.Join(binDir, "dockerd")
-	
+
 	if _, err := os.Stat(dockerdPath); err == nil {
 		logger.Info("Using cached dockerd binary")
 		return dockerdPath, nil
@@ -241,7 +247,7 @@ func ensureDockerd(logger Logger) (string, error) {
 
 	// Download Docker static binary
 	logger.Info("Downloading Docker static binary...")
-	
+
 	if err := os.MkdirAll(binDir, 0755); err != nil {
 		return "", fmt.Errorf("failed to create bin directory: %w", err)
 	}
@@ -250,9 +256,9 @@ func ensureDockerd(logger Logger) (string, error) {
 	version := "28.0.0"
 	arch := "x86_64" // TODO: detect architecture
 	url := fmt.Sprintf("https://download.docker.com/linux/static/stable/%s/docker-%s.tgz", arch, version)
-	
+
 	logger.Infof("Downloading from %s", url)
-	
+
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", fmt.Errorf("failed to download Docker: %w", err)
@@ -278,15 +284,23 @@ func ensureDockerd(logger Logger) (string, error) {
 	out.Close()
 
 	// Extract dockerd binary
-	logger.Info("Extracting dockerd...")
-	extractCmd := exec.Command("tar", "xzf", tmpFile, "-C", binDir, "--strip-components=1", "docker/dockerd")
+	logger.Info("Extracting Docker binaries...")
+
+	// Extract all Docker binaries (dockerd, docker-proxy, containerd, etc.)
+	extractCmd := exec.Command("tar", "xzf", tmpFile, "-C", binDir, "--strip-components=1", "docker/")
 	if err := extractCmd.Run(); err != nil {
-		return "", fmt.Errorf("failed to extract dockerd: %w", err)
+		return "", fmt.Errorf("failed to extract Docker binaries: %w", err)
 	}
 
-	// Make executable
-	if err := os.Chmod(dockerdPath, 0755); err != nil {
-		return "", fmt.Errorf("failed to make dockerd executable: %w", err)
+	// Make all binaries executable
+	binaries := []string{"dockerd", "docker-proxy", "containerd", "containerd-shim-runc-v2", "runc"}
+	for _, binary := range binaries {
+		binaryPath := filepath.Join(binDir, binary)
+		if _, err := os.Stat(binaryPath); err == nil {
+			if err := os.Chmod(binaryPath, 0755); err != nil {
+				logger.Warnf("Failed to make %s executable: %v", binary, err)
+			}
+		}
 	}
 
 	logger.Info("Docker binary downloaded successfully")
@@ -296,24 +310,24 @@ func ensureDockerd(logger Logger) (string, error) {
 // Stop closes the Docker client connection and stops embedded daemon if running
 func (d *Daemon) Stop() error {
 	d.logger.Info("Stopping Docker...")
-	
+
 	if d.client != nil {
 		d.client.Close()
 	}
-	
+
 	if d.dockerdCmd != nil && d.dockerdCmd.Process != nil {
 		d.logger.Info("Stopping embedded Docker daemon...")
-		
+
 		// Since dockerd was started with sudo, we need to find and kill it properly
 		// Get the actual dockerd PID (not the sudo PID)
 		findCmd := exec.Command("pgrep", "-f", "dockerd.*"+d.socketPath)
 		if output, err := findCmd.Output(); err == nil && len(output) > 0 {
 			pid := strings.TrimSpace(string(output))
 			d.logger.Infof("Found dockerd process: %s", pid)
-			
+
 			// Try graceful shutdown with SIGTERM
 			exec.Command("sudo", "kill", "-TERM", pid).Run()
-			
+
 			// Wait up to 10 seconds
 			for i := 0; i < 20; i++ {
 				checkCmd := exec.Command("ps", "-p", pid)
@@ -323,20 +337,20 @@ func (d *Daemon) Stop() error {
 				}
 				time.Sleep(500 * time.Millisecond)
 			}
-			
+
 			// Force kill if still running
 			if exec.Command("ps", "-p", pid).Run() == nil {
 				d.logger.Warn("Force killing dockerd...")
 				exec.Command("sudo", "kill", "-9", pid).Run()
 			}
 		}
-		
+
 		// Clean up socket
 		if d.socketPath != "" {
 			exec.Command("sudo", "rm", "-f", d.socketPath).Run()
 		}
 	}
-	
+
 	return nil
 }
 

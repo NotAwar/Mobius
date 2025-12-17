@@ -105,6 +105,20 @@ func (c *Cluster) Create() error {
 		c.logger.Infof("Using Docker socket: %s", c.dockerHost)
 	}
 
+	// Check if cluster already exists and delete it
+	clusters, err := c.provider.List()
+	if err == nil {
+		for _, existingCluster := range clusters {
+			if existingCluster == c.name {
+				c.logger.Infof("Cluster '%s' already exists, deleting...", c.name)
+				if err := c.provider.Delete(c.name, c.kubeconfig); err != nil {
+					c.logger.Warnf("Failed to delete existing cluster: %v", err)
+				}
+				break
+			}
+		}
+	}
+
 	var createOpts []cluster.CreateOption
 
 	// Only use config file if provided and exists
@@ -122,7 +136,7 @@ func (c *Cluster) Create() error {
 		createOpts = append(createOpts, cluster.CreateWithKubeconfigPath(c.kubeconfig))
 	}
 
-	err := c.provider.Create(c.name, createOpts...)
+	err = c.provider.Create(c.name, createOpts...)
 
 	if err != nil {
 		return fmt.Errorf("failed to create cluster: %w", err)

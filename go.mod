@@ -15,7 +15,7 @@ require (
 	github.com/shirou/gopsutil/v3 v3.24.5
 	github.com/sirupsen/logrus v1.9.3
 	go.uber.org/zap v1.27.1
-	golang.org/x/crypto v0.37.0
+	golang.org/x/crypto v0.45.0
 	gopkg.in/yaml.v3 v3.0.1
 	sigs.k8s.io/kind v0.30.0
 )

@@ -34,10 +34,11 @@ type EnrollmentRequest struct {
 
 // EnrollmentResponse represents enrollment response
 type EnrollmentResponse struct {
-	ClientID  string `json:"client_id"`
-	ClientKey string `json:"client_key"`
-	ServerURL string `json:"server_url"`
-	Message   string `json:"message"`
+	ClientID      string                 `json:"client_id"`
+	ClientKey     string                 `json:"client_key"`
+	ServerURL     string                 `json:"server_url"`
+	Configuration map[string]interface{} `json:"configuration"`
+	Message       string                 `json:"message"`
 }
 
 // GetEnrollmentKeys lists all enrollment keys
@@ -386,11 +387,35 @@ func (h *Handler) EnrollClient(c *fiber.Ctx) error {
 
 	h.logger.Infof("Client enrolled: %s (%s) using key: %s", req.Hostname, clientID, enrollKey.Name)
 
+	// Get server URL from environment or request
+	serverURL := "http://localhost:3001" // Default for development
+	if c.Get("X-Forwarded-Host") != "" {
+		scheme := "https"
+		if c.Get("X-Forwarded-Proto") == "http" {
+			scheme = "http"
+		}
+		serverURL = scheme + "://" + c.Get("X-Forwarded-Host")
+	} else if c.BaseURL() != "" {
+		serverURL = c.BaseURL()
+	}
+
+	// Default configuration for newly enrolled clients
+	configuration := map[string]interface{}{
+		"check_in_interval": 300, // 5 minutes
+		"osquery_interval":  60,  // 1 minute
+		"enable_osquery":    true,
+		"enable_ssh":        true,
+		"ssh_port":          2222,
+		"log_level":         "info",
+		"max_query_results": 1000,
+	}
+
 	response := EnrollmentResponse{
-		ClientID:  clientID,
-		ClientKey: clientKey,
-		ServerURL: c.BaseURL(),
-		Message:   "Enrollment successful",
+		ClientID:      clientID,
+		ClientKey:     clientKey,
+		ServerURL:     serverURL,
+		Configuration: configuration,
+		Message:       "Enrollment successful. Save client_id and client_key securely.",
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(response)

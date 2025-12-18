@@ -1,5 +1,4 @@
 package client
-package client
 
 import (
 	"context"
@@ -10,6 +9,7 @@ import (
 	"os/exec"
 
 	"mobius/internal/logger"
+
 	"golang.org/x/crypto/ssh"
 )
 

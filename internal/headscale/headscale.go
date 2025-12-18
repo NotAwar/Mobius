@@ -87,12 +87,24 @@ func (h *Deployer) Deploy() error {
 	if _, err := os.Stat(valuesFile); err == nil {
 		valuesFiles = append(valuesFiles, valuesFile)
 		h.logger.Info("Using Headscale values file: configs/headscale/values.yaml")
+	} else {
+		h.logger.Warn("No custom values file found, using default Helm values")
 	}
 
 	// Install the chart (OCI charts don't need repo add)
-	h.logger.Infof("Installing Headscale as release %s in namespace %s", h.config.ReleaseName, h.config.Namespace)
+	h.logger.Infof("Installing Helm chart: %s as release %s in namespace %s", chartName, h.config.ReleaseName, h.config.Namespace)
+	h.logger.Info("Note: This may take a few minutes to download and install...")
+	
 	if err := h.deployer.HelmInstall(h.config.ReleaseName, chartName, h.config.Namespace, helmValues, valuesFiles); err != nil {
-		return fmt.Errorf("failed to install helm chart: %w", err)
+		// Provide detailed error information
+		h.logger.Errorf("Failed to install Headscale Helm chart: %v", err)
+		h.logger.Error("Possible causes:")
+		h.logger.Error("  1. Helm chart repository (codeberg.org) may be unreachable")
+		h.logger.Error("  2. OCI registry authentication may be required")
+		h.logger.Error("  3. Chart version may not exist or be incompatible")
+		h.logger.Error("  4. RBAC permissions may be insufficient")
+		h.logger.Info("You can manually install Headscale later if needed")
+		return fmt.Errorf("failed to install helm chart %s: %w", chartName, err)
 	}
 
 	h.logger.Info("Headscale installed successfully!")

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"mobius/internal/logger"
+
 	"github.com/shirou/gopsutil/v3/cpu"
 )
 

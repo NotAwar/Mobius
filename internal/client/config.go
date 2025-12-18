@@ -1,5 +1,4 @@
 package client
-package client
 
 import (
 	"errors"
@@ -12,142 +11,141 @@ import (
 
 // Config represents the client configuration
 type Config struct {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}	return nil	}		return fmt.Errorf("failed to write config: %w", err)	if err := os.WriteFile(path, data, 0600); err != nil {	}		return fmt.Errorf("failed to marshal config: %w", err)	if err != nil {	data, err := yaml.Marshal(c)func (c *Config) Save(path string) error {// Save writes configuration to file}	return nil	}		return errors.New("max_cpu_pct must be between 1 and 100")	if c.MaxCPUPct < 1 || c.MaxCPUPct > 100 {	}		return errors.New("max_memory_mb must be at least 10MB")	if c.MaxMemoryMB < 10 {	}		return errors.New("check_in_interval must be at least 10 seconds")	if c.CheckInInterval < 10*time.Second {	}		return errors.New("client_key is required (client not enrolled)")	if c.ClientKey == "" {	}		return errors.New("client_id is required (client not enrolled)")	if c.ClientID == "" {	}		return errors.New("server_url is required")	if c.ServerURL == "" {func (c *Config) Validate() error {// Validate checks if configuration is valid}	return cfg, nil	}		return nil, fmt.Errorf("failed to parse config: %w", err)	if err := yaml.Unmarshal(data, cfg); err != nil {	// Parse YAML	}		return nil, fmt.Errorf("failed to read config: %w", err)	if err != nil {	data, err := os.ReadFile(path)	// Read file	}		return nil, fmt.Errorf("config file not found: %s", path)	if _, err := os.Stat(path); os.IsNotExist(err) {	// Check if file exists	cfg := DefaultConfig()	// Start with defaultsfunc LoadConfig(path string) (*Config, error) {// LoadConfig loads configuration from file}	}		MaxCPUPct:           5,   // Keep under 5% CPU		MaxMemoryMB:         50,  // Keep under 50MB		UpdateChannel:       "stable",		EnableAutoUpdate:    false,		HardwareInfoInterval: 1 * time.Hour,		CollectNetworkInfo:  true,		CollectSoftwareInfo: true,		CollectHardwareInfo: true,		LogFormat:           "json",		LogFile:             "/var/log/mobius/client.log",		LogLevel:            "info",		TLSVerify:           true,		EnableSSH:           true,		SSHPort:             2222,		OSQueryFlagsPath:    "/etc/mobius/osquery/osquery.flags",		OSQueryPacksPath:    "/etc/mobius/osquery/packs",		EnableOSQuery:       true,		OSQueryLogPath:      "/var/log/osquery/osqueryd.results.log",		OSQueryInterval:     60 * time.Second,		OSQuerySocket:       "/var/osquery/osquery.sock",		HeartbeatTimeout:    30 * time.Second,		CheckInInterval:     5 * time.Minute,	return &Config{func DefaultConfig() *Config {// DefaultConfig returns a configuration with sensible defaults}	MaxCPUPct   int `yaml:"max_cpu_pct"`	MaxMemoryMB int `yaml:"max_memory_mb"`	// Resource limits (to keep service lightweight)	UpdateChannel    string `yaml:"update_channel"` // stable, beta, dev	EnableAutoUpdate bool   `yaml:"enable_auto_update"`	// Auto-update	HardwareInfoInterval time.Duration `yaml:"hardware_info_interval"`	CollectNetworkInfo   bool `yaml:"collect_network_info"`	CollectSoftwareInfo  bool `yaml:"collect_software_info"`	CollectHardwareInfo  bool `yaml:"collect_hardware_info"`	// System info collection	LogFormat string `yaml:"log_format"` // json, text	LogFile   string `yaml:"log_file"`	LogLevel  string `yaml:"log_level"`	// Logging	TLSServerName string `yaml:"tls_server_name"`	TLSVerify     bool   `yaml:"tls_verify"`	TLSKey        string `yaml:"tls_key"`	TLSCert       string `yaml:"tls_cert"`	// Security	EnableSSH        bool     `yaml:"enable_ssh"`	SSHAuthorizedKeys []string `yaml:"ssh_authorized_keys"`	SSHPort          int      `yaml:"ssh_port"`	// SSH settings (for remote management)	OSQueryTablePlugin string        `yaml:"osquery_table_plugin"`	OSQueryExtensions  []string      `yaml:"osquery_extensions"`	OSQueryFlagsPath   string        `yaml:"osquery_flags_path"`	OSQueryPacksPath   string        `yaml:"osquery_packs_path"`	EnableOSQuery      bool          `yaml:"enable_osquery"`	OSQueryLogPath     string        `yaml:"osquery_log_path"`	OSQueryInterval    time.Duration `yaml:"osquery_interval"`	OSQuerySocket      string        `yaml:"osquery_socket"`	// OSQuery settings	HeartbeatTimeout time.Duration `yaml:"heartbeat_timeout"`	CheckInInterval  time.Duration `yaml:"check_in_interval"`	// Check-in settings	ClientKey string `yaml:"client_key"`	ClientID  string `yaml:"client_id"`	ServerURL string `yaml:"server_url"`	// Server connection
+	// Server connection
+	ServerURL string `yaml:"server_url"`
+	ClientID  string `yaml:"client_id"`
+	ClientKey string `yaml:"client_key"`
+	
+	// Check-in settings
+	CheckInInterval  time.Duration `yaml:"check_in_interval"`
+	HeartbeatTimeout time.Duration `yaml:"heartbeat_timeout"`
+	
+	// OSQuery settings
+	OSQuerySocket      string        `yaml:"osquery_socket"`
+	OSQueryInterval    time.Duration `yaml:"osquery_interval"`
+	OSQueryLogPath     string        `yaml:"osquery_log_path"`
+	EnableOSQuery      bool          `yaml:"enable_osquery"`
+	OSQueryPacksPath   string        `yaml:"osquery_packs_path"`
+	OSQueryFlagsPath   string        `yaml:"osquery_flags_path"`
+	OSQueryExtensions  []string      `yaml:"osquery_extensions"`
+	OSQueryTablePlugin string        `yaml:"osquery_table_plugin"`
+	
+	// SSH settings (for remote management)
+	SSHPort          int      `yaml:"ssh_port"`
+	SSHAuthorizedKeys []string `yaml:"ssh_authorized_keys"`
+	EnableSSH        bool     `yaml:"enable_ssh"`
+	
+	// Security
+	TLSCert       string `yaml:"tls_cert"`
+	TLSKey        string `yaml:"tls_key"`
+	TLSVerify     bool   `yaml:"tls_verify"`
+	TLSServerName string `yaml:"tls_server_name"`
+	
+	// Logging
+	LogLevel  string `yaml:"log_level"`
+	LogFile   string `yaml:"log_file"`
+	LogFormat string `yaml:"log_format"` // json, text
+	
+	// System info collection
+	CollectHardwareInfo  bool `yaml:"collect_hardware_info"`
+	CollectSoftwareInfo  bool `yaml:"collect_software_info"`
+	CollectNetworkInfo   bool `yaml:"collect_network_info"`
+	HardwareInfoInterval time.Duration `yaml:"hardware_info_interval"`
+	
+	// Auto-update
+	EnableAutoUpdate bool   `yaml:"enable_auto_update"`
+	UpdateChannel    string `yaml:"update_channel"` // stable, beta, dev
+	
+	// Resource limits (to keep service lightweight)
+	MaxMemoryMB int `yaml:"max_memory_mb"`
+	MaxCPUPct   int `yaml:"max_cpu_pct"`
+}
+
+// DefaultConfig returns a configuration with sensible defaults
+func DefaultConfig() *Config {
+	return &Config{
+		CheckInInterval:     5 * time.Minute,
+		HeartbeatTimeout:    30 * time.Second,
+		OSQuerySocket:       "/var/osquery/osquery.sock",
+		OSQueryInterval:     60 * time.Second,
+		OSQueryLogPath:      "/var/log/osquery/osqueryd.results.log",
+		EnableOSQuery:       true,
+		OSQueryPacksPath:    "/etc/mobius/osquery/packs",
+		OSQueryFlagsPath:    "/etc/mobius/osquery/osquery.flags",
+		SSHPort:             2222,
+		EnableSSH:           true,
+		TLSVerify:           true,
+		LogLevel:            "info",
+		LogFile:             "/var/log/mobius/client.log",
+		LogFormat:           "json",
+		CollectHardwareInfo: true,
+		CollectSoftwareInfo: true,
+		CollectNetworkInfo:  true,
+		HardwareInfoInterval: 1 * time.Hour,
+		EnableAutoUpdate:    false,
+		UpdateChannel:       "stable",
+		MaxMemoryMB:         50,  // Keep under 50MB
+		MaxCPUPct:           5,   // Keep under 5% CPU
+	}
+}
+
+// LoadConfig loads configuration from file
+func LoadConfig(path string) (*Config, error) {
+	// Start with defaults
+	cfg := DefaultConfig()
+	
+	// Check if file exists
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return nil, fmt.Errorf("config file not found: %s", path)
+	}
+	
+	// Read file
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config: %w", err)
+	}
+	
+	// Parse YAML
+	if err := yaml.Unmarshal(data, cfg); err != nil {
+		return nil, fmt.Errorf("failed to parse config: %w", err)
+	}
+	
+	return cfg, nil
+}
+
+// Validate checks if configuration is valid
+func (c *Config) Validate() error {
+	if c.ServerURL == "" {
+		return errors.New("server_url is required")
+	}
+	if c.ClientID == "" {
+		return errors.New("client_id is required (client not enrolled)")
+	}
+	if c.ClientKey == "" {
+		return errors.New("client_key is required (client not enrolled)")
+	}
+	if c.CheckInInterval < 10*time.Second {
+		return errors.New("check_in_interval must be at least 10 seconds")
+	}
+	if c.MaxMemoryMB < 10 {
+		return errors.New("max_memory_mb must be at least 10MB")
+	}
+	if c.MaxCPUPct < 1 || c.MaxCPUPct > 100 {
+		return errors.New("max_cpu_pct must be between 1 and 100")
+	}
+	return nil
+}
+
+// Save writes configuration to file
+func (c *Config) Save(path string) error {
+	data, err := yaml.Marshal(c)
+	if err != nil {
+		return fmt.Errorf("failed to marshal config: %w", err)
+	}
+	
+	if err := os.WriteFile(path, data, 0600); err != nil {
+		return fmt.Errorf("failed to write config: %w", err)
+	}
+	
+	return nil
+}

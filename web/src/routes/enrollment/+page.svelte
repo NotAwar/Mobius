@@ -281,8 +281,9 @@
 
 			<div class="space-y-4">
 				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Key Name</label>
+					<label for="key-name" class="block text-sm font-medium text-gray-700 mb-1">Key Name</label>
 					<input
+						id="key-name"
 						type="text"
 						bind:value={keyName}
 						placeholder="e.g., Production Servers"
@@ -292,8 +293,9 @@
 				</div>
 
 				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Expires At (optional)</label>
+					<label for="expires-at" class="block text-sm font-medium text-gray-700 mb-1">Expires At (optional)</label>
 					<input
+						id="expires-at"
 						type="datetime-local"
 						bind:value={keyExpires}
 						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
@@ -301,8 +303,9 @@
 				</div>
 
 				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Max Uses</label>
+					<label for="max-uses" class="block text-sm font-medium text-gray-700 mb-1">Max Uses</label>
 					<input
+						id="max-uses"
 						type="number"
 						bind:value={keyMaxUses}
 						min="1"
@@ -312,8 +315,9 @@
 				</div>
 
 				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Auto-assign Groups (optional)</label>
+					<label for="auto-groups" class="block text-sm font-medium text-gray-700 mb-1">Auto-assign Groups (optional)</label>
 					<select
+						id="auto-groups"
 						multiple
 						bind:value={keyGroupIds}
 						class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
@@ -326,11 +330,12 @@
 				</div>
 
 				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Tags (optional)</label>
+					<label for="key-tags-0" class="block text-sm font-medium text-gray-700 mb-1">Tags (optional)</label>
 					<div class="space-y-2">
 						{#each keyTags as tag, i}
 							<div class="flex gap-2">
 								<input
+									id="key-tags-{i}"
 									type="text"
 									bind:value={keyTags[i]}
 									placeholder="Tag name"

@@ -368,3 +368,138 @@ func (h *Handler) ExportOSQueryResults(c *fiber.Ctx) error {
 		"query_id": queryID,
 	})
 }
+
+// GetOSQueryPack retrieves a specific pack
+// TODO: Connect to osquery database
+func (h *Handler) GetOSQueryPack(c *fiber.Ctx) error {
+	packID := c.Params("id")
+
+	pack := OSQueryPack{
+		ID:          packID,
+		Name:        "security_monitoring",
+		Description: "Security-focused queries",
+		Platform:    "all",
+		Active:      true,
+		Queries:     []string{uuid.New().String(), uuid.New().String()},
+		Tags:        []string{"security", "compliance"},
+		CreatedAt:   time.Now().Add(-30 * 24 * time.Hour),
+		UpdatedAt:   time.Now(),
+	}
+
+	return c.JSON(pack)
+}
+
+// UpdateOSQueryPack updates an existing pack
+// TODO: Connect to osquery database
+func (h *Handler) UpdateOSQueryPack(c *fiber.Ctx) error {
+	packID := c.Params("id")
+
+	type UpdatePackRequest struct {
+		Name        *string  `json:"name"`
+		Description *string  `json:"description"`
+		Platform    *string  `json:"platform"`
+		Active      *bool    `json:"active"`
+		Tags        []string `json:"tags"`
+	}
+
+	var req UpdatePackRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   "Invalid request body",
+			"message": err.Error(),
+		})
+	}
+
+	// Build updated pack
+	pack := OSQueryPack{
+		ID:        packID,
+		Name:      "security_monitoring",
+		Platform:  "all",
+		Active:    true,
+		Tags:      []string{"security", "compliance"},
+		UpdatedAt: time.Now(),
+	}
+
+	if req.Name != nil {
+		pack.Name = *req.Name
+	}
+	if req.Description != nil {
+		pack.Description = *req.Description
+	}
+	if req.Platform != nil {
+		pack.Platform = *req.Platform
+	}
+	if req.Active != nil {
+		pack.Active = *req.Active
+	}
+	if len(req.Tags) > 0 {
+		pack.Tags = req.Tags
+	}
+
+	h.logger.Infof("Updated OSQuery pack: %s", packID)
+
+	return c.JSON(pack)
+}
+
+// DeleteOSQueryPack deletes a pack
+// TODO: Connect to osquery database
+func (h *Handler) DeleteOSQueryPack(c *fiber.Ctx) error {
+	packID := c.Params("id")
+
+	h.logger.Infof("Deleted OSQuery pack: %s", packID)
+
+	return c.JSON(fiber.Map{
+		"message": "Pack deleted successfully",
+		"id":      packID,
+	})
+}
+
+// AddQueryToPack adds a query to a pack
+// TODO: Connect to osquery database
+func (h *Handler) AddQueryToPack(c *fiber.Ctx) error {
+	packID := c.Params("id")
+
+	type AddQueryRequest struct {
+		QueryID  string `json:"query_id"`
+		Interval int    `json:"interval"` // Override interval for this pack
+	}
+
+	var req AddQueryRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   "Invalid request body",
+			"message": err.Error(),
+		})
+	}
+
+	if req.QueryID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   "Validation error",
+			"message": "query_id is required",
+		})
+	}
+
+	h.logger.Infof("Added query %s to pack %s", req.QueryID, packID)
+
+	return c.JSON(fiber.Map{
+		"message":  "Query added to pack successfully",
+		"pack_id":  packID,
+		"query_id": req.QueryID,
+		"interval": req.Interval,
+	})
+}
+
+// RemoveQueryFromPack removes a query from a pack
+// TODO: Connect to osquery database
+func (h *Handler) RemoveQueryFromPack(c *fiber.Ctx) error {
+	packID := c.Params("id")
+	queryID := c.Params("queryId")
+
+	h.logger.Infof("Removed query %s from pack %s", queryID, packID)
+
+	return c.JSON(fiber.Map{
+		"message":  "Query removed from pack successfully",
+		"pack_id":  packID,
+		"query_id": queryID,
+	})
+}

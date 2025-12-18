@@ -210,7 +210,7 @@
 			</button>
 			<button
 				onclick={clearLogs}
-				class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+				class="rounded-lg bg-[rgba(239, 68, 68, 0.1)] border border-[#ef4444] px-4 py-2 text-sm font-medium text-[#ef4444] transition hover:bg-[rgba(239, 68, 68, 0.2)]"
 			>
 				🗑️ Clear
 			</button>
@@ -221,7 +221,7 @@
 <!-- Stats -->
 <div class="mb-6 grid grid-cols-2 gap-4 md:grid-cols-5">
 	<div class="rounded-xl bg-white p-4 shadow-lg dark:bg-gray-800">
-		<div class="text-2xl font-bold text-gray-900 dark:text-white">{logs.length}</div>
+		<div class="text-2xl font-bold text-[#FFFFF0]">{logs.length}</div>
 		<div class="text-sm text-gray-600 dark:text-gray-400">Total Logs</div>
 	</div>
 	<div class="rounded-xl bg-blue-50 p-4 dark:bg-blue-900/20">
@@ -261,7 +261,7 @@
 {:else if filteredLogs().length === 0}
 	<div class="rounded-xl bg-white p-12 text-center shadow-lg dark:bg-gray-800">
 		<div class="mb-4 text-6xl">📋</div>
-		<p class="mb-2 text-lg font-medium text-gray-900 dark:text-white">No Logs Found</p>
+		<p class="mb-2 text-lg font-medium text-[#FFFFF0]">No Logs Found</p>
 		<p class="text-gray-600 dark:text-gray-400">
 			{searchTerm || selectedSource !== 'all' || selectedLevel !== 'all'
 				? 'Try adjusting your filters'

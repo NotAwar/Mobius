@@ -42,7 +42,7 @@ The Mobius client is a lightweight, kernel-level service that runs on managed de
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         Mobius Client Service           │
 ├─────────────────────────────────────────┤

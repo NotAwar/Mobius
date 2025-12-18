@@ -5,6 +5,8 @@
 *.so
 *.dylib
 main
+client
+server
 /main
 mobius-server
 /mobius-server

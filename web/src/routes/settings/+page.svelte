@@ -49,7 +49,7 @@
 </script>
 
 <!-- Hero Section -->
-<div class="mb-6 rounded-2xl bg-linear-to-br from-gray-700 via-gray-800 to-gray-900 p-6 text-white shadow-2xl">
+<div class="mb-6 rounded-2xl bg-[rgba(212, 175, 55, 0.1)] border border-[rgba(212, 175, 55, 0.3)] p-6 text-white shadow-2xl">
 	<div class="flex items-center justify-between">
 		<div>
 			<h1 class="mb-2 flex items-center gap-3 text-3xl font-bold">
@@ -69,14 +69,15 @@
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 	<!-- General Settings -->
 	<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
-		<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">General Settings</h2>
+		<h2 class="mb-4 text-xl font-bold text-[#FFFFF0]">General Settings</h2>
 		
 		<div class="space-y-4">
 			<div>
-				<label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+				<label for="api-url" class="mb-2 block text-sm font-medium text-[#FFFFF0]">
 					API URL
 				</label>
 				<input
+					id="api-url"
 					type="url"
 					bind:value={settings.apiUrl}
 					placeholder="http://localhost:3001"
@@ -88,10 +89,11 @@
 			</div>
 
 			<div>
-				<label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+				<label for="refresh-interval" class="mb-2 block text-sm font-medium text-[#FFFFF0]">
 					Refresh Interval: {settings.refreshInterval / 1000}s
 				</label>
 				<input
+					id="refresh-interval"
 					type="range"
 					bind:value={settings.refreshInterval}
 					min="1000"
@@ -106,7 +108,7 @@
 
 			<div class="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700">
 				<div>
-					<div class="font-medium text-gray-900 dark:text-white">Auto-refresh</div>
+					<div class="font-medium text-[#FFFFF0]">Auto-refresh</div>
 					<div class="text-sm text-gray-500 dark:text-gray-400">
 						Automatically refresh data at set intervals
 					</div>
@@ -123,7 +125,7 @@
 
 			<div class="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700">
 				<div>
-					<div class="font-medium text-gray-900 dark:text-white">Notifications</div>
+					<div class="font-medium text-[#FFFFF0]">Notifications</div>
 					<div class="text-sm text-gray-500 dark:text-gray-400">
 						Show system notifications for important events
 					</div>
@@ -142,86 +144,86 @@
 
 	<!-- Appearance -->
 	<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
-		<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Appearance</h2>
+		<h2 class="mb-4 text-xl font-bold text-[#FFFFF0]">Appearance</h2>
 		
 		<div class="space-y-4">
-			<div>
-				<label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+			<fieldset>
+				<legend class="mb-2 block text-sm font-medium text-[#FFFFF0]">
 					Theme
-				</label>
+				</legend>
 				<div class="grid grid-cols-3 gap-3">
 					<button
 						onclick={() => (settings.theme = 'light')}
 						class="rounded-lg border-2 p-4 transition-all {settings.theme === 'light'
-							? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
+							? 'border-[#d4af37] bg-purple-50 dark:bg-purple-900/20'
 							: 'border-gray-300 hover:border-gray-400 dark:border-gray-600'}"
 					>
 						<div class="mb-2 text-2xl">☀️</div>
-						<div class="text-sm font-medium text-gray-900 dark:text-white">Light</div>
+						<div class="text-sm font-medium text-[#FFFFF0]">Light</div>
 					</button>
 					<button
 						onclick={() => (settings.theme = 'dark')}
 						class="rounded-lg border-2 p-4 transition-all {settings.theme === 'dark'
-							? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
+							? 'border-[#d4af37] bg-purple-50 dark:bg-purple-900/20'
 							: 'border-gray-300 hover:border-gray-400 dark:border-gray-600'}"
 					>
 						<div class="mb-2 text-2xl">🌙</div>
-						<div class="text-sm font-medium text-gray-900 dark:text-white">Dark</div>
+						<div class="text-sm font-medium text-[#FFFFF0]">Dark</div>
 					</button>
 					<button
 						onclick={() => (settings.theme = 'system')}
 						class="rounded-lg border-2 p-4 transition-all {settings.theme === 'system'
-							? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
+							? 'border-[#d4af37] bg-purple-50 dark:bg-purple-900/20'
 							: 'border-gray-300 hover:border-gray-400 dark:border-gray-600'}"
 					>
 						<div class="mb-2 text-2xl">💻</div>
-						<div class="text-sm font-medium text-gray-900 dark:text-white">System</div>
+						<div class="text-sm font-medium text-[#FFFFF0]">System</div>
 					</button>
 				</div>
-			</div>
+			</fieldset>
 		</div>
 	</div>
 
 	<!-- System Information -->
 	<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
-		<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">System Information</h2>
+		<h2 class="mb-4 text-xl font-bold text-[#FFFFF0]">System Information</h2>
 		
 		<div class="space-y-3">
 			<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
-				<span class="text-sm text-gray-600 dark:text-gray-300">Version</span>
-				<span class="font-mono text-sm font-medium text-gray-900 dark:text-white">1.0.0</span>
+				<span class="text-sm text-[#FFFFF0]">Version</span>
+				<span class="font-mono text-sm font-medium text-[#FFFFF0]">1.0.0</span>
 			</div>
 			<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
-				<span class="text-sm text-gray-600 dark:text-gray-300">Build Date</span>
-				<span class="font-mono text-sm font-medium text-gray-900 dark:text-white">2025-12-17</span>
+				<span class="text-sm text-[#FFFFF0]">Build Date</span>
+				<span class="font-mono text-sm font-medium text-[#FFFFF0]">2025-12-17</span>
 			</div>
 			<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
-				<span class="text-sm text-gray-600 dark:text-gray-300">Environment</span>
-				<span class="font-mono text-sm font-medium text-gray-900 dark:text-white">Development</span>
+				<span class="text-sm text-[#FFFFF0]">Environment</span>
+				<span class="font-mono text-sm font-medium text-[#FFFFF0]">Development</span>
 			</div>
 			<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
-				<span class="text-sm text-gray-600 dark:text-gray-300">UI Port</span>
-				<span class="font-mono text-sm font-medium text-gray-900 dark:text-white">3000</span>
+				<span class="text-sm text-[#FFFFF0]">UI Port</span>
+				<span class="font-mono text-sm font-medium text-[#FFFFF0]">3000</span>
 			</div>
 			<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
-				<span class="text-sm text-gray-600 dark:text-gray-300">API Port</span>
-				<span class="font-mono text-sm font-medium text-gray-900 dark:text-white">3001</span>
+				<span class="text-sm text-[#FFFFF0]">API Port</span>
+				<span class="font-mono text-sm font-medium text-[#FFFFF0]">3001</span>
 			</div>
 		</div>
 	</div>
 
 	<!-- About -->
 	<div class="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-800">
-		<h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">About Mobius</h2>
+		<h2 class="mb-4 text-xl font-bold text-[#FFFFF0]">About Mobius</h2>
 		
 		<div class="space-y-4">
-			<div class="rounded-lg bg-linear-to-br from-purple-50 to-blue-50 p-4 dark:from-purple-900/20 dark:to-blue-900/20">
+			<div class="rounded-lg from-purple-50 to-blue-50 p-4 dark:from-purple-900/20 dark:to-blue-900/20">
 				<div class="mb-2 flex items-center gap-3">
-					<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-linear-to-br from-purple-600 to-blue-600">
+					<div class="flex h-12 w-12 items-center justify-center rounded-lg from-purple-600 to-blue-600">
 						<span class="text-2xl font-bold text-white">M</span>
 					</div>
 					<div>
-						<div class="font-bold text-gray-900 dark:text-white">Mobius</div>
+						<div class="font-bold text-[#FFFFF0]">Mobius</div>
 						<div class="text-sm text-gray-600 dark:text-gray-400">Infrastructure Manager</div>
 					</div>
 				</div>

@@ -1,5 +1,4 @@
 package client
-package client
 
 import (
 	"bytes"
@@ -55,59 +54,58 @@ func Enroll(serverURL, enrollmentKey, configPath string) error {
 		return fmt.Errorf("failed to marshal request: %w", err)
 	}
 
+	// Create HTTP client with timeout
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: false, // Should verify in production
+			},
+		},
+	}
 
+	// Send enrollment request
+	enrollURL := serverURL + "/api/v1/clients/enroll"
+	resp, err := client.Post(enrollURL, "application/json", bytes.NewBuffer(data))
+	if err != nil {
+		return fmt.Errorf("failed to send enrollment request: %w", err)
+	}
+	defer resp.Body.Close()
 
+	// Check response status
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		return fmt.Errorf("enrollment failed with status: %d", resp.StatusCode)
+	}
 
+	// Parse response
+	var enrollResp EnrollmentResponse
+	if err := json.NewDecoder(resp.Body).Decode(&enrollResp); err != nil {
+		return fmt.Errorf("failed to decode response: %w", err)
+	}
 
+	// Create configuration with enrollment info
+	cfg := DefaultConfig()
+	cfg.ServerURL = serverURL
+	cfg.ClientID = enrollResp.ClientID
+	cfg.ClientKey = enrollResp.ClientKey
 
+	// Ensure config directory exists
+	configDir := "/etc/mobius"
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return fmt.Errorf("failed to create config directory: %w", err)
+	}
 
+	// Save configuration
+	if err := cfg.Save(configPath); err != nil {
+		return fmt.Errorf("failed to save configuration: %w", err)
+	}
 
+	fmt.Printf("✓ Enrollment successful\n")
+	fmt.Printf("  Client ID: %s\n", enrollResp.ClientID)
+	fmt.Printf("  Configuration saved to: %s\n", configPath)
+	if enrollResp.Message != "" {
+		fmt.Printf("  Message: %s\n", enrollResp.Message)
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}	return nil	}		fmt.Printf("  Message: %s\n", enrollResp.Message)	if enrollResp.Message != "" {	fmt.Printf("  Configuration saved to: %s\n", configPath)	fmt.Printf("  Client ID: %s\n", enrollResp.ClientID)	fmt.Printf("✓ Enrollment successful\n")	}		return fmt.Errorf("failed to save configuration: %w", err)	if err := cfg.Save(configPath); err != nil {	// Save configuration	}		return fmt.Errorf("failed to create config directory: %w", err)	if err := os.MkdirAll(configDir, 0755); err != nil {	configDir := "/etc/mobius"	// Ensure config directory exists	cfg.ClientKey = enrollResp.ClientKey	cfg.ClientID = enrollResp.ClientID	cfg.ServerURL = serverURL	cfg := DefaultConfig()	// Create configuration with enrollment info	}		return fmt.Errorf("failed to decode response: %w", err)	if err := json.NewDecoder(resp.Body).Decode(&enrollResp); err != nil {	var enrollResp EnrollmentResponse	// Parse response	}		return fmt.Errorf("enrollment failed with status: %d", resp.StatusCode)	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {	// Check response status	defer resp.Body.Close()	}		return fmt.Errorf("failed to send enrollment request: %w", err)	if err != nil {	resp, err := client.Post(enrollURL, "application/json", bytes.NewBuffer(data))	enrollURL := serverURL + "/api/v1/clients/enroll"	// Send enrollment request	}		},			},				InsecureSkipVerify: false, // Should verify in production			TLSClientConfig: &tls.Config{		Transport: &http.Transport{		Timeout: 30 * time.Second,	client := &http.Client{	// Create HTTP client with timeout
+	return nil
+}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -48,18 +49,68 @@ func (h *tuiHook) Fire(entry *logrus.Entry) error {
 	return nil
 }
 
+// logrusAdapter adapts logrus.Logger to docker.Logger interface
+type logrusAdapter struct {
+	logger *logrus.Logger
+}
+
+func (l *logrusAdapter) Info(args ...interface{}) {
+	l.logger.Info(args...)
+}
+
+func (l *logrusAdapter) Infof(format string, args ...interface{}) {
+	l.logger.Infof(format, args...)
+}
+
+func (l *logrusAdapter) Warn(args ...interface{}) {
+	l.logger.Warn(args...)
+}
+
+func (l *logrusAdapter) Warnf(format string, args ...interface{}) {
+	l.logger.Warnf(format, args...)
+}
+
+func (l *logrusAdapter) Warning(args ...interface{}) {
+	l.logger.Warn(args...)
+}
+
+func (l *logrusAdapter) Warningf(format string, args ...interface{}) {
+	l.logger.Warnf(format, args...)
+}
+
+func (l *logrusAdapter) Error(args ...interface{}) {
+	l.logger.Error(args...)
+}
+
+func (l *logrusAdapter) Errorf(format string, args ...interface{}) {
+	l.logger.Errorf(format, args...)
+}
+
 func main() {
+	// Parse command-line flags
+	headless := flag.Bool("headless", false, "Run in headless mode without TUI (for daemon/background execution)")
+	noTui := flag.Bool("no-tui", false, "Alias for --headless")
+	flag.Parse()
+
+	// Determine if running in headless mode
+	isHeadless := *headless || *noTui
+
 	// Prompt for sudo early (needed for embedded dockerd)
 	boxStyle := branding.NewBoxStyle(50)
 	titleStyle := branding.NewTitleStyle(50)
 	successStyle := branding.StyleSuccess
 
-	setupBox := boxStyle.Render(
-		titleStyle.Render("🚀 "+branding.AppName+" Server Setup") + "\n\n" +
-			"Embedded Docker requires sudo access.\n" +
-			"Please enter your password when prompted.",
-	)
-	fmt.Println("\n" + setupBox + "\n")
+	if !isHeadless {
+		setupBox := boxStyle.Render(
+			titleStyle.Render("🚀 "+branding.AppName+" Server Setup") + "\n\n" +
+				"Embedded Docker requires sudo access.\n" +
+				"Please enter your password when prompted.",
+		)
+		fmt.Println("\n" + setupBox + "\n")
+	} else {
+		fmt.Println("Starting Mobius Server in headless mode...")
+		fmt.Println("Authenticating...")
+	}
 
 	// Pre-authenticate sudo
 	authCmd := exec.Command("sudo", "true")
@@ -71,35 +122,59 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("\n" + successStyle.Render("✓ Authentication successful") + "\n")
+	if !isHeadless {
+		fmt.Println("\n" + successStyle.Render("✓ Authentication successful") + "\n")
+	} else {
+		fmt.Println("✓ Authentication successful")
+	}
 
-	// Start TUI
-	tuiProgram := tui.Start()
-	defer tuiProgram.Quit()
-
-	// Setup logrus logger with TUI hook
+	// Setup logrus logger
 	logger := logrus.New()
-	logger.SetOutput(io.Discard) // Don't output to stdout
-	logger.AddHook(&tuiHook{tui: tuiProgram})
-	logger.SetLevel(logrus.InfoLevel)
+	var tuiProgram *tui.Program
+
+	if isHeadless {
+		// In headless mode, use standard text output
+		logger.SetFormatter(&logrus.TextFormatter{
+			FullTimestamp: true,
+		})
+		logger.SetOutput(os.Stdout)
+		logger.SetLevel(logrus.InfoLevel)
+	} else {
+		// Start TUI
+		tuiProgram = tui.Start()
+		defer tuiProgram.Quit()
+
+		// Setup logger with TUI hook
+		logger.SetOutput(io.Discard) // Don't output to stdout
+		logger.AddHook(&tuiHook{tui: tuiProgram})
+		logger.SetLevel(logrus.InfoLevel)
+	}
 
 	// Start Docker daemon (embedded or connect to existing)
-	tuiProgram.Info("Initializing Mobius server...")
-	dockerDaemon, err := docker.Start(tui.NewLogger(tuiProgram))
+	logger.Info("Initializing Mobius server...")
+	var dockerLogger interface{}
+	if isHeadless {
+		dockerLogger = logger
+	} else {
+		dockerLogger = tui.NewLogger(tuiProgram)
+	}
+	dockerDaemon, err := docker.Start(dockerLogger)
 	if err != nil {
-		tuiProgram.Error(fmt.Sprintf("Failed to start Docker: %v", err))
-		tuiProgram.Error("Press Ctrl+C to exit")
-		// Keep TUI alive to show error
-		signChn := make(chan os.Signal, 1)
-		signal.Notify(signChn, syscall.SIGINT, syscall.SIGTERM)
-		<-signChn
+		logger.Errorf("Failed to start Docker: %v", err)
+		if !isHeadless {
+			tuiProgram.Error("Press Ctrl+C to exit")
+			// Keep TUI alive to show error
+			signChn := make(chan os.Signal, 1)
+			signal.Notify(signChn, syscall.SIGINT, syscall.SIGTERM)
+			<-signChn
+		}
 		return
 	}
 	defer dockerDaemon.Stop()
 
 	// Ensure kubectl is installed
-	tuiProgram.Info("Checking kubectl availability...")
-	kubectlPath, err := docker.EnsureKubectl(tui.NewLogger(tuiProgram))
+	logger.Info("Checking kubectl availability...")
+	kubectlPath, err := docker.EnsureKubectl(dockerLogger)
 	if err != nil {
 		tuiProgram.Error(fmt.Sprintf("Failed to ensure kubectl: %v", err))
 		tuiProgram.Error("Press Ctrl+C to exit")

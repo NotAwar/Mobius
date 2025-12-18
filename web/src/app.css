@@ -1,4 +1,4 @@
-/* Mobius Global Styles */
+/* Mobius Global Styles - Matching mobiusdm.eu */
 @import 'tailwindcss';
 
 /* Font Configuration */
@@ -7,16 +7,39 @@
 	--font-heading: 'Montserrat', sans-serif;
 	/* Ubuntu for body text */
 	--font-body: 'Ubuntu', sans-serif;
-	/* Brand colors */
-	--color-accent: #d4af37; /* Golden */
-	--color-text: #ffffff; /* White */
+	
+	/* Brand colors - Matching website */
+	--color-primary: #1c2f38;
+	--color-secondary: rgba(28, 47, 56, 0.95);
+	--color-surface: #1c2f38;
+	--color-surface-variant: rgba(28, 47, 56, 0.5);
+	--color-accent: #d4af37;
+	--color-accent-hover: #e8c35a;
+	
+	/* Text colors - Ivory/cream matching website */
+	--color-text-primary: #FFFFF0;
+	--color-text-secondary: #FFFFF0;
+	--color-text-muted: rgba(255, 255, 240, 0.7);
+	--color-text-heading: #d4af37;
+	
+	/* Status colors */
+	--color-success: #10b981;
+	--color-error: #ef4444;
+	--color-warning: #f59e0b;
+	--color-info: #3b82f6;
+	
+	/* Borders and dividers - Gold theme */
+	--color-border: rgba(212, 175, 55, 0.3);
+	--color-border-light: #d4af37;
+	--color-divider: rgba(212, 175, 55, 0.2);
 }
 
-/* Apply body font and white text globally */
+/* Apply body font and high-contrast text globally */
 body {
 	font-family: var(--font-body);
 	font-weight: 400;
-	color: var(--color-text);
+	color: var(--color-text-primary);
+	background-color: var(--color-surface);
 }
 
 /* Heading styles with Montserrat Light (300) and golden accent color */
@@ -27,19 +50,131 @@ h4,
 h5,
 h6 {
 	font-family: var(--font-heading);
-	font-weight: 300; /* Light */
-	color: var(--color-accent); /* Golden color for headings */
-	letter-spacing: -0.025em; /* Tighter tracking for headings */
+	font-weight: 300;
+	color: var(--color-text-heading);
+	letter-spacing: -0.025em;
 }
 
 /* Stronger emphasis for specific cases */
 strong,
 b {
 	font-weight: 700;
+	color: var(--color-text-primary);
 }
 
 /* Medium weight for buttons and interactive elements */
 button,
 .btn {
 	font-weight: 500;
+}
+
+/* Link styles */
+a {
+	color: var(--color-accent);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+a:hover {
+	color: var(--color-accent-hover);
+}
+
+/* Card and surface elevation */
+.card,
+.surface {
+	background-color: rgba(212, 175, 55, 0.1);
+	border: 1px solid rgba(212, 175, 55, 0.3);
+	border-radius: 0.5rem;
+}
+
+.card:hover {
+	border-color: #d4af37;
+}
+
+/* Input and form styles */
+input,
+textarea,
+select {
+	background-color: rgba(28, 47, 56, 0.8);
+	border: 1px solid rgba(212, 175, 55, 0.3);
+	color: var(--color-text-primary);
+	border-radius: 0.375rem;
+	padding: 0.5rem 0.75rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	border-color: var(--color-accent);
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+/* Button variants */
+.btn-primary {
+	background-color: var(--color-accent);
+	color: var(--color-primary);
+	font-weight: 600;
+	padding: 0.5rem 1rem;
+	border-radius: 0.375rem;
+	transition: all 0.2s ease;
+	border: 2px solid var(--color-accent);
+}
+
+.btn-primary:hover {
+	background-color: var(--color-accent-hover);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.btn-secondary {
+	background-color: rgba(212, 175, 55, 0.08);
+	color: var(--color-accent);
+	border: 2px solid var(--color-accent);
+	padding: 0.5rem 1rem;
+	border-radius: 0.375rem;
+	transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+	background-color: rgba(212, 175, 55, 0.15);
+	transform: translateY(-2px);
+}
+
+/* Status badges */
+.badge-success {
+	background-color: rgba(16, 185, 129, 0.1);
+	color: var(--color-success);
+	border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-error {
+	background-color: rgba(239, 68, 68, 0.1);
+	color: var(--color-error);
+	border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-warning {
+	background-color: rgba(245, 158, 11, 0.1);
+	color: var(--color-warning);
+	border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(212, 175, 55, 0.3);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-accent);
 }

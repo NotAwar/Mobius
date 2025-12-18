@@ -74,7 +74,8 @@ is_migration_applied() {
     local db_name=$1
     local migration_file=$2
     
-    local count=$(PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$db_name" -t -c \
+    local count
+    count=$(PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$db_name" -t -c \
         "SELECT COUNT(*) FROM $MIGRATIONS_TABLE WHERE migration_file = '$migration_file';")
     
     if [ "$count" -gt 0 ]; then
@@ -118,7 +119,8 @@ apply_migration() {
     fi
     
     # Calculate checksum
-    local checksum=$(calculate_checksum "$sql_file")
+    local checksum
+    checksum=$(calculate_checksum "$sql_file")
     
     # Apply migration
     if PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$db_name" -f "$sql_file"; then

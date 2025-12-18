@@ -71,12 +71,12 @@
 	<header class="bg-white dark:bg-gray-800 shadow">
 		<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between">
-				<h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+				<h1 class="text-3xl font-bold tracking-tight text-[#FFFFF0]">
 					🗄️ PostgreSQL Management
 				</h1>
 				<a
 					href="/"
-					class="rounded-lg bg-purple-600 px-4 py-2 text-white transition hover:bg-purple-700"
+					class="rounded-lg bg-[#d4af37] px-4 py-2 text-[#1c2f38] font-semibold transition hover:bg-[#e8c35a]"
 				>
 					← Back to Dashboard
 				</a>
@@ -92,18 +92,18 @@
 		{/if}
 
 		<div class="mb-6 flex items-center justify-between">
-			<h2 class="text-xl font-semibold text-gray-900 dark:text-white">Databases</h2>
+			<h2 class="text-xl font-semibold text-[#FFFFF0]">Databases</h2>
 			<button
 				onclick={() => (showCreateForm = !showCreateForm)}
-				class="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+				class="rounded-lg bg-[#d4af37] px-4 py-2 text-[#1c2f38] font-semibold transition hover:bg-[#e8c35a]"
 			>
 				{showCreateForm ? 'Cancel' : '+ Create Database'}
 			</button>
 		</div>
 
 		{#if showCreateForm}
-			<div class="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-				<h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+			<div class="mb-6 rounded-lg bg-[rgba(212, 175, 55, 0.1)] border border-[rgba(212, 175, 55, 0.3)] p-6 shadow">
+				<h3 class="mb-4 text-lg font-semibold text-[#FFFFF0]">
 					Create New Database
 				</h3>
 				<form
@@ -117,13 +117,13 @@
 						type="text"
 						bind:value={newDbName}
 						placeholder="Database name"
-						class="flex-1 rounded-lg border border-gray-300 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+						class="flex-1 rounded-lg border border-[rgba(212, 175, 55, 0.3)] px-4 py-2 bg-[#1c2f38] text-[#FFFFF0] focus:border-[#d4af37] focus:ring-2 focus:ring-[rgba(212, 175, 55, 0.2)]"
 						required
 					/>
 					<button
 						type="submit"
 						disabled={creating}
-						class="rounded-lg bg-green-600 px-6 py-2 text-white transition hover:bg-green-700 disabled:opacity-50"
+						class="rounded-lg bg-[#d4af37] px-6 py-2 text-[#1c2f38] font-semibold transition hover:bg-[#e8c35a] hover:shadow-lg disabled:opacity-50"
 					>
 						{creating ? 'Creating...' : 'Create'}
 					</button>
@@ -136,7 +136,7 @@
 				<div class="h-32 w-32 animate-spin rounded-full border-b-2 border-purple-600"></div>
 			</div>
 		{:else}
-			<div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+			<div class="rounded-lg bg-[rgba(212, 175, 55, 0.1)] border border-[rgba(212, 175, 55, 0.3)] p-6 shadow">
 				{#if databases.length === 0}
 					<p class="text-center text-gray-600 dark:text-gray-400">
 						No databases found. Create one to get started!

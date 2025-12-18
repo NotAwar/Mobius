@@ -15,6 +15,8 @@ require (
 	github.com/shirou/gopsutil/v3 v3.24.5
 	github.com/sirupsen/logrus v1.9.3
 	go.uber.org/zap v1.27.1
+	golang.org/x/crypto v0.37.0
+	gopkg.in/yaml.v3 v3.0.1
 	sigs.k8s.io/kind v0.30.0
 )
 
@@ -83,7 +85,6 @@ require (
 	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
 	golang.org/x/text v0.32.0 // indirect

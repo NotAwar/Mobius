@@ -1,8 +1,8 @@
 /**
- * Mobius Brand Theme Configuration
+ * Mobius Brand Theme Configuration - Material Dark Theme
  * 
  * This file is the source of truth for all Mobius branding and styling.
- * Generated from pkg/branding/theme.json
+ * Optimized for high contrast and readability in dark theme.
  */
 
 export const theme = {
@@ -11,31 +11,37 @@ export const theme = {
   version: '1.0.0',
 
   colors: {
-    // Primary brand colors (from logo)
-    primary: '#1c2f38',     // Dark Blue - logo background, main brand
-    secondary: '#31413e',   // Teal Blue - lighter areas, elevated surfaces
-    accent: '#d4af37',      // Golden Yellow - logo accent, highlights, CTAs
+    // Primary brand colors (matching mobiusdm.eu)
+    primary: '#1c2f38',     // Dark Blue - main brand
+    secondary: 'rgba(28, 47, 56, 0.95)', // Semi-transparent dark blue
+    surface: '#1c2f38',     // Base surface
+    surfaceVariant: 'rgba(28, 47, 56, 0.5)', // Lighter variant
+    accent: '#d4af37',      // Golden Yellow - highlights, CTAs
+    accentHover: '#e8c35a', // Brighter gold for hover states
 
-    // Status colors (harmonized with brand)
-    success: '#4ade80',     // Green - success messages
+    // Status colors (accessible on dark backgrounds)
+    success: '#10b981',     // Green - success messages
     error: '#ef4444',       // Red - error messages
-    warning: '#fbbf24',     // Amber - warning messages
-    info: '#60a5fa',        // Sky Blue - info messages
+    warning: '#f59e0b',     // Amber - warning messages
+    info: '#3b82f6',        // Blue - info messages
 
     // Health indicators
-    healthy: '#4ade80',     // Green - healthy status
+    healthy: '#10b981',     // Green - healthy status
     unhealthy: '#ef4444',   // Red - unhealthy status
-    degraded: '#fbbf24',    // Amber - degraded status
+    degraded: '#f59e0b',    // Amber - degraded status
 
-    // Neutral colors (optimized for dark theme)
-    textPrimary: '#ffffff',     // Pure white - body text on dark bg
-    textSecondary: '#94a3b8',   // Slate gray - muted content
-    textTertiary: '#64748b',    // Darker slate - subtle content
-    textHeading: '#d4af37',     // Golden - headings (matches accent)
-    background: '#1c2f38',
-    backgroundAlt: '#31413e',
+    // Ivory/cream text colors (matching mobiusdm.eu)
+    textPrimary: '#FFFFF0',     // Ivory - primary text
+    textSecondary: '#FFFFF0',   // Ivory - secondary text
+    textMuted: 'rgba(255, 255, 240, 0.7)', // Dimmed ivory
+    textHeading: '#d4af37',     // Gold - headings
+    
+    // Layout colors
+    background: '#1a252e',
+    backgroundAlt: '#253744',
     border: '#334155',
     borderLight: '#475569',
+    divider: '#1e293b',
   },
 
   typography: {

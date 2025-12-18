@@ -1,5 +1,4 @@
 package client
-package client
 
 import (
 	"os"
@@ -7,6 +6,7 @@ import (
 	"time"
 
 	"mobius/internal/logger"
+
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/host"

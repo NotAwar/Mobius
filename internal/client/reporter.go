@@ -1,5 +1,4 @@
 package client
-package client
 
 import (
 	"bytes"

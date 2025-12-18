@@ -238,33 +238,66 @@ spec:
 	return manifestPath, nil
 }
 
-// startPortForward starts a port-forward to the UI service
+// startPortForward starts a port-forward to the UI service with retry logic
 func (u *Deployer) startPortForward() error {
 	u.logger.Infof("Starting port-forward to UI service on port %d...", u.config.ServicePort)
 
-	// Map local port to service port (service then routes to container port 80)
-	portMapping := fmt.Sprintf("%d:%d", u.config.ServicePort, u.config.ServicePort)
-	u.portForwardCmd = cmd.NewCmd(
-		"kubectl", "port-forward",
-		"-n", u.config.Namespace,
-		fmt.Sprintf("svc/%s", u.config.ServiceName),
-		portMapping,
-	)
-	u.portForwardCmd.Env = append(os.Environ(), fmt.Sprintf("KUBECONFIG=%s", u.deployer.GetKubeconfig()))
+	// Start port-forward with auto-retry on failure
+	go u.maintainPortForward()
 
-	// Start in background
-	statusChan := u.portForwardCmd.Start()
-
-	// Start a goroutine to log if port-forward fails
-	go func() {
-		status := <-statusChan
-		if status.Exit != 0 {
-			u.logger.Warnf("Port-forward exited with code %d: %s", status.Exit, status.Stderr)
-		}
-	}()
+	// Give it a moment to start
+	time.Sleep(2 * time.Second)
 
 	u.logger.Info("Port-forward started successfully")
 	return nil
+}
+
+// maintainPortForward keeps the port-forward running with automatic restarts
+func (u *Deployer) maintainPortForward() {
+	maxRetries := 10
+	retryDelay := 5 * time.Second
+	retryCount := 0
+
+	for {
+		// Map local port to service port
+		portMapping := fmt.Sprintf("%d:%d", u.config.ServicePort, u.config.ServicePort)
+		u.portForwardCmd = cmd.NewCmd(
+			"kubectl", "port-forward",
+			"-n", u.config.Namespace,
+			fmt.Sprintf("svc/%s", u.config.ServiceName),
+			portMapping,
+		)
+		u.portForwardCmd.Env = append(os.Environ(), fmt.Sprintf("KUBECONFIG=%s", u.deployer.GetKubeconfig()))
+
+		// Start port-forward
+		statusChan := u.portForwardCmd.Start()
+
+		// Wait for exit
+		status := <-statusChan
+
+		if status.Exit != 0 {
+			retryCount++
+			u.logger.Warnf("Port-forward exited with code %d (retry %d/%d): %v", status.Exit, retryCount, maxRetries, status.Stderr)
+
+			if retryCount >= maxRetries {
+				u.logger.Errorf("Port-forward failed after %d retries, giving up", maxRetries)
+				return
+			}
+
+			// Exponential backoff: 5s, 10s, 20s, etc (max 60s)
+			backoff := retryDelay * time.Duration(retryCount)
+			if backoff > 60*time.Second {
+				backoff = 60 * time.Second
+			}
+
+			u.logger.Infof("Retrying port-forward in %v...", backoff)
+			time.Sleep(backoff)
+		} else {
+			// Successful exit (user stopped?), reset retry count
+			u.logger.Info("Port-forward stopped gracefully")
+			return
+		}
+	}
 }
 
 // stopPortForward stops the port-forward process

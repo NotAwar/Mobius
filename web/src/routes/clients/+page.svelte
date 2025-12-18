@@ -23,8 +23,8 @@
 	// Available groups for bulk actions
 	let availableGroups: any[] = [];
 
-	onMount(async () => {
-		await Promise.all([fetchClients(), fetchGroups()]);
+	onMount(() => {
+		Promise.all([fetchClients(), fetchGroups()]);
 		// Set up auto-refresh every 30 seconds
 		const interval = setInterval(fetchClients, 30000);
 		return () => clearInterval(interval);
@@ -265,7 +265,7 @@
 					Delete
 				</button>
 				<button
-					on:click={() => selectedClients.clear() && (selectedClients = selectedClients)}
+					on:click={() => { selectedClients.clear(); selectedClients = selectedClients; }}
 					class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
 				>
 					Clear

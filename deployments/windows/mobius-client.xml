@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Mobius Client Windows Service Configuration
+
+To install this service using NSSM (Non-Sucking Service Manager):
+1. Download NSSM from https://nssm.cc/download
+2. Run: nssm install MobiusClient "C:\Program Files\Mobius\mobius-client.exe" start --config="C:\ProgramData\Mobius\config\client.yaml"
+3. Run: nssm set MobiusClient Description "Mobius MDM client daemon"
+4. Run: nssm set MobiusClient Start SERVICE_AUTO_START
+5. Run: nssm start MobiusClient
+
+To install using sc.exe (built-in Windows tool):
+sc.exe create MobiusClient binPath= "C:\Program Files\Mobius\mobius-client.exe start --config=C:\ProgramData\Mobius\config\client.yaml" start= auto DisplayName= "Mobius Client Daemon"
+sc.exe description MobiusClient "Mobius MDM client daemon for remote device management"
+sc.exe failure MobiusClient reset= 86400 actions= restart/60000/restart/60000/restart/60000
+net start MobiusClient
+-->
+
+<service>
+    <id>MobiusClient</id>
+    <name>Mobius Client Daemon</name>
+    <description>Mobius MDM client daemon for remote device management</description>
+    <executable>C:\Program Files\Mobius\mobius-client.exe</executable>
+    <arguments>start --config="C:\ProgramData\Mobius\config\client.yaml"</arguments>
+    
+    <log mode="roll-by-time">
+        <pattern>yyyyMMdd</pattern>
+    </log>
+    
+    <onfailure action="restart" delay="10 sec"/>
+    <onfailure action="restart" delay="30 sec"/>
+    <onfailure action="restart" delay="60 sec"/>
+    <resetfailure>1 day</resetfailure>
+    
+    <serviceaccount>
+        <domain>LocalSystem</domain>
+    </serviceaccount>
+    
+    <priority>Normal</priority>
+    <stoptimeout>30 sec</stoptimeout>
+    <starttimeout>30 sec</starttimeout>
+    <startmode>Automatic</startmode>
+    
+    <env name="MOBIUS_CONFIG" value="C:\ProgramData\Mobius\config\client.yaml"/>
+    <env name="MOBIUS_DATA_DIR" value="C:\ProgramData\Mobius\data"/>
+    <env name="MOBIUS_LOG_DIR" value="C:\ProgramData\Mobius\logs"/>
+</service>

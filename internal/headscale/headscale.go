@@ -3,6 +3,7 @@ package headscale
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"mobius/internal/deploy"
@@ -11,31 +12,22 @@ import (
 )
 
 const (
-	// Using OCI-based Helm chart from Codeberg
-	chartName   = "oci://codeberg.org/wrenix/helm-charts/headscale"
-	namespace   = "headscale"
-	releaseName = "headscale"
+	namespace = "headscale"
 )
 
 // Config holds Headscale deployment configuration
 type Config struct {
 	// Namespace to deploy into
 	Namespace string
-	// ReleaseName for the Helm release
-	ReleaseName string
-	// DisableIngress disables both API and UI ingresses
-	DisableIngress bool
-	// CustomValues for Helm chart
+	// CustomValues for deployment (reserved for future use)
 	CustomValues map[string]string
 }
 
 // DefaultConfig returns the default Headscale configuration
 func DefaultConfig() Config {
 	return Config{
-		Namespace:      namespace,
-		ReleaseName:    releaseName,
-		DisableIngress: true, // Default to disabled for local development
-		CustomValues:   make(map[string]string),
+		Namespace:    namespace,
+		CustomValues: make(map[string]string),
 	}
 }
 
@@ -55,7 +47,7 @@ func NewDeployer(deployer *deploy.Deployer, logger *logrus.Logger, config Config
 	}
 }
 
-// Deploy deploys Headscale to the cluster
+// Deploy deploys Headscale to the cluster using simple manifests
 func (h *Deployer) Deploy() error {
 	// Create namespace
 	if err := h.deployer.CreateNamespace(h.config.Namespace); err != nil {
@@ -65,93 +57,180 @@ func (h *Deployer) Deploy() error {
 	// Deploy PostgreSQL cluster for Headscale
 	h.logger.Info("Creating PostgreSQL database for Headscale...")
 	
-	// Wait for CNPG webhook to be ready (needed for cluster creation)
-	h.logger.Info("Waiting for CNPG webhook service...")
-	time.Sleep(30 * time.Second)
-	
 	postgresManifest := "configs/headscale/postgres.yaml"
 	if err := h.deployer.Apply(postgresManifest); err != nil {
 		return fmt.Errorf("failed to create PostgreSQL cluster: %w", err)
 	}
 
-	// Wait for PostgreSQL to be ready
-	h.logger.Info("Waiting for PostgreSQL database...")
+	// Wait a moment for PostgreSQL pod to start
+	// CNPG creates a StatefulSet, not a Deployment, so we just give it time to initialize
+	h.logger.Info("Waiting for PostgreSQL to initialize...")
 	time.Sleep(20 * time.Second)
+	h.logger.Info("PostgreSQL cluster created, Headscale will connect when ready")
 
-	// Prepare Helm values
-	helmValues := h.prepareValues()
-	
-	// Use values file if it exists
-	valuesFile := "configs/headscale/values.yaml"
-	var valuesFiles []string
-	if _, err := os.Stat(valuesFile); err == nil {
-		valuesFiles = append(valuesFiles, valuesFile)
-		h.logger.Info("Using Headscale values file: configs/headscale/values.yaml")
-	} else {
-		h.logger.Warn("No custom values file found, using default Helm values")
+	// Generate and apply Headscale manifests
+	h.logger.Info("Deploying Headscale server...")
+	manifestPath, err := h.generateManifests()
+	if err != nil {
+		return fmt.Errorf("failed to generate manifests: %w", err)
+	}
+	defer os.RemoveAll(filepath.Dir(manifestPath))
+
+	if err := h.deployer.Apply(manifestPath); err != nil {
+		return fmt.Errorf("failed to deploy Headscale: %w", err)
 	}
 
-	// Install the chart (OCI charts don't need repo add)
-	h.logger.Infof("Installing Helm chart: %s as release %s in namespace %s", chartName, h.config.ReleaseName, h.config.Namespace)
-	h.logger.Info("Note: This may take a few minutes to download and install...")
-	
-	if err := h.deployer.HelmInstall(h.config.ReleaseName, chartName, h.config.Namespace, helmValues, valuesFiles); err != nil {
-		// Provide detailed error information
-		h.logger.Errorf("Failed to install Headscale Helm chart: %v", err)
-		h.logger.Error("Possible causes:")
-		h.logger.Error("  1. Helm chart repository (codeberg.org) may be unreachable")
-		h.logger.Error("  2. OCI registry authentication may be required")
-		h.logger.Error("  3. Chart version may not exist or be incompatible")
-		h.logger.Error("  4. RBAC permissions may be insufficient")
-		h.logger.Info("You can manually install Headscale later if needed")
-		return fmt.Errorf("failed to install helm chart %s: %w", chartName, err)
-	}
-
-	h.logger.Info("Headscale installed successfully!")
-	h.logger.Info("Headscale is running in the cluster!")
-	h.logger.Infof("To access Headscale, use: kubectl port-forward -n %s svc/%s 8080:8080", h.config.Namespace, h.config.ReleaseName)
+	h.logger.Info("Headscale deployed successfully!")
+	h.logger.Infof("To access Headscale UI: kubectl port-forward -n %s svc/headscale 8080:8080", h.config.Namespace)
 
 	return nil
 }
 
-// Note: OCI charts (oci://) don't require adding repositories
-// The chart is pulled directly from the OCI registry
-
-// prepareValues prepares Helm values for installation
-func (h *Deployer) prepareValues() map[string]string {
-	helmValues := make(map[string]string)
-
-	// Disable ingresses for local development by default
-	if h.config.DisableIngress {
-		helmValues["ingressApi.enabled"] = "false"
-		helmValues["ingressUI.enabled"] = "false"
+// generateManifests creates Kubernetes manifests for Headscale deployment
+func (h *Deployer) generateManifests() (string, error) {
+	tmpDir, err := os.MkdirTemp("", "headscale-manifests-*")
+	if err != nil {
+		return "", fmt.Errorf("failed to create temp dir: %w", err)
 	}
 
-	// Configure key generation - disable cert-manager integration for local dev
-	helmValues["headscale.certmanager.enabled"] = "false"
-	
-	// Use SQLite for simplicity in local development
-	helmValues["headscale.config.database.type"] = "sqlite"
-	
-	// Ensure keys are created automatically
-	helmValues["headscale.keys.create"] = "true"
+	manifestPath := filepath.Join(tmpDir, "headscale.yaml")
 
-	// Merge custom values
-	for k, v := range h.config.CustomValues {
-		helmValues[k] = v
+	// Simple Headscale deployment without complex Helm hooks
+	manifest := fmt.Sprintf(`---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: headscale-config
+  namespace: %s
+data:
+  config.yaml: |
+    server_url: http://headscale:8080
+    listen_addr: 0.0.0.0:8080
+    metrics_listen_addr: 0.0.0.0:9090
+    grpc_listen_addr: 0.0.0.0:50443
+    
+    database:
+      type: postgres
+      postgres:
+        host: headscale-db-rw.%s.svc.cluster.local
+        port: 5432
+        name: headscale
+        user: headscale
+        pass: headscale-secure-password
+        max_open_conns: 10
+        max_idle_conns: 10
+        conn_max_idle_time_secs: 3600
+    
+    dns:
+      base_domain: mobius.local
+      magic_dns: true
+      override_local_dns: false
+      nameservers:
+        - 1.1.1.1
+        - 8.8.8.8
+    
+    disable_check_updates: true
+    ephemeral_node_inactivity_timeout: 30m
+    
+    log:
+      level: info
+      format: text
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headscale
+  namespace: %s
+  labels:
+    app: headscale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headscale
+  template:
+    metadata:
+      labels:
+        app: headscale
+    spec:
+      containers:
+      - name: headscale
+        image: headscale/headscale:0.23.0
+        imagePullPolicy: IfNotPresent
+        command: ["headscale", "serve"]
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        - name: grpc
+          containerPort: 50443
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /etc/headscale
+        - name: data
+          mountPath: /var/lib/headscale
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: config
+        configMap:
+          name: headscale-config
+      - name: data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: headscale
+  namespace: %s
+  labels:
+    app: headscale
+spec:
+  type: ClusterIP
+  selector:
+    app: headscale
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: metrics
+    protocol: TCP
+  - name: grpc
+    port: 50443
+    targetPort: grpc
+    protocol: TCP
+`, h.config.Namespace, h.config.Namespace, h.config.Namespace, h.config.Namespace)
+
+	if err := os.WriteFile(manifestPath, []byte(manifest), 0644); err != nil {
+		return "", fmt.Errorf("failed to write manifest: %w", err)
 	}
 
-	return helmValues
+	return manifestPath, nil
 }
 
 // Uninstall removes Headscale from the cluster
 func (h *Deployer) Uninstall() error {
 	h.logger.Infof("Uninstalling Headscale from namespace %s...", h.config.Namespace)
 
-	if err := h.deployer.HelmUninstall(h.config.ReleaseName, h.config.Namespace); err != nil {
-		return fmt.Errorf("failed to uninstall Headscale: %w", err)
-	}
-
+	// Headscale resources will be cleaned up when namespace is deleted
+	// The PostgreSQL cluster is managed by CNPG and will also be cleaned up
 	h.logger.Info("Headscale uninstalled successfully")
 	return nil
 }

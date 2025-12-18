@@ -83,7 +83,12 @@ func (ka *KeycloakAuth) Middleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		// Skip if Keycloak is disabled (dev mode)
 		if !ka.config.Enabled {
-			ka.logger.Debug("Keycloak auth disabled, allowing request")
+			ka.logger.Debug("Keycloak auth disabled, granting admin access for development")
+			// In dev mode without auth, grant full admin access
+			c.Locals("user_id", "dev-user")
+			c.Locals("username", "developer")
+			c.Locals("email", "dev@localhost")
+			c.Locals("roles", []string{RoleAdmin}) // Grant admin role for development
 			return c.Next()
 		}
 
